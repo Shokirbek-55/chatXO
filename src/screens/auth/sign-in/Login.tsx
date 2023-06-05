@@ -1,7 +1,7 @@
 import React from 'react'
 import useRootStore from '../../../hooks/useRootStore'
 import { observer } from 'mobx-react-lite'
-import TextFieldd from '../../../components/TextField'
+import TextFieldd from '../../../components/TextField/TextField'
 import { useNavigate } from 'react-router-dom'
 import styles from "./Login.module.css"
 import Colors from '../../../utils/colors'
@@ -12,7 +12,7 @@ import { Form, Formik } from 'formik'
 import * as yup from "yup";
 import Regex from '../../../utils/regax'
 
-function Login() {
+const Login = () => {
 
   const { togleToken } = useRootStore().loginStore
   const navigation = useNavigate()
@@ -76,11 +76,7 @@ function Login() {
                 password: "",
               }}
               validationSchema={validate}
-              onSubmit={(values) => {
-                console.log(values);
-                //@ts-ignore
-                onFinish(values);
-              }}
+              onSubmit={() => togleToken()}
             >
               {(formik) => (
                 <div>
@@ -91,8 +87,10 @@ function Login() {
                       name="password"
                       type="password"
                     />
-                    <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                      <a onClick={() => navigation("")}>{t("forgot_pass")}</a>
+                    <div className={styles.forgotBox}>
+                      <a style={{
+                        color: Colors.Blue,
+                      }} onClick={() => navigation("")}>{t("forgot_pass")}</a>
                     </div>
                     <button
                       type="submit"
@@ -100,6 +98,7 @@ function Login() {
                       style={{
                         background: Colors.Blue,
                       }}
+                      onClick={() => togleToken()}
                     >
                       {t("sign_up_email")}
                     </button>

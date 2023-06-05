@@ -40,7 +40,7 @@ const ChangeLanguageView = () => {
       <HeaderView
         text={`${t("change_language")}`}
         leftIcon="arrowLeft"
-        onLeftIconPress={() => navigation("")}
+        onLeftIconPress={() => navigation("/auth/welcome")}
       />
       <div className={styles.contentBox}>
         <div>

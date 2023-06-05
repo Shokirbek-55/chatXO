@@ -1,20 +1,18 @@
-
-
 import { observer } from 'mobx-react-lite';
 import { Navigate, Outlet } from 'react-router-dom';
 import useRootStore from '../hooks/useRootStore';
 
 function HomeLayout() {
 
-    const { token } = useRootStore().loginStore
+  const { token } = useRootStore().loginStore
 
-    if (!token) {
-        console.log('token', token);        
-        return <Navigate to="/auth/login" replace />;
-    }
+  if (!token) {
+    console.log('token', token);
+    return <Navigate to="/auth/login" replace />;
+  }
 
   return (
-      <div>
+    <div>
       <div className='sidebar'>
         SideBar
       </div>
@@ -22,7 +20,7 @@ function HomeLayout() {
         <div>Chat Area</div>
         <div>Profile Area</div>
       </div>
-      </div>
+    </div>
   )
 }
 

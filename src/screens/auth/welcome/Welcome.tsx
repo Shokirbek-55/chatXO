@@ -26,14 +26,14 @@ const WelcomeView = () => {
         </div>
         <div className={styles.registerBoxBottom}>
           <Link
-            to={"/login"}
+            to={"/auth/login"}
             className={styles.loginBtn}
             style={{ textDecoration: "none" }}
           >
             {t("login")}
           </Link>
           <Link
-            to={""}
+            to={"/auth/sign-up-social"}
             className={styles.createAnAccount}
             style={{ textDecoration: "none" }}
           >

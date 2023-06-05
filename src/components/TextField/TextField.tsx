@@ -1,13 +1,12 @@
 import React from "react";
 import { ErrorMessage, useField } from "formik";
-
-import styles from "./index.module.css";
+import styles from "./TextField.module.css";
 
 const TextFieldd = ({ label, ...props }: any) => {
   const [field, meta] = useField(props);
   return (
     <div className={styles.textFieldContainer}>
-      <label htmlFor={field.name}>{label}</label>
+      <label className={styles.label} htmlFor={field.name}>{label}</label>
       <input
         className={`${styles.validationInput} ${meta.touched && meta.error && styles.isInValid
           }`}
