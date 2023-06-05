@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import styles from "./Login.module.css"
 import Colors from '../../../utils/colors'
 import { useTranslation } from 'react-i18next'
-import HeaderView from '../../../components/Header'
+import Header from '../../../components/Header/Header'
 import Assets from '../../../utils/requireAssets'
 import { Form, Formik } from 'formik'
 import * as yup from "yup";
@@ -34,7 +34,7 @@ function Login() {
 
   return (
     <div className={styles.headerBox}>
-      <HeaderView
+      <Header
         leftIcon="arrowLeft"
         text={`${t("login")}`}
         onLeftIconPress={() => navigation("/auth/welcome")}

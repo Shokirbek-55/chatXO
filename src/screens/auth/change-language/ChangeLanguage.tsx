@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import HeaderView from "../../../components/Header";
+import Header from "../../../components/Header/Header";
 import styles from "./ChangeLanguage.module.css";
 import i18n from '../../../translations/index';
 
@@ -37,7 +37,7 @@ const ChangeLanguageView = () => {
 
   return (
     <div className={styles.container}>
-      <HeaderView
+      <Header
         text={`${t("change_language")}`}
         leftIcon="arrowLeft"
         onLeftIconPress={() => navigation("")}
