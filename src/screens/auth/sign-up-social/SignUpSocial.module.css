@@ -1,0 +1,111 @@
+.newAccountBox {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.newAccountBack {
+  display: flex;
+  width: 100%;
+  height: 50px;
+  font-weight: 500;
+  font-size: 22px;
+  justify-content: center;
+  align-items: center;
+}
+
+.NewAccountBoxTwo {
+  display: flex;
+  width: 100%;
+  height: 50%;
+  margin: auto 0;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.newAccountContainer {
+  display: flex;
+  width: 60%;
+  height: 100%;
+  margin: 0 auto;
+  background: #fff;
+  flex-direction: column;
+}
+
+.NewAccountBoxTwo > p {
+  font-size: 18px;
+}
+
+.NewAccountButton {
+  display: flex;
+  width: 350px;
+  height: 50px;
+  color: black;
+  font-family: "Montserrat6";
+  margin-bottom: 20px;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 20px;
+  border: 1px solid grey;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.NewAccountButton:hover {
+  background-color: rgb(241, 238, 238);
+}
+
+.NewAccountButtonB {
+  display: flex;
+  width: 350px;
+  height: 50px;
+  color: black;
+  font-family: "Montserrat6";
+  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 20px;
+  border: 1px solid blue;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.NewAccountButtonB:hover {
+  background-color: blue;
+  color: #fff;
+}
+
+.NewAccountButtonBox {
+  display: flex;
+  flex-direction: column;
+}
+
+.loginButton {
+  display: flex;
+  width: 350px;
+  height: 50px;
+  color: black;
+  font-family: "Montserrat6";
+  margin-bottom: 20px;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 20px;
+  border: 1px solid grey;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.loginButton:hover {
+  background-color: rgb(241, 238, 238);
+  cursor: pointer;
+}
