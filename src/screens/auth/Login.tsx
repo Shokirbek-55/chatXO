@@ -1,5 +1,5 @@
 import React from 'react'
-import useRootStore from '../hooks/useRootStore'
+import useRootStore from '../../hooks/useRootStore'
 import { observer } from 'mobx-react-lite'
 
 function Login() {
