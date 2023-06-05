@@ -13,7 +13,7 @@ import styles from "./index.module.css";
 
 interface Props {
   header?: string;
-  text?: string;
+  text?: any;
   rightIcon?: string;
   onRightIconPress?: () => void;
   leftIcon?: string;
@@ -23,7 +23,7 @@ interface Props {
   leftIconColor?: string;
   textSize?: string;
 }
-const HeaderView: FC<Props> = ({
+const Header: FC<Props> = ({
   header,
   text,
   rightIcon,
@@ -110,4 +110,4 @@ const HeaderView: FC<Props> = ({
   );
 };
 
-export default HeaderView;
+export default Header;

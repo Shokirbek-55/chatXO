@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
-import Text from "../../../components/Text";
+import Text from "../../../components/Text/Text";
 import Assets from "../../../utils/requireAssets";
 import styles from "./Welcome.module.css";
 
