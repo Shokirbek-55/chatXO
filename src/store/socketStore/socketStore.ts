@@ -1,0 +1,90 @@
+import { makeAutoObservable } from "mobx";
+import io, { Socket } from "socket.io-client";
+import { Env } from "../../env";
+
+class SocketStore {
+    constructor() {
+        makeAutoObservable(this);
+    }
+
+    _socket: Socket<any> = io();
+    _connected = false;
+    _keepAlive = false;
+    _initialized = false;
+
+    get socket() {
+        return this._socket;
+    }
+
+    get connected() {
+        return this._connected;
+    }
+
+    get keepAlive() {
+        return this._keepAlive;
+    }
+
+    set keepAlive(value: boolean) {
+        this._keepAlive = value;
+    }
+
+    connect = (callback?:() => void) => {
+
+        const { auth: { user } } =  JSON.parse(localStorage.getItem("persist:root") || "{}");
+
+        this._socket = io(Env.SocketUrl, {
+            autoConnect: true,
+            query: { userId: user?.id },
+            transports: ["websocket"],
+        });
+
+        this._socket.on("connect", () => {
+            this._connected = true;
+            console.log("connected", this._socket);
+
+            if (this._initialized) {
+                return;
+            }
+
+            this._socket?.on("ping", () => {
+                console.log("ping");
+            });
+
+            this._socket?.on("disconnect", () => {
+                this._connected = false;
+                console.log("disconnected", this._socket);
+            });
+
+            this._socket?.on("error", (error: any) => {
+                console.log("error", error);
+            })
+
+            callback && callback();
+        });
+
+        this._socket?.on("connect_error", (error: any) => {
+            console.log("connect_error", error);
+        });
+    }
+
+    disconnect = () => {
+        if (this._socket) {
+            this._socket.disconnect();
+        } else {
+            console.log("socket is null");
+        }
+    }
+
+    dispose = () => {
+        this._connected = false;
+        this._keepAlive = false;
+        this._initialized = false;
+
+        this._socket?.removeAllListeners()
+
+        this._socket = io();
+    }
+}
+
+
+export default SocketStore;
