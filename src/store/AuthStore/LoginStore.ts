@@ -10,7 +10,7 @@ export default class LoginStore {
         this.root = root
     }
 
-    token: boolean = false
+    token: boolean = true
 
     setToken = (token: boolean) => {
         this.token = token

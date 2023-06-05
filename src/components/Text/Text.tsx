@@ -13,7 +13,7 @@ interface Props {
   onClick?: () => void;
 }
 
-const TextView: FC<Props> = ({
+const Text: FC<Props> = ({
   children,
   handleLink,
   center,
@@ -52,4 +52,4 @@ const TextView: FC<Props> = ({
   );
 };
 
-export default TextView;
+export default Text;

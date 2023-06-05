@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 7.5vh;
+  box-shadow: 0 0 10px 1px rgba(1, 1, 1, 0.1);
+  border-right: 1px solid #eee;
+}
+
+.container .icon_circle {
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 100%;
+}

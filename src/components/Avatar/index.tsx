@@ -1,9 +1,9 @@
 import { CSSProperties, FC, useState } from "react";
-import Colors from "../../utils/colors";
-import { User } from "../../types/user";
-import Assets from "../../utils/requireAssets";
 import { AvatarHook } from "./hook";
 import styles from "./index.module.css";
+import { User } from "../../types/user";
+import Assets from "../../utils/requireAssets";
+import Colors from "../../utils/colors";
 import Icon from "../Icon";
 
 interface Props {
@@ -69,6 +69,9 @@ const AvatarView: FC<Props> = ({
               <img
                 src={url}
                 className={styles.avatar}
+                onClick={() => {
+                  console.log("url", url);
+                }}
                 alt="#"
               />
             ) : null}
@@ -79,8 +82,12 @@ const AvatarView: FC<Props> = ({
           </div>
           {upload ? (
             <label className={styles.largeAvatar}>
+              {/* <DropDownSelect */}
+              {/* onSelectFile={onChange} */}
+              {/* onOpenCamera={onOpenCamera} */}
+              {/* cameraIcon={ */}
               <Icon
-                src={Assets.upload}
+                src={Assets.download}
                 color={Colors.ActiveHastag}
                 // onClick={}
                 style={{
@@ -90,6 +97,8 @@ const AvatarView: FC<Props> = ({
                   height: "25px",
                 }}
               />
+              {/* } */}
+              {/* /> */}
               <input
                 onChange={onChange}
                 type="file"
@@ -127,6 +136,9 @@ const AvatarView: FC<Props> = ({
             <img src={url}
               className={styles.avatarSmall}
               alt="#"
+              onClick={() => {
+                console.log("url", url);
+              }}
             />
           ) : (
             <div
