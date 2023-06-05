@@ -1,13 +1,13 @@
 import { Route, Routes } from "react-router-dom"
 import PrivateRoutes from "./PrivateRoutes"
-import Home from "../screens/Home"
-import Login from "../screens/Login"
-import Contact from "../screens/Contact"
+import Home from "../screens/home/Home"
+import Login from "../screens/auth/Login"
+import Contact from "../screens/home/Contact"
 import useRootStore from "../hooks/useRootStore"
 import { observer } from "mobx-react-lite"
-import SignUp from "../screens/SignUp"
 import HomeLayout from "../screens/HomeLayout"
 import AuthLayout from "../screens/AuthLayout"
+import SignUp from "../screens/auth/SignUp"
 
 
 function RootRouter() {

@@ -1,4 +1,4 @@
-import useRootStore from "../hooks/useRootStore"
+import useRootStore from "../../hooks/useRootStore"
 
 function Home() {
 
