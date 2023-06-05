@@ -1,0 +1,24 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.404);
+  backdrop-filter: blur(25px);
+  position: sticky;
+  height: 7.5vh;
+  width: 100%;
+  top: 0;
+  z-index: 10;
+  padding: 0 15px;
+  box-shadow: 0 0 10px 1px rgba(1, 1, 1, 0.1);
+}
+
+.text {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #404d66;
+}
+
+.hidden {
+  visibility: hidden;
+}
