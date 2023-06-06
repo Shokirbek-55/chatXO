@@ -1,23 +1,29 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
+import { Session } from "../../types/auth";
 
+
+const TOKENS = 'tokens';
 
 export default class LocalStore {
     constructor() {
         makeAutoObservable(this);
+        this.getToken();
     }
 
+    session: Session = {
+        accessToken: '',
+        refreshToken: '',
+    };
     value: any = null;
     token: string = '';
 
-    get getValue() {
-        return this.value;
-    }
-
     getToken = async () => {
         try {
-            const value = window.localStorage.getItem(this.token);
+            const value = window.localStorage.getItem(TOKENS);
             if (value) {
-                this.token = JSON.parse(value);
+                runInAction(() => {
+                    this.session = JSON.parse(value);
+                })
                 return value
             }
         } catch (error) {
@@ -25,10 +31,12 @@ export default class LocalStore {
         }
     }
 
-    setToken = async (value: any) => {
+    setToken = async (data: Session) => {
         try {
-            window.localStorage.setItem('token', JSON.stringify('token'));
-            this.token = value
+            window.localStorage.setItem(TOKENS, JSON.stringify(data));
+            runInAction(() => {
+                this.session = data;
+            })
         } catch (error) {
             console.log('Can not set token localStore');
         }
@@ -36,8 +44,13 @@ export default class LocalStore {
 
     removeToken = async () => {
         try {
-            window.localStorage.removeItem('token');
-            this.token = '';
+            window.localStorage.removeItem(TOKENS);
+            runInAction(() => {
+                this.session = {
+                    accessToken: '',
+                    refreshToken: '',
+                };
+            })
         } catch (error) {
             console.log('Can not remove token localStore');
         }

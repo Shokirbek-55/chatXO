@@ -1,14 +1,14 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import HeaderView from '../../../components/Header';
 import MessageBox from '../../../components/MessageBox';
 import RowItemView from '../../../components/RowItem';
-import TextView from '../../../components/Text';
 import { TMP_URL } from '../../../env';
 import { friend } from '../../../store/dataBase';
 import { InputComponent } from '../../../utils/inputComponent';
 import styles from "./FriendsScreen.module.css"
+import Header from '../../../components/Header/Header';
+import Text from '../../../components/Text/Text';
 
 const FriendsScreen = () => {
     const navigation = useNavigate()
@@ -17,7 +17,7 @@ const FriendsScreen = () => {
     return (
         <div>
             <div className={styles.container}>
-                <HeaderView
+                <Header
                     text={`${t("friends")}`}
                     leftIcon={"addUser"}
                     onLeftIconPress={() => navigation("/add-friends")}
@@ -29,7 +29,7 @@ const FriendsScreen = () => {
                         onChangeText={handleChangeText}
                         placeholder={`${t("searchPlaceholder")}`}
                     />
-                    <TextView
+                    <Text
                         style={{
                             fontFamily: "Montserrat5",
                             fontSize: "18px",

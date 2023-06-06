@@ -6,12 +6,11 @@ import useRootStore from '../hooks/useRootStore';
 
 function AuthLayout() {
 
-    const { token } = useRootStore().loginStore
+  const { session } = useRootStore().localStore
 
-    if (token) {
-        console.log('token', token);
-        return <Navigate to="/" replace />;
-    }
+  if (session.accessToken) {
+    return <Navigate to="/" replace />;
+  }
     
   return (
     <div>

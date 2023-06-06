@@ -4,8 +4,8 @@ import { createContext } from 'react';
 
 import MessageStore  from './messageStore.ts/MessageStore';
 import ChannelStore  from './channelStore/channelStore';
-import SocketStore from './socketStore/socketStore';
-import LoginStore from './AuthStore/LoginStore';
+// import SocketStore from './socketStore/socketStore';
+import AuthStore from './AuthStore/AuthStore';
 import SingUpStore from './AuthStore/SignUpStore';
 import LocalStore from './loacalStore/loacalStore';
 
@@ -14,9 +14,8 @@ export class AppRootStore {
 
     messageStore :  MessageStore
     channelStoore :  ChannelStore
-    socketStore: SocketStore
-    loginStore: LoginStore
-    singUpStore: SingUpStore
+    // socketStore: SocketStore
+    authStore: AuthStore
     localStore: LocalStore
 
     constructor() {
@@ -25,9 +24,8 @@ export class AppRootStore {
 
         this.messageStore = new MessageStore(this);
         this.channelStoore = new ChannelStore();
-        this.socketStore = new SocketStore();
-        this.loginStore = new LoginStore(this);
-        this.singUpStore = new SingUpStore();
+        // this.socketStore = new SocketStore();
+        this.authStore = new AuthStore(this);
         this.localStore = new LocalStore();
     }
 

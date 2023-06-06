@@ -2,12 +2,12 @@ import React from 'react'
 import { useTranslation } from 'react-i18next';
 import * as yup from "yup";
 import { useNavigate } from 'react-router-dom';
-import HeaderView from '../../../components/Header';
 import styles from "./SignUp.module.css"
 import TextFieldd from '../../../components/TextField/TextField';
 import { Form, Formik } from 'formik';
 import Colors from '../../../utils/colors';
 import Regex from '../../../utils/regax';
+import Header from '../../../components/Header/Header';
 
 function SignUp() {
   const { t } = useTranslation();
@@ -37,7 +37,7 @@ function SignUp() {
 
   return (
     <div className={styles.CreateAnAccount}>
-      <HeaderView text={`${t("sign_up_header")}`} leftIcon="arrowLeft" onLeftIconPress={() => navigation("/auth/sign-up-social")} />
+      <Header text={`${t("sign_up_header")}`} leftIcon="arrowLeft" onLeftIconPress={() => navigation("/auth/sign-up-social")} />
       <div className={styles.CreateAnAccountBox}>
         <div className={styles.CreateAnAccountContent}>
           <Formik

@@ -1,23 +1,23 @@
-import React from 'react'
-import useRootStore from '../../../hooks/useRootStore'
-import { observer } from 'mobx-react-lite'
 import TextFieldd from '../../../components/TextField/TextField'
-import { useNavigate } from 'react-router-dom'
-import styles from "./Login.module.css"
-import Colors from '../../../utils/colors'
-import { useTranslation } from 'react-i18next'
-import Header from '../../../components/Header/Header'
-import Assets from '../../../utils/requireAssets'
+
 import { Form, Formik } from 'formik'
-import * as yup from "yup";
+import { observer } from 'mobx-react-lite'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import * as yup from "yup"
+import Header from '../../../components/Header/Header'
+import useRootStore from '../../../hooks/useRootStore'
+import Colors from '../../../utils/colors'
 import Regex from '../../../utils/regax'
+import Assets from '../../../utils/requireAssets'
+import styles from "./Login.module.css"
 
 const Login = () => {
 
-  const { togleToken } = useRootStore().loginStore
+  const { loginEmailWithPassword } = useRootStore().authStore
   const navigation = useNavigate()
   const { t } = useTranslation()
-
+ 
   const validate = yup.object({
     email: yup
       .string()
@@ -76,7 +76,10 @@ const Login = () => {
                 password: "",
               }}
               validationSchema={validate}
-              onSubmit={() => togleToken()}
+              onSubmit={(values) => {
+                console.log(values);
+                loginEmailWithPassword(values)
+              }}
             >
               {(formik) => (
                 <div>
@@ -98,7 +101,7 @@ const Login = () => {
                       style={{
                         background: Colors.Blue,
                       }}
-                      onClick={() => togleToken()}
+                      onClick={() => navigation("/")}
                     >
                       {t("sign_up_email")}
                     </button>
