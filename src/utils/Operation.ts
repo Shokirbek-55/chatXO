@@ -57,7 +57,7 @@ export class Operation<T> implements IOperation<T> {
             return response;
         } catch (e: any) {
             console.log('e', e);
-            this._setError(e.response.data);
+            this._setError(e.response?.data?.message || e.message);
         } finally {
             this.setHasInitialLoading(true);
         }

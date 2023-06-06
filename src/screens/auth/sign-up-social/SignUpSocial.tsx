@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import Assets from "../../../utils/requireAssets";
-import HeaderView from "../../../components/Header";
 import styles from "./SignUpSocial.module.css";
+import Header from "../../../components/Header/Header";
 
 const SignUpSocial = () => {
     const { t } = useTranslation();
@@ -10,7 +10,7 @@ const SignUpSocial = () => {
 
     return (
         <div className={styles.newAccountBox}>
-            <HeaderView
+            <Header
                 leftIcon="arrowLeft"
                 onLeftIconPress={() => navigation("/auth/welcome")}
                 text={`${t("create_account")}`}

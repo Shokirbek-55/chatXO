@@ -3,10 +3,10 @@ import { useTranslation } from "react-i18next";
 import { SearchIcon } from "../../utils/icons";
 import { Channel } from "../../types/channel";
 import { Friend } from "../../types/friend";
-import Text from "../Text";
 import styles from "./index.module.css";
 import ButtonView from "../Button";
 import AvatarView from "../Avatar";
+import Text from "../Text/Text";
 
 interface Props {
   item?: Friend;

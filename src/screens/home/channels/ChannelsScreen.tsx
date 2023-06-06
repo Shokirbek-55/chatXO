@@ -8,10 +8,12 @@ import styles from './index.module.css'
 import { Loading } from "../../../components/Loading/Loading"
 import MessageBox from "../../../components/MessageBox/MessageBox"
 import ChannelRowItem from "../../../components/ChanneItem/ChannelItem"
+import useRootStore from "../../../hooks/useRootStore"
 
 
 function ChannelsScreen() {
 
+  const {logout} = useRootStore().authStore
   const { t } = useTranslation()
 
   return (
@@ -19,7 +21,7 @@ function ChannelsScreen() {
       <Header
         text={t("groups")}
         rightIcon="account"
-        onRightIconPress={() => console.log("right icon pressed")}
+        onRightIconPress={logout}
       />
       <div className={styles.SearchBox}>
         <InputComponent
@@ -61,7 +63,7 @@ function ChannelsScreen() {
                         natification={2}
                         color={"linear-gradient(#ddd, #666)"}
                         number={2}
-                        imageUrl={'https://www.google.com/url?sa=i&url=https%3A%2F%2Funsplash.com%2Fs%2Fphotos%2Fimage&psig=AOvVaw1wzc2EL4jeU1VvdKu5xohL&ust=1686049984247000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCMjvzuT_q_8CFQAAAAAdAAAAABAE'}
+                        imageUrl={'https://www.seiu1000.org/sites/main/files/main-images/camera_lense_0.jpeg'}
                       />
                     </div>
                   ) :

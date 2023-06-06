@@ -1,17 +1,16 @@
-import { observer } from 'mobx-react-lite';
-import { Navigate, Outlet } from 'react-router-dom';
-import useRootStore from '../hooks/useRootStore';
-import { styled } from 'styled-components';
 import { motion } from "framer-motion";
+import { observer } from 'mobx-react-lite';
+import { Navigate } from 'react-router-dom';
+import { styled } from 'styled-components';
+import useRootStore from '../hooks/useRootStore';
 import ChannelsScreen from './home/channels/ChannelsScreen';
 
 function HomeLayout() {
 
-  const { token } = useRootStore().loginStore
-
-  if (!token) {
-    console.log('token', token);
-    return <Navigate to="/auth/login" replace />;
+  const { session } = useRootStore().localStore
+  
+  if (!session.accessToken) {
+    return <Navigate to='/auth/login' />
   }
 
   return (

@@ -33,7 +33,7 @@ const WelcomeView = () => {
             {t("login")}
           </Link>
           <Link
-            to={"/auth/sign-up-social"}
+            to={"/auth/signup"}
             className={styles.createAnAccount}
             style={{ textDecoration: "none" }}
           >
