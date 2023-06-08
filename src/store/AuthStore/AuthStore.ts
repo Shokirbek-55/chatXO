@@ -12,8 +12,8 @@ export default class AuthStore {
 
     constructor(root: AppRootStore) {
         makeAutoObservable(this);
-        this.getMe()
         this.root = root
+        this.getMe()
     }
 
     loginOperation = new Operation<Session>({} as Session)
@@ -25,7 +25,7 @@ export default class AuthStore {
     getMeOperation = new Operation<User>({} as User)
 
     getMe = async () => {
-        if(!this.root.localStore.token) return
+        if(!this.root.localStore.session.accessToken) return
         await this.getMeOperation.run(() => APIs.acount.getMyAccount())
         if (this.getMeOperation.data && this.getMeOperation.isSuccess) {
             this.root.socketStore.connect(()=> {}, this.getMeOperation.data)
