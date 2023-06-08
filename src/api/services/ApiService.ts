@@ -1,21 +1,74 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosInstance, AxiosResponse } from "axios";
 import { combineConfig, combineUrls } from "../../helper/api";
+import { Env } from "../../env";
+import { TOKENS } from "../../store/loacalStore/loacalStore";
 
-const ApiService = {
-  get: <R>(url: string, config?: AxiosRequestConfig) =>
-    axios.get<R>(combineUrls(url), combineConfig(config)),
+export default class ApiService {
 
-  post: <R, D = unknown>(url: string, data?: D, config?: AxiosRequestConfig) =>
-    axios.post<R>(combineUrls(url), data, combineConfig(config)),
+  private readonly axios: AxiosInstance;
 
-  put: <R, D = unknown>(url: string, data?: D, config?: AxiosRequestConfig) =>
-    axios.put<R>(combineUrls(url), data, combineConfig(config)),
+  constructor() {
+    this.axios = axios.create({
+      baseURL: Env.ApiUrl,
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
 
-  patch: <R, D = unknown>(url: string, data?: D, config?: AxiosRequestConfig) =>
-    axios.patch<R>(combineUrls(url), data, combineConfig(config)),
+    this.axios.interceptors.response.use(
+      (response: AxiosResponse) => response,
+      (error) => {
+        if (error) {
+          console.log('[Error]:', error?.response?.data);
+        }
+        return Promise.reject(error);
+      }
+    );
 
-  delete: <R>(url: string, config?: AxiosRequestConfig) =>
-    axios.delete<R>(combineUrls(url), combineConfig(config)),
+    this.axios.interceptors.request.use(
+      (config: any) => {
+        const token = window.localStorage.getItem(TOKENS);
+        const { accessToken } = JSON.parse(token || '{}');
+        if (accessToken) {
+          config.headers = {
+            ...config.headers,
+            Authorization: `Bearer ${accessToken}`,
+          };
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+  }
+
+  public setAccessToken = (accessToken: string) => {
+    this.axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+  };
+
+  public clearAccessToken = () => {
+    delete this.axios.defaults.headers.common.Authorization;
+  };
+
+  public hasAuthorizationHeader = () =>
+    !!this.axios.defaults.headers.common.Authorization; 
+
+  methods = {
+    get: <R>(url: string, config?: AxiosRequestConfig) =>
+      this.axios.get<R>(combineUrls(url), combineConfig(config)),
+
+    post: <R, D = unknown>(url: string, data?: D, config?: AxiosRequestConfig) =>
+      this.axios.post<R>(combineUrls(url), data, combineConfig(config)),
+
+    put: <R, D = unknown>(url: string, data?: D, config?: AxiosRequestConfig) =>
+      this.axios.put<R>(combineUrls(url), data, combineConfig(config)),
+
+    patch: <R, D = unknown>(url: string, data?: D, config?: AxiosRequestConfig) =>
+      this.axios.patch<R>(combineUrls(url), data, combineConfig(config)),
+
+    delete: <R>(url: string, config?: AxiosRequestConfig) =>
+      this.axios.delete<R>(combineUrls(url), combineConfig(config)),
+  }
 };
-
-export default ApiService;

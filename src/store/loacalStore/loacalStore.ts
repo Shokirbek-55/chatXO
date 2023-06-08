@@ -1,8 +1,10 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { Session } from "../../types/auth";
+import { User } from "../../types/user";
 
 
-const TOKENS = 'tokens';
+export const TOKENS = 'tokens';
+const USER = 'user';
 
 export default class LocalStore {
     constructor() {
@@ -14,6 +16,9 @@ export default class LocalStore {
         accessToken: '',
         refreshToken: '',
     };
+
+    user: User | null = null;
+
     value: any = null;
     token: string = '';
 
@@ -32,11 +37,11 @@ export default class LocalStore {
     }
 
     setToken = async (data: Session) => {
+        runInAction(() => {
+            this.session = data;
+        })
         try {
             window.localStorage.setItem(TOKENS, JSON.stringify(data));
-            runInAction(() => {
-                this.session = data;
-            })
         } catch (error) {
             console.log('Can not set token localStore');
         }
@@ -55,6 +60,43 @@ export default class LocalStore {
             console.log('Can not remove token localStore');
         }
     }
+
+    getUser = async () => {
+        try {
+            const value = window.localStorage.getItem(USER);
+            if (value) {
+                runInAction(() => {
+                    this.user = JSON.parse(value);
+                })
+                return value
+            }
+        } catch (error) {
+            console.log('User not found localStore');
+        }
+    }
+
+    setUser = async (data: User) => {
+        runInAction(() => {
+            this.user = data;
+        })
+        try {
+            window.localStorage.setItem(USER, JSON.stringify(data));
+        } catch (error) {
+            console.log('Can not set user localStore');
+        }
+    }
+
+    removeUser = async () => {
+        try {
+            window.localStorage.removeItem(USER);
+            runInAction(() => {
+                this.user = null;
+            })
+        } catch (error) {
+            console.log('Can not remove user localStore');
+        }
+    }
+
 
     getLocalStore = async(key: string) => {
         this.value = null;

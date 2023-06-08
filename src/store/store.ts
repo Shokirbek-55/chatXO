@@ -4,17 +4,16 @@ import { createContext } from 'react';
 
 import MessageStore  from './messageStore.ts/MessageStore';
 import ChannelStore  from './channelStore/channelStore';
-// import SocketStore from './socketStore/socketStore';
 import AuthStore from './AuthStore/AuthStore';
-import SingUpStore from './AuthStore/SignUpStore';
 import LocalStore from './loacalStore/loacalStore';
+import SocketStore from './socketStore/socketStore';
 
 
 export class AppRootStore {
 
     messageStore :  MessageStore
     channelStoore :  ChannelStore
-    // socketStore: SocketStore
+    socketStore: SocketStore
     authStore: AuthStore
     localStore: LocalStore
 
@@ -24,7 +23,7 @@ export class AppRootStore {
 
         this.messageStore = new MessageStore(this);
         this.channelStoore = new ChannelStore();
-        // this.socketStore = new SocketStore();
+        this.socketStore = new SocketStore(this);
         this.authStore = new AuthStore(this);
         this.localStore = new LocalStore();
     }
@@ -32,7 +31,7 @@ export class AppRootStore {
     private run = () => {
         runInAction(() => {
 
-            const list: any[] = [];
+            const list: void[] = [];
 
             Promise.all(list)
                 .then(() => {

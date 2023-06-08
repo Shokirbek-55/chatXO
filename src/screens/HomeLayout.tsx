@@ -25,7 +25,7 @@ function HomeLayout() {
   const { session } = useRootStore().localStore
 
   if (!session.accessToken) {
-    return <Navigate to='/auth/login' />
+    return <Navigate to='/auth/welcome' />
   }
 
   return (

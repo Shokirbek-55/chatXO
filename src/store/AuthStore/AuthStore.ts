@@ -3,13 +3,16 @@ import APIs, { LoginEmailWithPasswordReqData } from "../../api/api";
 import { Session } from "../../types/auth";
 import { Operation } from "../../utils/Operation";
 import { AppRootStore } from "../store";
+import { User } from "../../types/user";
 
-export default class LoginStore {
+export default class AuthStore {
 
-    root: AppRootStore
+    root: AppRootStore;
+    user: User = {} as User
 
     constructor(root: AppRootStore) {
         makeAutoObservable(this);
+        this.getMe()
         this.root = root
     }
 
@@ -19,12 +22,25 @@ export default class LoginStore {
     registerOperation = new Operation<Session>({} as Session)
     refreshTokenOperation = new Operation<Session>({} as Session)
     logoutOperation = new Operation<any>({} as any)
+    getMeOperation = new Operation<User>({} as User)
+
+    getMe = async () => {
+        if(!this.root.localStore.token) return
+        await this.getMeOperation.run(() => APIs.acount.getMyAccount())
+        if (this.getMeOperation.data && this.getMeOperation.isSuccess) {
+            this.root.socketStore.connect(()=> {}, this.getMeOperation.data)
+            this.user = this.getMeOperation.data        
+        }
+    }
 
     loginEmailWithPassword = async (data: LoginEmailWithPasswordReqData) => {
         await this.loginOperation.run(() => APIs.login(data))
-
-        if (this.loginOperation.data) {
+        if (this.loginOperation.data && this.loginOperation.isSuccess) {
             this.root.localStore.setToken(this.loginOperation.data)
+            await this.getMeOperation.run(() => APIs.acount.getMyAccount())
+            if (this.getMeOperation.data && this.getMeOperation.isSuccess) {
+                this.user = this.getMeOperation.data
+            }
         }
     }
 
@@ -38,7 +54,6 @@ export default class LoginStore {
 
     register = async (data: any) => {
         await this.registerOperation.run(() => APIs.register(data))
-
         if (this.registerOperation.data) {
             this.root.localStore.setToken(this.registerOperation.data)
         }
@@ -55,7 +70,9 @@ export default class LoginStore {
     logout = async () => {
         console.log(this.root.localStore.session.refreshToken);        
         await this.logoutOperation.run(() => APIs.logout(this.root.localStore.session.refreshToken))
-        this.root.localStore.removeToken()
+        if (this.logoutOperation.data) {
+            this.root.localStore.removeToken()
+        }
     }
 
 }
