@@ -7,6 +7,7 @@
   margin: 0 auto;
   padding: 5px 15px;
   transition: 0.15s ease-in-out;
+  cursor: pointer !important;
 }
 .container:hover {
   background-color: #ddd;
@@ -18,10 +19,9 @@
 }
 .headerTitle {
   font-size: 10px;
-  font-family: "Roboto", sans-serif;
   font-weight: bolder;
   padding: 0;
-  margin: 0;
+  margin: 0 0 0 5px;
 }
 
 .card {

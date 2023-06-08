@@ -15,50 +15,48 @@ const FriendsScreen = () => {
     const { t } = useTranslation()
     const handleChangeText = () => { }
     return (
-        <div>
-            <div className={styles.container}>
-                <Header
-                    text={`${t("friends")}`}
-                    leftIcon={"addUser"}
-                    onLeftIconPress={() => navigation("/add-friends")}
-                    rightIcon={"account"}
-                    onRightIconPress={() => navigation("/account/friends")}
+        <div className={styles.container}>
+            <Header
+                text={`${t("friends")}`}
+                leftIcon={"addUser"}
+                onLeftIconPress={() => navigation("/add-friends")}
+                rightIcon={"account"}
+                onRightIconPress={() => navigation("/account/friends")}
+            />
+            <div className={styles.searchBox}>
+                <InputComponent
+                    onChangeText={handleChangeText}
+                    placeholder={`${t("searchPlaceholder")}`}
                 />
-                <div className={styles.searchBox}>
-                    <InputComponent
-                        onChangeText={handleChangeText}
-                        placeholder={`${t("searchPlaceholder")}`}
-                    />
-                    <Text
-                        style={{
-                            fontFamily: "Montserrat5",
-                            fontSize: "18px",
-                            padding: "5px",
-                        }}
-                        center
-                        numbers={friend?.flat().length}
-                        children={t("friends")}
-                    />
-                </div>
-                <div className={styles.main}>
-                    {friend?.length !== 0 ?
-                        friend?.map((e, index) => {
-                            return (
-                                <div key={index}>
-                                    <RowItemView
-                                        title={`${t("unfriend")}`}
-                                        imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ""}
-                                        color={e.color ? e.color : "linear-gradient(#ddd, #666)"}
-                                        text={e.username}
-                                        rightButton
-                                        loading={false}
-                                    />
-                                </div>
-                            );
-                        }) :
-                        <MessageBox title={`${t("no_avalible_friends")}`} />
-                    }
-                </div>
+                <Text
+                    style={{
+                        fontFamily: "Montserrat5",
+                        fontSize: "18px",
+                        padding: "5px",
+                    }}
+                    center
+                    numbers={friend?.flat().length}
+                    children={t("friends")}
+                />
+            </div>
+            <div className={styles.main}>
+                {friend?.length !== 0 ?
+                    friend?.map((e, index) => {
+                        return (
+                            <div key={index}>
+                                <RowItemView
+                                    title={`${t("unfriend")}`}
+                                    imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ""}
+                                    color={e.color ? e.color : "linear-gradient(#ddd, #666)"}
+                                    text={e.username}
+                                    rightButton
+                                    loading={false}
+                                />
+                            </div>
+                        );
+                    }) :
+                    <MessageBox title={`${t("no_avalible_friends")}`} />
+                }
             </div>
         </div>
     )

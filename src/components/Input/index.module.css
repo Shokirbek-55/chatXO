@@ -5,6 +5,8 @@
   border-radius: 8px;
   border: none;
   border: 1px solid rgb(182, 180, 180);
+  font-family: "Montserrat6";
+  color: #404d66;
 }
 
 .NotBorderred {
@@ -15,5 +17,6 @@
   outline: none;
   font-family: "Montserrat5";
   font-size: 18px;
+  color: #404d66;
   opacity: 0.7;
 }

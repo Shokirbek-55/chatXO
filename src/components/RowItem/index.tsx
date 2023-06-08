@@ -5,8 +5,9 @@ import { Channel } from "../../types/channel";
 import { Friend } from "../../types/friend";
 import styles from "./index.module.css";
 import ButtonView from "../Button";
-import AvatarView from "../Avatar";
+import AvatarView from "../AvatarUpload/AvatarUpload";
 import Text from "../Text/Text";
+import SmallAvatar from "../SmallAvatar/smallAvatar";
 
 interface Props {
   item?: Friend;
@@ -40,13 +41,10 @@ const RowItemView: FC<Props> = ({
   groupItem,
   text,
   rightButton,
-  matches,
-  style,
   title,
   onNamePress,
   onGroupPress,
   value,
-  uploadAvatar,
   onButtonPress,
   loading,
   color,
@@ -63,32 +61,16 @@ const RowItemView: FC<Props> = ({
           className={styles.card}
           onClick={() => onGroupPress && onGroupPress(groupItem?.hashId || "")}
         >
-          <AvatarView
-            style={style}
-            upload={uploadAvatar}
-            url={imageUrl}
-            value={value}
+          <SmallAvatar
             color={color}
-            loading={loading}
+            imageUrl={imageUrl}
           />
           <div
             className={styles.headerTitle}
             onClick={() => onNamePress && onNamePress(item?.id || "")}
           >
             <Text
-              style={{
-                marginLeft: "5px",
-                fontFamily: "Montserrat6",
-              }}
               text={chsUser(text)}
-            />
-            <Text
-              style={{
-                marginLeft: "5px",
-                fontSize: "10px",
-                marginTop: "-7px",
-              }}
-              text={item?.username}
             />
           </div>
         </div>

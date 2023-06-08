@@ -17,7 +17,7 @@ const Login = () => {
   const { loginEmailWithPassword } = useRootStore().authStore
   const navigation = useNavigate()
   const { t } = useTranslation()
- 
+
   const validate = yup.object({
     email: yup
       .string()
@@ -101,7 +101,6 @@ const Login = () => {
                       style={{
                         background: Colors.Blue,
                       }}
-                      onClick={() => navigation("/")}
                     >
                       {t("sign_up_email")}
                     </button>

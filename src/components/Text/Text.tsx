@@ -11,6 +11,7 @@ interface Props {
   handleLink?: () => void;
   style?: CSSProperties;
   onClick?: () => void;
+  margin?: string;
 }
 
 const Text: FC<Props> = ({
@@ -23,6 +24,7 @@ const Text: FC<Props> = ({
   value,
   numbers,
   onClick,
+  margin
 }) => {
   const isHttp = text?.includes("http");
   return (
@@ -33,7 +35,7 @@ const Text: FC<Props> = ({
           target="_blank"
           className={center ? styles.centerText : styles.text}
           onClick={() => handleLink && handleLink()}
-          style={style}
+          style={{ ...style, margin: margin }}
           color={color}
         >
           {numbers} {children} {onClick} {value} {text}
@@ -42,7 +44,7 @@ const Text: FC<Props> = ({
         <p
           className={center ? styles.centerText : styles.text}
           onClick={() => handleLink && handleLink()}
-          style={style}
+          style={{ ...style, margin: margin ? margin : "3px 0" }}
           color={color}
         >
           {numbers} {children} {onClick} {value} {text}
