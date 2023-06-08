@@ -52,9 +52,10 @@ function ChannelsScreen() {
           </div>
         )}
         <div className={styles.contentBox}>
-          {channels.map((e) => {
+          {channels.map((e, index) => {
             return (
               <div
+                key={index}
                 id="map-dev"
                 className={styles.channelRowBox}
               >

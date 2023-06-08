@@ -8,8 +8,11 @@ import { Form, Formik } from 'formik';
 import Colors from '../../../utils/colors';
 import Regex from '../../../utils/regax';
 import Header from '../../../components/Header/Header';
+import useRootStore from '../../../hooks/useRootStore';
 
 function SignUp() {
+
+  const {register} = useRootStore().authStore
   const { t } = useTranslation();
   const navigation = useNavigate()
 
@@ -48,7 +51,7 @@ function SignUp() {
               passwordConfirm: "",
             }}
             validationSchema={validate}
-            onSubmit={() => console.log("click")}
+            onSubmit={(value) => register(value)}
           >
             {(formik) => (
               <div className={styles.formBox}>

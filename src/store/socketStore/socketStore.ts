@@ -1,13 +1,19 @@
 import { makeAutoObservable } from "mobx";
 import io, { Socket } from "socket.io-client";
 import { Env } from "../../env";
+import { AppRootStore } from "../store";
+import { User } from "../../types/user";
 
 class SocketStore {
-    constructor() {
+
+    root: AppRootStore;
+
+    constructor(root : AppRootStore) {
         makeAutoObservable(this);
+        this.root = root;
     }
 
-    _socket: Socket<any> = io();
+    _socket: typeof Socket | undefined;
     _connected = false;
     _keepAlive = false;
     _initialized = false;
@@ -28,9 +34,7 @@ class SocketStore {
         this._keepAlive = value;
     }
 
-    connect = (callback?:() => void) => {
-
-        const { auth: { user } } =  JSON.parse(localStorage.getItem("persist:root") || "{}");
+    connect = (callback?:() => void, user?: User) => {
 
         this._socket = io(Env.SocketUrl, {
             autoConnect: true,
