@@ -19,19 +19,17 @@ export class AppRootStore {
 
     constructor() {
         makeAutoObservable(this);
-        this.run();
-
+        this.localStore = new LocalStore();
+        this.authStore = new AuthStore(this);
         this.messageStore = new MessageStore(this);
         this.channelStoore = new ChannelStore();
         this.socketStore = new SocketStore(this);
-        this.authStore = new AuthStore(this);
-        this.localStore = new LocalStore();
+        this.run();
     }
 
     private run = () => {
         runInAction(() => {
-
-            const list: void[] = [];
+            const list: any[] = [            ];
 
             Promise.all(list)
                 .then(() => {

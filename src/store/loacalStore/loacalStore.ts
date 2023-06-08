@@ -20,7 +20,6 @@ export default class LocalStore {
     user: User | null = null;
 
     value: any = null;
-    token: string = '';
 
     getToken = async () => {
         try {
