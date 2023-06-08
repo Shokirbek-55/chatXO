@@ -16,7 +16,6 @@
 .contentBox {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  /* flex-wrap: wrap; */
   margin: 0 auto;
   width: 90%;
 }

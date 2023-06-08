@@ -1,9 +1,7 @@
 import { CSSProperties, FC } from "react";
-import Avatar from "../Avatar";
-// import { TMP_URL } from "../../../env";
-// import styles from "./index.module.css";
 import { useTranslation } from "react-i18next";
 import { Channel } from "../../types/channel";
+import ChannelAvatar from "../ChannelAvatar/channelAvatar";
 
 interface Props {
   text?: string;
@@ -13,11 +11,12 @@ interface Props {
   onPress?: (hashId: string) => void;
   style?: CSSProperties;
   number?: number;
-  natification?: any
+  natification?: any;
+  name?: string;
 }
 
 const ChannelRowItem: FC<Props> = ({
-  text,
+  name,
   imageUrl,
   color,
   style,
@@ -32,19 +31,11 @@ const ChannelRowItem: FC<Props> = ({
 
   return (
     <div onClick={() => onPress && onPress(item?.hashId || "")}>
-      <Avatar
-        text={text}
-        url={imageUrl}
-        color={color}
-        natification={natification}
-        number={2334}
-        onPreview={() => onPress && onPress(item?.hashId || "")}
-        large
-        style={{
-          cursor: "pointer",
-          backgroundBlendMode: "darken",
-        }}
-        loading={false}
+      <ChannelAvatar
+        name={name}
+        imageUrl={imageUrl}
+        color={color ? color : "linear-gradient(#ddd, #666)"}
+        time={"2334"}
       />
     </div>
   );

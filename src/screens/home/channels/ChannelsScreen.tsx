@@ -4,16 +4,17 @@ import { useTranslation } from "react-i18next"
 import Footer from "../../../components/Footer/Footer"
 import { InputComponent } from "../../../components/InputSearch/inputComponent"
 import Text from "../../../components/Text/Text"
-import styles from './index.module.css'
+import styles from './ChannelsScreen.module.css'
 import { Loading } from "../../../components/Loading/Loading"
 import MessageBox from "../../../components/MessageBox/MessageBox"
 import ChannelRowItem from "../../../components/ChanneItem/ChannelItem"
 import useRootStore from "../../../hooks/useRootStore"
+import { channels } from "../../../store/dataBase"
 
 
 function ChannelsScreen() {
 
-  const {logout} = useRootStore().authStore
+  const { logout } = useRootStore().authStore
   const { t } = useTranslation()
 
   return (
@@ -31,7 +32,7 @@ function ChannelsScreen() {
         />
         <Text
           center
-          numbers={1}
+          numbers={channels.length}
           children={t("groups")}
           style={{
             fontSize: "16px",
@@ -51,24 +52,23 @@ function ChannelsScreen() {
           </div>
         )}
         <div className={styles.contentBox}>
-          {true ? (
-                    <div
-                      id="map-dev"
-                      className={styles.channelRowBox}
-                    >
-                      <ChannelRowItem
-                        onPress={() => console.log("channel row pressed")}                        
-                        item={'channel'}
-                        text={'channel'}
-                        natification={2}
-                        color={"linear-gradient(#ddd, #666)"}
-                        number={2}
-                        imageUrl={'https://www.seiu1000.org/sites/main/files/main-images/camera_lense_0.jpeg'}
-                      />
-                    </div>
-                  ) :
-                <MessageBox size="12px" title={t("no_avalible_groups")} />
-              }
+          {channels.map((e) => {
+            return (
+              <div
+                id="map-dev"
+                className={styles.channelRowBox}
+              >
+                <ChannelRowItem
+                  onPress={() => console.log("channel row pressed")}
+                  item={'channel'}
+                  name={e.name}
+                  color={e.color ? e.color : "linear-gradient(#ddd, #666)"}
+                  number={2}
+                  imageUrl={e.avatar ? e.avatar : ""}
+                />
+              </div>
+            )
+          })}
         </div>
       </div>
       <Footer activeTab={1} />
