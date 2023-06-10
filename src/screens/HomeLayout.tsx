@@ -31,7 +31,7 @@ function HomeLayout() {
   return (
     <Container>
       <Sidebar>
-        <ChannelsScreen />
+        <FriendsScreen />
       </Sidebar>
       <MainBody>
         <ChatArea>

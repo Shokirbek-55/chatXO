@@ -7,15 +7,19 @@ import ChannelStore  from './channelStore/channelStore';
 import AuthStore from './AuthStore/AuthStore';
 import LocalStore from './loacalStore/loacalStore';
 import SocketStore from './socketStore/socketStore';
+import  FriendsStore  from './friendsStore/friendsStore';
+import UsersStore  from './usersStore/usersStore';
 
 
 export class AppRootStore {
 
-    messageStore :  MessageStore
-    channelStoore :  ChannelStore
+    messageStore : MessageStore
+    channelStoore : ChannelStore
     socketStore: SocketStore
     authStore: AuthStore
     localStore: LocalStore
+    friendsStore: FriendsStore
+    usersStore: UsersStore
 
     constructor() {
         makeAutoObservable(this);
@@ -24,12 +28,14 @@ export class AppRootStore {
         this.messageStore = new MessageStore(this);
         this.channelStoore = new ChannelStore();
         this.socketStore = new SocketStore(this);
+        this.friendsStore = new FriendsStore(this)
+        this.usersStore = new UsersStore(this)
         this.run();
     }
 
     private run = () => {
         runInAction(() => {
-            const list: any[] = [            ];
+            const list: any[] = [];
 
             Promise.all(list)
                 .then(() => {

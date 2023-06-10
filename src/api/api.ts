@@ -12,6 +12,8 @@ const url = "auth";
 const checkUserNameUrl = `${url}/verify/username/`;
 const checkUserEmailUrl = `${url}/verify/email/`;
 const checOAuthUrl = `${url}/verify/oauth2`;
+const friends = "friends"
+const users = "/users"
 
 const accountUrl = "/users";
 const authUrl = "/auth";
@@ -55,6 +57,20 @@ const APIs = {
         delateAccount: (userId: number) => {
             return apiService.methods.delete(`${accountUrl}/${userId}`);
         },
+    },
+
+    Friends: {
+        getfriends: () => apiService.methods.get<User[]>(`${friends}/get`),
+
+        deleteFriend: (friendId: number) => apiService.methods.delete(`${friends}/delete/${friendId}`),
+
+        createFriend: (friendId: number) => apiService.methods.post(`${friends}/create`, {friendId})
+    },
+
+    Users: {
+        getAllUsers: () => apiService.methods.get<User[]>(`${users}/nonfriends`),
+
+        getFriendDetails: (friendId: number) => apiService.methods.get(`${users}/get/${friendId}`)
     }
 }
 
