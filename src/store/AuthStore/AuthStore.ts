@@ -13,7 +13,6 @@ export default class AuthStore {
     constructor(root: AppRootStore) {
         makeAutoObservable(this);
         this.root = root
-        this.getMe()
     }
 
     loginOperation = new Operation<Session>({} as Session)
@@ -40,6 +39,7 @@ export default class AuthStore {
             await this.getMeOperation.run(() => APIs.acount.getMyAccount())
             if (this.getMeOperation.data && this.getMeOperation.isSuccess) {
                 this.user = this.getMeOperation.data
+                this.root.runFunctionsWithLogin()
             }
         }
     }

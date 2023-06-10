@@ -2,8 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { ErrorResponse, StatusEnum } from "../../types";
 import { Channel } from "../../types/channel";
 import { Operation } from '../../utils/Operation';
-
-type channelStatus = StatusEnum.IDLE | StatusEnum.PENDING | StatusEnum.REJECTED | StatusEnum.RESOLVED;
+import APIs from "../../api/api";
 
 
 export default class ChannelStore {
@@ -11,40 +10,26 @@ export default class ChannelStore {
         makeAutoObservable(this);
     }
 
-    getChannelOperation = new Operation<Channel>(null as unknown as Channel);
+    getChannelOperation = new Operation<Channel[]>([] as Channel[]);
 
-    channelStatus: channelStatus = StatusEnum.IDLE;
+    channelsData: Channel[] = []
 
-    channelData: Channel | null = null;
-
-    error: ErrorResponse | null = null;
-
-
-    getChannel = async (hashId: string) => {
-        try {
-            runInAction(() => {
-                this.channelStatus = StatusEnum.PENDING;
-            });
-            //get channel
-            console.log("get channel");
-
-            // await this.getChannelOperation.run(() => ChannelService.getChannel(hashId));
-            const respons = this.getChannelOperation;
+    getMyChannels = async () => {
+            await this.getChannelOperation.run(() => APIs.channels.getMyChannels());
             
-            if (respons.isSuccess) {
+        if (this.getChannelOperation.isSuccess) {
+                console.log('my channels', this.getChannelOperation.data);
+                
                 runInAction(() => {
-                    this.channelStatus = StatusEnum.RESOLVED;
+                    this.channelsData = this.getChannelOperation.data;
                 });
-                this.channelData = respons.data;
             }
-            
-        } catch (e: any) {
-            runInAction(() => {
-                this.channelStatus = StatusEnum.REJECTED;
-            });
-            this.error = e.response.data;
-        }
     };
 
+    setSearchChannels = (text:string) => {
+        runInAction(() => {
+            this.channelsData = this.getChannelOperation.data.filter(channel => channel.name.toLowerCase().includes(text.toLowerCase()));
+        })
+    }
 }
 

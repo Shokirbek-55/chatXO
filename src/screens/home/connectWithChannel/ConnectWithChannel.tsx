@@ -21,7 +21,7 @@ const ConnectWithChannel = () => {
                             borderred
                         />
                         <ButtonView
-                            title={`${t("Join group")}`}
+                            title={`${t("join_group")}`}
                             style={{
                                 display: "flex",
                                 fontSize: "18px",
