@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable, runInAction, toJS } from "mobx";
 import { Session } from "../../types/auth";
 import { User } from "../../types/user";
 
@@ -9,7 +9,6 @@ const USER = 'user';
 export default class LocalStore {
     constructor() {
         makeAutoObservable(this);
-        this.getToken();
     }
 
     session: Session = {
@@ -22,6 +21,7 @@ export default class LocalStore {
     value: any = null;
 
     getToken = async () => {
+        console.log(toJS(this.session));
         try {
             const value = window.localStorage.getItem(TOKENS);
             if (value) {

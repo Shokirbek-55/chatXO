@@ -1,6 +1,6 @@
+import { motion } from "framer-motion";
 import { CSSProperties, FC } from "react";
 import { useTranslation } from "react-i18next";
-import { Channel } from "../../types/channel";
 import ChannelAvatar from "../ChannelAvatar/channelAvatar";
 
 interface Props {
@@ -30,14 +30,16 @@ const ChannelRowItem: FC<Props> = ({
   const messageTimestamp = item.lastMessageTimestamp;
 
   return (
-    <div onClick={() => onPress && onPress(item?.hashId || "")}>
+    <motion.div
+      initial={{ scale: 1 }}
+      onClick={() => onPress && onPress(item?.hashId || "")}>
       <ChannelAvatar
         name={name}
         imageUrl={imageUrl}
         color={color ? color : "linear-gradient(#ddd, #666)"}
         time={"2334"}
       />
-    </div>
+    </motion.div>
   );
 };
 

@@ -3,22 +3,9 @@ import { observer } from 'mobx-react-lite';
 import { Navigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import useRootStore from '../hooks/useRootStore';
-import Account from "./home/account/Account";
-import AccountSetting from "./home/accountSetting/AccountSetting";
-import AddFriend from "./home/addFriend/AddFriend";
-import AddUserToChannel from "./home/addUserToChannel/AddUserToChannel";
-import BlockUser from "./home/blockUser/BlockUser";
-import ChannelsScreen from './home/channels/ChannelsScreen';
-import ChannelSetting from "./home/channelSetting/ChannelSetting";
+import SidebarLayout from "./Sidebar";
 import Chat from "./home/chat/Chat";
-import ConnectWithChannel from "./home/connectWithChannel/ConnectWithChannel";
-import CreateChannel from "./home/createChannel/CreateChannel";
 import EditChannel from "./home/editChannel/EditChannel";
-import EmptyScreen from "./home/emptyScreen/EmptyScreen";
-import FriendDetail from "./home/friendDetail/FriendDetail";
-import FriendsScreen from "./home/friendsScreen/FriendsScreen";
-import ManagaChannel from "./home/manageChannel/ManagaChannel";
-import NewAdmin from "./home/newAdmin/NewAdmin";
 
 function HomeLayout() {
 
@@ -31,7 +18,7 @@ function HomeLayout() {
   return (
     <Container>
       <Sidebar>
-        <FriendsScreen />
+        <SidebarLayout/>
       </Sidebar>
       <MainBody>
         <ChatArea>

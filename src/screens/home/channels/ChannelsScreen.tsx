@@ -1,7 +1,6 @@
 import { styled } from "styled-components"
 import Header from "../../../components/Header/Header"
 import { useTranslation } from "react-i18next"
-import Footer from "../../../components/Footer/Footer"
 import { InputComponent } from "../../../components/InputSearch/inputComponent"
 import Text from "../../../components/Text/Text"
 import styles from './ChannelsScreen.module.css'
@@ -9,13 +8,39 @@ import { Loading } from "../../../components/Loading/Loading"
 import MessageBox from "../../../components/MessageBox/MessageBox"
 import ChannelRowItem from "../../../components/ChanneItem/ChannelItem"
 import useRootStore from "../../../hooks/useRootStore"
-import { channels } from "../../../store/dataBase"
+import { observer } from "mobx-react-lite"
+import { TMP_URL } from "../../../env"
+import { motion } from "framer-motion";
 
+const container = {
+  hidden: { opacity: 1, scale: 0 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      delayChildren: 0.3,
+      staggerChildren: 0.2
+    }
+  }
+};
+
+const item = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1
+  }
+};
 
 function ChannelsScreen() {
 
   const { logout } = useRootStore().authStore
+  const { channelsData, setSearchChannels } = useRootStore().channelStore
   const { t } = useTranslation()
+
+  const serachChannelHandler = (text: string) => {
+    setSearchChannels(text)
+  }
 
   return (
     <LeftAreaContainer>
@@ -26,13 +51,13 @@ function ChannelsScreen() {
       />
       <div className={styles.SearchBox}>
         <InputComponent
-          onChangeText={(text) => console.log(text)}
+          onChangeText={serachChannelHandler}
           size={18}
           placeholder={t("searchPlaceholder")}
         />
         <Text
           center
-          numbers={channels.length}
+          numbers={channelsData.length}
           children={t("groups")}
           style={{
             fontSize: "16px",
@@ -51,33 +76,37 @@ function ChannelsScreen() {
             <MessageBox title={t("No Internet Connection")} />
           </div>
         )}
-        <div className={styles.contentBox}>
-          {channels.map((e, index) => {
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="visible"
+          className={styles.contentBox}>
+          {channelsData.map((e, index) => {
             return (
-              <div
+              <motion.div
+                variants={item}
                 key={index}
                 id="map-dev"
                 className={styles.channelRowBox}
               >
                 <ChannelRowItem
                   onPress={() => console.log("channel row pressed")}
-                  item={'channel'}
+                  item={e}
                   name={e.name}
                   color={e.color ? e.color : "linear-gradient(#ddd, #666)"}
-                  number={2}
-                  imageUrl={e.avatar ? e.avatar : ""}
+                  number={e.id}
+                  imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ""}
                 />
-              </div>
+              </motion.div>
             )
           })}
-        </div>
+        </motion.div>
       </div>
-      <Footer activeTab={1} />
     </LeftAreaContainer>
   )
 }
 
-export default ChannelsScreen
+export default observer(ChannelsScreen)
 
 
 const LeftAreaContainer = styled.div`
