@@ -22,6 +22,7 @@ interface Props {
   rightIconColor?: string;
   leftIconColor?: string;
   textSize?: string;
+  style?: CSSProperties;
 }
 const Header: FC<Props> = ({
   header,
@@ -34,9 +35,10 @@ const Header: FC<Props> = ({
   textSize = "18",
   onRightIconPress = () => { },
   onLeftIconPress = () => { },
+  style
 }) => {
   return (
-    <div className={styles.container} style={{}}>
+    <div className={styles.container} style={{...style}}>
       <div>
         {leftIcon === "account" ? (
           <div onClick={onLeftIconPress}>

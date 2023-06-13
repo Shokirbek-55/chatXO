@@ -43,66 +43,67 @@ function ChannelsScreen() {
   }
 
   return (
-    <LeftAreaContainer>
+      <LeftAreaContainer>
       <Header
-        text={t("groups")}
-        rightIcon="account"
-        onRightIconPress={logout}
-      />
-      <div className={styles.SearchBox}>
-        <InputComponent
-          onChangeText={serachChannelHandler}
-          size={18}
-          placeholder={t("searchPlaceholder")}
+          text={t("groups")}
+          rightIcon="account"
+          onRightIconPress={logout}
         />
-        <Text
-          center
-          numbers={channelsData.length}
-          children={t("groups")}
-          style={{
-            fontSize: "16px",
-            paddingBottom: "5px",
-          }}
-        />
-      </div>
-      <div className={styles.main}>
-        {false && (
-          <div className={styles.loadingBox}>
-            <Loading />
-          </div>
-        )}
-        {false && (
-          <div className={styles.loadingError}>
-            <MessageBox title={t("No Internet Connection")} />
-          </div>
-        )}
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="visible"
-          className={styles.contentBox}>
-          {channelsData.map((e, index) => {
-            return (
-              <motion.div
-                variants={item}
-                key={index}
-                id="map-dev"
-                className={styles.channelRowBox}
-              >
-                <ChannelRowItem
-                  onPress={() => console.log("channel row pressed")}
-                  item={e}
-                  name={e.name}
-                  color={e.color ? e.color : "linear-gradient(#ddd, #666)"}
-                  number={e.id}
-                  imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ""}
-                />
-              </motion.div>
-            )
-          })}
-        </motion.div>
-      </div>
-    </LeftAreaContainer>
+        <div className={styles.SearchBox}>
+          <InputComponent
+            onChangeText={serachChannelHandler}
+            size={18}
+            placeholder={t("searchPlaceholder")}
+          />
+          <Text
+            center
+            numbers={channelsData.length}
+            children={t("groups")}
+            style={{
+              fontSize: "16px",
+              paddingBottom: "5px",
+            }}
+          />
+        </div>
+        <div className={styles.main}>
+          {false && (
+            <div className={styles.loadingBox}>
+              <Loading />
+            </div>
+          )}
+          {false && (
+            <div className={styles.loadingError}>
+              <MessageBox title={t("No Internet Connection")} />
+            </div>
+          )}
+          <motion.div
+            variants={container}
+            initial="hidden"
+            animate="visible"
+            className={styles.contentBox}>
+            {channelsData.map((e, index) => {
+              return (
+                <motion.div
+                  variants={item}
+                  whileTap={{ scale: 0.8 }}
+                  key={index}
+                  id="map-dev"
+                  className={styles.channelRowBox}
+                >
+                  <ChannelRowItem
+                    onPress={() => console.log("channel row pressed")}
+                    item={e}
+                    name={e.name}
+                    color={e.color ? e.color : "linear-gradient(#ddd, #666)"}
+                    number={e.id}
+                    imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ""}
+                  />
+                </motion.div>
+              )
+            })}
+          </motion.div>
+        </div>
+      </LeftAreaContainer>
   )
 }
 
@@ -112,7 +113,6 @@ export default observer(ChannelsScreen)
 const LeftAreaContainer = styled.div`
     width: 100%;
     height: 100%;
-    border: 1px solid yellow;
     display: flex;
     flex-direction: column;
 `

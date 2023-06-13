@@ -109,7 +109,7 @@ const AccountSetting = () => {
                         marginTop: "10px",
                         backgroundColor: "red"
                     }}
-                    title={`${t("Delate account")}`}
+                    title={`Delate account`}
                 />
             </div>
         </div>

@@ -30,7 +30,7 @@ const Input: FC<Props> = ({
     style={{
       ...style,
     }}
-    value={value}
+    value={value || ""}
     name={name}
     className={borderred ? styles.borderred : styles.NotBorderred}
   />
