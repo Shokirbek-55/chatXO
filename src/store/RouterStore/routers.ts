@@ -18,6 +18,13 @@ export type MainRoutesType = {
     components: React.FC;
 }
 
+export type SideBarHelperRoutesType = {
+    id: number;
+    key: string
+    components: React.FC;
+    isOpen: boolean;
+}
+
 export const mainRoutes: MainRoutesType[] = [
     {
         id: 1,
@@ -42,25 +49,30 @@ export const SideBarHelperRoutes = {
         id: 1,
         key: 'addFriends',
         components: AddFriend,
+        isOpen: false,
     },
     account: {
         id: 2,
         key: 'account',
         components: Account,
+        isOpen: false,
     },
     settings: {
         id: 3,
         key: 'settings',
         components: AccountSetting,
+        isOpen: false,
     },
     friendDetails: {
         id: 4,
         key: 'friendDetails',
         components: AddFriend,
+        isOpen: false,
     },
     language: {
         id: 5,
         key: 'language',
         components: AddFriend,
+        isOpen: false,
     }
 }

@@ -39,6 +39,7 @@ const Account = () => {
     const { myData, getUserData } = useRootStore().usersStore
     const { channelsData, getMyChannels, channelsLoading } = useRootStore().channelStore
     const { friends, getFriends, loading } = useRootStore().friendsStore
+    const { toRouter,closeModal } = useRootStore().routerStore
 
     useEffect(() => {
         getUserData()
@@ -53,7 +54,7 @@ const Account = () => {
             <Header
                 text={t("account")}
                 leftIcon="arrowLeft"
-                onLeftIconPress={() => navigation(-1)}
+                onLeftIconPress={() => closeModal()}
             />
             <div className={styles.container}>
                 <div className={styles.avatarBox}>
@@ -65,7 +66,7 @@ const Account = () => {
                     />
                     <Text color="yellowgreen" value={myData?.username ? myData.username : "User"}></Text>
                     <Text
-                        handleLink={() => navigation("")}
+                        handleLink={() => toRouter('settings')}
                         color="yellowgreen"
                     >
                         {t("settings")}

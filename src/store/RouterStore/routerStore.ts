@@ -1,5 +1,6 @@
 import { makeAutoObservable, runInAction, set } from "mobx";
-import { MainRoutes, MainRoutesType, SideBarHelperRoutes, mainRoutes } from "./routers";
+import { MainRoutes, MainRoutesType, SideBarHelperRoutes, SideBarHelperRoutesType, mainRoutes } from "./routers";
+import _ from 'lodash';
 
 
 export default class RouterStore {
@@ -8,9 +9,8 @@ export default class RouterStore {
     }
 
     currentRoute: MainRoutesType = mainRoutes[0];
-    modalRoute: MainRoutesType | null = null;
-    isOpen : boolean = false;
-
+    // modalRoute: MainRoutesType | null = null;
+    routers: SideBarHelperRoutesType[] = []
 
     setCurrentRoute = (route: keyof typeof MainRoutes) => {
         this.currentRoute = mainRoutes.find(item => item.key === route) as MainRoutesType;
@@ -18,24 +18,24 @@ export default class RouterStore {
 
     toRouter = (route: keyof typeof SideBarHelperRoutes) => {
         runInAction(() => {
-            this.modalRoute = SideBarHelperRoutes[route];
-            this.isOpen = true;
+            this.routers.push(SideBarHelperRoutes[route]);
         })
-    }
-
-    backToRouter = () => {
-        
+        setTimeout(() => {
+            runInAction(() => {
+                _.last(this.routers)!.isOpen = true;
+            })
+        }, 100)
     }
 
     closeModal = () => {
         runInAction(() => {
-            this.isOpen = false;
+            _.last(this.routers)!.isOpen = false;
         })
         setTimeout(() => {
             runInAction(() => {
-                this.modalRoute = null;
+                this.routers.pop();
             })
-        } , 300)
+        }, 300)
     }
 
 }
