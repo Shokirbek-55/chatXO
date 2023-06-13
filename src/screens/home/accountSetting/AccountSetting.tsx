@@ -18,6 +18,7 @@ import { User } from '../../../types/user'
 const AccountSetting = () => {
     const { getUserData, setMyData, updateUserAccount, setUserState, myData, createMeAvatar } = useRootStore().usersStore
     const { logout } = useRootStore().authStore
+    const { closeModal } = useRootStore().routerStore
     const navigation = useNavigate()
     const { t } = useTranslation()
 
@@ -47,7 +48,7 @@ const AccountSetting = () => {
                 leftIcon="arrowLeft"
                 rightIcon="logout"
                 onRightIconPress={logout}
-                onLeftIconPress={() => navigation(-1)}
+                onLeftIconPress={() => closeModal()}
             />
             <div className={styles.ImageBox}>
                 <AvatarView

@@ -1,4 +1,3 @@
-import { motion } from "framer-motion"
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { styled } from 'styled-components'
@@ -10,26 +9,20 @@ const ModalComponent = ({ children, isOpen }: {
   isOpen: boolean
 }) => {
 
-  const modal = {
-    open: {
-      x: 0,
-    },
-    closed: {
-      x: 400,
-    },
-  }
-
   return (
-    <motion.div
-      variants={modal}
-      initial="closed"
-      animate={isOpen ? "open" : "closed"}
-      transition={{ duration: 0.5 }}
-    >
+    <div style={{
+      position: "absolute",
+      width: "100%",
+      height: "100vh",
+      zIndex: 10,
+      overflow: "hidden",
+      transform: isOpen ? "translateX(0)" : "translateX(100%)",
+      transition: "transform 0.3s ease-in-out"
+    }}>
       <ModalContainer>
         {children}
       </ModalContainer>
-    </motion.div>
+    </div>
   )
 
 }
@@ -37,15 +30,19 @@ const ModalComponent = ({ children, isOpen }: {
 
 function Sidebar() {
 
-  const { currentRoute, modalRoute,isOpen } = useRootStore().routerStore
+  const { currentRoute, routers } = useRootStore().routerStore
 
   return (
     <SidebarContainer >
-      <ModalComponent isOpen={isOpen}>
-        {
-          modalRoute?.components && <modalRoute.components />
-        }
-        </ModalComponent>
+      {
+        routers.map((route, index) => {
+          return (
+            <ModalComponent key={index} isOpen={route.isOpen}>
+              <route.components />
+            </ModalComponent>
+          )
+        })
+      }
       <currentRoute.components />
       <Footer />
     </SidebarContainer>

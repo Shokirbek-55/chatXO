@@ -73,6 +73,8 @@ export default class AuthStore {
         await this.logoutOperation.run(() => APIs.logout(this.root.localStore.session.refreshToken))
         if (this.logoutOperation.data) {
             this.root.localStore.removeToken()
+            this.root.socketStore.disconnect()
+            this.root.routerStore.routers = []
             message.success("Logout")
         }
     }

@@ -35,6 +35,7 @@ const item = {
 function ChannelsScreen() {
 
   const { logout } = useRootStore().authStore
+  const { toRouter } = useRootStore().routerStore
   const { channelsData, setSearchChannels } = useRootStore().channelStore
   const { t } = useTranslation()
 
@@ -47,7 +48,7 @@ function ChannelsScreen() {
       <Header
           text={t("groups")}
           rightIcon="account"
-          onRightIconPress={logout}
+        onRightIconPress={() => toRouter('account')}
         />
         <div className={styles.SearchBox}>
           <InputComponent
