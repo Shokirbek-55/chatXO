@@ -60,22 +60,27 @@ const Account = () => {
                     <AvatarUpload
                         upload={false}
                         imageUrl={myData.avatar ? `${TMP_URL}/${myData.avatar}` : ""}
-                        color={myData?.color ? myData.color : "linear-gradient(#ddd, #666)"}
+                        color={myData?.color ? `linear-gradient(25deg, ${myData.color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}
                         style={{ width: "140px", height: "140px" }}
                     />
-                    <Text style={{ color: "#1e7335" }} value={myData?.username ? myData.username : "User"}></Text>
+                    <Text color="yellowgreen" value={myData?.username ? myData.username : "User"}></Text>
                     <Text
                         handleLink={() => navigation("")}
-                        style={{ color: "#1e7335" }}
+                        color="yellowgreen"
                     >
                         {t("settings")}
                     </Text>
                 </div>
                 <div className={styles.groupsBox}>
                     <div className={styles.loader}>
-                        <Text center margin='0 0 10px 0'>
-                            {t("My judgement")} {t("in groups")}
-                        </Text>
+                        <div className={styles.judgementText}>
+                            <Text margin='0 0 10px 0'>
+                                {t("My judgement")}
+                            </Text>
+                            <Text color="yellowgreen" margin='0 0 10px 0'>
+                                {t("in groups")}
+                            </Text>
+                        </div>
                         <Loading isLoad={channelsLoading} />
                         {false && (
                             <div className={styles.loadingBox}>
@@ -105,7 +110,7 @@ const Account = () => {
                                                 //     onGroupPress(e.hashId as string)
                                                 // }
                                                 imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ""}
-                                                color={e.color ? e.color : "linear-gradient(#ddd, #666)"}
+                                                color={e.color ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}
                                                 text={e.name}
                                                 loading={false}
                                             />
@@ -118,9 +123,14 @@ const Account = () => {
                     </div>
                     <div className={styles.getChannelsBox}></div>
                     <div className={styles.friendsBox}>
-                        <Text center margin='0 0 10px 0'>
-                            {t("relevance")} {t("per_user")}
-                        </Text>
+                        <div className={styles.judgementText}>
+                            <Text margin='0 0 10px 0'>
+                                {t("relevance")}
+                            </Text>
+                            <Text color="yellowgreen" margin='0 0 10px 0'>
+                                {t("per_user")}
+                            </Text>
+                        </div>
                         <Loading isLoad={loading} />
                         {false && (
                             <div className={styles.loadingBox}>
@@ -149,7 +159,7 @@ const Account = () => {
                                                 // onNamePress={() => onNamePress(e.id as never)}
                                                 key={index}
                                                 text={e.username}
-                                                color={e.color ? e.color : "linear-gradient(#ddd, #666)"}
+                                                color={e.color ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}
                                                 imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ""}
                                                 loading={false}
                                             />

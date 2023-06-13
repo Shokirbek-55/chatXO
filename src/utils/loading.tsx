@@ -11,12 +11,10 @@ interface Props {
 const FullScreen = styled.div`
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* z-index: 2;
-  background-color: rgba(1,1,1, 0.2); */
 `;
 const Loading: React.FC<Props> = ({
   isLoad,

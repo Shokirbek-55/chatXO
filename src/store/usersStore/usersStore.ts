@@ -5,6 +5,7 @@ import { Operation } from "../../utils/Operation";
 import { AppRootStore } from "../store";
 import { message } from 'antd';
 import { t } from "i18next";
+import { Channel } from "../../types/channel";
 
 type UserStateType = {
     username:string,
@@ -29,13 +30,17 @@ export default class UsersStore {
     getUserDataOperation = new Operation<User>({} as User)
     updateUserAccountOperation = new Operation<User>({} as User)
     userMeAvatarOperation = new Operation<User>({} as User)
+    getFriendDetailsOperation = new Operation<User>({}  as User)
 
     myData: User = {} as User
+
     setMyData: UserStateType = {} as UserStateType
 
     nonFriends: User[] = []
 
-    randomColor: string = ""
+    weChannels: Channel[] = []
+
+    friendDetails: User = {}
 
     getUserData = async () => {
         runInAction(() => {
@@ -101,5 +106,27 @@ export default class UsersStore {
              if (!this.nonFriends) {
                 message.warning('No such username exists')
             }
+    }
+
+    getFriendDetails = async (friendId: number) => {
+        await this.getFriendDetailsOperation.run(() => APIs.Users.getFriendDetails(friendId))
+        if (this.getFriendDetailsOperation.isSuccess) {
+            runInAction(() => {
+                this.friendDetails = this.getFriendDetailsOperation.data
+                    if (!!this.rootStore.channelStore.channelsData.length && !!this.friendDetails.channels?.length) {
+                    const sortedData = this.rootStore.channelStore.channelsData.reduce((total: Channel[] = [], myChanel) => {
+                        const slug = myChanel.slug;
+                        const currentChanel =
+                        this.friendDetails?.channels?.filter(
+                            (ch: any) => ch.slug === slug
+                        ) ?? [];
+
+                        return [...total, ...currentChanel];
+                    }, []);
+
+                        this.weChannels = sortedData as any
+                }
+            });
+        }
     }
 }

@@ -1,3 +1,5 @@
+import { Channel } from "./channel";
+
 export interface User {
   id?: number;
   color?: string;
@@ -7,7 +9,7 @@ export interface User {
   username?: string;
   createdAt?: string;
   updatedAt?: string;
-  channels?: any; // then_will_do!
+  channels?: Channel[] | any; // then_will_do!
   // channels?: Channel[];
   relevance?: number;
   judgement?: number;

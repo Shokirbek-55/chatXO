@@ -35,8 +35,7 @@ const Text: FC<Props> = ({
           target="_blank"
           className={center ? styles.centerText : styles.text}
           onClick={() => handleLink && handleLink()}
-          style={{ ...style, margin: margin }}
-          color={color}
+          style={{ ...style, margin: margin, color }}
         >
           {numbers} {children} {onClick} {value} {text}
         </a>
@@ -44,8 +43,7 @@ const Text: FC<Props> = ({
         <p
           className={center ? styles.centerText : styles.text}
           onClick={() => handleLink && handleLink()}
-          style={{ ...style, margin: margin ? margin : "3px 0" }}
-          color={color}
+          style={{ ...style, margin: margin ? margin : "3px 0", color }}
         >
           {numbers} {children} {onClick} {value} {text}
         </p>

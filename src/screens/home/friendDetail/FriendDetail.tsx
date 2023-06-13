@@ -6,11 +6,14 @@ import Header from '../../../components/Header/Header';
 import MessageBox from '../../../components/MessageBox';
 import RowItemView from '../../../components/RowItem';
 import Text from '../../../components/Text/Text';
-import { friendDetails, weChanels } from '../../../store/dataBase';
+import { TMP_URL } from '../../../env';
+import useRootStore from '../../../hooks/useRootStore';
 import styles from "./FriendDetail.module.css"
+import { observer } from 'mobx-react-lite';
 
 const FriendDetail = () => {
     const navigation = useNavigate()
+    const { friendDetails, weChannels } = useRootStore().usersStore
     const { t } = useTranslation()
     return (
         <div className={styles.container}>
@@ -23,22 +26,25 @@ const FriendDetail = () => {
                 <AvatarUpload
                     imageUrl={
                         friendDetails.avatar
-                            ? friendDetails.avatar
+                            ? `${TMP_URL}/${friendDetails.avatar}`
                             : ""
                     }
                     upload={false}
-                    color={friendDetails.color}
+                    color={friendDetails.color ? friendDetails.color : "linear-gradient(#ddd, #666)"}
                 />
-                <Text text={friendDetails.username} />
-                <Text children="My Judgement in groups" />
+                <Text text={friendDetails.username ? friendDetails.username : "User"} />
+                <div className={styles.judgementText}>
+                    <Text children="My Judgement" />
+                    <Text color="yellowgreen" children="in groups" />
+                </div>
             </div>
-            {weChanels?.length !== 0 ?
-                weChanels?.map((e, index) => {
+            {weChannels?.length !== 0 ?
+                weChannels?.map((e, index) => {
                     return (
                         <div key={index}>
                             <RowItemView
-                                color={e.color}
-                                imageUrl={e.avatar ? e.avatar : ""}
+                                color={e.color ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}
+                                imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ""}
                                 text={e.name}
                                 loading={false}
                             />
@@ -51,4 +57,4 @@ const FriendDetail = () => {
     )
 }
 
-export default FriendDetail
+export default observer(FriendDetail)
