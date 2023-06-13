@@ -21,7 +21,6 @@ export default class ChannelStore {
             this.channelsLoading = true
         })
         await this.getChannelOperation.run(() => APIs.channels.getMyChannels());
-        
         if (this.getChannelOperation.isSuccess) {
                 console.log('my channels', this.getChannelOperation.data);
                 runInAction(() => {

@@ -36,6 +36,7 @@ const item = {
 const FriendsScreen = () => {
     const navigation = useNavigate()
     const { getFriends, friends, deleteFriend, loading, getFriendsFilter } = useRootStore().friendsStore
+    const { toRouter } = useRootStore().routerStore
     const { t } = useTranslation()
 
     const handleChangeText = (key: string) => {
@@ -49,9 +50,10 @@ const FriendsScreen = () => {
     return (
         <div className={styles.container}>
             <Header
+                style={{zIndex:1}}
                 text={`${t("friends")}`}
                 leftIcon={"addUser"}
-                onLeftIconPress={() => navigation("/add-friends")}
+                onLeftIconPress={() => toRouter('addFriends')}
                 rightIcon={"account"}
                 onRightIconPress={() => navigation("/account/friends")}
             />

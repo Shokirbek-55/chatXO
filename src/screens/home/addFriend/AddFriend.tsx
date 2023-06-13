@@ -1,18 +1,15 @@
-import React, { useEffect } from 'react'
+import { observer } from 'mobx-react-lite';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import Header from '../../../components/Header/Header';
 import MessageBox from '../../../components/MessageBox';
 import RowItemView from '../../../components/RowItem';
 import useRootStore from '../../../hooks/useRootStore';
-import { userList } from '../../../store/dataBase';
 import { InputComponent } from '../../../utils/inputComponent';
-import styles from "./AddFriend.module.css"
-import { toJS } from 'mobx';
-import { observer } from 'mobx-react-lite';
 import Loading from '../../../utils/loading';
 import { TMP_URL } from '../../../env';
 import { motion } from "framer-motion";
+import styles from "./AddFriend.module.css";
 
 const container = {
   hidden: { opacity: 1, scale: 0 },
@@ -39,6 +36,7 @@ const AddFriend = () => {
   const { nonFriends, loading, getNonFriends, getUsersFilter } = useRootStore().usersStore
 
   const { createFriend } = useRootStore().friendsStore
+  const { closeModal } = useRootStore().routerStore
 
   useEffect(() => {
     getNonFriends()
@@ -49,21 +47,21 @@ const AddFriend = () => {
   };
 
   const { t } = useTranslation()
-  const navigation = useNavigate()
 
   return (
-    <div className={styles.container}>
-      <Header
-        text={t("addFriend")}
-        leftIcon="arrowLeft"
-        onLeftIconPress={() => navigation("")}
-      />
-      <div style={{ width: "90%", margin: "3px auto" }}>
-        <InputComponent
-          onChangeText={handleChangeText}
-          placeholder="Search..."
+      <div className={styles.container}>
+        <Header
+          style={{zIndex: 1000}}
+          text={t("addFriend")}
+          leftIcon="arrowLeft"
+          onLeftIconPress={() => closeModal()}
         />
-      </div>
+        <div style={{ width: "90%", margin: "3px auto" }}>
+          <InputComponent
+            onChangeText={handleChangeText}
+            placeholder="Search..."
+          />
+        </div>
       <div className={styles.main}>
         <Loading isLoad={loading} />
         {false && (

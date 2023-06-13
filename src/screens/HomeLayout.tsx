@@ -57,6 +57,7 @@ const Sidebar = styled.div`
   max-width: 340px;
   width: 340px;
   height: 100%;
+  z-index: 1;
 `
 
 const ChatArea = styled.div`
@@ -72,4 +73,5 @@ const MainBody = styled.div`
   height: 100%;
   display: flex;
   flex-direction: row;
+  z-index: 1;
 `
