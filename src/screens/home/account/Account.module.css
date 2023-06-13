@@ -53,3 +53,10 @@
   justify-content: center;
   flex-direction: column;
 }
+
+.judgementText{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}

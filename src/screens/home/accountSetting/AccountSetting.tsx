@@ -57,11 +57,12 @@ const AccountSetting = () => {
                     onChange={(e) => onImageSelect(e)}
                 />
                 <Text
-                    color={Colors.LightGreen}
+                    color="yellowgreen"
                     children={t("random_color")}
                     handleLink={() => randomUserColor(getRandomColor())}
                 />
                 <Text
+                    color="yellowgreen"
                     handleLink={() => navigation("")}
                     children={t("change_language")}
                 />

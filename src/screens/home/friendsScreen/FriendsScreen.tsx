@@ -37,10 +37,15 @@ const FriendsScreen = () => {
     const navigation = useNavigate()
     const { getFriends, friends, deleteFriend, loading, getFriendsFilter } = useRootStore().friendsStore
     const { toRouter } = useRootStore().routerStore
+    const { getFriendDetails } = useRootStore().usersStore
     const { t } = useTranslation()
 
     const handleChangeText = (key: string) => {
         getFriendsFilter(key)
+    }
+
+    const FriendDetails = (friendId: number) => {
+        getFriendDetails(friendId)
     }
 
     useEffect(() => {
@@ -50,7 +55,7 @@ const FriendsScreen = () => {
     return (
         <div className={styles.container}>
             <Header
-                style={{zIndex:1}}
+                style={{ zIndex: 1 }}
                 text={`${t("friends")}`}
                 leftIcon={"addUser"}
                 onLeftIconPress={() => toRouter('addFriends')}
@@ -74,46 +79,50 @@ const FriendsScreen = () => {
                 />
             </div>
             <div className={styles.main}>
-                <Loading isLoad={loading} />
-                {false && (
-                    <div className={styles.loadingBox}>
-                        <Loading isLoad={loading} />
-                    </div>
-                )}
-                {!friends && (
-                    <div className={styles.loadingError}>
-                        <MessageBox title={`${t("No Internet Connection")}`} />
-                    </div>
-                )}
-                <motion.div
-                    variants={container}
-                    initial="hidden"
-                    animate="visible"
-                    className={styles.contentBox}>
-                    {friends?.length !== 0 ?
-                        friends?.map((e, index) => {
-                            return (
-                                <motion.div
-                                    variants={item}
-                                    key={index}
-                                    id="map-dev"
-                                    className={styles.channelRowBox}
-                                >
-                                    <RowItemView
-                                        title={`${t("unfriend")}`}
-                                        imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ""}
-                                        color={e.color ? e.color : "linear-gradient(#ddd, #666)"}
-                                        text={e.username}
-                                        onButtonPress={() => deleteFriend(e.id ? e.id : 0)}
-                                        rightButton
-                                        loading={false}
-                                    />
-                                </motion.div>
-                            );
-                        }) :
-                        <MessageBox title={`${t("no_avalible_friends")}`} />
-                    }
-                </motion.div>
+                {loading ?
+                    <Loading isLoad={loading} /> : <>
+                        {false && (
+                            <div className={styles.loadingBox}>
+                                <Loading isLoad={loading} />
+                            </div>
+                        )}
+                        {!friends && (
+                            <div className={styles.loadingError}>
+                                <MessageBox title={`${t("No Internet Connection")}`} />
+                            </div>
+                        )}
+                        <motion.div
+                            variants={container}
+                            initial="hidden"
+                            animate="visible"
+                            className={styles.contentBox}>
+                            {friends?.length !== 0 ?
+                                friends?.map((e, index) => {
+                                    return (
+                                        <motion.div
+                                            variants={item}
+                                            key={index}
+                                            id="map-dev"
+                                            className={styles.channelRowBox}
+                                        >
+                                            <RowItemView
+                                                title={`${t("unfriend")}`}
+                                                imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ""}
+                                                color={e.color ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}
+                                                text={e.username}
+                                                onButtonPress={() => deleteFriend(e.id ? e.id : 0)}
+                                                onNamePress={() => FriendDetails(e.id ? e.id : 0)}
+                                                rightButton
+                                                loading={false}
+                                            />
+                                        </motion.div>
+                                    );
+                                }) :
+                                <MessageBox title={`${t("no_avalible_friends")}`} />
+                            }
+                        </motion.div>
+                    </>
+                }
             </div>
         </div>
     )

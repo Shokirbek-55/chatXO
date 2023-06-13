@@ -49,19 +49,19 @@ const AddFriend = () => {
   const { t } = useTranslation()
 
   return (
-      <div className={styles.container}>
-        <Header
-          style={{zIndex: 1000}}
-          text={t("addFriend")}
-          leftIcon="arrowLeft"
-          onLeftIconPress={() => closeModal()}
+    <div className={styles.container}>
+      <Header
+        style={{ zIndex: 1000 }}
+        text={t("addFriend")}
+        leftIcon="arrowLeft"
+        onLeftIconPress={() => closeModal()}
+      />
+      <div style={{ width: "90%", margin: "3px auto" }}>
+        <InputComponent
+          onChangeText={handleChangeText}
+          placeholder="Search..."
         />
-        <div style={{ width: "90%", margin: "3px auto" }}>
-          <InputComponent
-            onChangeText={handleChangeText}
-            placeholder="Search..."
-          />
-        </div>
+      </div>
       <div className={styles.main}>
         <Loading isLoad={loading} />
         {false && (
@@ -90,7 +90,7 @@ const AddFriend = () => {
                 >
                   <RowItemView
                     imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ""}
-                    color={e.color ? e.color : "linear-gradient(#ddd, #666)"}
+                    color={e.color ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}
                     text={e.username}
                     loading={false}
                     onNamePress={() => createFriend(e.id ? e.id : 0)}

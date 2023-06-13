@@ -10,6 +10,7 @@ import Account from "./home/account/Account";
 import AccountSetting from "./home/accountSetting/AccountSetting";
 import FriendsScreen from "./home/friendsScreen/FriendsScreen";
 import AddFriend from "./home/addFriend/AddFriend";
+import FriendDetail from "./home/friendDetail/FriendDetail";
 
 function HomeLayout() {
 
@@ -22,7 +23,7 @@ function HomeLayout() {
   return (
     <Container>
       <Sidebar>
-        <AccountSetting />
+        <AddFriend />
       </Sidebar>
       <MainBody>
         <ChatArea>
