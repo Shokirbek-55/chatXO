@@ -4,6 +4,7 @@ import { Session } from "../../types/auth";
 import { Operation } from "../../utils/Operation";
 import { AppRootStore } from "../store";
 import { User } from "../../types/user";
+import { message } from 'antd';
 
 export default class AuthStore {
 
@@ -25,7 +26,7 @@ export default class AuthStore {
 
     getMe = async () => {
         if(!this.root.localStore.session.accessToken) return
-        await this.getMeOperation.run(() => APIs.acount.getMyAccount())
+        await this.getMeOperation.run(() => APIs.Account.getMyAccount())
         if (this.getMeOperation.data && this.getMeOperation.isSuccess) {
             this.root.socketStore.connect(()=> {}, this.getMeOperation.data)
             this.user = this.getMeOperation.data        
@@ -36,7 +37,7 @@ export default class AuthStore {
         await this.loginOperation.run(() => APIs.login(data))
         if (this.loginOperation.data && this.loginOperation.isSuccess) {
             this.root.localStore.setToken(this.loginOperation.data)
-            await this.getMeOperation.run(() => APIs.acount.getMyAccount())
+            await this.getMeOperation.run(() => APIs.Account.getMyAccount())
             if (this.getMeOperation.data && this.getMeOperation.isSuccess) {
                 this.user = this.getMeOperation.data
                 this.root.runFunctionsWithLogin()
@@ -72,6 +73,7 @@ export default class AuthStore {
         await this.logoutOperation.run(() => APIs.logout(this.root.localStore.session.refreshToken))
         if (this.logoutOperation.data) {
             this.root.localStore.removeToken()
+            message.success("Logout")
         }
     }
 

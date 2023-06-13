@@ -14,14 +14,19 @@ export default class ChannelStore {
 
     channelsData: Channel[] = []
 
+    channelsLoading: boolean = false
+
     getMyChannels = async () => {
-            await this.getChannelOperation.run(() => APIs.channels.getMyChannels());
-            
+        runInAction(() => {
+            this.channelsLoading = true
+        })
+        await this.getChannelOperation.run(() => APIs.channels.getMyChannels());
+        
         if (this.getChannelOperation.isSuccess) {
                 console.log('my channels', this.getChannelOperation.data);
-                
                 runInAction(() => {
                     this.channelsData = this.getChannelOperation.data;
+                    this.channelsLoading = false
                 });
             }
     };

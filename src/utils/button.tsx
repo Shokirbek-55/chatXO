@@ -48,6 +48,7 @@ export const ButtonComponent = ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        whiteSpace: "nowrap",
         fontSize: `${textSize}px`,
         color: `${color}`,
         backgroundColor: `${backColor}`,

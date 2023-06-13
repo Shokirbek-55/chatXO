@@ -6,7 +6,7 @@ import { AnimatePresence } from 'framer-motion'
 
 function Sidebar() {
 
-    const { currentRoute } = useRootStore().routerStore    
+  const { currentRoute } = useRootStore().routerStore
 
   return (
     <SidebarContainer >

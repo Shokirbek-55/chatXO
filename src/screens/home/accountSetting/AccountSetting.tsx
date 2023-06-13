@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import AvatarView from '../../../components/AvatarUpload/AvatarUpload'
@@ -7,33 +7,59 @@ import Header from '../../../components/Header/Header'
 import Input from '../../../components/Input'
 import Text from '../../../components/Text/Text'
 import { TMP_URL } from '../../../env'
-import { myData } from '../../../store/dataBase'
+import useRootStore from '../../../hooks/useRootStore'
 import Colors from '../../../utils/colors'
 import { getRandomColor } from '../../../utils/randomColor'
 import styles from "./AccountSetting.module.css"
+import { toJS } from 'mobx';
+import { observer } from 'mobx-react-lite'
+import { User } from '../../../types/user'
 
 const AccountSetting = () => {
+    const { getUserData, setMyData, updateUserAccount, setUserState, myData, createMeAvatar } = useRootStore().usersStore
+    const { logout } = useRootStore().authStore
     const navigation = useNavigate()
     const { t } = useTranslation()
+
+    useEffect(() => {
+        getUserData()
+    }, [])
+
+    const randomUserColor = (Color: string) => {
+        setUserState('color', Color)
+        updateUserAccount({ color: Color })
+    }
+
+    const onImageSelect = async (e: ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        if (e.target.files?.length) {
+            const formData = new FormData();
+            formData.append("avatar", e.target.files[0]);
+            createMeAvatar(formData)
+        }
+    };
+
+
     return (
         <div className={styles.container}>
             <Header
                 text={t("edit_profile")}
                 leftIcon="arrowLeft"
                 rightIcon="logout"
+                onRightIconPress={logout}
                 onLeftIconPress={() => navigation(-1)}
             />
-
             <div className={styles.ImageBox}>
                 <AvatarView
                     upload={true}
-                    color={myData.color ? myData.color : "linear-gradient(#ddd, #666)"}
-                    imageUrl={myData.avatar ? myData.avatar : ""}
+                    color={setMyData.color ? setMyData.color : "linear-gradient(#ddd, #666)"}
+                    imageUrl={myData?.avatar ? `${TMP_URL}/${myData?.avatar}` : ""}
+                    onChange={(e) => onImageSelect(e)}
                 />
                 <Text
                     color={Colors.LightGreen}
                     children={t("random_color")}
-                    handleLink={() => getRandomColor()}
+                    handleLink={() => randomUserColor(getRandomColor())}
                 />
                 <Text
                     handleLink={() => navigation("")}
@@ -48,8 +74,10 @@ const AccountSetting = () => {
                     children={t("username")}
                 />
                 <Input
-                    name={myData.username}
-                    value={myData.username}
+                    value={setMyData.username}
+                    setUserName={(e) => {
+                        setUserState('username', e)
+                    }}
                 />
             </div>
             <div className={styles.ContentBox}>
@@ -60,8 +88,10 @@ const AccountSetting = () => {
                     children={t("your_email")}
                 />
                 <Input
-                    name={myData.email}
-                    value={myData.email}
+                    value={setMyData.email}
+                    setUserName={(e) => {
+                        setUserState('email', e)
+                    }}
                 />
             </div>
             <div className={styles.ContentBox}>
@@ -71,6 +101,7 @@ const AccountSetting = () => {
                         marginTop: "25px",
                     }}
                     title={`${t("update_profile")}`}
+                    onClickbutton={() => updateUserAccount(setMyData)}
                 />
                 <ButtonView
                     style={{
@@ -85,4 +116,4 @@ const AccountSetting = () => {
     )
 }
 
-export default AccountSetting
+export default observer(AccountSetting);

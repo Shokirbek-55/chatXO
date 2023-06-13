@@ -11,10 +11,32 @@ import styles from "./AddFriend.module.css"
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import Loading from '../../../utils/loading';
+import { TMP_URL } from '../../../env';
+import { motion } from "framer-motion";
+
+const container = {
+  hidden: { opacity: 1, scale: 0 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      delayChildren: 0.3,
+      staggerChildren: 0.2
+    }
+  }
+};
+
+const item = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1
+  }
+};
 
 const AddFriend = () => {
 
-  const { nonFriends, loading, getNonFriends } = useRootStore().usersStore
+  const { nonFriends, loading, getNonFriends, getUsersFilter } = useRootStore().usersStore
 
   const { createFriend } = useRootStore().friendsStore
 
@@ -22,7 +44,9 @@ const AddFriend = () => {
     getNonFriends()
   }, [])
 
-  const handleChangeText = () => { }
+  const handleChangeText = (text: string) => {
+    getUsersFilter(text)
+  };
 
   const { t } = useTranslation()
   const navigation = useNavigate()
@@ -40,24 +64,45 @@ const AddFriend = () => {
           placeholder="Search..."
         />
       </div>
-      <Loading isLoad={loading} />
       <div className={styles.main}>
-        {nonFriends?.length !== 0 ?
-          nonFriends?.map((e, index) => {
-            return (
-              <div className={styles.rowItemBox} key={index}>
-                <RowItemView
-                  imageUrl={e.avatar ? e.avatar : ""}
-                  color={e.color ? e.color : "linear-gradient(#ddd, #666)"}
-                  text={e.username}
-                  loading={false}
-                  onNamePress={() => createFriend(e.id)}
-                />
-              </div>
-            );
-          }) :
-          <MessageBox title="No users available" />
-        }
+        <Loading isLoad={loading} />
+        {false && (
+          <div className={styles.loadingBox}>
+            <Loading isLoad={loading} />
+          </div>
+        )}
+        {!nonFriends && (
+          <div className={styles.loadingError}>
+            <MessageBox title={`${t("No Internet Connection")}`} />
+          </div>
+        )}
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="visible"
+          className={styles.contentBox}>
+          {nonFriends?.length !== 0 ?
+            nonFriends?.map((e, index) => {
+              return (
+                <motion.div
+                  variants={item}
+                  key={index}
+                  id="map-dev"
+                  className={styles.channelRowBox}
+                >
+                  <RowItemView
+                    imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ""}
+                    color={e.color ? e.color : "linear-gradient(#ddd, #666)"}
+                    text={e.username}
+                    loading={false}
+                    onNamePress={() => createFriend(e.id ? e.id : 0)}
+                  />
+                </motion.div>
+              );
+            }) :
+            <MessageBox title="No users available" />
+          }
+        </motion.div>
       </div>
     </div>
   )

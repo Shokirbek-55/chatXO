@@ -35,7 +35,7 @@ const APIs = {
     logout: (refreshToken: string) => apiService.methods.post(`${url}/logout`, { refreshToken }),
     refreshToken: (refreshToken: string) => apiService.methods.post<{ accessToken: string }>(`/token/refresh`, { refreshToken }),
     
-    acount: {
+    Account: {
         getMyAccount: () => apiService.methods.get<User>(`${accountUrl}/me`),
         updateAccount: (user: Partial<User>) => {
             const data = new FormData();

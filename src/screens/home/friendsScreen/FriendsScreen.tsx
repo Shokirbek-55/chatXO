@@ -4,21 +4,43 @@ import { useNavigate } from 'react-router-dom';
 import MessageBox from '../../../components/MessageBox';
 import RowItemView from '../../../components/RowItem';
 import { TMP_URL } from '../../../env';
-import { friend } from '../../../store/dataBase';
 import { InputComponent } from '../../../utils/inputComponent';
 import styles from "./FriendsScreen.module.css"
 import Header from '../../../components/Header/Header';
 import Text from '../../../components/Text/Text';
 import useRootStore from '../../../hooks/useRootStore';
 import { observer } from 'mobx-react-lite';
-import { toJS } from 'mobx';
 import Loading from '../../../utils/loading';
+import { motion } from "framer-motion";
+
+const container = {
+    hidden: { opacity: 1, scale: 0 },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        transition: {
+            delayChildren: 0.3,
+            staggerChildren: 0.2
+        }
+    }
+};
+
+const item = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+        y: 0,
+        opacity: 1
+    }
+};
 
 const FriendsScreen = () => {
     const navigation = useNavigate()
-    const { getFriends, friends, deleteFriend, loading } = useRootStore().friendsStore
+    const { getFriends, friends, deleteFriend, loading, getFriendsFilter } = useRootStore().friendsStore
     const { t } = useTranslation()
-    const handleChangeText = () => { }
+
+    const handleChangeText = (key: string) => {
+        getFriendsFilter(key)
+    }
 
     useEffect(() => {
         getFriends()
@@ -49,26 +71,47 @@ const FriendsScreen = () => {
                     children={t("friends")}
                 />
             </div>
-            <Loading isLoad={loading} />
             <div className={styles.main}>
-                {friends?.length !== 0 ?
-                    friends?.map((e, index) => {
-                        return (
-                            <div key={index}>
-                                <RowItemView
-                                    title={`${t("unfriend")}`}
-                                    imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ""}
-                                    color={e.color ? e.color : "linear-gradient(#ddd, #666)"}
-                                    text={e.username}
-                                    onButtonPress={() => deleteFriend(e.id)}
-                                    rightButton
-                                    loading={false}
-                                />
-                            </div>
-                        );
-                    }) :
-                    <MessageBox title={`${t("no_avalible_friends")}`} />
-                }
+                <Loading isLoad={loading} />
+                {false && (
+                    <div className={styles.loadingBox}>
+                        <Loading isLoad={loading} />
+                    </div>
+                )}
+                {!friends && (
+                    <div className={styles.loadingError}>
+                        <MessageBox title={`${t("No Internet Connection")}`} />
+                    </div>
+                )}
+                <motion.div
+                    variants={container}
+                    initial="hidden"
+                    animate="visible"
+                    className={styles.contentBox}>
+                    {friends?.length !== 0 ?
+                        friends?.map((e, index) => {
+                            return (
+                                <motion.div
+                                    variants={item}
+                                    key={index}
+                                    id="map-dev"
+                                    className={styles.channelRowBox}
+                                >
+                                    <RowItemView
+                                        title={`${t("unfriend")}`}
+                                        imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ""}
+                                        color={e.color ? e.color : "linear-gradient(#ddd, #666)"}
+                                        text={e.username}
+                                        onButtonPress={() => deleteFriend(e.id ? e.id : 0)}
+                                        rightButton
+                                        loading={false}
+                                    />
+                                </motion.div>
+                            );
+                        }) :
+                        <MessageBox title={`${t("no_avalible_friends")}`} />
+                    }
+                </motion.div>
             </div>
         </div>
     )
