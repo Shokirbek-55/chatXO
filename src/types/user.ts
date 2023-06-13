@@ -1,10 +1,10 @@
 export interface User {
-  id: number;
+  id?: number;
   color?: string;
   email?: string;
   avatar?: string;
   active?: boolean;
-  username: string;
+  username?: string;
   createdAt?: string;
   updatedAt?: string;
   channels?: any; // then_will_do!

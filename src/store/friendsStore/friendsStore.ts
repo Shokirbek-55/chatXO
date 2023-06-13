@@ -3,6 +3,7 @@ import APIs from "../../api/api";
 import { User } from "../../types/user";
 import { Operation } from "../../utils/Operation";
 import { AppRootStore } from "../store";
+import { message } from 'antd';
 
 export default class FriendsStore {
 
@@ -21,23 +22,28 @@ export default class FriendsStore {
 
     loading: boolean = false
 
-    createdFriendId: Number = 0
+    createUsername: User = {}
 
     getFriends = async () => {
-        await this.getFriendsOperation.run(() => APIs.Friends.getfriends())
         runInAction(() => {
             this.loading = true
         })
+        await this.getFriendsOperation.run(() => APIs.Friends.getfriends())
         if (this.getFriendsOperation.data) {
             runInAction(() => {
                 this.friends = this.getFriendsOperation.data
-            })
-        }
-        if (this.getFriendsOperation.isSuccess) {
-            runInAction(() => {
                 this.loading = false
             })
         }
+    }
+
+    getFriendsFilter = (key: string) => {       
+            runInAction(() => {
+                this.friends = this.getFriendsOperation.data.filter((i) => i.username?.trim().toLowerCase().includes(key.toLowerCase().trim()))
+            })
+            if (!this.friends) {
+                 message.warning('No such username exists')
+            }
     }
 
     createFriend = async (friendId:number) => {
@@ -46,8 +52,8 @@ export default class FriendsStore {
             runInAction(() => {
                 this.friends = this.createFriendOperation.data as never
                 this.rootStore.usersStore.nonFriends =
-                    this.rootStore.usersStore.nonFriends.filter((e) => e.id !== friendId)  
-                console.log("crearteeeee", toJS(this.createFriendOperation.data));
+                this.rootStore.usersStore.nonFriends.filter((e) => e.id !== friendId)  
+                message.success(`added friends`)
             })
         }
     }
@@ -57,7 +63,7 @@ export default class FriendsStore {
         runInAction(() => {
             if (this.deleteFriendOperation.isSuccess) {
                 this.friends = this.friends.filter((e) => e.id !== friendId)
-                this.createdFriendId = friendId
+                message.success(`delated friend`)
             }
         })
     }

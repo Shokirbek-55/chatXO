@@ -6,6 +6,10 @@ import useRootStore from '../hooks/useRootStore';
 import SidebarLayout from "./Sidebar";
 import Chat from "./home/chat/Chat";
 import EditChannel from "./home/editChannel/EditChannel";
+import Account from "./home/account/Account";
+import AccountSetting from "./home/accountSetting/AccountSetting";
+import FriendsScreen from "./home/friendsScreen/FriendsScreen";
+import AddFriend from "./home/addFriend/AddFriend";
 
 function HomeLayout() {
 
@@ -18,7 +22,7 @@ function HomeLayout() {
   return (
     <Container>
       <Sidebar>
-        <SidebarLayout/>
+        <AccountSetting />
       </Sidebar>
       <MainBody>
         <ChatArea>

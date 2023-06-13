@@ -9,7 +9,7 @@ interface Props {
   color?: string;
   imageUrl?: string;
   upload: boolean,
-  onChange?: () => void;
+  onChange?: (e: any) => void;
   value?: string;
 }
 

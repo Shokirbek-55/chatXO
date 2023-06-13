@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import ChannelAvatar from "../ChannelAvatar/channelAvatar";
 
 interface Props {
-  text?: string;
   imageUrl?: string;
   color?: string;
   item: any;

@@ -14,13 +14,12 @@
 }
 .channelName {
     font-size: 20px;
-    padding: 0;
-    margin: 0px 7px;
+    padding: 0 5px;
     overflow: hidden;
     text-align: center;
-    width: "90%";
     font-family: "Montserrat6";
     color: #fff;
+    white-space: nowrap;
 }
 .avatar{
     width: 100%;
