@@ -27,7 +27,7 @@ export class AppRootStore {
         this.localStore = new LocalStore();
         this.authStore = new AuthStore(this);
         this.messageStore = new MessageStore(this);
-        this.channelStore = new ChannelStore();
+        this.channelStore = new ChannelStore(this);
         this.socketStore = new SocketStore(this);
         this.friendsStore = new FriendsStore(this)
         this.usersStore = new UsersStore(this)

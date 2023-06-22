@@ -2,7 +2,7 @@ import { channels } from './../store/dataBase';
 import { CheckOAuthData, RegisterData, Session } from "../types/auth";
 import { User } from "../types/user";
 import ApiService from "./services/ApiService";
-import { Channel } from '../types/channel';
+import { Channel, SetUpdataChanelType } from '../types/channel';
 
 
 export type LoginEmailWithPasswordReqData={
@@ -88,17 +88,17 @@ const APIs = {
             apiService.methods.get<(Omit<Channel, "users"> & { users?: User[] })[]>(
                 `${channelUrl}/all`
             ),
-        createChannel: (name: string, isPrivate: boolean, users?: number[]) =>
+        createChannel: (name: string, description: string, color: string) =>
             apiService.methods.post<Channel>(`${channelUrl}`, {
                 name,
-                isPrivate,
-                users,
+                description,
+                color,
             }),
         createChannelWithName: (name: string, isPrivate: boolean) =>
             apiService.methods.post<Channel>(`${channelUrl}`, { name, isPrivate }),
 
-        createChannelAvatar: (channelhashId: string, data: any) => {
-            return apiService.methods.post(`${channelUrl}/${channelhashId}/avatar`, data, {
+        createChannelAvatar: (hashId: string, data: any) => {
+            return apiService.methods.post(`${channelUrl}/${hashId}/avatar`, data, {
                 headers: {
                     Accept: "application/json",
                     ContentType: "multipart/form-data",
@@ -127,7 +127,7 @@ const APIs = {
         getChannelByUserHashId: (hashId: string) =>
             apiService.methods.get<Channel>(`${channelUrl}/${hashId}/users`),
 
-        updateChannel: (channelhashId: string, data: any) => {
+        updateChannel: (channelhashId: string, data: SetUpdataChanelType) => {
             apiService.methods.patch(`${channelUrl}/hash/${channelhashId}`, data);
         },
 

@@ -16,4 +16,5 @@ export interface User {
   status?: string;
   latitude?: string;
   longitude?: string;
+  isAdded?: boolean;
 }

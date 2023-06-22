@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Header from '../../../components/Header/Header';
-import MessageBox from '../../../components/MessageBox';
+import MessageBox from '../../../components/MessageBox/MessageBox';
 import RowItemView from '../../../components/RowItem';
 import useRootStore from '../../../hooks/useRootStore';
 import { InputComponent } from '../../../utils/inputComponent';
@@ -63,12 +63,6 @@ const AddFriend = () => {
         />
       </div>
       <div className={styles.main}>
-        <Loading isLoad={loading} />
-        {false && (
-          <div className={styles.loadingBox}>
-            <Loading isLoad={loading} />
-          </div>
-        )}
         {!nonFriends && (
           <div className={styles.loadingError}>
             <MessageBox title={`${t("No Internet Connection")}`} />

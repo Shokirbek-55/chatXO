@@ -20,6 +20,8 @@ export default class FriendsStore {
 
     friends: User[] = []
 
+    usersListForAdd: User[] = []
+
     loading: boolean = false
 
     createUsername: User = {}
@@ -32,6 +34,10 @@ export default class FriendsStore {
         if (this.getFriendsOperation.data) {
             runInAction(() => {
                 this.friends = this.getFriendsOperation.data
+                this.usersListForAdd = this.rootStore.friendsStore.friends.map((users) => ({
+                    ...users,
+                    isAdded: this.rootStore.channelStore.getChannelsUsersData.some((e) => e.id === users.id)
+                }))
                 this.loading = false
             })
         }
@@ -60,12 +66,12 @@ export default class FriendsStore {
 
     deleteFriend = async (friendId: number) => {
         await this.deleteFriendOperation.run(() => APIs.Friends.deleteFriend(friendId))
-        runInAction(() => {
-            if (this.deleteFriendOperation.isSuccess) {
+        if (this.deleteFriendOperation.isSuccess) {
+                runInAction(() => {
                 this.friends = this.friends.filter((e) => e.id !== friendId)
                 message.success(`delated friend`)
-            }
-        })
+            })
+        }
     }
 
 }

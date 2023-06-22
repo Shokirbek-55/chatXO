@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import MessageBox from '../../../components/MessageBox';
+import MessageBox from '../../../components/MessageBox/MessageBox';
 import RowItemView from '../../../components/RowItem';
 import { TMP_URL } from '../../../env';
 import { InputComponent } from '../../../utils/inputComponent';
@@ -46,6 +46,7 @@ const FriendsScreen = () => {
 
     const FriendDetails = (friendId: number) => {
         getFriendDetails(friendId)
+        toRouter("friendDetails")
     }
 
     useEffect(() => {
@@ -60,7 +61,7 @@ const FriendsScreen = () => {
                 leftIcon={"addUser"}
                 onLeftIconPress={() => toRouter('addFriends')}
                 rightIcon={"account"}
-                onRightIconPress={() => navigation("/account/friends")}
+                onRightIconPress={() => toRouter('account')}
             />
             <div className={styles.searchBox}>
                 <InputComponent
@@ -68,61 +69,51 @@ const FriendsScreen = () => {
                     placeholder={`${t("searchPlaceholder")}`}
                 />
                 <Text
-                    style={{
-                        fontFamily: "Montserrat5",
-                        fontSize: "18px",
-                        padding: "5px",
-                    }}
                     center
                     numbers={friends?.flat().length}
                     children={t("friends")}
+                    style={{
+                        fontSize: "16px",
+                        paddingBottom: "5px",
+                    }}
                 />
             </div>
             <div className={styles.main}>
-                {loading ?
-                    <Loading isLoad={loading} /> : <>
-                        {false && (
-                            <div className={styles.loadingBox}>
-                                <Loading isLoad={loading} />
-                            </div>
-                        )}
-                        {!friends && (
-                            <div className={styles.loadingError}>
-                                <MessageBox title={`${t("No Internet Connection")}`} />
-                            </div>
-                        )}
-                        <motion.div
-                            variants={container}
-                            initial="hidden"
-                            animate="visible"
-                            className={styles.contentBox}>
-                            {friends?.length !== 0 ?
-                                friends?.map((e, index) => {
-                                    return (
-                                        <motion.div
-                                            variants={item}
-                                            key={index}
-                                            id="map-dev"
-                                            className={styles.channelRowBox}
-                                        >
-                                            <RowItemView
-                                                title={`${t("unfriend")}`}
-                                                imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ""}
-                                                color={e.color ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}
-                                                text={e.username}
-                                                onButtonPress={() => deleteFriend(e.id ? e.id : 0)}
-                                                onNamePress={() => FriendDetails(e.id ? e.id : 0)}
-                                                rightButton
-                                                loading={false}
-                                            />
-                                        </motion.div>
-                                    );
-                                }) :
-                                <MessageBox title={`${t("no_avalible_friends")}`} />
-                            }
-                        </motion.div>
-                    </>
-                }
+                {!friends && (
+                    <div className={styles.loadingError}>
+                        <MessageBox title={`${t("No Internet Connection")}`} />
+                    </div>
+                )}
+                <motion.div
+                    variants={container}
+                    initial="hidden"
+                    animate="visible"
+                    className={styles.contentBox}>
+                    {friends?.length !== 0 ?
+                        friends?.map((e, index) => {
+                            return (
+                                <motion.div
+                                    variants={item}
+                                    key={index}
+                                    id="map-dev"
+                                    className={styles.channelRowBox}
+                                >
+                                    <RowItemView
+                                        title={`${t("unfriend")}`}
+                                        imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ""}
+                                        color={e.color ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}
+                                        text={e.username}
+                                        onButtonPress={() => deleteFriend(e.id ? e.id : 0)}
+                                        onNamePress={() => FriendDetails(e.id ? e.id : 0)}
+                                        rightButton
+                                        loading={false}
+                                    />
+                                </motion.div>
+                            );
+                        }) :
+                        <MessageBox title={`${t("no_avalible_friends")}`} />
+                    }
+                </motion.div>
             </div>
         </div>
     )

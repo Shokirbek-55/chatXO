@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import AvatarUpload from '../../../components/AvatarUpload/AvatarUpload';
 import Header from '../../../components/Header/Header';
-import MessageBox from '../../../components/MessageBox';
+import MessageBox from '../../../components/MessageBox/MessageBox';
 import RowItemView from '../../../components/RowItem';
 import Text from '../../../components/Text/Text';
 import { TMP_URL } from '../../../env';
@@ -36,16 +36,21 @@ const item = {
 
 const Account = () => {
     const navigation = useNavigate()
-    const { myData, getUserData } = useRootStore().usersStore
-    const { channelsData, getMyChannels, channelsLoading } = useRootStore().channelStore
+    const { myData, getUserData, getFriendDetails } = useRootStore().usersStore
+    const { myChannels, getMyChannels, channelsLoading } = useRootStore().channelStore
     const { friends, getFriends, loading } = useRootStore().friendsStore
-    const { toRouter,closeModal } = useRootStore().routerStore
+    const { toRouter, closeModal } = useRootStore().routerStore
 
     useEffect(() => {
         getUserData()
         getFriends()
         getMyChannels()
     }, [])
+
+    const FriendDetails = (friendId: number) => {
+        getFriendDetails(friendId)
+        toRouter("friendDetails")
+    }
 
     const { t } = useTranslation()
 
@@ -82,13 +87,7 @@ const Account = () => {
                                 {t("in groups")}
                             </Text>
                         </div>
-                        <Loading isLoad={channelsLoading} />
-                        {false && (
-                            <div className={styles.loadingBox}>
-                                <Loading isLoad={channelsLoading} />
-                            </div>
-                        )}
-                        {!channelsData && (
+                        {!myChannels && (
                             <div className={styles.loadingError}>
                                 <MessageBox title={`${t("No Internet Connection")}`} />
                             </div>
@@ -98,8 +97,8 @@ const Account = () => {
                             initial="hidden"
                             animate="visible"
                             className={styles.contentBox}>
-                            {channelsData?.length !== 0 ?
-                                channelsData?.map((e, index) => {
+                            {myChannels?.length !== 0 ?
+                                myChannels?.map((e, index) => {
                                     return (
                                         <motion.div
                                             variants={item}
@@ -132,13 +131,7 @@ const Account = () => {
                                 {t("per_user")}
                             </Text>
                         </div>
-                        <Loading isLoad={loading} />
-                        {false && (
-                            <div className={styles.loadingBox}>
-                                <Loading isLoad={loading} />
-                            </div>
-                        )}
-                        {!channelsData && (
+                        {!myChannels && (
                             <div className={styles.loadingError}>
                                 <MessageBox title={`${t("No Internet Connection")}`} />
                             </div>
@@ -157,7 +150,7 @@ const Account = () => {
                                             id="map-dev"
                                             className={styles.channelRowBox}>
                                             <RowItemView
-                                                // onNamePress={() => onNamePress(e.id as never)}
+                                                onNamePress={() => FriendDetails(e.id as never)}
                                                 key={index}
                                                 text={e.username}
                                                 color={e.color ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}

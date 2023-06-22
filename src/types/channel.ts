@@ -105,40 +105,115 @@ export type InvitationCodes = {
 };
 
 export type Channel = {
-  id?: number;
-  hashId?: string;
+  id: number;
+  hashId: string;
   name: string;
-  slug?: string;
-  color?: string;
-  avatar?: string;
-  adminId?: number;
-  active?: boolean;
-  isOwn?: boolean;
+  slug: string;
+  color: string;
+  avatar: string;
+  adminId: number;
+  active: boolean;
+  isOwn: boolean;
   isPrivate: boolean;
-  synced?: boolean;
-  createdAt?: string;
-  pageState?: string;
-  description?: string;
-  // messages?: Message[];
-  lastMessageTimestamp?: string;
-  canLoadMore?: boolean;
-  relevance?: number;
-  userRelevance?: number;
-  filtered?: boolean;
-  unreadMessage?: number;
-  // hashtags?: Hashtag[];
-  // activeHashtags?: Hashtag[];
-  isOpen?: boolean;
-  users?: User[];
-  inviteCode?: string | null;
-  groupNumber?: string;
-  groupPassword?: string;
-  invitationCodes?: InvitationCodes[];
-  qrCode?: string;
-  isBlocked?: boolean;
-  // rByLocation?: RlType;
-  // rByLocationType?: RlTypeKeys;
+  synced: boolean;
+  createdAt: string;
+  pageState: string;
+  description: string;
+  // messages: Message[];
+  lastMessageTimestamp: string;
+  canLoadMore: boolean;
+  relevance: number;
+  userRelevance: number;
+  filtered: boolean;
+  unreadMessage: number;
+  // hashtags: Hashtag[];
+  // activeHashtags: Hashtag[];
+  isOpen: boolean;
+  users: User[];
+  inviteCode: string | null;
+  groupNumber: string;
+  groupPassword: string;
+  invitationCodes: InvitationCodes[];
+  qrCode: string;
+  isBlocked: boolean;
 };
+
+export type SetUpdataChanelType = {
+  name?: string;
+  isPrivate?: boolean;
+  color?: string;
+}
+export type generateInviteCodeType = {
+  inviteCode: string,
+  qrCode: string,
+  hashId:string
+}
+export const generateInviteCodeInitialState = {
+  inviteCode: "",
+  qrCode: "",
+  hashId:""
+}
+
+export const ChannelInitialState = {
+  id: 0,
+  hashId: "",
+  name: "",
+  slug: "",
+  color: "",
+  avatar: "",
+  adminId: 0,
+  active: false,
+  isOwn: false,
+  isPrivate: false,
+  synced: false,
+  createdAt: "",
+  pageState: "",
+  description: "",
+  // messages: Message[],
+  lastMessageTimestamp: "",
+  canLoadMore: false,
+  relevance: 0,
+  userRelevance: 0,
+  filtered: false,
+  unreadMessage: 0,
+  // hashtags: Hashtag[],
+  // activeHashtags: Hashtag[],
+  isOpen: false,
+  users: [],
+  inviteCode: "" || null,
+  groupNumber: "",
+  groupPassword: "",
+  invitationCodes: [],
+  qrCode: "",
+  isBlocked: false,
+};
+
+export type ChannelsUsersType = {
+  active: boolean,
+  avatar: string,
+  color: string,
+  email: string
+  id: number
+  adminId: number 
+  latitude: string
+  longitude: string
+  relevance: 0
+  status: string
+  username: string
+}
+export const ChannelsUsersInitial = {
+  active: false,
+  avatar: null,
+  color: "#",
+  email: "",
+  id: 0,
+  adminId: 0,
+  latitude: null,
+  longitude: null,
+  relevance: 0,
+  status: "",
+  username: "",
+}
 
 export type PimpMessage = {
   userId?: number;
@@ -186,3 +261,9 @@ export type TimestampHistoryResponse = {
   messages: Array<RawMessage>;
   isEnd: boolean;
 };
+
+export type CreateChannelType = {
+  name: string,
+  description: string;
+  color: string;
+}

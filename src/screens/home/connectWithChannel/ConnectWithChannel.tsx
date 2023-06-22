@@ -5,11 +5,12 @@ import ButtonView from '../../../components/Button';
 import Header from '../../../components/Header/Header';
 import Input from '../../../components/Input';
 import Text from '../../../components/Text/Text';
+import useRootStore from '../../../hooks/useRootStore';
 import styles from "./ConnectWithChannel.module.css"
 
 const ConnectWithChannel = () => {
     const { t } = useTranslation()
-    const navigation = useNavigate()
+    const { toRouter } = useRootStore().routerStore
     return (
         <div className={styles.container}>
             <Header text="Connect" />
@@ -43,7 +44,7 @@ const ConnectWithChannel = () => {
                     </div>
                     <ButtonView
                         title={`${t("createGroup")}`}
-                        onClickbutton={() => navigation("")}
+                        onClickbutton={() => toRouter("createChannel")}
                         style={{
                             display: "flex",
                             fontSize: "18px",

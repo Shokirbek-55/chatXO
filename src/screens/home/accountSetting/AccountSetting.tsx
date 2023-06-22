@@ -18,7 +18,7 @@ import { User } from '../../../types/user'
 const AccountSetting = () => {
     const { getUserData, setMyData, updateUserAccount, setUserState, myData, createMeAvatar } = useRootStore().usersStore
     const { logout } = useRootStore().authStore
-    const { closeModal } = useRootStore().routerStore
+    const { closeModal, toRouter } = useRootStore().routerStore
     const navigation = useNavigate()
     const { t } = useTranslation()
 
@@ -64,7 +64,7 @@ const AccountSetting = () => {
                 />
                 <Text
                     color="yellowgreen"
-                    handleLink={() => navigation("")}
+                    handleLink={() => toRouter("language")}
                     children={t("change_language")}
                 />
             </div>

@@ -69,12 +69,12 @@ export default class UsersStore {
     updateUserAccount = async (user: Partial<User>) => {
         await this.updateUserAccountOperation.run(() => APIs.Account.updateAccount(user))
         if (this.updateUserAccountOperation.isSuccess) {
-           message.success(`${t("update_profile")}`)
+            message.success(`${t("update_profile")}`)
+            this.getUserData()
         }
     }
 
     createMeAvatar = async (formData: FormData) => {
-        console.log('form', formData);
         runInAction(() => {
             this.avatarLoading = true
         })
@@ -113,8 +113,8 @@ export default class UsersStore {
         if (this.getFriendDetailsOperation.isSuccess) {
             runInAction(() => {
                 this.friendDetails = this.getFriendDetailsOperation.data
-                    if (!!this.rootStore.channelStore.channelsData.length && !!this.friendDetails.channels?.length) {
-                    const sortedData = this.rootStore.channelStore.channelsData.reduce((total: Channel[] = [], myChanel) => {
+                    if (!!this.rootStore.channelStore.myChannels.length && !!this.friendDetails.channels?.length) {
+                    const sortedData = this.rootStore.channelStore.myChannels.reduce((total: Channel[] = [], myChanel) => {
                         const slug = myChanel.slug;
                         const currentChanel =
                         this.friendDetails?.channels?.filter(

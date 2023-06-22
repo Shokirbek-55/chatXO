@@ -28,6 +28,7 @@ interface Props {
   matches?: any;
   icon?: string;
   className?: any;
+  userType?: string;
 }
 
 function chsUser(username: string) {
@@ -52,6 +53,7 @@ const RowItemView: FC<Props> = ({
   onClick,
   icon,
   className,
+  userType
 }) => {
   const { t } = useTranslation();
   return (
@@ -87,6 +89,9 @@ const RowItemView: FC<Props> = ({
           />
         ) : null}
         {icon === "search" ? <SearchIcon size={21} /> : null}
+        {userType ?
+          <Text style={{ fontSize: "12px", whiteSpace: "nowrap" }} color="yellowgreen" children={userType} /> : null
+        }
       </div>
     </div>
   );

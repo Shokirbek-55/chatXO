@@ -222,7 +222,7 @@ export const en = {
   system_message_user_blocked: "{{name}} was blocked in the chat",
   system_message_user_unblocked: "{{name}} was unblocked in the chat",
   system_message_user_was_added: "{{name}} was added to the chat",
-  type_group: "Group's Type: {{groupType}}",
+  type_group: "Group's Type: ",
   group_is_private: "Only the Admin of the chat can invite a new participant",
   group_is_open: "Any user of the chat can invite a new participant",
   join_private_group:

@@ -1,4 +1,6 @@
 import React, { CSSProperties, FC, useState } from "react";
+import { useTranslation } from "react-i18next";
+import Text from "../Text/Text";
 import styles from "./switch.module.css";
 
 interface Props {
@@ -21,20 +23,23 @@ const SimpleSwitch: FC<Props> = ({
   offOpen,
   isPrivate,
 }) => {
-  const [isToggled, setIsToggled] = useState(switchValue);
+  const [isToggled, setIsToggled] = useState(!!switchValue);
   const onToggled = () => setIsToggled(!isToggled);
-
+  const { t } = useTranslation()
   return (
     <>
-      <p style={{ fontSize: "14px", fontFamily: "Montserrat5" }}>
-        {title} <span>{isToggled ? onOpen : offOpen}</span>
-      </p>
+      <div className={styles.header}>
+        <Text children={t("type_group")} />
+        <p style={{ fontSize: "16px", fontFamily: "Montserrat7" }}>
+          {title} <span>{isToggled ? onOpen : offOpen}</span>
+        </p>
+      </div>
       <label className={styles.toggleSwitch}>
         <input
           type="checkbox"
           checked={isToggled}
           onClick={onToggled}
-          onChange={(e) => isPrivate(e.target.checked)}
+          onChange={(e) => isPrivate(e.currentTarget.checked)}
         />
         <span className={styles.switch} />
       </label>
