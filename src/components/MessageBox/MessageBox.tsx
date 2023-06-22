@@ -13,11 +13,12 @@ const MessageBox: React.FC<Props> = ({
             display: "flex",
             width: "100%",
             justifyContent: "center",
-            marginTop: "50px",
+            margin: "40px 0",
             opacity: 0.5,
-            fontSize: size
+            fontSize: size ? size : "16px",
+            fontFamily: "Montserrat5"
         }}>
-            <h3>{title}</h3>
+            {title}
         </div>
     )
 }

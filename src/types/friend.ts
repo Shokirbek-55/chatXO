@@ -14,4 +14,5 @@ export interface Friend {
   id: number;
   updatedAt: string;
   username: string;
+  // isAdded: boolean;
 }

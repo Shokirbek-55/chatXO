@@ -52,7 +52,7 @@ export class Operation<T> implements IOperation<T> {
         try {
             const response = await request();
             this.setSuccess();
-            this.setData(response.data);
+            this.setData(response?.data);
             return response;
         } catch (e: any) {
             console.log('e', e);

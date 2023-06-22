@@ -71,3 +71,8 @@ span {
   background-color: #b8b4b4;
   border-radius: 20px;
 }
+
+.unblock_user_btn {
+  white-space: nowrap;
+  background-color: crimson !important;
+}

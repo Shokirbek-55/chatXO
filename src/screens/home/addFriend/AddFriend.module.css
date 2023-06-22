@@ -7,9 +7,9 @@
 
 .main {
   flex: 1;
-  /* background-color: yellow; */
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .rowItemBox {
