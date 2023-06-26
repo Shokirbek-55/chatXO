@@ -5,12 +5,61 @@ import {
 import styled from "styled-components";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+interface propsType {
+  onTextSearch: () => void;
+  name?: string;
+  img_url?: string;
+  color?: string;
+  pageState?: string;
+  onPress?: () => void
+}
+
+export const ChatHeader = ({
+  name,
+  img_url,
+  color,
+  onPress
+}: propsType) => {
+
+  const [isSearch, setIsSearch] = useState(Boolean)
+  const navigation = useNavigate()
+  return (
+      <BassComponent onClick={onPress}>
+        <header>
+          <div>
+            <nav>
+              {img_url ? (
+                <img src={img_url} alt={img_url} />
+              ) : color ? (
+                <BackgroundGradent style={{ background: `${color}` }} />
+              ) : (
+                <BackgroundGradent style={{ background: `${color}` }} />
+              )}
+            </nav>
+            <h3>{name}</h3>
+          </div>
+        </header>
+        <div>
+          <span onClick={() => setIsSearch((prev) => !prev)}>
+            {isSearch ? (
+            <CloserNoCirculIcon size={24} color="#303030" />
+            ) : (
+              <SearchIcon size={24} color="#303030" />
+            )}
+          </span>
+        </div>
+      </BassComponent>
+  );
+};
+
+
+
 const BassComponent = styled.div`
   position: relative;
-  top: 0;
   width: 100%;
+  top: 0;
   height: 7.5vh;
-  /* border: 1px solid red; */
   background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(25px);
   display: flex;
@@ -18,6 +67,8 @@ const BassComponent = styled.div`
   justify-content: space-between;
   padding: 5px;
   z-index: 15;
+  box-shadow: 0px 8px 48px 0px rgba(32, 35, 39, 0.02), 0px 4px 8px 0px rgba(32, 35, 39, 0.04), 0px 0px 1px 0px rgba(32, 35, 39, 0.16);
+
   header {
     position: relative;
     width: 65%;
@@ -41,6 +92,7 @@ const BassComponent = styled.div`
       }
     }
   }
+
   div {
     position: relative;
     display: flex;
@@ -56,52 +108,3 @@ const BackgroundGradent = styled.div`
   height: 100%;
   background: linear-gradient(#ddd, #666);
 `;
-
-interface propsType {
-  onTextSearch: () => void;
-  name?: string;
-  img_url?: string;
-  color?: string;
-  pageState?: string;
-  onPress?: () => void
-}
-
-export const ChatHeader = ({
-  name,
-  img_url,
-  color,
-  onPress
-}: propsType) => {
-
-  const [isSearch, setIsSearch] = useState(Boolean)
-  const navigation = useNavigate()
-  return (
-    <>
-      <BassComponent onClick={onPress}>
-        <header>
-          <div>
-            <nav>
-              {img_url ? (
-                <img src={img_url} alt={img_url} />
-              ) : color ? (
-                <BackgroundGradent style={{ background: `${color}` }} />
-              ) : (
-                <BackgroundGradent style={{ background: `${color}` }} />
-              )}
-            </nav>
-            <h3>{name}</h3>
-          </div>
-        </header>
-        <div>
-          <span onClick={() => setIsSearch((prev) => !prev)}>
-            {isSearch ? (
-              <CloserNoCirculIcon size={24} />
-            ) : (
-              <SearchIcon size={24} />
-            )}
-          </span>
-        </div>
-      </BassComponent>
-    </>
-  );
-};

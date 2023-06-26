@@ -1,0 +1,12 @@
+.parentContainer {
+  width: 100%;
+  padding: 10px 15px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 10px;
+}
+.imgCard {
+  max-width: 600px;
+  max-height: 300px;
+}

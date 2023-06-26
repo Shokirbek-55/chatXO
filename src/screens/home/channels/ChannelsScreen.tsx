@@ -2,7 +2,6 @@ import { styled } from "styled-components"
 import Header from "../../../components/Header/Header"
 import { useTranslation } from "react-i18next"
 import Text from "../../../components/Text/Text"
-import styles from './ChannelsScreen.module.css'
 import { Loading } from "../../../components/Loading/Loading"
 import MessageBox from "../../../components/MessageBox/MessageBox"
 import ChannelRowItem from "../../../components/ChanneItem/ChannelItem"
@@ -11,7 +10,8 @@ import { observer } from "mobx-react-lite"
 import { TMP_URL } from "../../../env"
 import { motion } from "framer-motion";
 import { InputComponent } from "../../../utils/inputComponent"
-import { toJS } from "mobx"
+import { generatePath, useNavigate } from "react-router-dom"
+import styles from './index.module.css'
 
 const container = {
   hidden: { opacity: 1, scale: 0 },
@@ -35,18 +35,14 @@ const item = {
 
 function ChannelsScreen() {
 
-  const { logout } = useRootStore().authStore
   const { toRouter } = useRootStore().routerStore
-  const { myChannels, setSearchChannels, getChannelByHashId, channelData } = useRootStore().channelStore
+  const { myChannels, setSearchChannels, getChannelByHashId } = useRootStore().channelStore
+  const { getHistoryMessages } = useRootStore().messageStore
   const { t } = useTranslation()
+  const navigate = useNavigate();
 
   const serachChannelHandler = (text: string) => {
     setSearchChannels(text)
-  }
-
-  const getChannel = (hashId: string) => {
-    getChannelByHashId(hashId)
-    toRouter("manageChannel")
   }
 
   return (
@@ -97,7 +93,12 @@ function ChannelsScreen() {
                 className={styles.channelRowBox}
               >
                 <ChannelRowItem
-                  onPress={() => getChannel(e?.hashId as string)}
+                  onPress={() => {
+                    getChannelByHashId(e.hashId as string)
+                    getHistoryMessages(e.slug)
+                    const target = generatePath(`/:name`, { name: `@${e.name}` })
+                    navigate(target)
+                  }}
                   item={e}
                   name={e.name}
                   color={e.color ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}

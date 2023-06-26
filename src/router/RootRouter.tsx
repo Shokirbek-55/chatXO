@@ -7,7 +7,7 @@ import SignUp from "../screens/auth/sign-up/SignUp"
 import WelcomeView from "../screens/auth/welcome/Welcome"
 import ChangeLanguageView from "../screens/auth/change-language/ChangeLanguage"
 import SignUpSocial from "../screens/auth/sign-up-social/SignUpSocial"
-import FriendsScreen from "../screens/home/friendsScreen/FriendsScreen"
+import Chat from "../screens/home/chat/Chat"
 
 
 function RootRouter() {
@@ -15,7 +15,7 @@ function RootRouter() {
     return (
         <Routes>
             <Route path="/" element={<HomeLayout />} >
-                <Route path='friends' element={<FriendsScreen />} />
+                <Route path=':name' element={<Chat />} />
             </Route>
             <Route path="/auth" element={<AuthLayout />} >
                 <Route index path='welcome' element={<WelcomeView />} />

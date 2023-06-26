@@ -35,6 +35,7 @@ export default class ChannelStore {
     delateUserFromChannelOperation = new Operation<Channel>({} as Channel)
     getChannelBlockedUsersOperation = new Operation<User[]>([] as User[])
     blockUserOperation = new Operation<User>({} as User)
+    getChannelUsersOperation = new Operation<any>({} as any)
 
     myChannels: Channel[] = []
 
@@ -46,9 +47,15 @@ export default class ChannelStore {
 
     getChannelsUsersData: ChannelsUsersType[] = []
 
+    channelUsers: {
+        [key: string]: ChannelsUsersType
+    } = {}
+
     getBlockedUser: User[] = []
 
     channelsLoading: boolean = false
+
+    isLoad: boolean = false
 
     getMyChannels = async () => {
         runInAction(() => {
@@ -64,7 +71,11 @@ export default class ChannelStore {
     };
 
     getChannelByHashId = async (hashId: string) => {
+        runInAction(() => {
+            this.isLoad = true
+        })
         await this.getChannelByHashIdOperation.run(() => APIs.channels.getChannelByHashId(hashId))
+        await this.getChannelUsers(hashId)
         if (this.getChannelByHashIdOperation.isSuccess) {
             runInAction(() => {
                 this.channelData = this.getChannelByHashIdOperation.data
@@ -75,6 +86,19 @@ export default class ChannelStore {
                 isPrivate: this.channelData.isPrivate,
                 color: this.channelData.color || '',
             }
+            runInAction(() => {
+                this.isLoad = false
+            })
+        }
+    }
+
+    getChannelUsers = async (hashId: string) => {
+        await this.getChannelUsersOperation.run(() => APIs.channels.getChannelUsers(hashId))
+        if (this.getChannelUsersOperation.isSuccess) {
+            console.log("channelUsers", toJS(this.getChannelUsersOperation.data));
+            runInAction(() => {
+                this.channelUsers = this.getChannelUsersOperation.data
+            })
         }
     }
 

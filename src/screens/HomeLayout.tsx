@@ -1,15 +1,17 @@
 import { motion } from "framer-motion";
 import { observer } from 'mobx-react-lite';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { styled } from 'styled-components';
 import useRootStore from '../hooks/useRootStore';
 import SidebarLayout from "./Sidebar";
 import Chat from "./home/chat/Chat";
 import EditChannel from "./home/editChannel/EditChannel";
+import EmptyScreen from "./home/emptyScreen/EmptyScreen";
 
 function HomeLayout() {
 
   const { session } = useRootStore().localStore
+  const { isOpenRigthSideBar } = useRootStore().routerStore
 
   if (!session.accessToken) {
     return <Navigate to='/auth/welcome' />
@@ -20,36 +22,45 @@ function HomeLayout() {
       <Sidebar>
         <SidebarLayout />
       </Sidebar>
-      <MainBody>
-        <ChatArea>
-          <Chat />
-        </ChatArea>
-        <motion.div
-          className='rigthArea'
-        >
-          <EditChannel />
-        </motion.div>
-      </MainBody>
+      <ChatArea>
+        <Outlet />
+        <EmptyScreen />
+      </ChatArea>
+      <RightArea isopen={isOpenRigthSideBar}>
+        <EditChannel />
+      </RightArea>
     </Container>
   )
-}
+} 
 
 export default observer(HomeLayout)
 
 
 const Container = styled.div`
   display: flex;
-  flex: 5;
   height: 100vh;
   width: 100vw;
+  max-width: 100vw;
+  max-height: 100vh;
   overflow: hidden;
   .rigthArea{
-    flex: 1.3;
+    flex: 1;
+    max-width: 340px;
+    width: 340px;
+    height: 100%;
+    transition: transform 0.3s ease-in-out;
+    z-index: 16;
+  }
+  .open{
+    transform: translateX(0);
+  }
+  .close{
+    transform: translateX(100%);
   }
 `
 
 const Sidebar = styled.div`
-  flex: 2;
+  flex: 1;
   max-width: 340px;
   width: 340px;
   height: 100%;
@@ -57,17 +68,20 @@ const Sidebar = styled.div`
 `
 
 const ChatArea = styled.div`
-  flex: 3;
+  position: relative;
+  flex: 1;
   width: 100%;
   height: 100%;
   background-color: #ddd;
+  z-index: 1;
 `
 
-const MainBody = styled.div`
-  flex: 3;
-  width: 100%;
+const RightArea = styled.div<{ isopen: string }>`
+  flex: 1;
+  max-width: 340px;
+  width: 340px;
   height: 100%;
-  display: flex;
-  flex-direction: row;
-  z-index: 1;
+  transition: margin-right 0.3s ease-in-out;
+  z-index: 16;
+  margin-right: ${props => props.isopen};
 `

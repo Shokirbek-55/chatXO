@@ -1,0 +1,29 @@
+.videoPlayer {
+  width: 450px;
+  /* height: 30px; */
+  border-radius: 10px;
+  position: relative;
+}
+.avatarCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  padding: 20px 15px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.messageCard {
+  border-radius: 10px;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}

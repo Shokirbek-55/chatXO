@@ -246,6 +246,8 @@ export const FillterIcon = ({
     <span
       className={hoverActive ? styles.iconsHoverAndActive : ""}
       style={{
+        width: '45px',
+        height: '45px',
         fontSize: `${size}px`,
         display: "flex",
         padding: `${padding}px`,
@@ -253,6 +255,8 @@ export const FillterIcon = ({
         borderRadius: `${radius}%`,
         backgroundColor: `${background}`,
         color: `${color}`,
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     >
       <FaFilter />

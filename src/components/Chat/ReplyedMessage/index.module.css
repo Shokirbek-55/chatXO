@@ -1,0 +1,48 @@
+.container {
+  width: 100%;
+  margin: 10px 0;
+  display: flex;
+}
+
+.originMessageCard {
+  padding: 10px;
+  width: fit-content;
+  height: fit-content;
+  margin-left: 5px;
+  margin-top: 10px;
+}
+.replyMessageBox {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: flex-end;
+}
+.avatarCard {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.replyMessageCard {
+  background-color: #ccc;
+  width: fit-content;
+  height: 100%;
+  min-width: min-content;
+  max-width: max-content;
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+.replyedMediaCard {
+  padding: 2px 0 2px 8px;
+  width: fit-content;
+  height: 40px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  border-left: 2px solid rgb(0, 170, 255);
+}
+
+.replyedMessage {
+  padding: 5px 8px;
+  background-color: rgba(255, 255, 255, 0.926);
+  border-radius: 10px;
+}
