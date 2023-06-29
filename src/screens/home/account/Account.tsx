@@ -81,10 +81,10 @@ const Account = () => {
                     <div className={styles.loader}>
                         <div className={styles.judgementText}>
                             <Text margin='0 0 10px 0'>
-                                {t("My judgement")}
+                                {t("relevance")}
                             </Text>
                             <Text color="yellowgreen" margin='0 0 10px 0'>
-                                {t("in groups")}
+                                {t("in_channels")}
                             </Text>
                         </div>
                         {!myChannels && (

@@ -30,6 +30,7 @@ const ChannelRowItem: FC<Props> = ({
 
   return (
     <motion.div
+      id="map-dev"
       initial={{ scale: 1 }}
       onClick={() => onPress && onPress(item?.hashId || "")}>
       <ChannelAvatar

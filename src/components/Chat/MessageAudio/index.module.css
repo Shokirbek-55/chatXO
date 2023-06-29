@@ -1,0 +1,20 @@
+.parentContainer {
+  width: 100%;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+}
+.childContainer {
+  width: fit-content;
+  z-index: 10;
+}
+.messageCard {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.avatarCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}

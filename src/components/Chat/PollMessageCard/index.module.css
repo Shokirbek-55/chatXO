@@ -1,0 +1,42 @@
+.parentContainer {
+  width: 100%;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+}
+.childContainer {
+  width: fit-content;
+  z-index: 10;
+}
+.messageCard {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.avatarCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.pollMessageCard {
+  max-width: 550px;
+  min-width: 250px;
+  padding: 10px 15px;
+  align-items: center;
+  background-color: rgb(242, 242, 240);
+  border-radius: 15px;
+}
+
+.rowPercentage {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+}
+
+.voteButton {
+  margin-top: 10px;
+  padding: 1px 8px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}

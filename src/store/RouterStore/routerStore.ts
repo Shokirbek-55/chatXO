@@ -1,3 +1,4 @@
+import { channels } from './../dataBase';
 import { makeAutoObservable, runInAction, set } from "mobx";
 import { MainRoutes, MainRoutesType, SideBarHelperRoutes, SideBarHelperRoutesType, mainRoutes } from "./routers";
 import _ from 'lodash';
@@ -9,8 +10,9 @@ export default class RouterStore {
     }
 
     currentRoute: MainRoutesType = mainRoutes[0];
-    // modalRoute: MainRoutesType | null = null;
     routers: SideBarHelperRoutesType[] = []
+
+    isOpenRigthSideBar = '-340px'
 
     setCurrentRoute = (route: keyof typeof MainRoutes) => {
         this.currentRoute = mainRoutes.find(item => item.key === route) as MainRoutesType;
@@ -36,6 +38,10 @@ export default class RouterStore {
                 this.routers.pop();
             })
         }, 300)
+    }
+
+    openRightSideBar = () => {
+        this.isOpenRigthSideBar === '-340px' ? this.isOpenRigthSideBar = '0px' : this.isOpenRigthSideBar = '-340px'
     }
 
 }

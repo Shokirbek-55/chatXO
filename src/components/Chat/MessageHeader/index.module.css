@@ -1,0 +1,17 @@
+.replayContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 5px 0;
+}
+.relevence {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+.messageHeaderStar {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+}

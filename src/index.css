@@ -76,3 +76,9 @@ span {
   white-space: nowrap;
   background-color: crimson !important;
 }
+
+body {
+  #map-dev{
+    outline: none;
+  }
+}

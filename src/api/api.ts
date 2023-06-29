@@ -78,6 +78,7 @@ const APIs = {
 
         getFriendDetails: (friendId: number) => apiService.methods.get(`${users}/get/${friendId}`)
     },
+
     channels: {
         getChannel: (hashId: string) =>
             apiService.methods.get<Channel>(`${channelUrl}/hash/${hashId}`),
@@ -105,6 +106,10 @@ const APIs = {
                 },
             });
         },
+
+        getChannelUsers: (channelHashId: string) => 
+            apiService.methods.get<User[]>(`${channelUrl}/${channelHashId}/users`),
+
         connectToChannel: (channelNumber: string) =>
             apiService.methods.get<Channel>(`${channelUrl}/${channelNumber}`),
 

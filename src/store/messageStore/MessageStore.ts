@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction, toJS } from "mobx";
 import { RawMessage } from "../../types/channel";
 import { AppRootStore } from "../store";
 
@@ -20,10 +20,40 @@ export default class MessageStore {
 
     messages: RawMessage[] = [];
     slug: string = '';
-    pageState:string = ''
+    pageState: string = ''
+    
+    messageData = {
+        slug: '',
+        pageState: '',
+        messages: [],
+    }
+
+    isLoadMessages: boolean = false;
 
     get allMessages() {
         return this.messages;
+    }
+
+    getHistoryMessages = (slug: string) => {
+        runInAction(() => {
+            this.isLoadMessages = true;
+        });
+        
+        this.app.socketStore.socket?.emit('history', {
+            channelSlug: slug,
+        });
+
+        this.app.socketStore.socket?.once('history', (data: {
+            messages: RawMessage[];
+            pageState: string;
+            slug: string;
+        }) => { 
+            this.getAllMessages(data);
+        });
+
+        runInAction(() => {
+            this.isLoadMessages = false;
+        });
     }
 
     getAllMessages = ({ slug, pageState, messages }: MessagesState) => {

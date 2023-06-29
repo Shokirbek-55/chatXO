@@ -2,7 +2,7 @@ import { makeAutoObservable, runInAction } from 'mobx';
 import { createContext } from 'react';
 
 
-import MessageStore  from './messageStore.ts/MessageStore';
+import MessageStore  from './messageStore/MessageStore';
 import ChannelStore  from './channelStore/channelStore';
 import AuthStore from './AuthStore/AuthStore';
 import LocalStore from './loacalStore/loacalStore';

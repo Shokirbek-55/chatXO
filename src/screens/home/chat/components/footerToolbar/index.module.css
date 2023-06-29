@@ -1,0 +1,32 @@
+.footerToolbar {
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  padding-bottom: 5px;
+  bottom: 7.5vh;
+  width: 100%;
+  height: 45px;
+  left: 0;
+  border: 1px solid #eee;
+  z-index: 15;
+}
+.toolbarLeft {
+  display: flex;
+  flex-direction: row;
+  padding-left: 10px;
+  gap: 10px;
+}
+
+.toolbarRight {
+  display: flex;
+  flex-direction: row;
+  padding-right: 10px;
+  gap: 20px;
+}
+.labelForCss {
+  width: 25px;
+  height: 25px;
+  background-color: red;
+}
