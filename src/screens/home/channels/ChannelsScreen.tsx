@@ -45,6 +45,13 @@ function ChannelsScreen() {
     setSearchChannels(text)
   }
 
+  const handleChanel = (e) => {
+    getHistoryMessages(e.slug)
+    const target = generatePath(`/:name`, { name: `@${e.name}` })
+    navigate(target)
+  }
+
+
   return (
     <LeftAreaContainer>
       <Header
@@ -93,12 +100,7 @@ function ChannelsScreen() {
                 className={styles.channelRowBox}
               >
                 <ChannelRowItem
-                  onPress={() => {
-                    getChannelByHashId(e.hashId as string)
-                    getHistoryMessages(e.slug)
-                    const target = generatePath(`/:name`, { name: `@${e.name}` })
-                    navigate(target)
-                  }}
+                  onPress={() => handleChanel(e)}
                   item={e}
                   name={e.name}
                   color={e.color ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}

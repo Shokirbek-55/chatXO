@@ -18,6 +18,7 @@ const StyleRangeSilder = styled.div`
     display: flex;
     width: 100%;
     gap: 15px;
+    align-items: center;
   }
 `;
 interface propsType {
@@ -29,7 +30,9 @@ const FilterSilderComponent = () => {
     progress: 0,
   });
   const changeRelevance = (e: number) => {
-
+    setFilter({
+      progress: e
+    })
   };
 
   return (

@@ -1,6 +1,7 @@
 
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { ArrowDowunIcon } from "../../utils/icons";
+import { styled } from "styled-components";
 
 type ScrollContainerProps = {
     children: React.ReactNode;
@@ -11,30 +12,56 @@ type ScrollContainerProps = {
 const ScrollContainer = ({ children, header,input }:ScrollContainerProps) => {
     const outerDiv = useRef<HTMLDivElement | any>(null);
     const innerDiv = useRef<HTMLDivElement | any>(null);
+    const inputDiv = useRef<HTMLDivElement | any>(null);
 
-    const prevInnerDivHeight = useRef(null);
+    const topDiv = useRef<HTMLDivElement | any>(null);
+
+    // const prevInnerDivHeight = useRef(null);
 
     const [showScrollButton, setShowScrollButton] = useState(false);
+
+    // scroll event listener
+    useEffect(() => {
+        const handleScroll = () => {
+            if (innerDiv.current.clientHeight - outerDiv.current.clientHeight === outerDiv.current.scrollTop) {
+                setShowScrollButton(false);
+            }
+            toBottomShowArrow();
+            toBottomNoShowArrow();           
+        };
+        outerDiv.current.addEventListener('scroll', handleScroll);
+    }, []);
 
     useEffect(() => {
         const outerDivHeight = outerDiv.current.clientHeight;
         const innerDivHeight = innerDiv.current.clientHeight;
         const outerDivScrollTop = outerDiv.current.scrollTop;
 
-        if (
-            !prevInnerDivHeight.current ||
-            outerDivScrollTop === prevInnerDivHeight.current - outerDivHeight
-        ) {
-            outerDiv.current.scrollTo({
-                top: innerDivHeight! - outerDivHeight!,
-                left: 0,
-                behavior: prevInnerDivHeight.current ? "smooth" : "auto"
-            });
+        if (innerDivHeight < outerDivHeight) {
+            topDiv.current.style.height = `${outerDivHeight - innerDivHeight}px`;
         } else {
-            setShowScrollButton(true);
-        };
+            topDiv.current.style.height = `0px`;
+            outerDiv.current.scrollTo({
+                top: innerDivHeight - outerDivHeight + 12,
+                left: 0,
+                behavior: "auto" //prevInnerDivHeight.current ? "smooth" :
+            });
+        }
+        
+        // if (
+        //     !prevInnerDivHeight.current ||
+        //     outerDivScrollTop === prevInnerDivHeight.current - outerDivHeight
+        // ) {
+            // outerDiv.current.scrollTo({
+            //     top: innerDivHeight! - outerDivHeight! + 12,
+            //     left: 0,
+            //     behavior: "auto" //prevInnerDivHeight.current ? "smooth" :
+            // });
+        // } else {
+        //     setShowScrollButton(true);
+        // };
 
-        prevInnerDivHeight.current = innerDivHeight;
+        // prevInnerDivHeight.current = innerDivHeight;
     }, [children]);
 
     const handleScrollButtonClick = useCallback(() => {
@@ -42,7 +69,7 @@ const ScrollContainer = ({ children, header,input }:ScrollContainerProps) => {
         const innerDivHeight = innerDiv.current.clientHeight;
 
         outerDiv.current.scrollTo({
-            top: innerDivHeight! - outerDivHeight! + 10,
+            top: innerDivHeight! - outerDivHeight! + 12,
             left: 0,
             behavior: "smooth",
         });
@@ -69,21 +96,7 @@ const ScrollContainer = ({ children, header,input }:ScrollContainerProps) => {
             setShowScrollButton(false);
         }
     }, []);
-
-    // scroll event listener
-    useEffect(() => {
         
-        const handleScroll = () => {
-            if (innerDiv.current.clientHeight - outerDiv.current.clientHeight === outerDiv.current.scrollTop) {
-                setShowScrollButton(false);
-            }
-            toBottomShowArrow();
-            toBottomNoShowArrow();
-        };
-
-        outerDiv.current.addEventListener('scroll', handleScroll);
-    }, []);
-
 
     return (
         <div
@@ -92,23 +105,44 @@ const ScrollContainer = ({ children, header,input }:ScrollContainerProps) => {
                 height: "100%",
                 width: "100%",
                 backgroundColor: 'green',
+                overflow: "hidden",
             }}
         >
-            {header}
+            <div style={{
+                position: "absolute",
+                top: "0",
+                width: "100%",
+                zIndex: 11,
+                height: 'auto',
+            }}
+            >
+                {header}
+            </div>
             <div
                 ref={outerDiv}
                 style={{
                     position: "relative",
                     height: "100%",
                     overflowY: "scroll",
+                    // border: "1px solid red",
+                    overflowX: "hidden",
+                    flex: '1 1 0',
                 }}
             >
+                <div ref={topDiv}  style={{
+                    flex: '1 1 auto',
+                    position: 'relative',
+                    minHeight: '12px',
+                }}/>
                 <div
                     ref={innerDiv}
                     style={{
-                        position: "relative"
+                        position: "relative",
+                        // border: "1px solid black",
+                        flex: '0 0 auto',
                     }}
                 >
+                    <div />
                     {children}
                 </div>
             </div>
@@ -132,7 +166,11 @@ const ScrollContainer = ({ children, header,input }:ScrollContainerProps) => {
                 position: "absolute",
                 bottom: "0",
                 width: "100%",
-            }}>
+                zIndex: 10,
+                height: 'auto',
+            }}
+                ref={inputDiv}
+            >
                 {input}
             </div>
         </div>

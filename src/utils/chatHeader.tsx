@@ -1,10 +1,10 @@
+import { useState } from "react";
+import styled from "styled-components";
 import {
   CloserNoCirculIcon,
   SearchIcon,
 } from "./icons";
-import styled from "styled-components";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { TMP_URL } from "../env";
 
 interface propsType {
   onTextSearch: () => void;
@@ -18,19 +18,18 @@ interface propsType {
 export const ChatHeader = ({
   name,
   img_url,
-  color,
+  color ,
   onPress
 }: propsType) => {
 
   const [isSearch, setIsSearch] = useState(Boolean)
-  const navigation = useNavigate()
   return (
       <BassComponent onClick={onPress}>
         <header>
           <div>
             <nav>
               {img_url ? (
-                <img src={img_url} alt={img_url} />
+              <img src={TMP_URL + '/' + img_url} alt={img_url} />
               ) : color ? (
                 <BackgroundGradent style={{ background: `${color}` }} />
               ) : (
@@ -66,7 +65,7 @@ const BassComponent = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 5px;
-  z-index: 15;
+  z-index: 10;
   box-shadow: 0px 8px 48px 0px rgba(32, 35, 39, 0.02), 0px 4px 8px 0px rgba(32, 35, 39, 0.04), 0px 0px 1px 0px rgba(32, 35, 39, 0.16);
 
   header {

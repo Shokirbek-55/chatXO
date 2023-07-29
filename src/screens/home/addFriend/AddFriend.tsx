@@ -38,10 +38,6 @@ const AddFriend = () => {
   const { createFriend } = useRootStore().friendsStore
   const { closeModal } = useRootStore().routerStore
 
-  useEffect(() => {
-    getNonFriends()
-  }, [])
-
   const handleChangeText = (text: string) => {
     getUsersFilter(text)
   };

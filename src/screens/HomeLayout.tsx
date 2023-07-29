@@ -1,17 +1,17 @@
-import { motion } from "framer-motion";
 import { observer } from 'mobx-react-lite';
 import { Navigate, Outlet } from 'react-router-dom';
 import { styled } from 'styled-components';
 import useRootStore from '../hooks/useRootStore';
 import SidebarLayout from "./Sidebar";
-import Chat from "./home/chat/Chat";
 import EditChannel from "./home/editChannel/EditChannel";
 import EmptyScreen from "./home/emptyScreen/EmptyScreen";
+import isPropValid from '@emotion/is-prop-valid'
 
 function HomeLayout() {
 
   const { session } = useRootStore().localStore
   const { isOpenRigthSideBar } = useRootStore().routerStore
+
 
   if (!session.accessToken) {
     return <Navigate to='/auth/welcome' />
@@ -26,7 +26,7 @@ function HomeLayout() {
         <Outlet />
         <EmptyScreen />
       </ChatArea>
-      <RightArea isopen={isOpenRigthSideBar}>
+      <RightArea $isopen={isOpenRigthSideBar}>
         <EditChannel />
       </RightArea>
     </Container>
@@ -34,7 +34,6 @@ function HomeLayout() {
 } 
 
 export default observer(HomeLayout)
-
 
 const Container = styled.div`
   display: flex;
@@ -76,12 +75,12 @@ const ChatArea = styled.div`
   z-index: 1;
 `
 
-const RightArea = styled.div<{ isopen: string }>`
+const RightArea = styled.div<{ $isopen?: string }>`
   flex: 1;
   max-width: 340px;
   width: 340px;
   height: 100%;
   transition: margin-right 0.3s ease-in-out;
   z-index: 16;
-  margin-right: ${props => props.isopen};
+  margin-right: ${props => props.$isopen};
 `

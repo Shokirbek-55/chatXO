@@ -9,7 +9,6 @@ import RowItemView from '../../../components/RowItem';
 import Text from '../../../components/Text/Text';
 import { TMP_URL } from '../../../env';
 import useRootStore from '../../../hooks/useRootStore';
-import { channels, friend, myData } from '../../../store/dataBase';
 import styles from "./Account.module.css"
 import { motion } from "framer-motion";
 import Loading from '../../../utils/loading';
@@ -35,17 +34,11 @@ const item = {
 };
 
 const Account = () => {
-    const navigation = useNavigate()
-    const { myData, getUserData, getFriendDetails } = useRootStore().usersStore
-    const { myChannels, getMyChannels, channelsLoading } = useRootStore().channelStore
-    const { friends, getFriends, loading } = useRootStore().friendsStore
+    const { getFriendDetails } = useRootStore().usersStore
+    const { user } = useRootStore().authStore
+    const { myChannels, getMyChannels } = useRootStore().channelStore
+    const { friends } = useRootStore().friendsStore
     const { toRouter, closeModal } = useRootStore().routerStore
-
-    useEffect(() => {
-        getUserData()
-        getFriends()
-        getMyChannels()
-    }, [])
 
     const FriendDetails = (friendId: number) => {
         getFriendDetails(friendId)
@@ -65,11 +58,11 @@ const Account = () => {
                 <div className={styles.avatarBox}>
                     <AvatarUpload
                         upload={false}
-                        imageUrl={myData.avatar ? `${TMP_URL}/${myData.avatar}` : ""}
-                        color={myData?.color ? `linear-gradient(25deg, ${myData.color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}
+                        imageUrl={user.avatar ? `${TMP_URL}/${user.avatar}` : ""}
+                        color={user?.color ? `linear-gradient(25deg, ${user.color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}
                         style={{ width: "140px", height: "140px" }}
                     />
-                    <Text color="yellowgreen" value={myData?.username ? myData.username : "User"}></Text>
+                    <Text color="yellowgreen" value={user?.username ? user.username : "User"}></Text>
                     <Text
                         handleLink={() => toRouter('settings')}
                         color="yellowgreen"

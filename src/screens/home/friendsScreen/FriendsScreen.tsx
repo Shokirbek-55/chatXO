@@ -1,17 +1,14 @@
-import React, { useEffect } from 'react'
+import { motion } from "framer-motion";
+import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import Header from '../../../components/Header/Header';
 import MessageBox from '../../../components/MessageBox/MessageBox';
 import RowItemView from '../../../components/RowItem';
-import { TMP_URL } from '../../../env';
-import { InputComponent } from '../../../utils/inputComponent';
-import styles from "./FriendsScreen.module.css"
-import Header from '../../../components/Header/Header';
 import Text from '../../../components/Text/Text';
+import { TMP_URL } from '../../../env';
 import useRootStore from '../../../hooks/useRootStore';
-import { observer } from 'mobx-react-lite';
-import Loading from '../../../utils/loading';
-import { motion } from "framer-motion";
+import { InputComponent } from '../../../utils/inputComponent';
+import styles from "./FriendsScreen.module.css";
 
 const container = {
     hidden: { opacity: 1, scale: 0 },
@@ -34,8 +31,7 @@ const item = {
 };
 
 const FriendsScreen = () => {
-    const navigation = useNavigate()
-    const { getFriends, friends, deleteFriend, loading, getFriendsFilter } = useRootStore().friendsStore
+    const { friends, deleteFriend, loading, getFriendsFilter } = useRootStore().friendsStore
     const { toRouter } = useRootStore().routerStore
     const { getFriendDetails } = useRootStore().usersStore
     const { t } = useTranslation()
@@ -48,10 +44,6 @@ const FriendsScreen = () => {
         getFriendDetails(friendId)
         toRouter("friendDetails")
     }
-
-    useEffect(() => {
-        getFriends()
-    }, [])
 
     return (
         <div className={styles.container}>

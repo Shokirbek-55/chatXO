@@ -32,8 +32,6 @@ export default class UsersStore {
     userMeAvatarOperation = new Operation<User>({} as User)
     getFriendDetailsOperation = new Operation<User>({}  as User)
 
-    myData: User = {} as User
-
     setMyData: UserStateType = {} as UserStateType
 
     nonFriends: User[] = []
@@ -42,24 +40,10 @@ export default class UsersStore {
 
     friendDetails: User = {}
 
-    getUserData = async () => {
-        runInAction(() => {
-            this.loading = true
-        })
-        await this.getUserDataOperation.run(() => APIs.Account.getMyAccount())
-        if (this.getUserDataOperation.isSuccess) {
-            runInAction(() => {
-                this.myData = this.getUserDataOperation.data
-                this.myDataToSetData()
-                this.loading = false
-            })
-        }
-    }
-
-    myDataToSetData = () => this.setMyData = {
-                    username: this.myData.username as string,
-                    email: this.myData.email as string,
-                    color: this.myData.color as string
+    myDataToSetData = (myData: User) => this.setMyData = {
+                    username: myData.username as string,
+                    email: myData.email as string,
+                    color: myData.color as string
                 }
 
     setUserState = (key:keyof UserStateType, value:string) => {
@@ -70,7 +54,7 @@ export default class UsersStore {
         await this.updateUserAccountOperation.run(() => APIs.Account.updateAccount(user))
         if (this.updateUserAccountOperation.isSuccess) {
             message.success(`${t("update_profile")}`)
-            this.getUserData()
+            this.rootStore.authStore.getMe()
         }
     }
 

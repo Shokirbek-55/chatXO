@@ -10,6 +10,9 @@ import SocketStore from './socketStore/socketStore';
 import FriendsStore  from './friendsStore/friendsStore';
 import UsersStore  from './usersStore/usersStore';
 import RouterStore from './RouterStore/routerStore';
+import ChatStore from './chatStore/chatStore';
+import VisibleStore from './visibleStore/visibleStore';
+import HelperStore from './helperStore/helperStore';
 
 
 export class AppRootStore {
@@ -21,6 +24,9 @@ export class AppRootStore {
     friendsStore: FriendsStore
     usersStore: UsersStore
     routerStore: RouterStore
+    chatStore: ChatStore
+    visibleStore: VisibleStore
+    helperStore: HelperStore
 
     constructor() {
         makeAutoObservable(this);
@@ -32,6 +38,9 @@ export class AppRootStore {
         this.friendsStore = new FriendsStore(this)
         this.usersStore = new UsersStore(this)
         this.routerStore = new RouterStore();
+        this.chatStore = new ChatStore(this);
+        this.visibleStore = new VisibleStore()
+        this.helperStore = new HelperStore()
         this.run();
     }
 
@@ -50,6 +59,8 @@ export class AppRootStore {
                 .then(() => {
                     this.authStore.getMe();
                     this.channelStore.getMyChannels();
+                    this.friendsStore.getFriends();
+                    this.usersStore.getNonFriends();
                     console.log("All requests are done!");
                 })
                 .catch(() => console.log('Requests failed!'));

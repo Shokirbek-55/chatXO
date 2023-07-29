@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, toJS } from "mobx";
 import io, { Socket } from "socket.io-client";
 import { Env } from "../../env";
 import { AppRootStore } from "../store";
@@ -34,7 +34,8 @@ class SocketStore {
         this._keepAlive = value;
     }
 
-    connect = (callback?:() => void, user?: User) => {
+    connect = (user?: User) => {
+        console.log('connecting...', toJS(user));
 
         this._socket = io(Env.SocketUrl, {
             autoConnect: true,
@@ -63,7 +64,7 @@ class SocketStore {
                 console.log("error", error);
             })
 
-            callback && callback();
+            this.root.chatStore.init();
         });
 
         this._socket?.on("connect_error", (error: any) => {

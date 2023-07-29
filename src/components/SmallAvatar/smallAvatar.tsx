@@ -13,7 +13,7 @@ const SmallAvatar: React.FC<Props> = ({
     onPress,
     style
 }) => {
-    style = color ? { ...style, background: color } : { ...style };
+    style = color ? { ...style, background: color } : { ...style, background: "linear-gradient(#ddd, #666)" };
     return (
         <div onClick={onPress} className={styles.container} style={{ ...style }}>
             {imageUrl ? <img className={styles.imageBox} src={imageUrl} /> : null}

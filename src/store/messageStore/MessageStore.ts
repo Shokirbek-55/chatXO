@@ -1,44 +1,92 @@
+import { message } from 'antd';
+import { data } from './../dataBase';
 import { makeAutoObservable, runInAction, toJS } from "mobx";
-import { RawMessage } from "../../types/channel";
+import { Channel, ChannelsUsersType, MessageType, RawMessage, SendMessage } from "../../types/channel";
 import { AppRootStore } from "../store";
+import _ from 'lodash';
+import APIs from "../../api/api";
+import { Operation } from '../../utils/Operation';
 
 
 type MessagesState = {
     slug: string;
-    pageState: string;
+    pageState: string | null;
     messages: RawMessage[];
 };
 
+const initialMassegeText: SendMessage = {
+    type: 'text',
+}
+
 export default class MessageStore {
 
-    app: AppRootStore;
-
+    app: AppRootStore
     constructor(app: AppRootStore) {
         makeAutoObservable(this);
         this.app = app;
     }
 
-    messages: RawMessage[] = [];
+    FileUploadOperation = new Operation<{
+        filePath: string;
+        fileTitle: string;
+        thumbnailPath: string;
+    }>({} as {
+        filePath: string;
+        fileTitle: string;
+        thumbnailPath: string;
+    } )
+
+    messageCache: {
+        [key: string]: {
+            messages: RawMessage[];
+            pageState: string | null;
+            channelData: Channel;
+            channelUsers: {
+                [key: string]: ChannelsUsersType
+            }
+        }
+    } = {};
+
     slug: string = '';
-    pageState: string = ''
-    
-    messageData = {
+
+    messageData: MessagesState = {
         slug: '',
         pageState: '',
         messages: [],
     }
 
+    messageTextState: string = ''
+
     isLoadMessages: boolean = false;
 
-    get allMessages() {
-        return this.messages;
+    setSendMessage: SendMessage = initialMassegeText
+
+    setReplyMessage: RawMessage = {
+        id: "",
+        type: "",
+        userId: 0,
+        message: "",
+        timestamp: new Date(),
+        username: "",
+        mediaUrl: "",
+        channelSlug: "",
+        hashtags: [],
+        pimps: [],
+        isReply: false,
+        originMessageId: "",
+        originMessageTimestamp: new Date(),
+        messageId: "",
+        taggedUserId: 0
     }
+
+    progress: number = 0
 
     getHistoryMessages = (slug: string) => {
         runInAction(() => {
             this.isLoadMessages = true;
+            this.slug = slug;
         });
-        
+
         this.app.socketStore.socket?.emit('history', {
             channelSlug: slug,
         });
@@ -46,9 +94,10 @@ export default class MessageStore {
         this.app.socketStore.socket?.once('history', (data: {
             messages: RawMessage[];
             pageState: string;
-            slug: string;
-        }) => { 
-            this.getAllMessages(data);
+            end: boolean
+        }) => {
+            data.messages = _.reverse(toJS(data.messages));
+            this.setHistoryMessages(data.messages[0]?.channelSlug || slug, data.messages, data.pageState);
         });
 
         runInAction(() => {
@@ -56,42 +105,180 @@ export default class MessageStore {
         });
     }
 
-    getAllMessages = ({ slug, pageState, messages }: MessagesState) => {
-        this.messages = [
-            ...this.messages,
-            ...(this.messages.filter(
-                (item) => item.id === messages[0].id
-            ).length === 1
-                ? []
-                : [...messages]),
-        ];
-        this.pageState = pageState;
-        this.slug = slug;
-    }
-
-    addMessage = (message: RawMessage) => {
-        this.messages = [...this.messages, message];
-    }
-
-    updateOneMessage = (id: string, data: any) => {
-        this.messages = this.messages.map((message) => {
-            if (message.id === id) {
-                return { ...message, ...data };
+    setHistoryMessages = (slug: string, messages: RawMessage[], pageState: string | null) => {
+        if (!!this.messageCache[slug]) {
+            if (this.messageCache[slug]?.pageState === pageState) {
+                return
+            } else {
+                this.messageCache[slug].messages = [
+                    ...this.messageCache[slug].messages,
+                    ...(this.messageCache[slug].messages.filter(
+                        (item) => item.id === messages[0].id
+                    ).length === 1
+                        ? []
+                        : [...messages])
+                ]
+                this.messageCache[slug].pageState = pageState;
             }
-            return message;
+        } else {
+            this.messageCache[slug] = {
+                messages: messages,
+                pageState: pageState,
+                channelData: this.messageCache[slug]?.channelData,
+                channelUsers: this.messageCache[slug]?.channelUsers
+            }
+        }
+    }
+
+    setChannelDataCache = (slug: string, channelData: Channel) => {
+        if (!this.messageCache[slug]) {
+            this.messageCache[slug] = {
+                messages: [],
+                pageState: '',
+                channelData: channelData,
+                channelUsers: this.messageCache[slug]?.channelUsers
+            }
+        } else {
+            this.messageCache[slug] = {
+                ...this.messageCache[slug],
+                channelData: channelData,
+            }
+        }
+    }
+
+    setChannelUsersCache = (slug: string, channelUsers: {
+        [key: string]: ChannelsUsersType
+    }) => {
+        if (!this.messageCache[slug]) {
+            this.messageCache[slug] = {
+                messages: [],
+                pageState: '',
+                channelData: this.messageCache[slug]?.channelData,
+                channelUsers: channelUsers
+            }
+        } else {
+            this.messageCache[slug] = {
+                ...this.messageCache[slug],
+                channelUsers: channelUsers,
+            }
+        }
+    }
+
+    getMessages = (slug: string) => {
+        if (this.messageCache[slug]) {
+            return this.messageCache[slug].messages;
+        } else {
+            return [];
+        }
+    }
+
+    getMessagesPageState = (slug: string) => {
+        if (this.messageCache[slug]) {
+            return this.messageCache[slug].pageState;
+        } else {
+            return '';
+        }
+    }
+
+    addMessage = (slug: string, message: RawMessage) => {
+        if (this.messageCache[slug]) {
+            this.messageCache[slug].messages.push(message);
+        } else {
+            this.messageCache[slug] = {
+                messages: [message],
+                pageState: '',
+                channelData: this.messageCache[slug]?.channelData,
+                channelUsers: this.messageCache[slug]?.channelUsers
+            };
+        }
+    }
+
+    setMessageText = (text: string) => {
+        this.messageTextState = text;
+    }
+
+    setSendTextMessage = () => {
+        this.setSendMessage = {
+            userId: this.app.authStore.user.id,
+            channelSlug: this.slug,
+            type: 'text',
+            message: this.messageTextState,
+        }
+        
+        this.onSendMessage()
+    }
+
+    setSendPhotoMessage = () => {
+        
+    }
+
+    setSendAudioMessage = () => {
+        this.setSendMessage = {
+            type: 'audio',
+            userId: this.app.authStore.user.id,
+            channelSlug: this.slug,
+            mediaTitle: this.FileUploadOperation.data.fileTitle,
+            mediaUrl: this.FileUploadOperation.data.filePath,
+            videoThumbnail: this.FileUploadOperation.data.thumbnailPath,
+        }
+
+        this.onSendMessage()
+    }
+
+    onSendMessage = (type?: MessageType) => {
+        this.app.socketStore.socket?.emit("message", this.setSendMessage)
+    }
+
+    deleteMessage = (id: string, slug: string, timestamp: Date) => {
+        this.app.chatStore.remove({
+            id,
+            slug,
+            timestamp
+        })
+        this.messageCache[this.slug].messages = this.messageCache[this.slug].messages.filter((e) => e.id != id)
+    }
+
+    replyMessage = (message: RawMessage) => {
+        this.setReplyMessage = message
+    }
+
+    onProgress = (percent: number) => {
+        runInAction(() => {
+            this.progress = percent
         })
     }
 
-    deleteMessage = (id: string) => {
-        this.messages = this.messages.filter((message) => message.id !== id);
-    }
+    readFile = async (file: File, type: SendMessage["type"]) => {
+        const form = new FormData();
+        form.append("file", file, file.name)
 
-    timestampHistoryMessages = (messages: RawMessage[]) => {
-        this.messages = messages;
-    }
+        const config = {
+            onUploadProgress: (progressEvent: any) => {
+                const { loaded, total } = progressEvent;
+                var percent = Math.floor((loaded * 100) / total);
+                if (percent < 100) {
+                    this.onProgress(percent);
+                }
+            },
+            headers: {
+                "Content-Type": "multipart/form-data"
+            },
+        };
 
-    clearAllMessages = () => {
-        this.messages = [];
-    }
+        await this.FileUploadOperation.run(() => APIs.upload(form, config))
 
+        if (this.FileUploadOperation.isSuccess) {
+            switch (type)
+            {
+                case 'audio':
+                    this.setSendAudioMessage()
+                    break;
+                case 'image':
+                    this.setSendPhotoMessage()
+                    break;
+            }      
+        } else {
+            console.log('Upload error')
+        }
+    }
 }

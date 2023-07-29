@@ -22,15 +22,17 @@ export type Message = IMessage & {
   minRelevance?: number;
   mediaUrl?: string;
   type: MessageType;
-  pimps: Pimp[];
+  userId?: string | number | undefined;
+  channelSlug?: string
+  pimps?: Pimp[];
   color?: string;
   username?: string;
   videoThumbnail?: string;
   mediaTitle?: string;
-  isReply: boolean;
+  isReply?: boolean;
   originMessage?: Message | null;
-  originMessageId: string;
-  originMessageTimestamp: Date | string;
+  originMessageId?: string;
+  originMessageTimestamp?: Date | string;
   index?: number;
   topic?: string;
   pollType?: "NORMAL" | "RELEVANCE";
@@ -41,7 +43,7 @@ export type Message = IMessage & {
   votersCount?: number;
   messageParameters?: Array<any>;
   isShownHeader?: boolean;
-  taggedUserId: number;
+  taggedUserId?: number;
   msgLocation?: MsgLocation;
   displayedRelevance?: number;
 };
@@ -49,10 +51,10 @@ export type Message = IMessage & {
 export type SendMessage = Omit<Message, "index">;
 
 export interface IMessage {
-  _id: string | number;
-  text: string;
-  createdAt: Date | number;
-  user: User;
+  _id?: string | number;
+  text?: string;
+  createdAt?: Date | number;
+  user?: User;
   image?: string;
   video?: string;
   audio?: string;
@@ -61,6 +63,7 @@ export interface IMessage {
   received?: boolean;
   pending?: boolean;
   quickReplies?: any;
+  message?: string;
 }
 export type RawMessage = {
   id: string;

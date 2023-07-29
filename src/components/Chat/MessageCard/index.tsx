@@ -25,8 +25,6 @@ const MessageCard: FC<Props> = ({ message, position, users }) => {
   const POSITION_CONTENT = position
     ? { justifyContent: "flex-start" }
     : { justifyContent: "flex-end" };
-  
-  console.log("messageCard", users);
 
   const currentUser: ChannelsUsersType | undefined =
     users?.[message.userId];

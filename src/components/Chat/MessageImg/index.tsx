@@ -1,17 +1,21 @@
 import { FC } from "react";
 
 import styles from "./index.module.css";
-import { RawMessage } from "../../../types/channel";
+import { ChannelsUsersType, RawMessage } from "../../../types/channel";
 import { User } from "../../../types/user";
 import { relevanceFuniction } from "../../../utils/boxShadov";
 import SmallAvatar from "../../SmallAvatar/smallAvatar";
-import { Env } from "../../../env";
+import { Env, TMP_URL } from "../../../env";
 import DropDownMenu from "../DropDownMenu/dropdownmenu";
+import { toJS } from "mobx";
+import MessageHeader from "../MessageHeader";
 
 interface Props {
   message: RawMessage;
   own?: boolean;
-  users?: User[];
+  users?: {
+    [key: string]: ChannelsUsersType;
+  };
 }
 
 const MessageImg: FC<Props> = ({ message, own, users }) => {
@@ -23,42 +27,55 @@ const MessageImg: FC<Props> = ({ message, own, users }) => {
     ? { justifyContent: "flex-end" }
     : { justifyContent: "flex-start" };
 
-  const currentUser: User | null =
-    users?.find((user) => user.id === message.userId) ?? null;
+  const currentUser: ChannelsUsersType | undefined =
+    users?.[message.userId];
 
   const MESSAGE_STYLE = relevanceFuniction(message);
   const boxShadov = MESSAGE_STYLE?.boxShadow;
-  const textSize = MESSAGE_STYLE?.fontSize;
-  const textWeight = MESSAGE_STYLE?.fontWeight;
-  const textLineHeight = MESSAGE_STYLE?.lineHeight;
 
   const handleRelevenceModal = () => {
-    
+
   }
 
   return (
     <div className={styles.parentContainer} style={isOwn}>
-      <div className={styles.avatarCard} style={isOwnAvatarCard}>
-        <SmallAvatar
-          style={{ justifyContent: "flex-end" }}
-          color={currentUser?.color}
-          imageUrl={
-            currentUser?.avatar ? `${Env.AssetsUrl}/${currentUser.avatar}` : ""
-          }
-        />
-      </div>
-      <DropDownMenu massage={message}>
-        <div style={{ boxShadow: boxShadov }}>
-          <img
-            src={`${Env.AssetsUrl}/${url}`}
-            alt="#"
-            className={styles.imgCard}
-            onClick={() => {
-              handleRelevenceModal();
-            }}
+      <div className={styles.childContainer}>
+        {!own && (
+          <MessageHeader
+            name={message.username}
+            relevance={message?.relevance}
+            color={currentUser?.color}
           />
+        )}
+        <div className={styles.messageCard}>
+          {!own && (
+            <div className={styles.avatarCard}>
+              {currentUser && (
+                <SmallAvatar
+                  color={currentUser?.color}
+                  imageUrl={
+                    currentUser.avatar
+                      ? `${TMP_URL}/${currentUser.avatar}`
+                      : ""
+                  }
+                />
+              )}
+            </div>
+          )}
+        <DropDownMenu massage={message}>
+          <div style={{ boxShadow: boxShadov, borderRadius:'15px', display:'flex'}}>
+            <img
+              src={`${Env.AssetsUrl}/${url}`}
+              alt="#"
+              className={styles.imgCard}
+              onClick={() => {
+                handleRelevenceModal();
+              }}
+            />
+          </div>
+        </DropDownMenu>
         </div>
-      </DropDownMenu>
+      </div>
     </div>
   );
 };
