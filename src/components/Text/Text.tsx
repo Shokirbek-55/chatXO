@@ -26,10 +26,9 @@ const Text: FC<Props> = ({
   onClick,
   margin
 }) => {
-  const isHttp = text?.includes("http");
   return (
     <>
-      {isHttp ? (
+      {/* {isHttp ? (
         <a
           href={`${text}`}
           target="_blank"
@@ -39,7 +38,7 @@ const Text: FC<Props> = ({
         >
           {numbers} {children} {onClick} {value} {text}
         </a>
-      ) : (
+      ) : ( */}
         <p
           className={center ? styles.centerText : styles.text}
           onClick={() => handleLink && handleLink()}
@@ -47,7 +46,7 @@ const Text: FC<Props> = ({
         >
           {numbers} {children} {onClick} {value} {text}
         </p>
-      )}
+      {/* )} */}
     </>
   );
 };

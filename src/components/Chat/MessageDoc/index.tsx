@@ -2,13 +2,14 @@ import { FC, useState } from "react";
 import CircleProgress from "../CircleProgress";
 import styles from "./index.module.css";
 import DropDownMenu from "../DropDownMenu/dropdownmenu";
-import { RawMessage } from "../../../types/channel";
+import { ChannelsUsersType, RawMessage } from "../../../types/channel";
 import { User } from "../../../types/user";
 import { relevanceFuniction } from "../../../utils/boxShadov";
 import { DocumentIcon, DownloadIcon } from "../../../utils/icons";
 import SmallAvatar from "../../SmallAvatar/smallAvatar";
 import { Env } from "../../../env";
 import Colors from "../../../utils/colors";
+import axios from "axios";
 
 interface Props {
   message: RawMessage;
@@ -20,7 +21,9 @@ interface Props {
   mediaTitle?: string;
   own?: boolean;
   isReply?: boolean;
-  users?: User[];
+  users?: {
+    [key: string]: ChannelsUsersType;
+  };
 }
 
 const MessageDoc: FC<Props> = ({
@@ -43,17 +46,43 @@ const MessageDoc: FC<Props> = ({
     ? { justifyContent: "flex-end" }
     : { justifyContent: "flex-start" };
 
-  const currentUser: User | null =
-    users?.find((user) => user.id === message.userId) ?? null;
+  const currentUser: ChannelsUsersType | undefined =
+    users?.[message.userId];
 
   const MESSAGE_STYLE = relevanceFuniction(message);
   const boxShadov = MESSAGE_STYLE?.boxShadow;
   const textSize = MESSAGE_STYLE?.fontSize;
-  const textWeight = MESSAGE_STYLE?.fontWeight;
-  const textLineHeight = MESSAGE_STYLE?.lineHeight;
 
-  const handleClickDownloader =  () => {
+  const handleClickDownloader = async() => {
+    await axios({
+      url: `${Env.AssetsUrl}/${mediaLocation}`,
+      method: "GET",
+      responseType: "blob", // important
+      onDownloadProgress: (progressEvent) => {
+        setPercentCompleted(
+          Math.round((progressEvent.loaded * 100) / progressEvent.total!)
+        ); // you can use this to show user percentage of file downloaded
+      },
+    })
+      .then((response) => {
+        console.log(response, "response");
 
+        const url = window.URL.createObjectURL(
+          new Blob([response.data], {
+            type: response.headers["content-type"],
+          })
+        );
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", filename);
+        document.body.appendChild(link);
+        link.click();
+      })
+      .catch((error) => {
+        setState({ downloading: false });
+        console.log("Errore: " + error.message);
+        return [];
+      });
   };
 
   const changeIcons = () => {
@@ -94,6 +123,7 @@ const MessageDoc: FC<Props> = ({
               style={{
                 fontSize: textSize,
                 marginTop: "10px",
+                fontFamily: 'Montserrat4'
               }}
             >
               {mediaTitle}

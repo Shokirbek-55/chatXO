@@ -1,6 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
-//@ts-ignore
-import { useLinkPreview } from "get-link-preview";
+import React, { FC, ReactElement, useEffect, useRef, useState } from "react";
 import styles from "./index.module.css";
 import MessageHeader from "../MessageHeader";
 import DropDownMenu from "../DropDownMenu/dropdownmenu";
@@ -10,6 +8,7 @@ import { relevanceFuniction } from "../../../utils/boxShadov";
 import { TMP_URL } from "../../../env";
 import Text from "../../Text/Text";
 import SmallAvatar from "../../SmallAvatar/smallAvatar";
+import { styled } from "styled-components";
 
 interface Props {
   message: RawMessage;
@@ -17,14 +16,10 @@ interface Props {
   users?: {
     [key: string]: ChannelsUsersType
   }
-  messageText: string;
 }
 
-const LinkPriview = ({ message, position, users, messageText }: Props) => {
-  const [dataLinkUrl, setDateLinkUrl] = useState<linkPreviewType>();
-  const messageUrl = message.message.split(" ")[0];
-  const { getLinkPreviewData, loading, error, data } =
-    useLinkPreview(messageUrl);
+const LinkPriviewComponent = ({ message, position, users }: Props) => {
+
   const POSITION_CONTENT = position
     ? { justifyContent: "flex-start" }
     : { justifyContent: "flex-end" };
@@ -37,32 +32,31 @@ const LinkPriview = ({ message, position, users, messageText }: Props) => {
   const textSize = MESSAGE_STYLE?.fontSize;
   const textWeight = MESSAGE_STYLE?.fontWeight;
   const textLineHeight = MESSAGE_STYLE?.lineHeight;
-  interface linkPreviewType {
-    success: boolean;
-    ogUrl: "string";
-    title: "string";
-    description: "string";
-    image: "string";
-    sitename: "string";
-    domain: "string";
-    favicon: "string";
-  }
-  const getUrlLink = async () => {
-    try {
-      if (data.success) {
-        setDateLinkUrl(data);
-      }
-    } catch (error) {
-      console.log(error);
+
+
+  const renderMessage = () => {
+    const regex = /(http:\/\/|https:\/\/)?(www\.)?([a-zA-Z0-9-]+\.)*([a-zA-Z0-9-]+)\.[a-zA-Z]{2,}(\S*)/g;
+    const links = message.message.match(regex)
+
+    if (!links || links.length === 0) 
+      return <Paragraph>{message.message}</Paragraph>
+
+    function urlify(text:string) {
+      const replacedText = text.replace(regex, (match) => {
+        const isLink = /^(http:\/\/|https:\/\/)/i.test(match);
+        const href = isLink ? match : `http://${match}`; 
+        return `<a href="${href}" target="_blank" rel="noopener noreferrer">${match}</a>`;
+      });
+      return replacedText;
     }
+    
+    const text = urlify(message.message);
+    return <>
+      <Paragraph dangerouslySetInnerHTML={{ __html: text }} />
+    </>
   };
 
-  useEffect(() => {
-    getUrlLink();
-  }, [data]);
-
   return (
-    <>
       <div className={styles.parentContainer} style={POSITION_CONTENT}>
         <div className={styles.childContainer}>
           {position && (
@@ -88,55 +82,33 @@ const LinkPriview = ({ message, position, users, messageText }: Props) => {
               </div>
             )}
             <DropDownMenu massage={message} users={users}>
-              {!!dataLinkUrl ? (
-                <div
-                  className={styles.textCard}
-                  style={{ boxShadow: boxShadov }}
-                >
-                  <a href={message.message}>{messageUrl}</a>
-
-                  <div className={styles.linkPreviewInfo}>
-                    <div className={styles.linkPreviewText}>
-                      <span className={styles.linkTitle}>
-                        {dataLinkUrl.title}
-                      </span>
-                      <span className={styles.linkDescription}>
-                        {dataLinkUrl.description}
-                      </span>
-                    </div>
-                    <div className={styles.linkImg}>
-                      <img
-                        src={dataLinkUrl.image}
-                        alt=""
-                        width={100}
-                        height={100}
-                        style={{ borderRadius: "10px" }}
-                      />
-                    </div>
-                  </div>
-                  <p>{messageText}</p>
-                </div>
-              ) : (
                 <div
                   className={styles.textCard}
                   style={{ boxShadow: boxShadov }}
                 >
                   <Text
-                    text={message.message}
                     style={{
                       fontSize: textSize,
                       fontWeight: textWeight,
                       lineHeight: textLineHeight,
                     }}
-                  />
+                  >
+                  {renderMessage()}
+                </Text>
                 </div>
-              )}
             </DropDownMenu>
           </div>
         </div>
       </div>
-    </>
   );
 };
 
-export default LinkPriview;
+export default LinkPriviewComponent;
+
+
+const Paragraph = styled.p`
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-word;
+`
+

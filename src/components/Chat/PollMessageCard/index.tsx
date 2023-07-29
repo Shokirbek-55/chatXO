@@ -1,18 +1,18 @@
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 
 import MessageHeader from "../MessageHeader";
 
-import styles from "./index.module.css";
-import DropDownMenu from "../DropDownMenu/dropdownmenu";
-import { ChannelsUsersType, RawMessage } from "../../../types/channel";
-import { User } from "../../../types/user";
-import { RELEVANCE_TYPE, pollMessage } from "../../../types/messageType";
-import { relevanceFuniction } from "../../../utils/boxShadov";
-import RadioButton from "../../RadioButton/radioButton";
-import Text from "../../Text/Text";
-import Colors from "../../../utils/colors";
-import SmallAvatar from "../../SmallAvatar/smallAvatar";
 import { TMP_URL } from "../../../env";
+import { ChannelsUsersType, RawMessage } from "../../../types/channel";
+import { RELEVANCE_TYPE, pollMessage } from "../../../types/messageType";
+import { User } from "../../../types/user";
+import { relevanceFuniction } from "../../../utils/boxShadov";
+import Colors from "../../../utils/colors";
+import RadioButton from "../../RadioButton/radioButton";
+import SmallAvatar from "../../SmallAvatar/smallAvatar";
+import Text from "../../Text/Text";
+import DropDownMenu from "../DropDownMenu/dropdownmenu";
+import styles from "./index.module.css";
 
 interface Props {
   message: RawMessage;

@@ -6,18 +6,21 @@ import MessageBox from '../../../components/Chat/MessageBox'
 import MessageCard from '../../../components/Chat/MessageCard'
 import ScrollContainer from '../../../components/ScrollContainer/ScrollContainer'
 import useRootStore from '../../../hooks/useRootStore'
-import { data } from '../../../store/dataBase'
 import { RawMessage } from '../../../types/channel'
 import { ChatHeader } from '../../../utils/chatHeader'
 import MessageInput from './components/messageInput/MessageInput'
-import { toJS } from 'mobx'
-import _ from 'lodash'
+import MessageImg from '../../../components/Chat/MessageImg'
+import MessageVideo from '../../../components/Chat/MessageVideo'
+import MessageAudio from '../../../components/Chat/MessageAudio'
+import MessageDoc from '../../../components/Chat/MessageDoc'
+import LinkPriview from '../../../components/Chat/LinkPreView/linkPriview'
+import React from 'react'
 
 const Chat = () => {
     const navigate = useNavigate();
-    const { messages } = useRootStore().messageStore
-    const { myData } = useRootStore().usersStore
-    const { channelUsers } = useRootStore().channelStore
+    const { messageCache, slug } = useRootStore().messageStore
+    const { user } = useRootStore().authStore
+
 
     useEffect(() => {
         const handleEsc = (event: any) => {
@@ -32,17 +35,14 @@ const Chat = () => {
         };
     }, []);
 
-    const reversed = _.reverse(toJS(messages))
-
-    
     const Header = () => {
         return (
             <ChatHeader
-                img_url={data?.avatar ? data?.avatar : ""}
-                color={data?.color ? data?.color : "linear-gradient(#ddd, #666)"}
-                name={data?.name}
+                img_url={messageCache[slug]?.channelData.avatar}
+                color={messageCache[slug]?.channelData.color}
+                name={messageCache[slug]?.channelData.name}
                 onTextSearch={() => { }}
-                pageState={data.pageState}
+                pageState={messageCache[slug]?.channelData.pageState}
             />
         )
     }
@@ -55,16 +55,88 @@ const Chat = () => {
         )
     }
 
+    const renderTextMessage = (message: RawMessage) => {
+        switch (message.userId) {
+            case user.id:
+                return <LinkPriview
+                    message={message}
+                    position={false}
+                />
+            case -1:
+                return <MessageBox text={message.message} own={0} />;
+            default:
+                return <LinkPriview
+                    message={message}
+                    position={true}
+                    users={messageCache[slug]?.channelUsers}
+                />
+        }
+    }
+
+    const renderImageMessage = (message: RawMessage) => {
+        switch (message.userId) {
+            case user.id:
+                return <MessageImg message={message} own={true} />;
+            default:
+                return <MessageImg message={message} own={false} users={messageCache[slug]?.channelUsers} />;
+        }
+    }
+
+    const renderVideoMessage = (message: RawMessage) => {
+        switch (message.userId) {
+            case user.id:
+                return <MessageVideo message={message} own={true} />;
+            default:
+                return <MessageVideo message={message} own={false} users={messageCache[slug]?.channelUsers} />;
+        }
+    }
+
+    const renderAudioMessage = (message: RawMessage) => {
+        switch (message.userId) {
+            case user.id:
+                return <MessageAudio message={message} position={false} />;
+            default:
+                return <MessageAudio message={message} position={true} users={messageCache[slug]?.channelUsers} />;
+        }
+    }
+
+    const renderDocumentMessage = (message: RawMessage) => {
+        switch (message.userId) {
+            case user.id:
+                return <MessageDoc
+                    own={true}
+                    mediaLocation={message.mediaUrl}
+                    mediaTitle={message.mediaTitle}
+                    loading={false}
+                    status={"Download"}
+                    message={message}
+                />
+            default:
+                return <MessageDoc
+                    mediaLocation={message.mediaUrl}
+                    mediaTitle={message.mediaTitle}
+                    own={false}
+                    loading={false}
+                    status={"Download"}
+                    message={message}
+                    users={messageCache[slug]?.channelUsers}
+                />
+        }
+    }
 
     const renderMessage = (message: RawMessage) => {
-        if (message.userId === myData.id) {
-            return <MessageCard message={message} position={false} />;
-        } else if (message.userId === -1) {
-            return <MessageBox text={message.message} own={0} />;
-        } else {
-            return (
-                <MessageCard position={true} message={message} users={channelUsers} />
-            );
+
+        switch (message.type) {
+            case "text":
+                return renderTextMessage(message);
+            case "image":
+                return renderImageMessage(message);
+            case "video":
+                return renderVideoMessage(message);
+            case "audio":
+                return renderAudioMessage(message);
+            case "document":
+                return renderDocumentMessage(message);
         }
     };
 
@@ -72,19 +144,20 @@ const Chat = () => {
         <ChatContainer id="chatView">
             <ScrollContainer header={<Header />} input={<Input />}>
                 {
-                    reversed.map((message, index) => {
+                    messageCache[slug]?.messages.map((message, index) => {
                         return (
-                            <div key={index}>
-                                <div
-                                    style={{
-                                        paddingBottom:
-                                            reversed.length - 1 == index ? "7.5vh" : "0",
-                                        paddingTop: 0 == index ? "7vh" : "0",
-                                    }}
-                                >
-                                    {renderMessage(message)}
-                                </div>
+                            // <div  onContextMenu={() => console.log('event')}>
+                            <div
+                                key={index}
+                                style={{
+                                    paddingBottom:
+                                        messageCache[slug].messages?.length - 1 == index ? "7.5vh" : "0",
+                                    paddingTop: 0 == index ? "7vh" : "0",
+                                }}
+                            >
+                                {renderMessage(message)}
                             </div>
+                            // </div>
                         );
                     })
                 }
@@ -101,7 +174,4 @@ const ChatContainer = styled.div`
     height: 100%;
     position: relative;
     overflow: hidden;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
 `

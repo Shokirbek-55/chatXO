@@ -8,16 +8,23 @@ import FilterToolbar from "../filterToolbar/FilterToolBar";
 import FooterToolbarView from "../footerToolbar/FooterToolBar";
 import ReplyMessage from "../replyMessage/replyMessageComponent";
 import { styled } from "styled-components";
+import useRootStore from "../../../../../hooks/useRootStore";
+import { observer } from "mobx-react-lite";
+import useRecorder from "../../../../../components/VoiceRecorder/useRecorder";
+import { formatMinutes, formatSeconds } from "../../../../../components/VoiceRecorder/format-time";
 
 function MessageInput({ sendCurrentCurrentMessageOnScroll }: any) {
+  const { recorderState, ...handlers } = useRecorder();
   const [open, setOpen] = useState<boolean>(false);
   const [openFilter, setOpenFilter] = useState<boolean>(false);
   const [openhastag, setOpenhastag] = useState<boolean>(false);
   const [isOPen, setIsOpen] = useState(true);
-  const [messageText, setMessageText] = useState<string>("");
 
-  const onSendMessage = () => {
+  const { setMessageText, messageTextState, onSendMessage } = useRootStore().messageStore
 
+  const handleonSendMessage = () => {
+    console.log('ketdi');
+    onSendMessage('text')
   };
 
   useEffect(() => {
@@ -26,23 +33,30 @@ function MessageInput({ sendCurrentCurrentMessageOnScroll }: any) {
 
     textarea.oninput = function () {
       textarea.style.height = "";
-      /* textarea.style.height = Math.min(textarea.scrollHeight, 300) + "px"; */
       textarea.style.height = textarea.scrollHeight + "px"
     };
 
   }, []);
 
+  const onSendEnter = (e: any) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      onSendMessage('text');
+      sendCurrentCurrentMessageOnScroll();
+    }
+  };
+
   return (
     <MessageInputContainer>
-      {/* <FooterToolbarView
-        props={false}
-        openHashTags={false}
+      <FilterToolbar isOpen={openFilter} />
+      <FooterToolbarView
+        props={open}
+        openHashTags={open}
         setOpenHashtags={setOpenhastag}
-      /> */}
-      {/* <FilterToolbar isOpen={true} otherCard={false} />
-      <AddHashtags
-        isOpen={false}
-        otherCard={open}
+      />
+      {/* <AddHashtags
+        isOpen={true}
+        otherCard={true}
         setopenhashtags={setOpenhastag}
       /> */}
       {/* <ReplyMessage
@@ -67,34 +81,37 @@ function MessageInput({ sendCurrentCurrentMessageOnScroll }: any) {
           <textarea
             id="textarea"
             placeholder={
-              open ? "Write a message..." : "Write a message..."
+              recorderState.initRecording
+                ? `${formatMinutes(
+                  recorderState.recordingMinutes
+                )} : ${formatSeconds(recorderState.recordingSeconds)}`
+                : "Write a message..."
             }
-            value={messageText}
-            onKeyDown={(e) => { }}
+            value={messageTextState}
+            onKeyDown={(e) => onSendEnter(e)}
             autoFocus
-            disabled={false}
+            disabled={recorderState.initRecording}
             onChange={(e) => setMessageText(e.target.value)}
             className="textAreaInput"
           />
         </div>
-        {!false ? (
-          <div className="icon" onClick={onSendMessage}>
-            <SendIcon color="#303030" />
-          </div>
-        ) : false ? (
-          <div className={styles.voiceIcon}>
-            <div
-              style={{ position: "absolute", right: "80px" }}
-              onClick={() => setIsOpen(!isOPen)}
+        {messageTextState ? (
+          <div className="icon" onClick={handleonSendMessage}>
+              <SendIcon color="#303030" />
+            </div>
+        ) : recorderState.initRecording ? (
+          <div className="iconBox">
+            <div className={`icon ${!isOPen && 'iconDelete'}`}
+                onClick={handlers.cancelRecording}
             >
               <DeleteIcon color="#e74c3c" />
             </div>
-            <div onClick={() => setIsOpen(!isOPen)}>
+              <div className="icon" onClick={handlers.saveRecording}>
               <SendIcon color="#303030" />
             </div>
           </div>
         ) : (
-          <div onClick={() => setIsOpen(!isOPen)}>
+          <div className="icon" onClick={handlers.startRecording}>
             <MicrophoneIcon color="#303030" />
           </div>
         )}
@@ -102,7 +119,7 @@ function MessageInput({ sendCurrentCurrentMessageOnScroll }: any) {
     </MessageInputContainer>
   );
 }
-export default MessageInput;
+export default observer(MessageInput)
 
 
 const MessageInputContainer = styled.div`
@@ -113,7 +130,11 @@ const MessageInputContainer = styled.div`
     backdrop-filter: blur(25px);
     display: flex;
     box-shadow: 0px -8px 48px 0px rgba(32, 35, 39, 0.02), 0px -4px 8px 0px rgba(32, 35, 39, 0.04), 0px 0px 1px 0px rgba(32, 35, 39, 0.16);
-
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: height height .15s ease-out,opacity .15s ease-out;
+    
     .inputContainer{
         width: 100%;
         display: flex;
@@ -146,5 +167,16 @@ const MessageInputContainer = styled.div`
         justify-content: center;
         width: 45px;
         height: 45px;
+    }
+
+    .iconBox {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 45px;
+    }
+
+    .iconDelete {
+      display: none;
     }
 `

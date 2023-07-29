@@ -3,6 +3,7 @@ import { CheckOAuthData, RegisterData, Session } from "../types/auth";
 import { User } from "../types/user";
 import ApiService from "./services/ApiService";
 import { Channel, SetUpdataChanelType } from '../types/channel';
+import { AxiosRequestConfig } from 'axios';
 
 
 export type LoginEmailWithPasswordReqData={
@@ -17,12 +18,14 @@ const checOAuthUrl = `${url}/verify/oauth2`;
 const friends = "friends"
 const users = "/users"
 
-const accountUrl = "/users";
+const accountUrl = "users";
 const authUrl = "/auth";
 
 const channelUrl = "channel";
 const channelsUrl = "channels";
 const usersUrl = "users";
+
+const mediaUploadUrl: string = "message/media";
 
 const apiService = new ApiService();
 
@@ -178,7 +181,13 @@ const APIs = {
 
         getPollOptionInfo: (pollOptionId: number) =>
             apiService.methods.get(`/poll/option/${pollOptionId}`),
-    }
+    },
+
+    upload: (form: FormData, config: AxiosRequestConfig) => apiService.methods.post<{
+        filePath: string;
+        fileTitle: string;
+        thumbnailPath: string;
+    }>(`${mediaUploadUrl}/upload`, form, config)
 }
 
 export default APIs;

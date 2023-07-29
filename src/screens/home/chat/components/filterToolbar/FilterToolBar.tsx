@@ -3,20 +3,17 @@ import styles from "./index.module.css";
 
 interface Props {
   isOpen: boolean;
-  otherCard: boolean;
 }
 
-const FilterToolbar = ({ isOpen, otherCard }: Props) => {
-  const OtherReplyMessage = otherCard ? styles.container : styles.noneContainer;
-
+const FilterToolbar = ({ isOpen }: Props) => {
   return (
-    <div>
+    <>
       {isOpen ? (
-        <div className={OtherReplyMessage}>
+        <div className='container'>
           <FilterSilderComponent />
         </div>
       ) : null}
-    </div>
+    </>
   );
 };
 

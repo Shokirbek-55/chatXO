@@ -1,3 +1,4 @@
+import { data } from './../dataBase';
 import { makeAutoObservable, runInAction, toJS } from "mobx";
 import { message} from "antd";
 import {
@@ -67,6 +68,7 @@ export default class ChannelStore {
                     this.myChannels = this.getChannelOperation.data;
                     this.channelsLoading = false
                 });
+                this.getChannelDataCache()
             }
     };
 
@@ -92,10 +94,29 @@ export default class ChannelStore {
         }
     }
 
+    getChannelDataCache = async () => {
+        try {
+            const promises = this.myChannels.map(async (channel) => {
+                const channelUsersData = await this.getChannelUsersOperation.run(() => APIs.channels.getChannelUsers(channel.hashId));
+                const channelData = await this.getChannelByHashIdOperation.run(() => APIs.channels.getChannelByHashId(channel.hashId));
+                if (this.getChannelByHashIdOperation.isSuccess) {
+                    this.rootStore.messageStore.setChannelDataCache(channel.slug, channelData.data);
+                }
+                if (this.getChannelUsersOperation.isSuccess) {
+                    this.rootStore.messageStore.setChannelUsersCache(channel.slug, channelUsersData.data);
+                }
+            });
+
+            await Promise.all(promises);
+        } catch (error) {
+            console.log('Error:', error);
+        }
+    }
+
+
     getChannelUsers = async (hashId: string) => {
         await this.getChannelUsersOperation.run(() => APIs.channels.getChannelUsers(hashId))
         if (this.getChannelUsersOperation.isSuccess) {
-            console.log("channelUsers", toJS(this.getChannelUsersOperation.data));
             runInAction(() => {
                 this.channelUsers = this.getChannelUsersOperation.data
             })

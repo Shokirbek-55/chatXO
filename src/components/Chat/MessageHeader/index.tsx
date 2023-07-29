@@ -50,8 +50,8 @@ const MessageHeader = ({
   showReply,
   style,
 }: Props) => {
-  const MESSAGE_STYLE = relevanceFuniction(message as RawMessage);
-  const textSize = MESSAGE_STYLE?.fontSize;
+  const MESSAGE_STYLE = relevanceFuniction({} as RawMessage, relevance);
+  const textSize = MESSAGE_STYLE.fontSize;
 
   return (
     <div className={styles.container}>

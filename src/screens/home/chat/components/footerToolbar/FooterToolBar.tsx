@@ -23,14 +23,18 @@ const FooterToolbarView: FC<Props> = ({
     
   };
 
+  if (!props) {
+    return null
+  }
+
   const handleOpenHashtags = () => {
     setOpenHashtags(!openHashTags);
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{display: props ? 'flex' : 'none'}}>
       <ProgressBarView progress={{
-        progress: 0
+        progress: 10
       }} />
       {props ? (
         <div className={styles.footerToolbar}>

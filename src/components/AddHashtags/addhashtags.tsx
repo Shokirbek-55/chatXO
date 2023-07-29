@@ -11,9 +11,6 @@ interface Props {
 
 const AddHashtags = ({ isOpen, otherCard, setopenhashtags }: Props) => {
   const [hashtag, setHashtag] = React.useState<string>("");
-  const OtherReplyMessage = otherCard
-    ? styles.hashtagcontainer
-    : styles.noneContainer;
 
   const handleOpenHashtags = useCallback(() => {
     setopenhashtags(!isOpen);
@@ -33,31 +30,28 @@ const AddHashtags = ({ isOpen, otherCard, setopenhashtags }: Props) => {
   };
 
   return (
-    <div>
+    <>
       {isOpen ? (
-        <div>
-          <div className={OtherReplyMessage}>
-            <div className={styles.hashtag}>
-              <input
-                type="text"
-                className={styles.hashtaginput}
-                onChange={(e) => handleHashtage({ e })}
-                value={hashtag}
-              />
+        <div className={styles.hashtag}>
+          <input
+            type="text"
+            className={styles.hashtaginput}
+            onChange={(e) => handleHashtage({ e })}
+            value={hashtag}
+            placeholder="Add hashtags"
+          />
 
-              <div className={styles.hashtagIcons}>
-                <span onClick={() => addHashtag()}>
-                  <PlusIcon size={26} color={Colors.GullGray} padding={15} />
-                </span>
-                <span onClick={() => handleOpenHashtags()}>
-                  <CloseIcon size={26} color={Colors.GullGray} padding={15} />
-                </span>
-              </div>
-            </div>
+          <div className={styles.hashtagIcons}>
+            <span onClick={() => addHashtag()}>
+              <PlusIcon size={32} color={Colors.White} padding={15} />
+            </span>
+            <span onClick={() => handleOpenHashtags()}>
+              <CloseIcon size={32} color={Colors.White} padding={15} />
+            </span>
           </div>
         </div>
       ) : null}
-    </div>
+    </>
   );
 };
 

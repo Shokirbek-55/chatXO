@@ -1,7 +1,7 @@
 import { FC } from "react";
 import styles from "./index.module.css";
 import DropDownMenu from "../DropDownMenu/dropdownmenu";
-import { RawMessage } from "../../../types/channel";
+import { ChannelsUsersType, RawMessage } from "../../../types/channel";
 import { User } from "../../../types/user";
 import { relevanceFuniction } from "../../../utils/boxShadov";
 import SmallAvatar from "../../SmallAvatar/smallAvatar";
@@ -10,7 +10,9 @@ import { Env } from "../../../env";
 interface Props {
   message: RawMessage;
   own?: boolean;
-  users?: User[];
+  users?: {
+    [key: string]: ChannelsUsersType;
+  };
 }
 
 const MessageVideo: FC<Props> = ({ message, users, own }) => {
@@ -20,8 +22,8 @@ const MessageVideo: FC<Props> = ({ message, users, own }) => {
   const isOwn = own
     ? { justifyContent: "flex-end" }
     : { justifyContent: "flex-start" };
-  const currentUser: User | null =
-    users?.find((user) => user.id === message.userId) ?? null;
+  const currentUser: ChannelsUsersType | undefined =
+    users?.[message.userId];
 
   const MESSAGE_STYLE = relevanceFuniction(message);
   const boxShadov = MESSAGE_STYLE?.boxShadow;

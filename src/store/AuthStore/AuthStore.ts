@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import APIs, { LoginEmailWithPasswordReqData } from "../../api/api";
 import { Session } from "../../types/auth";
 import { Operation } from "../../utils/Operation";
@@ -28,8 +28,11 @@ export default class AuthStore {
         if(!this.root.localStore.session.accessToken) return
         await this.getMeOperation.run(() => APIs.Account.getMyAccount())
         if (this.getMeOperation.data && this.getMeOperation.isSuccess) {
-            this.root.socketStore.connect(()=> {}, this.getMeOperation.data)
-            this.user = this.getMeOperation.data        
+            this.root.socketStore.connect(this.getMeOperation.data)
+            runInAction(() => {
+                this.user = this.getMeOperation.data  
+            })
+            this.root.usersStore.myDataToSetData(this.user)
         }
     }
 
@@ -39,7 +42,9 @@ export default class AuthStore {
             this.root.localStore.setToken(this.loginOperation.data)
             await this.getMeOperation.run(() => APIs.Account.getMyAccount())
             if (this.getMeOperation.data && this.getMeOperation.isSuccess) {
-                this.user = this.getMeOperation.data
+                runInAction(() => {
+                    this.user = this.getMeOperation.data
+                })
                 this.root.runFunctionsWithLogin()
             }
         }

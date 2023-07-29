@@ -8,6 +8,7 @@ interface Props {
 }
 
 const BubbleHeader: FC<Props> = ({ title, color, padding, textSize }) => {
+  
   const randomClipPath = () => {
     let clipPath = "polygon(";
     for (let i = 1; i <= 12; i++) {
@@ -64,10 +65,10 @@ const BubbleHeader: FC<Props> = ({ title, color, padding, textSize }) => {
           break;
       }
     }
-    // clipPath = clipPath.slice(0, -2);
     clipPath += ")";
     return clipPath;
   };
+
   return (
     <div
       className="bubble-header"
@@ -80,6 +81,7 @@ const BubbleHeader: FC<Props> = ({ title, color, padding, textSize }) => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        zIndex: 1,
       }}
     >
       <div

@@ -1,31 +1,63 @@
-import { useCallback, useEffect, useState } from "react";
-import { Dropdown, Menu, message, Space } from "antd";
+import { Dropdown, Menu, Space, message } from "antd";
 import { t } from "i18next";
+import { useCallback, useEffect, useState } from "react";
 import { ChannelsUsersType, RawMessage } from "../../../types/channel";
+import useRootStore from "../../../hooks/useRootStore";
+import { observer } from "mobx-react-lite";
+import { User } from "../../../types/user";
+import { styled } from "styled-components";
 
 interface Props {
   massage: RawMessage;
   users?: {
     [key: string]: ChannelsUsersType
   }
-  children: any;
+  children: React.ReactNode;
 }
 
 const DropDownMenu = ({ massage, users, children }: Props) => {
   const [isAdmin, setIsAdmin] = useState(false);
 
+  const { user } = useRootStore().authStore
+  const { slug, messageCache, deleteMessage, replyMessage } = useRootStore().messageStore
 
-  const onLongPressText = () => {}
+  const currentUser: User | null =
+    users?.[massage.userId] || null;
 
-  const renderMenu = (menuList: any) => <Menu items={menuList} />;
+  useEffect(() => {
+    setIsAdmin(messageCache[slug].channelData.adminId == user?.id);
+  }, [user, slug, messageCache]);
+
+  const onLongPressText = useCallback(
+    () => {
+      let options: string[] = [];
+      if (isAdmin) {
+        options = [t("reply"), t("copy"), t("delete"), t("cancel")];
+      } else {
+        options = [
+          t("reply"),
+          t("report"),
+          t("copy"),
+          t("delete"),
+          t("cancel"),
+        ];
+      }
+      return options;
+    },
+    [currentUser?.id, user?.id]
+  );
+
+  const renderMenu = (menuList: any) => <MenuList items={menuList} />;
 
   const contextOptions = {
     [t("delete")]: () => {
       console.log("delete message ", massage);
-      if (isAdmin) {
-
-      } else if (massage.userId == users?.[0].id) {
-       
+      if (isAdmin || massage.userId == user?.id) {
+        deleteMessage(
+          massage.id,
+          massage.channelSlug,
+          new Date(massage.timestamp)
+        );
       } else {
         message.error("you are not admin");
       }
@@ -40,17 +72,20 @@ const DropDownMenu = ({ massage, users, children }: Props) => {
     },
     [t("reply")]: () => {
       console.log("message ", massage);
+      replyMessage(massage);
     },
   };
+
+
   const menuLists = (
-    renderMenu(onLongPressText())?.props?.items ?? []
+    renderMenu(onLongPressText()).props.items || []
   ).map((label: string, key: number) => ({
     label,
     key,
     onClick: contextOptions[label],
   }));
+
   return (
-    <div>
       <Dropdown
         overlay={renderMenu(menuLists)}
         trigger={["contextMenu"]}
@@ -60,12 +95,23 @@ const DropDownMenu = ({ massage, users, children }: Props) => {
           borderRadius: "10%",
           alignItems: "center",
           padding: "15px",
+
         }}
       >
         <Space>{children}</Space>
       </Dropdown>
-    </div>
   );
 };
 
-export default DropDownMenu;
+export default observer(DropDownMenu)
+
+
+const MenuList = styled(Menu)`
+
+li{
+  outline: none;
+  .ant-dropdown-menu-title-content{
+    font-family: "Montserrat5";
+  }
+}
+`
