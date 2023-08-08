@@ -32,7 +32,7 @@ const AddUserToChannel = () => {
     const { t } = useTranslation()
     const { addUserToChannel, channelData } = useRootStore().channelStore
     const { usersListForAdd } = useRootStore().friendsStore
-    console.log("usersForAdd", toJS(usersListForAdd));
+
     const { closeModal } = useRootStore().routerStore
     return (
         <div

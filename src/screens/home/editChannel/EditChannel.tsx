@@ -14,7 +14,7 @@ import styles from "./EditChannel.module.css"
 
 const EditChannel = () => {
     const { t } = useTranslation()
-    const { closeModal, toRouter, } = useRootStore().routerStore
+    const { closeModal, toRouter, toRouterManageCh } = useRootStore().routerStore
     const { getFriends } = useRootStore().friendsStore
     const {
         channelData,
@@ -40,16 +40,6 @@ const EditChannel = () => {
         toRouter("addUserToChannel")
         getFriends()
     }
-
-    const onImageSelect = (e: ChangeEvent<HTMLInputElement>) => {
-        e.preventDefault();
-        if (e.target.files?.length) {
-            const formData = new FormData()
-            formData.append("avatar", e.target.files?.[0]);
-            console.log("formData", JSON.stringify(formData));
-            createChannelAvatar(channelData.hashId, formData)
-        }
-    };
 
     return (
         <div className={styles.editChannel}>
@@ -91,7 +81,7 @@ const EditChannel = () => {
                                     : "linear-gradient(#ddd, #666)"
                             }
                             upload={true}
-                            onChange={(e) => onImageSelect(e)}
+                            onChange={(e) => createChannelAvatar(channelData.hashId, e)}
                         />
                         <Text margin='6px 0 10px 0'
                             color="yellowgreen"

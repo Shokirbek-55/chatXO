@@ -5,7 +5,7 @@ import useRootStore from '../hooks/useRootStore';
 import SidebarLayout from "./Sidebar";
 import EditChannel from "./home/editChannel/EditChannel";
 import EmptyScreen from "./home/emptyScreen/EmptyScreen";
-import isPropValid from '@emotion/is-prop-valid'
+import ManageChannelLayout from "./ManageChannel"
 
 function HomeLayout() {
 
@@ -27,11 +27,11 @@ function HomeLayout() {
         <EmptyScreen />
       </ChatArea>
       <RightArea $isopen={isOpenRigthSideBar}>
-        <EditChannel />
+        <ManageChannelLayout />
       </RightArea>
     </Container>
   )
-} 
+}
 
 export default observer(HomeLayout)
 

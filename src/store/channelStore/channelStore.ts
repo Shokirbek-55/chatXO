@@ -15,6 +15,7 @@ import APIs from "../../api/api";
 import { AppRootStore } from "../store";
 import { Friend } from "../../types/friend";
 import { User } from "../../types/user";
+import { ChangeEvent } from "react";
 
 export default class ChannelStore {
 
@@ -46,7 +47,7 @@ export default class ChannelStore {
 
     setCreateChannelData: CreateChannelType = {} as CreateChannelType
 
-    getChannelsUsersData: ChannelsUsersType[] = []
+    getChannelUsersData: ChannelsUsersType[] = []
 
     channelUsers: {
         [key: string]: ChannelsUsersType
@@ -81,7 +82,7 @@ export default class ChannelStore {
         if (this.getChannelByHashIdOperation.isSuccess) {
             runInAction(() => {
                 this.channelData = this.getChannelByHashIdOperation.data
-                this.getChannelsUsersData = this.getChannelByHashIdOperation.data.users as never
+                this.getChannelUsersData = this.getChannelByHashIdOperation.data.users as never
             })
             this.setUpdataChannel = {
                 name: this.channelData.name,
@@ -176,13 +177,19 @@ export default class ChannelStore {
     noInvitationCode = async () => {
     }
 
-    createChannelAvatar = async (hashId: string, formData: FormData) => {
-        if (formData) {     
+    createChannelAvatar = async (hashId: string, e: ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        console.log("file", e.target.files);
+        if (e.target.files?.length) {     
+            
+            let formData = new FormData();
+            formData.append("avatar", e.target.files[0]);
             await this.createChannelAvatarOperation.run(() => APIs.channels.createChannelAvatar(hashId, formData))
         }
         if (this.createChannelAvatarOperation.isSuccess) {
             console.log("avatar", toJS(this.createChannelAvatarOperation.data));
             message.success("created avatar successfully")
+            
         }
     }
 
@@ -197,15 +204,19 @@ export default class ChannelStore {
     addUserToChannel = async (hashId: string, friendId:number) => {
         await this.addUserToChannelOperation.run(() => APIs.channels.addUsersToChannel(hashId, [friendId]))
         if (this.addUserToChannelOperation.isSuccess) {
-            this.rootStore.friendsStore.getFriends()
-            message.success("user added to channel")
+            this.getChannelUsersData.push(this.rootStore.friendsStore.usersListForAdd.find((e) => e.id === friendId) as never)
+            this.rootStore.friendsStore.usersListForAdd = this.rootStore.friendsStore.friends.map((users) => ({
+                ...users,
+                isAdded: this.getChannelUsersData.some((e) => e.id === users.id)
+            }))
+            console.log("usersListForAdd", toJS(this.getChannelUsersData))
         }
     }
 
     delateUserFromChannel =async (hashId:string, userId: number) => {
         await this.delateUserFromChannelOperation.run(() => APIs.channels.deleteUsersFromChannel(hashId, userId))
         if (this.delateUserFromChannelOperation.isSuccess) {
-            this.getChannelsUsersData =  this.getChannelsUsersData.filter((u) => u.id !== userId)
+            this.getChannelUsersData =  this.getChannelUsersData.filter((u) => u.id !== userId)
             message.success("delated user form channel")
         }
     }

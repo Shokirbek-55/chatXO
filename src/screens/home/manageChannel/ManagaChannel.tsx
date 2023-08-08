@@ -15,24 +15,40 @@ import styles from "./ManagaChannel.module.css"
 
 const ManagaChannel = () => {
     const { t } = useTranslation()
-    const { getChannelsUsersData, channelData } = useRootStore().channelStore
-    const { toRouter, closeModal } = useRootStore().routerStore
+    const { getChannelUsersData, channelData, getChannelBlockedUsers } = useRootStore().channelStore
+    const { toRouterManageCh, closeModal, closeRightSideBar } = useRootStore().routerStore
+    const { userChannelLeave } = useRootStore().usersStore
+    const { messageCache, slug } = useRootStore().messageStore
     const { user } = useRootStore().authStore
+    console.log("getChannelUsersData", toJS(getChannelUsersData));
+    console.log("channelData", toJS(messageCache[slug]?.channelData));
+    console.log("userssss", toJS(messageCache[slug]?.channelUsers));
+    
+
+    const leaveChannel = (channelId: number) => {
+        userChannelLeave(channelId)
+        closeRightSideBar()
+    }
+
+    const OpenBlogUser = () => {
+        toRouterManageCh("blockUser")
+        getChannelBlockedUsers(channelData.hashId)
+    }
 
     return (
         <div className={styles.container}>
             <Header
                 leftIcon="arrowRight"
                 text="Profile"
-                rightIcon={"setting"}
+                rightIcon={user.id === channelData.adminId ? "setting" : "logout"}
                 onLeftIconPress={() => closeModal()}
-                onRightIconPress={() => toRouter("channelSetting")}
+                onRightIconPress={() => user.id === channelData.adminId ? toRouterManageCh("channelSetting") : leaveChannel(channelData.id)}
             />
-            {channelData?.avatar ? (
+            {messageCache[slug]?.channelData?.avatar ? (
                 <div className={styles.avatarBox}>
                     <img
                         style={{ cursor: "pointer" }}
-                        src={channelData?.avatar ? `${TMP_URL}/${channelData.avatar}` : ""}
+                        src={messageCache[slug]?.channelData?.avatar ? `${TMP_URL}/${messageCache[slug]?.channelData.avatar}` : ""}
                         alt=""
                     />
                 </div>
@@ -40,30 +56,33 @@ const ManagaChannel = () => {
                 <AvatarUpload
                     upload={false}
                     style={{ margin: "10px auto" }}
-                    imageUrl={channelData?.avatar ? `${TMP_URL}/${channelData.avatar}` : ""}
-                    color={channelData?.color ? channelData.color : "linear-gradient(#ddd, #666)"}
+                        imageUrl={messageCache[slug]?.channelData?.avatar ? `${TMP_URL}/${messageCache[slug]?.channelData.avatar}` : ""}
+                        color={messageCache[slug]?.channelData?.color ? messageCache[slug]?.channelData.color : "linear-gradient(#ddd, #666)"}
                 />
             )}
-            <Text children={channelData?.name} center style={{ fontSize: "25px" }} />
+            <Text children={messageCache[slug]?.channelData?.name} center style={{ fontSize: "25px" }} />
             <Text
-                children={`${getChannelsUsersData?.length} members`}
+                children={`${Object.keys(messageCache[slug]?.channelUsers || {}).length} members`}
                 center
                 style={{ fontSize: "13px" }}
             />
-            <div className={styles.itemsRow}>
-                <ChannelItems
-                    textSize={13}
-                    icon="edit"
-                    text={`${t("editGroup")}`}
-                    onClickItem={() => toRouter("editChannel")}
-                />
-                <ChannelItems
-                    textSize={14}
-                    icon="block"
-                    text={t("blockedUsers")}
-                    onClickItem={() => toRouter("blockUser")}
-                />
-            </div>
+            {user.id === channelData.adminId ?
+                <div className={styles.itemsRow}>
+                    <ChannelItems
+                        textSize={13}
+                        icon="edit"
+                        text={`${t("editGroup")}`}
+                        onClickItem={() => toRouterManageCh("editChannel")}
+                    />
+                    <ChannelItems
+                        textSize={14}
+                        icon="block"
+                        text={t("blockedUsers")}
+                        onClickItem={OpenBlogUser}
+                    />
+                </div> :
+                null
+            }
             <div className={styles.items}>
                 <ChannelItems
                     textSize={13}
@@ -72,18 +91,18 @@ const ManagaChannel = () => {
                 />
             </div>
             <div className={styles.channalUsers}>
-                {getChannelsUsersData?.map((e) => {
+                {Object.keys(messageCache[slug]?.channelUsers || {}).map((e, index) => {
                     return (
-                        <div key={e.id} style={{ width: "100%" }}>
+                        <div key={index} style={{ width: "100%" }}>
                             <RowItemView
-                                text={e.username}
-                                color={e.color ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}
-                                imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ""}
+                                text={messageCache[slug]?.channelUsers[e].username}
+                                color={messageCache[slug]?.channelUsers[e].color ? `linear-gradient(25deg, ${messageCache[slug]?.channelUsers[e].color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}
+                                imageUrl={messageCache[slug]?.channelUsers[e].avatar ? `${TMP_URL}/${messageCache[slug]?.channelUsers[e].avatar}` : ""}
                                 loading={false}
                                 userType={
-                                    channelData.adminId === user.id && e.id ===
+                                    channelData.adminId === user.id && messageCache[slug]?.channelUsers[e].id ===
                                         user.id ? "You admin" : user.id ===
-                                            e.id ? "You" : channelData.adminId === e.id ? "Admin" : ""
+                                            messageCache[slug]?.channelUsers[e].id ? "You" : channelData.adminId === messageCache[slug]?.channelUsers[e].id ? "Admin" : ""
                                 }
                             />
                         </div>

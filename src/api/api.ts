@@ -79,7 +79,9 @@ const APIs = {
     Users: {
         getAllUsers: () => apiService.methods.get<User[]>(`${users}/nonfriends`),
 
-        getFriendDetails: (friendId: number) => apiService.methods.get(`${users}/get/${friendId}`)
+        getFriendDetails: (friendId: number) => apiService.methods.get(`${users}/get/${friendId}`),
+
+        leaveFromChannel: (channelId: number) => apiService.methods.post(`${users}/${channelUrl}/leave`, {channelId})
     },
 
     channels: {
