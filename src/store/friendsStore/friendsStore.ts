@@ -36,7 +36,7 @@ export default class FriendsStore {
                 this.friends = this.getFriendsOperation.data
                 this.usersListForAdd = this.rootStore.friendsStore.friends.map((users) => ({
                     ...users,
-                    isAdded: this.rootStore.channelStore.getChannelsUsersData.some((e) => e.id === users.id)
+                    isAdded: this.rootStore.channelStore.getChannelUsersData.some((e) => e.id === users.id)
                 }))
                 this.loading = false
             })

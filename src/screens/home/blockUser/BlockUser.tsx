@@ -4,31 +4,31 @@ import Header from '../../../components/Header/Header';
 import MessageBox from '../../../components/MessageBox/MessageBox';
 import RowItemView from '../../../components/RowItem';
 import useRootStore from '../../../hooks/useRootStore';
-import { blockedUser, friend } from '../../../store/dataBase';
 
 const BlockUser = () => {
     const { t } = useTranslation()
     const {
-        getChannelsUsersData,
+        getChannelUsersData,
         getChannelBlockedUsers,
         getBlockedUser,
         channelData,
         blockUser
     } = useRootStore().channelStore
     const { user } = useRootStore().authStore
-
-    useEffect(() => {
-        getChannelBlockedUsers(channelData.hashId)
-    }, [])
+    const { closeModal } = useRootStore().routerStore
+    // useEffect(() => {
+    //     getChannelBlockedUsers(channelData.hashId)
+    // }, [])
 
     return (
         <div>
             <Header
                 text={t("block_user_button")}
                 leftIcon="close"
+                onLeftIconPress={() => closeModal()}
             />
             <div>
-                {getChannelsUsersData.map((e, index) => {
+                {getChannelUsersData.map((e, index) => {
                     return (
                         <RowItemView
                             key={index}

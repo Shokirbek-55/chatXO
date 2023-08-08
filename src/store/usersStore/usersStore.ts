@@ -31,6 +31,7 @@ export default class UsersStore {
     updateUserAccountOperation = new Operation<User>({} as User)
     userMeAvatarOperation = new Operation<User>({} as User)
     getFriendDetailsOperation = new Operation<User>({}  as User)
+    userChannelLeaveOperation = new Operation<{channelId: number}>({}  as {channelId: number})
 
     setMyData: UserStateType = {} as UserStateType
 
@@ -111,6 +112,14 @@ export default class UsersStore {
                         this.weChannels = sortedData as any
                 }
             });
+        }
+    }
+
+    userChannelLeave =async (channelId:number) => {
+        await this.userChannelLeaveOperation.run(() => APIs.Users.leaveFromChannel(channelId))
+        if (this.userChannelLeaveOperation.isSuccess) {
+            this.rootStore.channelStore.myChannels = this.rootStore.channelStore.myChannels.filter((i) => i.id !== channelId)
+            message.success("Exited the channel")
         }
     }
 }

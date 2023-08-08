@@ -9,7 +9,7 @@ import { data } from '../../../store/dataBase';
 
 const ChannelSetting = () => {
     const { t } = useTranslation()
-    const { getChannelsUsersData, delateUserFromChannel, channelData } = useRootStore().channelStore
+    const { getChannelUsersData, delateUserFromChannel, channelData } = useRootStore().channelStore
     const { user } = useRootStore().authStore
     const { closeModal } = useRootStore().routerStore
     return (
@@ -27,14 +27,13 @@ const ChannelSetting = () => {
                 onLeftIconPress={() => closeModal()}
             />
             <div>
-                {getChannelsUsersData.filter((e) => e.id !== user.id).map((e, index) => {
+                {getChannelUsersData.filter((e) => e.id !== user.id).map((e, index) => {
                     return (
                         <>
                             <div
                                 key={index}
                             >
                                 <RowItemView
-                                    key={index}
                                     loading={false}
                                     rightButton={true}
                                     color={e.color ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}

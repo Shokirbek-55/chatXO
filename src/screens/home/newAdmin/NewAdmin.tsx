@@ -1,10 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import Header from '../../../components/Header/Header';
 import RowItemView from '../../../components/RowItem';
+import useRootStore from '../../../hooks/useRootStore';
 import { data } from '../../../store/dataBase';
 
 const NewAdmin = () => {
     const { t } = useTranslation()
+    const { closeModal } = useRootStore().routerStore
     return (
         <div
             style={{
@@ -17,6 +19,7 @@ const NewAdmin = () => {
             <Header
                 leftIcon="close"
                 text={t("newAdmin")}
+                onLeftIconPress={() => closeModal()}
             />
             <div>
                 {data

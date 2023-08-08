@@ -1,6 +1,6 @@
 import { channels } from './../dataBase';
 import { makeAutoObservable, runInAction, set } from "mobx";
-import { MainRoutes, MainRoutesType, SideBarHelperRoutes, SideBarHelperRoutesType, mainRoutes } from "./routers";
+import { MainRoutes, MainRoutesType, SideBarHelperRoutes, SideBarHelperRoutesType, mainRoutes, ManageHelperRoutes } from "./routers";
 import _ from 'lodash';
 
 
@@ -11,6 +11,7 @@ export default class RouterStore {
 
     currentRoute: MainRoutesType = mainRoutes[0];
     routers: SideBarHelperRoutesType[] = []
+    manageRouters: SideBarHelperRoutesType[] = [ManageHelperRoutes['manageChannel']]
 
     isOpenRigthSideBar = '-340px'
 
@@ -28,20 +29,41 @@ export default class RouterStore {
             })
         }, 100)
     }
+    toRouterManageCh = (route: keyof typeof ManageHelperRoutes) => {
+        runInAction(() => {
+            this.manageRouters.push(ManageHelperRoutes[route])
+        })
+        setTimeout(() => {
+            runInAction(() => {
+                _.last(this.manageRouters)!.isOpen = true;
+            })
+        }, 100)
+    }
 
     closeModal = () => {
         runInAction(() => {
-            _.last(this.routers)!.isOpen = false;
+            if(this.routers.length)
+                _.last(this.routers)!.isOpen = false;
+            if(this.manageRouters.length > 1)
+                _.last(this.manageRouters)!.isOpen = false;
+            else if (this.manageRouters.length === 1) 
+                this.closeRightSideBar()
         })
         setTimeout(() => {
             runInAction(() => {
                 this.routers.pop();
+                if(this.manageRouters.length > 1)
+                    this.manageRouters.pop()
             })
         }, 300)
     }
 
     openRightSideBar = () => {
-        this.isOpenRigthSideBar === '-340px' ? this.isOpenRigthSideBar = '0px' : this.isOpenRigthSideBar = '-340px'
+        this.isOpenRigthSideBar = '0px'
+    }
+
+    closeRightSideBar = () => {
+        this.isOpenRigthSideBar = '-340px'
     }
 
 }

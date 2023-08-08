@@ -133,3 +133,54 @@ export const SideBarHelperRoutes = {
         isOpen: false
     }
 }
+
+export const ManageHelperRoutes = {
+    addFriends: {
+        id: 1,
+        key: 'addFriends',
+        components: AddFriend,
+        isOpen: false,
+    },
+    language: {
+        id: 2,
+        key: 'language',
+        components: Language,
+        isOpen: false,
+    },
+    editChannel: {
+        id: 3,
+        key: 'editChannel',
+        components: EditChannel,
+        isOpen: false,
+    },
+    manageChannel: {
+        id: 4,
+        key: 'manageChannel',
+        components: ManagaChannel,
+        isOpen: true,
+    },
+    addUserToChannel: {
+        id: 5,
+        key: 'addUserToChannel',
+        components: AddUserToChannel,
+        isOpen: false
+    },
+    newAdmin: {
+        id: 6,
+        key: 'newAdmin',
+        components: NewAdmin,
+        isOpen: false
+    },
+    channelSetting: {
+        id: 7,
+        key: 'channelSetting',
+        components: ChannelSetting,
+        isOpen: false
+    },
+    blockUser: {
+        id: 8,
+        key: 'blockUser',
+        components: BlockUser,
+        isOpen: false
+    }
+}

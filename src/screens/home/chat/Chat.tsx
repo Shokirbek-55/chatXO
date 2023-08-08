@@ -21,6 +21,11 @@ const Chat = () => {
     const { messageCache, slug } = useRootStore().messageStore
     const { user } = useRootStore().authStore
 
+    const { toRouterManageCh, openRightSideBar } = useRootStore().routerStore
+    
+    const OpenManageChannel = () => {
+        openRightSideBar()
+    }
 
     useEffect(() => {
         const handleEsc = (event: any) => {
@@ -43,6 +48,7 @@ const Chat = () => {
                 name={messageCache[slug]?.channelData.name}
                 onTextSearch={() => { }}
                 pageState={messageCache[slug]?.channelData.pageState}
+                onPress={OpenManageChannel}
             />
         )
     }
