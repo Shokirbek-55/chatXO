@@ -43,8 +43,8 @@ function Sidebar() {
           )
         })
       }
-      <currentRoute.components />
-      <Footer />
+        <currentRoute.components />
+        <Footer />
     </SidebarContainer>
   )
 }

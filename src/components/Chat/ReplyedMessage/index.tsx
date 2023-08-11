@@ -59,7 +59,7 @@ const RepliedMessage: FC<Props> = ({ message, position, users }) => {
               color={currentUser?.color}
               imageUrl={
                 currentUser?.avatar
-                  ? `${Env.AssetsUrl}/${currentUser.avatar}`
+                  ? `${Env.AssetsUrl}/${currentUser?.avatar}`
                   : ""
               }
             />

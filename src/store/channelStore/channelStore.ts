@@ -69,7 +69,7 @@ export default class ChannelStore {
                     this.myChannels = this.getChannelOperation.data;
                     this.channelsLoading = false
                 });
-                this.getChannelDataCache()
+            this.getChannelDataCache();
             }
     };
 

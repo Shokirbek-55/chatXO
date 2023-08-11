@@ -8,7 +8,8 @@
 import { useState, useEffect } from 'react';
 import './Waveform.css';
 
-const defaultData = `GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQRChYECGFOAZwH/////////FUmpZpkq17GDD0JATYCGQ2hyb21lV0GGQ2hyb21lFlSua7+uvdeBAXPFh6IIYlVBzlaDgQKGhkFfT1BVU2Oik09wdXNIZWFkAQEAAIC7AAAAAADhjbWERzuAAJ+BAWJkgSAfQ7Z1Af/////////ngQCjRQqBAACA+4P9H/0+iqQJWV1IUwYQ299s24/d0VB6fCDnOHkuO3HMbK/0P9h+qKP9xuWBh9ZVww3AlceY4r1X3MXQlXx19d1q+5u29RrGiCiEZA2dTz5enVwhC393TikqkGgMDX6ynhrr8SmuKUfeAf2KYsIu3DsOv9LgZKfx7RxfEycZJGFcQhsX/vr6MgtT6wk3K7AOZa3Vz5bwWcoIwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASrWuatSkTemxIUFqVxBkYSUpMylwGF62bioks595ALidbFhHjsiLhOF37QYGGC+vdBjjOFGyRM38tbfsYhFEhCAklQGXjNXN5PYokxeNKidNCKcEdNlDQkgUHmwGyL`;
+const defaultData = `GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQRChYECGFOAZwH/////////FUmpZpkq17GDD0JATYCGQ2hyb21lV0GGQ2hyb2`;
+// const defaultData = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
 
 const waveformCache = new Map();
 
@@ -44,27 +45,27 @@ const Waveform = ({ data, dragging, value }: {
 }) => {
     const [waveformData, setWaveformData] = useState(defaultData);
 
-    useEffect(() => {
-        if (!data) {
-            setWaveformData(defaultData);
-            return;
-        }
+    // useEffect(() => {
+    //     if (!data) {
+    //         setWaveformData(defaultData);
+    //         return;
+    //     }
 
-        fetch(data)
-            .then((response) => response.blob())
-            .then((blob) => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    const base64data = reader.result?.toString().split(',')[1] || ''
-                    console.log(base64data);
-                    setWaveformData(base64data);
-                };
-                reader.readAsDataURL(blob);
-            })
-            .catch((error) => {
-                console.error('Error fetching audio data:', error);
-            });
-    }, [data]);
+    //     fetch(data)
+    //         .then((response) => response.blob())
+    //         .then((blob) => {
+    //             const reader = new FileReader();
+    //             reader.onloadend = () => {
+    //                 const base64data = reader.result?.toString().split(',')[1] || ''
+    //                 // console.log(base64data);
+    //                 setWaveformData(base64data);
+    //             };
+    //             reader.readAsDataURL(blob);
+    //         })
+    //         .catch((error) => {
+    //             console.error('Error fetching audio data:', error);
+    //         });
+    // }, [data]);
     
     const waveform = getNormalizedWaveform(waveformData);
 
@@ -90,7 +91,7 @@ const Waveform = ({ data, dragging, value }: {
         <div className='waveform'>
             <div className='waveform-content'>
                 <div className='waveform-background'>{svg}</div>
-                <div className='waveform-progress' style={{ transition, width: value * 100 + '%' }}>
+                <div className='waveform-progress' style={{ transition, width: value + '%' }}>
                     {svg}
                 </div>
             </div>

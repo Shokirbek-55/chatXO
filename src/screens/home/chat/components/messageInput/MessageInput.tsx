@@ -23,8 +23,8 @@ function MessageInput({ sendCurrentCurrentMessageOnScroll }: any) {
   const { setMessageText, messageTextState, onSendMessage } = useRootStore().messageStore
 
   const handleonSendMessage = () => {
-    console.log('ketdi');
     onSendMessage('text')
+    setMessageText("")
   };
 
   useEffect(() => {
@@ -39,10 +39,10 @@ function MessageInput({ sendCurrentCurrentMessageOnScroll }: any) {
   }, []);
 
   const onSendEnter = (e: any) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
+    if (e.key === "Enter" && !e.shiftKey) {
       onSendMessage('text');
-      sendCurrentCurrentMessageOnScroll();
+      e.preventDefault();
+      setMessageText("");
     }
   };
 

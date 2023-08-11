@@ -42,7 +42,7 @@ const MessageVideo: FC<Props> = ({ message, users, own }) => {
           style={{ justifyContent: "flex-end" }}
           color={currentUser?.color}
           imageUrl={
-            currentUser?.avatar ? `${Env.AssetsUrl}/${currentUser.avatar}` : ""
+            currentUser?.avatar ? `${Env.AssetsUrl}/${currentUser?.avatar}` : ""
           }
         />
       </div>
