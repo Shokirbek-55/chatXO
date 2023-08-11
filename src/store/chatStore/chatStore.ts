@@ -13,9 +13,14 @@ class ChatStore {
 
     init = () => {
         console.log("init events");
-
         this.root.socketStore.socket?.on("message", (payload: RawMessage) => {
             console.log('new message', payload);
+            this.root.messageStore.addMessageToCache(payload);
+        });
+
+        this.root.socketStore.socket?.on('mergeMessage', (payload: RawMessage) => { 
+            console.log('merge message', payload);
+            this.root.messageStore.addMessageToCache(payload);
         });
 
         this.root.socketStore.socket?.on(
@@ -77,7 +82,7 @@ class ChatStore {
         hashtags,
     }: {
         slug: string;
-        pageState?: string;
+        pageState?: string | null | undefined;
         relevance?: number;
         hashtags?: string[];
     }) => {

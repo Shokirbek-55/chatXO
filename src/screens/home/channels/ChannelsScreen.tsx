@@ -74,7 +74,7 @@ function ChannelsScreen() {
           }}
         />
       </div>
-      <div className={styles.main}>
+      <ChannelRowContainer>
         {false && (
           <div className={styles.loadingBox}>
             <Loading />
@@ -111,7 +111,7 @@ function ChannelsScreen() {
             )
           })}
         </motion.div>
-      </div>
+      </ChannelRowContainer>
     </LeftAreaContainer>
   )
 }
@@ -122,6 +122,14 @@ export default observer(ChannelsScreen)
 const LeftAreaContainer = styled.div`
     width: 100%;
     height: 100%;
+    position: relative;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
+`
+
+const ChannelRowContainer = styled.div`
+    position: relative;
+    flex: 1;
+    overflow-y: auto;
 `

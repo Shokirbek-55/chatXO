@@ -15,14 +15,11 @@ import styles from "./ManagaChannel.module.css"
 
 const ManagaChannel = () => {
     const { t } = useTranslation()
-    const { getChannelUsersData, channelData, getChannelBlockedUsers } = useRootStore().channelStore
+    const { channelData, getChannelBlockedUsers } = useRootStore().channelStore
     const { toRouterManageCh, closeModal, closeRightSideBar } = useRootStore().routerStore
     const { userChannelLeave } = useRootStore().usersStore
     const { messageCache, slug } = useRootStore().messageStore
     const { user } = useRootStore().authStore
-    console.log("getChannelUsersData", toJS(getChannelUsersData));
-    console.log("channelData", toJS(messageCache[slug]?.channelData));
-    console.log("userssss", toJS(messageCache[slug]?.channelUsers));
     
 
     const leaveChannel = (channelId: number) => {

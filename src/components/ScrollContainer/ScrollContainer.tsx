@@ -2,6 +2,10 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { ArrowDowunIcon } from "../../utils/icons";
 import { styled } from "styled-components";
+import Lottie from "lottie-react";
+import topLoaderJson from "../../assets/topLoader.json";
+import { observer } from "mobx-react-lite";
+import useRootStore from "../../hooks/useRootStore";
 
 type ScrollContainerProps = {
     children: React.ReactNode;
@@ -14,17 +18,24 @@ const ScrollContainer = ({ children, header,input }:ScrollContainerProps) => {
     const innerDiv = useRef<HTMLDivElement | any>(null);
     const inputDiv = useRef<HTMLDivElement | any>(null);
 
+    const { getHistoryMessagesPageState, messageCache, slug, isLoadMessages  } = useRootStore().messageStore
+
     const topDiv = useRef<HTMLDivElement | any>(null);
 
-    // const prevInnerDivHeight = useRef(null);
+    const prevInnerDivHeight = useRef(null);
 
     const [showScrollButton, setShowScrollButton] = useState(false);
+    const [showTopLoading, setShowTopLoading] = useState(false);
 
     // scroll event listener
     useEffect(() => {
-        const handleScroll = () => {
+        const handleScroll = () => {           
             if (innerDiv.current.clientHeight - outerDiv.current.clientHeight === outerDiv.current.scrollTop) {
                 setShowScrollButton(false);
+            } else if (outerDiv.current.scrollTop == 0) {
+                if(messageCache[slug]?.end) return;
+                setShowTopLoading(true);
+                getHistoryMessagesPageState()
             }
             toBottomShowArrow();
             toBottomNoShowArrow();           
@@ -40,28 +51,22 @@ const ScrollContainer = ({ children, header,input }:ScrollContainerProps) => {
         if (innerDivHeight < outerDivHeight) {
             topDiv.current.style.height = `${outerDivHeight - innerDivHeight}px`;
         } else {
-            topDiv.current.style.height = `0px`;
-            outerDiv.current.scrollTo({
-                top: innerDivHeight - outerDivHeight + 12,
-                left: 0,
-                behavior: "auto" //prevInnerDivHeight.current ? "smooth" :
-            });
+            topDiv.current.style.height = `0px`;   
+            if (prevInnerDivHeight.current) {
+                outerDiv.current.scrollTo({
+                    top: innerDivHeight - prevInnerDivHeight.current + outerDivScrollTop,
+                    left: 0,
+                    behavior: "auto"
+                });
+            } else {
+                outerDiv.current.scrollTo({
+                    top: innerDivHeight - outerDivHeight + 12,
+                    left: 0,
+                    behavior: "auto" //prevInnerDivHeight.current ? "smooth" :
+                });
+            }
         }
-        
-        // if (
-        //     !prevInnerDivHeight.current ||
-        //     outerDivScrollTop === prevInnerDivHeight.current - outerDivHeight
-        // ) {
-            // outerDiv.current.scrollTo({
-            //     top: innerDivHeight! - outerDivHeight! + 12,
-            //     left: 0,
-            //     behavior: "auto" //prevInnerDivHeight.current ? "smooth" :
-            // });
-        // } else {
-        //     setShowScrollButton(true);
-        // };
-
-        // prevInnerDivHeight.current = innerDivHeight;
+        prevInnerDivHeight.current = innerDivHeight;
     }, [children]);
 
     const handleScrollButtonClick = useCallback(() => {
@@ -96,7 +101,6 @@ const ScrollContainer = ({ children, header,input }:ScrollContainerProps) => {
             setShowScrollButton(false);
         }
     }, []);
-        
 
     return (
         <div
@@ -104,7 +108,8 @@ const ScrollContainer = ({ children, header,input }:ScrollContainerProps) => {
                 position: "relative",
                 height: "100%",
                 width: "100%",
-                backgroundColor: 'green',
+                // backgroundColor: 'green',
+                backgroundColor: '#ddd',
                 overflow: "hidden",
             }}
         >
@@ -124,7 +129,6 @@ const ScrollContainer = ({ children, header,input }:ScrollContainerProps) => {
                     position: "relative",
                     height: "100%",
                     overflowY: "scroll",
-                    // border: "1px solid red",
                     overflowX: "hidden",
                     flex: '1 1 0',
                 }}
@@ -138,11 +142,14 @@ const ScrollContainer = ({ children, header,input }:ScrollContainerProps) => {
                     ref={innerDiv}
                     style={{
                         position: "relative",
-                        // border: "1px solid black",
                         flex: '0 0 auto',
                     }}
                 >
-                    <div />
+                    {
+                        showTopLoading && !messageCache[slug]?.end ? (
+                            <ScrollTopLoading animationData={topLoaderJson} autoplay={showTopLoading} />
+                        ) : null
+                    }
                     {children}
                 </div>
             </div>
@@ -178,4 +185,12 @@ const ScrollContainer = ({ children, header,input }:ScrollContainerProps) => {
 };
 
 
-export default ScrollContainer;
+export default observer(ScrollContainer);
+
+
+const ScrollTopLoading = styled(Lottie)`
+    position: absolute;
+    top: 6vh;
+    left: 0;
+    width: 100%;
+`

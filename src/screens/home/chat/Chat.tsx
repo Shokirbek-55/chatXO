@@ -14,12 +14,12 @@ import MessageVideo from '../../../components/Chat/MessageVideo'
 import MessageAudio from '../../../components/Chat/MessageAudio'
 import MessageDoc from '../../../components/Chat/MessageDoc'
 import LinkPriview from '../../../components/Chat/LinkPreView/linkPriview'
-import React from 'react'
+import { toJS } from 'mobx'
 
 const Chat = () => {
     const navigate = useNavigate();
     const { messageCache, slug } = useRootStore().messageStore
-    const { user } = useRootStore().authStore
+    const { user } = useRootStore().authStore    
 
     const { toRouterManageCh, openRightSideBar } = useRootStore().routerStore
     
@@ -56,7 +56,6 @@ const Chat = () => {
     const Input = () => {
         return (
             <MessageInput
-                sendCurrentCurrentMessageOnScroll={() => { }}
             />
         )
     }
@@ -168,6 +167,7 @@ const Chat = () => {
                     })
                 }
             </ScrollContainer>
+            <audio id="audioPlayer" />
         </ChatContainer>
     )
 }

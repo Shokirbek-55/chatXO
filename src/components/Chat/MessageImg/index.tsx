@@ -54,8 +54,8 @@ const MessageImg: FC<Props> = ({ message, own, users }) => {
                 <SmallAvatar
                   color={currentUser?.color}
                   imageUrl={
-                    currentUser.avatar
-                      ? `${TMP_URL}/${currentUser.avatar}`
+                    currentUser?.avatar
+                      ? `${TMP_URL}/${currentUser?.avatar}`
                       : ""
                   }
                 />
