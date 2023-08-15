@@ -1,4 +1,5 @@
-import { channels } from './../store/dataBase';
+import { LoginOAuth2Payload } from './../store/AuthStore/AuthStore';
+import { channels, data } from './../store/dataBase';
 import { CheckOAuthData, RegisterData, Session } from "../types/auth";
 import { User } from "../types/user";
 import ApiService from "./services/ApiService";
@@ -35,6 +36,8 @@ const APIs = {
     checkEmail: (email: string) => apiService.methods.get<boolean>(`${checkUserEmailUrl}${email}`),
     checkOauth: (data: CheckOAuthData) => apiService.methods.post<boolean>(`${checOAuthUrl}`, data),
     register: (data: RegisterData) => apiService.methods.post<Session>(`${url}/register`, data),
+    loginOAuth: (data: LoginOAuth2Payload) => apiService.methods.post<Session>(`${url}/login/oauth2`, data),
+    registerOAuth: (data: LoginOAuth2Payload) => apiService.methods.post<Session>(`${url}/register/oauth2`, data),
     logout: (refreshToken: string) => apiService.methods.post(`${url}/logout`, { refreshToken }),
     refreshToken: (refreshToken: string) => apiService.methods.post<{ accessToken: string }>(`/token/refresh`, { refreshToken }),
     
