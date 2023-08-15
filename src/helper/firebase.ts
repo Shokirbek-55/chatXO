@@ -1,12 +1,6 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyAdMuI1wT1mK1Y5drZ8O6GaFxH3f_zmJUY",
   authDomain: "chatxo-message-auth.firebaseapp.com",
@@ -19,4 +13,19 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth();
+
+const auth = getAuth(app);
+
+const providerOAuth = new GoogleAuthProvider();
+
+providerOAuth.setCustomParameters({
+  prompt: 'select_account'
+});
+
+const providerFC = new FacebookAuthProvider();
+
+providerFC.setCustomParameters({
+  prompt: 'select_account'
+});
+
+export { auth, providerOAuth, providerFC }

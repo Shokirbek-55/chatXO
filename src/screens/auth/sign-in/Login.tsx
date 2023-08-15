@@ -10,12 +10,37 @@ import Colors from '../../../utils/colors'
 import Regex from '../../../utils/regax'
 import Assets from '../../../utils/requireAssets'
 import styles from "./Login.module.css"
+import { FacebookAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth, providerOAuth, providerFC } from '../../../helper/firebase'
 
 const Login = () => {
 
-  const { loginEmailWithPassword } = useRootStore().authStore
+  const { loginEmailWithPassword, loginOAuth2 } = useRootStore().authStore
   const navigation = useNavigate()
   const { t } = useTranslation()
+
+  const handleGoogleSignIn = () => {
+    signInWithPopup(auth, providerOAuth).then((result: any) => {
+      loginOAuth2({
+        authType: 'googleToken',
+        oAuth2token: result._tokenResponse.oauthIdToken,
+        email: result.user.email,
+        userName: result.user.email,
+      })
+    }).catch((err) => {
+      console.log(err);
+    })
+  }
+
+  const handleFacebookLogin = () => {
+    signInWithPopup(auth, providerFC).then((result) => {
+      const credential = FacebookAuthProvider.credentialFromResult(result);
+      const accessToken = credential!.accessToken;
+      console.log('facebook login success', result);
+    }).catch((err) => {
+      console.log(err);
+    })
+  }
 
   const validate = yup.object({
     email: yup
@@ -40,7 +65,7 @@ const Login = () => {
       />
       <div className={styles.login_container}>
         <div className={styles.buttonContent}>
-          <button className={styles.loginButton}>
+          <button className={styles.loginButton} onClick={handleFacebookLogin}>
             {
               <img
                 style={{
@@ -53,7 +78,7 @@ const Login = () => {
             {t("login_fb")}
           </button>
 
-          <button className={styles.loginButton}>
+          <button onClick={handleGoogleSignIn} className={styles.loginButton}>
             {
               <img
                 style={{
@@ -63,7 +88,7 @@ const Login = () => {
                 alt=""
               />
             }
-            {t("login_fb")}
+            {t("login_google")}
           </button>
         </div>
         <h3 className={styles.loginTitleOr}>{t("or")}</h3>

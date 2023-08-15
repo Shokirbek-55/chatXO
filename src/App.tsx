@@ -33,9 +33,7 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
       <RootRouter />
-    </div>
   );
 }
 
