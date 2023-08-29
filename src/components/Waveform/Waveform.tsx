@@ -71,13 +71,14 @@ const Waveform = ({ data, dragging, value }: {
 
     const transition: any = dragging ? null : 'width 0.25s'
     const waveformMaxHeight = 23;
+    const rectWidth = 1;
 
     const d = waveform
         .filter((x: any, index: number) => index % 2 === 1)
         .map((x: number, index: number) => {
             const height = Math.min(Math.max(2, x * waveformMaxHeight), waveformMaxHeight);
-            const y = waveformMaxHeight - Math.floor(height);
-            return `M${1 + 4 * index + 1},${y + 1}v${Math.floor(height) - 2}Z`;
+            const y = 16 - (height / 2);
+            return `M${1 + 4 * index + 1},${y}v${height}h${rectWidth}v${-height}Z`;
         })
         .join('');
 

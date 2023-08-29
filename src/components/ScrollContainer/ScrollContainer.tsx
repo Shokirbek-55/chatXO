@@ -6,6 +6,7 @@ import Lottie from "lottie-react";
 import topLoaderJson from "../../assets/topLoader.json";
 import { observer } from "mobx-react-lite";
 import useRootStore from "../../hooks/useRootStore";
+import { useInfiniteScroll } from "../../hooks/useThrottledEffect";
 
 type ScrollContainerProps = {
     children: React.ReactNode;
@@ -26,16 +27,19 @@ const ScrollContainer = ({ children, header,input }:ScrollContainerProps) => {
 
     const [showScrollButton, setShowScrollButton] = useState(false);
     const [showTopLoading, setShowTopLoading] = useState(false);
+    
+    const getMoreMessages = useCallback(() => {
+        setShowTopLoading(true);
+        getHistoryMessagesPageState();
+    }, [getHistoryMessagesPageState, messageCache, slug]);
+
+    const [isFetching, setIsFetching, stop] = useInfiniteScroll(getMoreMessages, outerDiv, innerDiv);
 
     // scroll event listener
     useEffect(() => {
-        const handleScroll = () => {           
+        const handleScroll = () => {     
             if (innerDiv.current.clientHeight - outerDiv.current.clientHeight === outerDiv.current.scrollTop) {
                 setShowScrollButton(false);
-            } else if (outerDiv.current.scrollTop == 0) {
-                if(messageCache[slug]?.end) return;
-                setShowTopLoading(true);
-                getHistoryMessagesPageState()
             }
             toBottomShowArrow();
             toBottomNoShowArrow();           
@@ -108,7 +112,6 @@ const ScrollContainer = ({ children, header,input }:ScrollContainerProps) => {
                 position: "relative",
                 height: "100%",
                 width: "100%",
-                // backgroundColor: 'green',
                 backgroundColor: '#ddd',
                 overflow: "hidden",
             }}
