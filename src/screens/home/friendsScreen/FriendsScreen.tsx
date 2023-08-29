@@ -1,13 +1,13 @@
 import { motion } from "framer-motion";
-import { observer } from 'mobx-react-lite';
-import { useTranslation } from 'react-i18next';
-import Header from '../../../components/Header/Header';
-import MessageBox from '../../../components/MessageBox/MessageBox';
-import RowItemView from '../../../components/RowItem';
-import Text from '../../../components/Text/Text';
-import { TMP_URL } from '../../../env';
-import useRootStore from '../../../hooks/useRootStore';
-import { InputComponent } from '../../../utils/inputComponent';
+import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
+import Header from "../../../components/Header/Header";
+import MessageBox from "../../../components/MessageBox/MessageBox";
+import RowItemView from "../../../components/RowItem";
+import Text from "../../../components/Text/Text";
+import { TMP_URL } from "../../../env";
+import useRootStore from "../../../hooks/useRootStore";
+import { InputComponent } from "../../../utils/inputComponent";
 import styles from "./FriendsScreen.module.css";
 
 const container = {
@@ -17,33 +17,34 @@ const container = {
         scale: 1,
         transition: {
             delayChildren: 0.3,
-            staggerChildren: 0.2
-        }
-    }
+            staggerChildren: 0.2,
+        },
+    },
 };
 
 const item = {
     hidden: { y: 20, opacity: 0 },
     visible: {
         y: 0,
-        opacity: 1
-    }
+        opacity: 1,
+    },
 };
 
 const FriendsScreen = () => {
-    const { friends, deleteFriend, loading, getFriendsFilter } = useRootStore().friendsStore
-    const { toRouter } = useRootStore().routerStore
-    const { getFriendDetails } = useRootStore().usersStore
-    const { t } = useTranslation()
+    const { friends, deleteFriend, loading, getFriendsFilter } =
+        useRootStore().friendsStore;
+    const { toRouter } = useRootStore().routerStore;
+    const { getFriendDetails } = useRootStore().usersStore;
+    const { t } = useTranslation();
 
     const handleChangeText = (key: string) => {
-        getFriendsFilter(key)
-    }
+        getFriendsFilter(key);
+    };
 
     const FriendDetails = (friendId: number) => {
-        getFriendDetails(friendId)
-        toRouter("friendDetails")
-    }
+        getFriendDetails(friendId);
+        toRouter("friendDetails");
+    };
 
     return (
         <div className={styles.container}>
@@ -51,9 +52,9 @@ const FriendsScreen = () => {
                 style={{ zIndex: 1 }}
                 text={`${t("friends")}`}
                 leftIcon={"addUser"}
-                onLeftIconPress={() => toRouter('addFriends')}
+                onLeftIconPress={() => toRouter("addFriends")}
                 rightIcon={"account"}
-                onRightIconPress={() => toRouter('account')}
+                onRightIconPress={() => toRouter("account")}
             />
             <div className={styles.searchBox}>
                 <InputComponent
@@ -62,7 +63,7 @@ const FriendsScreen = () => {
                 />
                 <Text
                     center
-                    numbers={friends?.flat().length}
+                    numbers={friends?.length}
                     children={t("friends")}
                     style={{
                         fontSize: "16px",
@@ -80,8 +81,9 @@ const FriendsScreen = () => {
                     variants={container}
                     initial="hidden"
                     animate="visible"
-                    className={styles.contentBox}>
-                    {friends?.length !== 0 ?
+                    className={styles.contentBox}
+                >
+                    {friends?.length > 0 ? (
                         friends?.map((e, index) => {
                             return (
                                 <motion.div
@@ -92,23 +94,36 @@ const FriendsScreen = () => {
                                 >
                                     <RowItemView
                                         title={`${t("unfriend")}`}
-                                        imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ""}
-                                        color={e.color ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}
+                                        imageUrl={
+                                            e.avatar
+                                                ? `${TMP_URL}/${e.avatar}`
+                                                : ""
+                                        }
+                                        color={
+                                            e.color
+                                                ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)`
+                                                : "linear-gradient(#ddd, #666)"
+                                        }
                                         text={e.username}
-                                        onButtonPress={() => deleteFriend(e.id ? e.id : 0)}
-                                        onNamePress={() => FriendDetails(e.id ? e.id : 0)}
+                                        onButtonPress={() =>
+                                            deleteFriend(e.id ? e.id : 0)
+                                        }
+                                        onNamePress={() =>
+                                            FriendDetails(e.id ? e.id : 0)
+                                        }
                                         rightButton
                                         loading={false}
                                     />
                                 </motion.div>
                             );
-                        }) :
+                        })
+                    ) : (
                         <MessageBox title={`${t("no_avalible_friends")}`} />
-                    }
+                    )}
                 </motion.div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default observer(FriendsScreen)
+export default observer(FriendsScreen);

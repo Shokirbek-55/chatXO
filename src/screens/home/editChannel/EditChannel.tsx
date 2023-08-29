@@ -1,21 +1,22 @@
-import { observer } from 'mobx-react-lite'
-import { ChangeEvent } from 'react'
-import { useTranslation } from 'react-i18next'
-import AvatarUpload from '../../../components/AvatarUpload/AvatarUpload'
-import Header from '../../../components/Header/Header'
-import Input from '../../../components/Input'
-import SimpleSwitch from '../../../components/SimpleSwitch/switch'
-import Text from '../../../components/Text/Text'
-import { TMP_URL } from '../../../env'
-import useRootStore from '../../../hooks/useRootStore'
-import { ButtonComponent } from '../../../utils/button'
-import { getRandomColor } from '../../../utils/randomColor'
-import styles from "./EditChannel.module.css"
+import { observer } from "mobx-react-lite";
+import { ChangeEvent } from "react";
+import { useTranslation } from "react-i18next";
+import AvatarUpload from "../../../components/AvatarUpload/AvatarUpload";
+import Header from "../../../components/Header/Header";
+import Input from "../../../components/Input";
+import SimpleSwitch from "../../../components/SimpleSwitch/switch";
+import Text from "../../../components/Text/Text";
+import { TMP_URL } from "../../../env";
+import useRootStore from "../../../hooks/useRootStore";
+import { ButtonComponent } from "../../../utils/button";
+import { getRandomColor } from "../../../utils/randomColor";
+import styles from "./EditChannel.module.css";
 
 const EditChannel = () => {
-    const { t } = useTranslation()
-    const { closeModal, toRouter, toRouterManageCh } = useRootStore().routerStore
-    const { getFriends } = useRootStore().friendsStore
+    const { t } = useTranslation();
+    const { closeModal, toRouter, toRouterManageCh } =
+        useRootStore().routerStore;
+    const { getFriends } = useRootStore().friendsStore;
     const {
         channelData,
         setUpdateChannelState,
@@ -23,23 +24,22 @@ const EditChannel = () => {
         generateNewInvitationCode,
         delateChannel,
         createChannelAvatar,
-
-    } = useRootStore().channelStore
+    } = useRootStore().channelStore;
 
     const updateChannelEvent = () => {
-        updateChannel()
-        toRouter("channels")
-    }
+        updateChannel();
+        toRouter("channels");
+    };
 
     const delateChannelEvent = (hashId: string) => {
-        delateChannel(hashId)
-        toRouter("channels")
-    }
+        delateChannel(hashId);
+        toRouter("channels");
+    };
 
     const addUserToChannel = () => {
-        toRouter("addUserToChannel")
-        getFriends()
-    }
+        toRouterManageCh("addUserToChannel");
+        getFriends();
+    };
 
     return (
         <div className={styles.editChannel}>
@@ -57,23 +57,28 @@ const EditChannel = () => {
                             style={{
                                 fontSize: "15px",
                                 fontFamily: "Montserrat5",
-                                color: "#03053F"
+                                color: "#03053F",
                             }}
                         />
-                        <Text margin='10px 0 0 0' text={`${t("groupsInvite")}`} />
+                        <Text
+                            margin="10px 0 0 0"
+                            text={`${t("groupsInvite")}`}
+                        />
                         <Text
                             text={channelData.invitationCodes[0]?.code || ""}
                             style={{
                                 fontSize: "15px",
                                 fontFamily: "Montserrat5",
-                                color: "#03053F"
+                                color: "#03053F",
                             }}
                         />
                     </div>
                     <div className={styles.rightBox}>
                         <AvatarUpload
                             imageUrl={
-                                channelData.avatar ? `${TMP_URL}/${channelData.avatar}` : ""
+                                channelData.avatar
+                                    ? `${TMP_URL}/${channelData.avatar}`
+                                    : ""
                             }
                             color={
                                 channelData.color
@@ -81,12 +86,17 @@ const EditChannel = () => {
                                     : "linear-gradient(#ddd, #666)"
                             }
                             upload={true}
-                            onChange={(e) => createChannelAvatar(channelData.hashId, e)}
+                            onChange={(e) =>
+                                createChannelAvatar(channelData.hashId, e)
+                            }
                         />
-                        <Text margin='6px 0 10px 0'
+                        <Text
+                            margin="6px 0 10px 0"
                             color="yellowgreen"
                             text="Random color"
-                            handleLink={() => setUpdateChannelState("color", getRandomColor())}
+                            handleLink={() =>
+                                setUpdateChannelState("color", getRandomColor())
+                            }
                         />
                     </div>
                 </div>
@@ -98,13 +108,17 @@ const EditChannel = () => {
                             iconColor="#fff"
                             textSize={14}
                             padding="5px 0"
-                            clickMe={() => generateNewInvitationCode(channelData.groupNumber as string)}
+                            clickMe={() =>
+                                generateNewInvitationCode(
+                                    channelData.groupNumber as string
+                                )
+                            }
                         />
                         <ButtonComponent
                             text={`${t("newAdmin")}`}
                             backColor="red"
                             icon="newAdmin"
-                            clickMe={() => toRouter("newAdmin")}
+                            clickMe={() => toRouterManageCh("newAdmin")}
                         />
                     </div>
                 </div>
@@ -112,15 +126,20 @@ const EditChannel = () => {
                     <SimpleSwitch
                         switchValue={channelData.isPrivate}
                         offOpen="Public"
-                        onOpen='Private'
+                        onOpen="Private"
                         onText={`${t("group_is_private")}`}
                         offText={`${t("group_is_open")}`}
-                        isPrivate={(e) => setUpdateChannelState("isPrivate", e as never)}
+                        isPrivate={(e) =>
+                            setUpdateChannelState("isPrivate", e as never)
+                        }
                     />
                 </div>
             </div>
             <div className={styles.addUsersBox}>
-                <Text style={{ paddingLeft: "10px" }} text={`${t("groupsName")}`} />
+                <Text
+                    style={{ paddingLeft: "10px" }}
+                    text={`${t("groupsName")}`}
+                />
                 <Input
                     borderred
                     name={channelData.name}
@@ -164,7 +183,7 @@ const EditChannel = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default observer(EditChannel)
+export default observer(EditChannel);

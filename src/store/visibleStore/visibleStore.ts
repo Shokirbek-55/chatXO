@@ -1,29 +1,27 @@
 import { makeAutoObservable } from "mobx";
 
-
 class VisibleStore {
-
     constructor() {
-        makeAutoObservable(this)
+        makeAutoObservable(this);
     }
 
     visible = {
         FooterToolbar: false,
-        FilterToolbar: false
-    }
+        FilterToolbar: false,
+        RelevenceModal: false,
+    };
 
     toglevisible = (key: keyof typeof this.visible) => {
-        this.visible[key] = !this.visible[key]
-    }
+        this.visible[key] = !this.visible[key];
+    };
 
     show = (key: keyof typeof this.visible) => {
-        this.visible[key] = true
-    }
+        this.visible[key] = true;
+    };
 
     hide = (key: keyof typeof this.visible) => {
-        this.visible[key] = false
-    }
-
+        this.visible[key] = false;
+    };
 }
 
-export default VisibleStore
+export default VisibleStore;

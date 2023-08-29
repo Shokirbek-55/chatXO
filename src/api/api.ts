@@ -1,23 +1,22 @@
-import { LoginOAuth2Payload } from './../store/AuthStore/AuthStore';
-import { channels, data } from './../store/dataBase';
+import { LoginOAuth2Payload } from "./../store/AuthStore/AuthStore";
+import { channels, data } from "./../store/dataBase";
 import { CheckOAuthData, RegisterData, Session } from "../types/auth";
 import { User } from "../types/user";
 import ApiService from "./services/ApiService";
-import { Channel, SetUpdataChanelType } from '../types/channel';
-import { AxiosRequestConfig } from 'axios';
+import { Channel, SetUpdataChanelType } from "../types/channel";
+import { AxiosRequestConfig } from "axios";
 
-
-export type LoginEmailWithPasswordReqData={
+export type LoginEmailWithPasswordReqData = {
     email: string;
     password: string;
-}
+};
 
 const url = "auth";
 const checkUserNameUrl = `${url}/verify/username/`;
 const checkUserEmailUrl = `${url}/verify/email/`;
 const checOAuthUrl = `${url}/verify/oauth2`;
-const friends = "friends"
-const users = "/users"
+const friends = "friends";
+const users = "/users";
 
 const accountUrl = "users";
 const authUrl = "/auth";
@@ -31,16 +30,27 @@ const mediaUploadUrl: string = "message/media";
 const apiService = new ApiService();
 
 const APIs = {
-    login: (data: LoginEmailWithPasswordReqData) => apiService.methods.post<Session>(`${url}/login`, data),
-    checkUserName: (username: string) => apiService.methods.get<boolean>(`${checkUserNameUrl}${username}`),
-    checkEmail: (email: string) => apiService.methods.get<boolean>(`${checkUserEmailUrl}${email}`),
-    checkOauth: (data: CheckOAuthData) => apiService.methods.post<boolean>(`${checOAuthUrl}`, data),
-    register: (data: RegisterData) => apiService.methods.post<Session>(`${url}/register`, data),
-    loginOAuth: (data: LoginOAuth2Payload) => apiService.methods.post<Session>(`${url}/login/oauth2`, data),
-    registerOAuth: (data: LoginOAuth2Payload) => apiService.methods.post<Session>(`${url}/register/oauth2`, data),
-    logout: (refreshToken: string) => apiService.methods.post(`${url}/logout`, { refreshToken }),
-    refreshToken: (refreshToken: string) => apiService.methods.post<{ accessToken: string }>(`/token/refresh`, { refreshToken }),
-    
+    login: (data: LoginEmailWithPasswordReqData) =>
+        apiService.methods.post<Session>(`${url}/login`, data),
+    checkUserName: (username: string) =>
+        apiService.methods.get<boolean>(`${checkUserNameUrl}${username}`),
+    checkEmail: (email: string) =>
+        apiService.methods.get<boolean>(`${checkUserEmailUrl}${email}`),
+    checkOauth: (data: CheckOAuthData) =>
+        apiService.methods.post<boolean>(`${checOAuthUrl}`, data),
+    register: (data: RegisterData) =>
+        apiService.methods.post<Session>(`${url}/register`, data),
+    loginOAuth: (data: LoginOAuth2Payload) =>
+        apiService.methods.post<Session>(`${url}/login/oauth2`, data),
+    registerOAuth: (data: LoginOAuth2Payload) =>
+        apiService.methods.post<Session>(`${url}/register/oauth2`, data),
+    logout: (refreshToken: string) =>
+        apiService.methods.post(`${url}/logout`, { refreshToken }),
+    refreshToken: (refreshToken: string) =>
+        apiService.methods.post<{ accessToken: string }>(`/token/refresh`, {
+            refreshToken,
+        }),
+
     Account: {
         getMyAccount: () => apiService.methods.get<User>(`${accountUrl}/me`),
         updateAccount: (user: Partial<User>) => {
@@ -51,7 +61,8 @@ const APIs = {
             return apiService.methods.put(`${accountUrl}/me`, data);
         },
 
-        delateMyAvatar: () => apiService.methods.delete<User>(`${accountUrl}/me/avatar`),
+        delateMyAvatar: () =>
+            apiService.methods.delete<User>(`${accountUrl}/me/avatar`),
 
         usersMeAvatar: (data: FormData) => {
             return apiService.methods.post(`${accountUrl}/me/avatar`, data, {
@@ -63,40 +74,50 @@ const APIs = {
         },
 
         resetPass: (email: string) => {
-            return apiService.methods.patch(`${authUrl}/password/reset`, { email });
+            return apiService.methods.patch(`${authUrl}/password/reset`, {
+                email,
+            });
         },
 
         delateAccount: (userId: number) => {
             return apiService.methods.delete(`${accountUrl}/${userId}`);
         },
     },
-    
+
     Friends: {
         getfriends: () => apiService.methods.get<User[]>(`${friends}/get`),
 
-        deleteFriend: (friendId: number) => apiService.methods.delete(`${friends}/delete/${friendId}`),
+        deleteFriend: (friendId: number) =>
+            apiService.methods.delete(`${friends}/delete/${friendId}`),
 
-        createFriend: (friendId: number) => apiService.methods.post(`${friends}/create`, {friendId})
+        createFriend: (friendId: number) =>
+            apiService.methods.post(`${friends}/create`, { friendId }),
     },
 
     Users: {
-        getAllUsers: () => apiService.methods.get<User[]>(`${users}/nonfriends`),
+        getAllUsers: () =>
+            apiService.methods.get<User[]>(`${users}/nonfriends`),
 
-        getFriendDetails: (friendId: number) => apiService.methods.get(`${users}/get/${friendId}`),
+        getFriendDetails: (friendId: number) =>
+            apiService.methods.get(`${users}/get/${friendId}`),
 
-        leaveFromChannel: (channelId: number) => apiService.methods.post(`${users}/${channelUrl}/leave`, {channelId})
+        leaveFromChannel: (channelId: number) =>
+            apiService.methods.post(`${users}/${channelUrl}/leave`, {
+                channelId,
+            }),
     },
 
     channels: {
         getChannel: (hashId: string) =>
             apiService.methods.get<Channel>(`${channelUrl}/hash/${hashId}`),
 
-        getMyChannels: () => apiService.methods.get<Channel[]>(`${usersUrl}/${channelsUrl}`),
+        getMyChannels: () =>
+            apiService.methods.get<Channel[]>(`${usersUrl}/${channelsUrl}`),
 
         getAllChannels: () =>
-            apiService.methods.get<(Omit<Channel, "users"> & { users?: User[] })[]>(
-                `${channelUrl}/all`
-            ),
+            apiService.methods.get<
+                (Omit<Channel, "users"> & { users?: User[] })[]
+            >(`${channelUrl}/all`),
         createChannel: (name: string, description: string, color: string) =>
             apiService.methods.post<Channel>(`${channelUrl}`, {
                 name,
@@ -104,35 +125,48 @@ const APIs = {
                 color,
             }),
         createChannelWithName: (name: string, isPrivate: boolean) =>
-            apiService.methods.post<Channel>(`${channelUrl}`, { name, isPrivate }),
+            apiService.methods.post<Channel>(`${channelUrl}`, {
+                name,
+                isPrivate,
+            }),
 
         createChannelAvatar: (hashId: string, data: any) => {
-            return apiService.methods.post(`${channelUrl}/${hashId}/avatar`, data, {
-                headers: {
-                    Accept: "application/json",
-                    ContentType: "multipart/form-data",
-                },
-            });
+            return apiService.methods.post(
+                `${channelUrl}/${hashId}/avatar`,
+                data,
+                {
+                    headers: {
+                        Accept: "application/json",
+                        ContentType: "multipart/form-data",
+                    },
+                }
+            );
         },
 
-        getChannelUsers: (channelHashId: string) => 
-            apiService.methods.get<User[]>(`${channelUrl}/${channelHashId}/users`),
+        getChannelUsers: (channelHashId: string) =>
+            apiService.methods.get<User[]>(
+                `${channelUrl}/${channelHashId}/users`
+            ),
 
         connectToChannel: (channelNumber: string) =>
             apiService.methods.get<Channel>(`${channelUrl}/${channelNumber}`),
 
         connectWithInviteCode: (channelNumber: string, inviteCode: string) =>
-            apiService.methods.post<Channel>(`${channelUrl}/${channelNumber}`, { inviteCode }),
+            apiService.methods.post<Channel>(`${channelUrl}/${channelNumber}`, {
+                inviteCode,
+            }),
 
         joinChannel: (channelId: number) =>
             apiService.methods.post<{ user: User; channel: Channel }>(
-                `${usersUrl}${channelUrl}/join`,
+                `${usersUrl}/${channelUrl}/join`,
                 {
                     channelId,
                 }
             ),
         leaveChannel: (channelId: number) =>
-            apiService.methods.post(`${usersUrl}${channelUrl}/leave`, { channelId }),
+            apiService.methods.post(`${usersUrl}${channelUrl}/leave`, {
+                channelId,
+            }),
 
         getChannelByHashId: (hashId: string) =>
             apiService.methods.get<Channel>(`${channelUrl}/hash/${hashId}`),
@@ -141,7 +175,10 @@ const APIs = {
             apiService.methods.get<Channel>(`${channelUrl}/${hashId}/users`),
 
         updateChannel: (channelhashId: string, data: SetUpdataChanelType) => {
-            apiService.methods.patch(`${channelUrl}/hash/${channelhashId}`, data);
+            apiService.methods.patch(
+                `${channelUrl}/hash/${channelhashId}`,
+                data
+            );
         },
 
         updateRelevance: (data: any) => {
@@ -150,14 +187,20 @@ const APIs = {
 
         generateNewInviteCode: (channelNumber: string, onlyQr?: string) =>
             apiService.methods.get<{ inviteCode: string; qrCode: string }>(
-                `${channelUrl}/${channelNumber}/generate-invite-code${onlyQr || ""}`
+                `${channelUrl}/${channelNumber}/generate-invite-code${
+                    onlyQr || ""
+                }`
             ),
 
         addUsersToChannel: (channelHashId: string, users: number[]) =>
-            apiService.methods.post(`${channelUrl}/${channelHashId}/users`, { users }),
+            apiService.methods.post(`${channelUrl}/${channelHashId}/users`, {
+                users,
+            }),
 
         deleteUsersFromChannel: (channelHashId: string, userId: number) =>
-            apiService.methods.delete(`${channelUrl}/${channelHashId}/users/${userId}`),
+            apiService.methods.delete(
+                `${channelUrl}/${channelHashId}/users/${userId}`
+            ),
 
         delateChannelAvatar: (channelhashId: string) => {
             apiService.methods.delete(`${channelUrl}/${channelhashId}/avatar`);
@@ -176,23 +219,30 @@ const APIs = {
             apiService.methods.get(`${channelUrl}/${hashId}/blocked-users`),
 
         blockUser: (hashId: string, userId: number) =>
-            apiService.methods.post(`${channelUrl}/${hashId}/block`, { userId }),
+            apiService.methods.post(`${channelUrl}/${hashId}/block`, {
+                userId,
+            }),
 
         unblockUser: (hashId: string, userId: number) =>
-            apiService.methods.post(`${channelUrl}/${hashId}/unblock`, { userId }),
+            apiService.methods.post(`${channelUrl}/${hashId}/unblock`, {
+                userId,
+            }),
 
         getPollDetails: (pollId: number, includeVotedUsers?: boolean) =>
-            apiService.methods.get(`/poll/${pollId}?includeVotedUsers=${includeVotedUsers}`),
+            apiService.methods.get(
+                `/poll/${pollId}?includeVotedUsers=${includeVotedUsers}`
+            ),
 
         getPollOptionInfo: (pollOptionId: number) =>
             apiService.methods.get(`/poll/option/${pollOptionId}`),
     },
 
-    upload: (form: FormData, config: AxiosRequestConfig) => apiService.methods.post<{
-        filePath: string;
-        fileTitle: string;
-        thumbnailPath: string;
-    }>(`${mediaUploadUrl}/upload`, form, config)
-}
+    upload: (form: FormData, config: AxiosRequestConfig) =>
+        apiService.methods.post<{
+            filePath: string;
+            fileTitle: string;
+            thumbnailPath: string;
+        }>(`${mediaUploadUrl}/upload`, form, config),
+};
 
 export default APIs;

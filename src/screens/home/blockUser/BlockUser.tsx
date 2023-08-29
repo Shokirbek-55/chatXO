@@ -1,24 +1,34 @@
-import React, { useEffect } from 'react'
-import { useTranslation } from 'react-i18next';
-import Header from '../../../components/Header/Header';
-import MessageBox from '../../../components/MessageBox/MessageBox';
-import RowItemView from '../../../components/RowItem';
-import useRootStore from '../../../hooks/useRootStore';
+import { toJS } from "mobx";
+import { observer } from "mobx-react-lite";
+import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import Header from "../../../components/Header/Header";
+import MessageBox from "../../../components/MessageBox/MessageBox";
+import RowItemView from "../../../components/RowItem";
+import { TMP_URL } from "../../../env";
+import useRootStore from "../../../hooks/useRootStore";
 
 const BlockUser = () => {
-    const { t } = useTranslation()
+    const { t } = useTranslation();
     const {
         getChannelUsersData,
-        getChannelBlockedUsers,
+        unblockUser,
         getBlockedUser,
         channelData,
-        blockUser
-    } = useRootStore().channelStore
-    const { user } = useRootStore().authStore
-    const { closeModal } = useRootStore().routerStore
+        blockUser,
+        adminId,
+    } = useRootStore().channelStore;
+    const { user } = useRootStore().authStore;
+    const { closeModal } = useRootStore().routerStore;
+    console.log("getBlockedUser", toJS(getBlockedUser));
+
     // useEffect(() => {
     //     getChannelBlockedUsers(channelData.hashId)
     // }, [])
+
+    const UnBlockUser = (id) => {
+        unblockUser(channelData.hashId, id);
+    };
 
     return (
         <div>
@@ -28,42 +38,66 @@ const BlockUser = () => {
                 onLeftIconPress={() => closeModal()}
             />
             <div>
-                {getChannelUsersData.map((e, index) => {
-                    return (
-                        <RowItemView
-                            key={index}
-                            loading={false}
-                            color={e.color ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}
-                            imageUrl={e.avatar ? e.avatar : ""}
-                            text={e.username}
-                            rightButton={user.id !== e.id}
-                            title={`${t("block_user_button")}`}
-                            className="component_pick_btn"
-                            onButtonPress={() => blockUser(channelData.hashId, e.id)}
-                        />
-                    );
-                })}
-
-                {getBlockedUser.length !== 0 ?
-                    getBlockedUser.map((e, index) => {
+                {getChannelUsersData
+                    .filter((e) =>
+                        Object.values(getBlockedUser).every(
+                            (i) => e.id !== i.id
+                        )
+                    )
+                    .map((e, index) => {
                         return (
                             <RowItemView
                                 key={index}
                                 loading={false}
-                                color={e.color ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}
-                                imageUrl={e.avatar ? e.avatar : ""}
+                                color={
+                                    e.color
+                                        ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)`
+                                        : "linear-gradient(#ddd, #666)"
+                                }
+                                imageUrl={
+                                    e.avatar ? `${TMP_URL}/${e.avatar}` : ""
+                                }
                                 text={e.username}
-                                rightButton={true}
-                                title={`${t("unblock_user_button")}`}
-                                className="unblock_user_btn"
+                                rightButton={user.id !== e.id}
+                                title={`${t("block_user_button")}`}
+                                className="component_pick_btn"
+                                onButtonPress={() =>
+                                    blockUser(channelData.hashId, e.id)
+                                }
                             />
                         );
-                    }) :
+                    })}
+
+                {Object.values(getBlockedUser).length !== 0 ? (
+                    Object.values(getBlockedUser)
+                        .filter((e) => e.id !== adminId)
+                        .map((e, index) => {
+                            return (
+                                <RowItemView
+                                    key={index}
+                                    loading={false}
+                                    color={
+                                        e.color
+                                            ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)`
+                                            : "linear-gradient(#ddd, #666)"
+                                    }
+                                    imageUrl={
+                                        e.avatar ? `${TMP_URL}${e.avatar}` : ""
+                                    }
+                                    onButtonPress={() => UnBlockUser(e.id)}
+                                    text={e.username}
+                                    rightButton={true}
+                                    title={`${t("unblock_user_button")}`}
+                                    className="unblock_user_btn"
+                                />
+                            );
+                        })
+                ) : (
                     <MessageBox title={`${t("no_blocked_users")}`} />
-                }
+                )}
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default BlockUser
+export default observer(BlockUser);
