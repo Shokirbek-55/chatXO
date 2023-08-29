@@ -6,10 +6,13 @@
  */
 
 .waveform {
-    height: 23px;
+    height: 32px;
     width: 202px;
     position: absolute;
-    top: -8px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: auto;
 }
 
 .waveform-content {

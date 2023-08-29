@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo, useCallback } from "react";
 
 interface Props {
   title?: string;
@@ -9,7 +9,7 @@ interface Props {
 
 const BubbleHeader: FC<Props> = ({ title, color, padding, textSize }) => {
   
-  const randomClipPath = () => {
+  const randomClipPath = useCallback(() => {
     let clipPath = "polygon(";
     for (let i = 1; i <= 12; i++) {
       switch (i) {
@@ -67,7 +67,8 @@ const BubbleHeader: FC<Props> = ({ title, color, padding, textSize }) => {
     }
     clipPath += ")";
     return clipPath;
-  };
+  }, [title, color, padding, textSize]);
+
 
   return (
     <div
@@ -94,4 +95,4 @@ const BubbleHeader: FC<Props> = ({ title, color, padding, textSize }) => {
   );
 };
 
-export default BubbleHeader;
+export default memo(BubbleHeader);

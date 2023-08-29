@@ -14,7 +14,6 @@ import MessageVideo from '../../../components/Chat/MessageVideo'
 import MessageAudio from '../../../components/Chat/MessageAudio'
 import MessageDoc from '../../../components/Chat/MessageDoc'
 import LinkPriview from '../../../components/Chat/LinkPreView/linkPriview'
-import { toJS } from 'mobx'
 
 const Chat = () => {
     const navigate = useNavigate();
@@ -67,8 +66,6 @@ const Chat = () => {
                     message={message}
                     position={false}
                 />
-            case -1:
-                return <MessageBox text={message.message} own={0} />;
             default:
                 return <LinkPriview
                     message={message}
@@ -142,6 +139,8 @@ const Chat = () => {
                 return renderAudioMessage(message);
             case "document":
                 return renderDocumentMessage(message);
+            default:
+                return <MessageBox text={message.message} own={0} />;
         }
     };
 
@@ -151,7 +150,6 @@ const Chat = () => {
                 {
                     messageCache[slug]?.messages.map((message, index) => {
                         return (
-                            // <div  onContextMenu={() => console.log('event')}>
                             <div
                                 key={index}
                                 style={{
@@ -162,12 +160,10 @@ const Chat = () => {
                             >
                                 {renderMessage(message)}
                             </div>
-                            // </div>
                         );
                     })
                 }
             </ScrollContainer>
-            <audio id="audioPlayer" />
         </ChatContainer>
     )
 }

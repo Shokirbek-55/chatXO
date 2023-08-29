@@ -13,6 +13,7 @@ import RouterStore from './RouterStore/routerStore';
 import ChatStore from './chatStore/chatStore';
 import VisibleStore from './visibleStore/visibleStore';
 import HelperStore from './helperStore/helperStore';
+import AudioStore from './AudioStore/AudioStore';
 
 
 export class AppRootStore {
@@ -27,6 +28,7 @@ export class AppRootStore {
     chatStore: ChatStore
     visibleStore: VisibleStore
     helperStore: HelperStore
+    audioStore: AudioStore
 
     constructor() {
         makeAutoObservable(this);
@@ -41,6 +43,7 @@ export class AppRootStore {
         this.chatStore = new ChatStore(this);
         this.visibleStore = new VisibleStore()
         this.helperStore = new HelperStore()
+        this.audioStore = new AudioStore(this)
         this.run();
     }
 

@@ -13,7 +13,7 @@ class ChatStore {
 
     init = () => {
         console.log("init events");
-        this.root.socketStore.socket?.on("message", (payload: RawMessage) => {
+        this.root.socketStore.socket?.once("message", (payload: RawMessage) => {
             console.log('new message', payload);
             this.root.messageStore.addMessageToCache(payload);
         });

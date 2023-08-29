@@ -106,6 +106,7 @@ export default class MessageStore {
     }
 
     getHistoryMessagesPageState = () => {
+        console.log('ishladi');
         this.app.chatStore.history({
             slug: this.slug,
             pageState: this.getMessagesPageState(this.slug)
