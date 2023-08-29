@@ -1,0 +1,54 @@
+.container {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    z-index: 110;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.box {
+    width: 400px;
+    /* height: 180px; */
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 15px;
+}
+
+.sliderBox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    margin: 10px auto;
+}
+.slider {
+    width: 85%;
+}
+
+.choose {
+    color: green;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+.choose:hover {
+    opacity: 0.6;
+}
+.cancel {
+    color: red;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+.cancel:hover {
+    opacity: 0.6;
+}
+
+.btnBox {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    padding: 0 5%;
+}

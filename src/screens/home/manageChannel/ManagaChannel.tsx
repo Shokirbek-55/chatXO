@@ -1,51 +1,71 @@
-import { toJS } from 'mobx';
-import { observer } from 'mobx-react-lite';
-import React from 'react'
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import AvatarUpload from '../../../components/AvatarUpload/AvatarUpload';
-import ChannelItems from '../../../components/ChannelItems/channelItems';
-import Header from '../../../components/Header/Header';
-import RowItemView from '../../../components/RowItem';
-import Text from '../../../components/Text/Text';
-import { TMP_URL } from '../../../env';
-import useRootStore from '../../../hooks/useRootStore';
-import { data } from '../../../store/dataBase';
-import styles from "./ManagaChannel.module.css"
+import { toJS } from "mobx";
+import { observer } from "mobx-react-lite";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import AvatarUpload from "../../../components/AvatarUpload/AvatarUpload";
+import ChannelItems from "../../../components/ChannelItems/channelItems";
+import Header from "../../../components/Header/Header";
+import RowItemView from "../../../components/RowItem";
+import Text from "../../../components/Text/Text";
+import { TMP_URL } from "../../../env";
+import useRootStore from "../../../hooks/useRootStore";
+import { data } from "../../../store/dataBase";
+import styles from "./ManagaChannel.module.css";
 
 const ManagaChannel = () => {
-    const { t } = useTranslation()
-    const { channelData, getChannelBlockedUsers } = useRootStore().channelStore
-    const { toRouterManageCh, closeModal, closeRightSideBar } = useRootStore().routerStore
-    const { userChannelLeave } = useRootStore().usersStore
-    const { messageCache, slug } = useRootStore().messageStore
-    const { user } = useRootStore().authStore
-    
+    const { t } = useTranslation();
+    const {
+        getChannelUsersData,
+        channelData,
+        getChannelBlockedUsers,
+        // channelUsers,
+        getChannelUsers,
+        adminId,
+    } = useRootStore().channelStore;
+    const { toRouterManageCh, closeModal, closeRightSideBar } =
+        useRootStore().routerStore;
+    const { userChannelLeave } = useRootStore().usersStore;
+    const { messageCache, slug } = useRootStore().messageStore;
+    const { user } = useRootStore().authStore;
 
     const leaveChannel = (channelId: number) => {
-        userChannelLeave(channelId)
-        closeRightSideBar()
-    }
+        userChannelLeave(channelId);
+        closeRightSideBar();
+    };
 
     const OpenBlogUser = () => {
-        toRouterManageCh("blockUser")
-        getChannelBlockedUsers(channelData.hashId)
-    }
+        toRouterManageCh("blockUser");
+        getChannelBlockedUsers(channelData.hashId);
+    };
+
+    const EditGroup = () => {
+        toRouterManageCh("editChannel");
+        getChannelUsers(channelData.hashId);
+    };
 
     return (
         <div className={styles.container}>
             <Header
                 leftIcon="arrowRight"
                 text="Profile"
-                rightIcon={user.id === channelData.adminId ? "setting" : "logout"}
+                rightIcon={user.id === adminId ? "setting" : "logout"}
                 onLeftIconPress={() => closeModal()}
-                onRightIconPress={() => user.id === channelData.adminId ? toRouterManageCh("channelSetting") : leaveChannel(channelData.id)}
+                onRightIconPress={() =>
+                    user.id === channelData.adminId
+                        ? toRouterManageCh("channelSetting")
+                        : leaveChannel(channelData.id)
+                }
             />
-            {messageCache[slug]?.channelData?.avatar ? (
+            {channelData?.avatar ? (
                 <div className={styles.avatarBox}>
                     <img
                         style={{ cursor: "pointer" }}
-                        src={messageCache[slug]?.channelData?.avatar ? `${TMP_URL}/${messageCache[slug]?.channelData.avatar}` : ""}
+                        src={
+                            channelData?.avatar
+                                ? `${TMP_URL}/${channelData.avatar}`
+                                : ""
+                        }
                         alt=""
                     />
                 </div>
@@ -53,23 +73,35 @@ const ManagaChannel = () => {
                 <AvatarUpload
                     upload={false}
                     style={{ margin: "10px auto" }}
-                        imageUrl={messageCache[slug]?.channelData?.avatar ? `${TMP_URL}/${messageCache[slug]?.channelData.avatar}` : ""}
-                        color={messageCache[slug]?.channelData?.color ? messageCache[slug]?.channelData.color : "linear-gradient(#ddd, #666)"}
+                    imageUrl={
+                        channelData?.avatar
+                            ? `${TMP_URL}/${channelData.avatar}`
+                            : ""
+                    }
+                    color={
+                        channelData?.color
+                            ? channelData.color
+                            : "linear-gradient(#ddd, #666)"
+                    }
                 />
             )}
-            <Text children={messageCache[slug]?.channelData?.name} center style={{ fontSize: "25px" }} />
             <Text
-                children={`${Object.keys(messageCache[slug]?.channelUsers || {}).length} members`}
+                children={channelData?.name}
+                center
+                style={{ fontSize: "25px" }}
+            />
+            <Text
+                children={`${getChannelUsersData.length} members`}
                 center
                 style={{ fontSize: "13px" }}
             />
-            {user.id === channelData.adminId ?
+            {adminId === user.id ? (
                 <div className={styles.itemsRow}>
                     <ChannelItems
                         textSize={13}
                         icon="edit"
                         text={`${t("editGroup")}`}
-                        onClickItem={() => toRouterManageCh("editChannel")}
+                        onClickItem={EditGroup}
                     />
                     <ChannelItems
                         textSize={14}
@@ -77,9 +109,8 @@ const ManagaChannel = () => {
                         text={t("blockedUsers")}
                         onClickItem={OpenBlogUser}
                     />
-                </div> :
-                null
-            }
+                </div>
+            ) : null}
             <div className={styles.items}>
                 <ChannelItems
                     textSize={13}
@@ -88,26 +119,39 @@ const ManagaChannel = () => {
                 />
             </div>
             <div className={styles.channalUsers}>
-                {Object.keys(messageCache[slug]?.channelUsers || {}).map((e, index) => {
-                    return (
-                        <div key={index} style={{ width: "100%" }}>
-                            <RowItemView
-                                text={messageCache[slug]?.channelUsers[e].username}
-                                color={messageCache[slug]?.channelUsers[e].color ? `linear-gradient(25deg, ${messageCache[slug]?.channelUsers[e].color} 30%, #ddd 100%)` : "linear-gradient(#ddd, #666)"}
-                                imageUrl={messageCache[slug]?.channelUsers[e].avatar ? `${TMP_URL}/${messageCache[slug]?.channelUsers[e].avatar}` : ""}
-                                loading={false}
-                                userType={
-                                    channelData.adminId === user.id && messageCache[slug]?.channelUsers[e].id ===
-                                        user.id ? "You admin" : user.id ===
-                                            messageCache[slug]?.channelUsers[e].id ? "You" : channelData.adminId === messageCache[slug]?.channelUsers[e].id ? "Admin" : ""
-                                }
-                            />
-                        </div>
-                    );
-                })}
+                {getChannelUsersData
+                    .slice()
+                    .sort((a) => (a.id === user.id ? -1 : 1))
+                    .map((e, index) => {
+                        return (
+                            <div key={index} style={{ width: "100%" }}>
+                                <RowItemView
+                                    text={e.username}
+                                    color={
+                                        e.color
+                                            ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)`
+                                            : "linear-gradient(#ddd, #666)"
+                                    }
+                                    imageUrl={
+                                        e.avatar ? `${TMP_URL}/${e.avatar}` : ""
+                                    }
+                                    loading={false}
+                                    userType={
+                                        adminId === user.id && e.id === user.id
+                                            ? "You admin"
+                                            : user.id === e.id
+                                            ? "You"
+                                            : adminId === e.id
+                                            ? "Admin"
+                                            : ""
+                                    }
+                                />
+                            </div>
+                        );
+                    })}
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default observer(ManagaChannel)
+export default observer(ManagaChannel);

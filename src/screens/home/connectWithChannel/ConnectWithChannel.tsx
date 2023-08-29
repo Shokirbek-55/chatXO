@@ -1,16 +1,27 @@
-import React from 'react'
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import ButtonView from '../../../components/Button';
-import Header from '../../../components/Header/Header';
-import Input from '../../../components/Input';
-import Text from '../../../components/Text/Text';
-import useRootStore from '../../../hooks/useRootStore';
-import styles from "./ConnectWithChannel.module.css"
+import { observer } from "mobx-react-lite";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import ButtonView from "../../../components/Button";
+import Header from "../../../components/Header/Header";
+import Input from "../../../components/Input";
+import Text from "../../../components/Text/Text";
+import useRootStore from "../../../hooks/useRootStore";
+import styles from "./ConnectWithChannel.module.css";
 
 const ConnectWithChannel = () => {
-    const { t } = useTranslation()
-    const { toRouter } = useRootStore().routerStore
+    const { t } = useTranslation();
+    const { toRouter } = useRootStore().routerStore;
+    const { forJoinChannelId } = useRootStore().usersStore;
+    const [gNumber, setGNumber] = useState("");
+
+    const { returnGroupByNumber, joinUserToChannel } =
+        useRootStore().usersStore;
+
+    const JoinChannel = async () => {
+        returnGroupByNumber(gNumber);
+    };
+
     return (
         <div className={styles.container}>
             <Header text="Connect" />
@@ -20,6 +31,9 @@ const ConnectWithChannel = () => {
                         <Text text={`${t("groupsNumber")}`} margin="2px 6px" />
                         <Input
                             borderred
+                            value={gNumber}
+                            placeholder="Enter group number"
+                            setUserName={(e) => setGNumber(e)}
                         />
                         <ButtonView
                             title={`${t("join_group")}`}
@@ -29,6 +43,7 @@ const ConnectWithChannel = () => {
                                 width: "100%",
                                 marginTop: "20px",
                             }}
+                            onClickbutton={() => JoinChannel()}
                         />
                     </div>
                     <div>
@@ -54,7 +69,7 @@ const ConnectWithChannel = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default ConnectWithChannel
+export default observer(ConnectWithChannel);
