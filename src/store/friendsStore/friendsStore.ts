@@ -71,11 +71,11 @@ export default class FriendsStore {
         );
         if (this.createFriendOperation.data) {
             runInAction(() => {
-                // this.friends.push(this.rootStore.usersStore.nonFriends.find((e) => e.id === friendId)) as never
                 this.rootStore.usersStore.nonFriends =
                     this.rootStore.usersStore.nonFriends.filter(
                         (e) => e.id !== friendId
                     );
+                this.getFriends();
                 message.success(`added friends`);
             });
         }
@@ -88,6 +88,7 @@ export default class FriendsStore {
         if (this.deleteFriendOperation.isSuccess) {
             runInAction(() => {
                 this.friends = this.friends.filter((e) => e.id !== friendId);
+                this.rootStore.usersStore.getNonFriends();
                 message.success(`delated friend`);
             });
         }

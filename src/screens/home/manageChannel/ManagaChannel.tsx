@@ -1,3 +1,4 @@
+import { message } from "antd";
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 import React from "react";
@@ -25,9 +26,15 @@ const ManagaChannel = () => {
     } = useRootStore().channelStore;
     const { toRouterManageCh, closeModal, closeRightSideBar } =
         useRootStore().routerStore;
-    const { userChannelLeave } = useRootStore().usersStore;
+    const { userChannelLeave, getPreviewData } = useRootStore().usersStore;
     const { messageCache, slug } = useRootStore().messageStore;
     const { user } = useRootStore().authStore;
+    const { show } = useRootStore().visibleStore;
+
+    const PreviewChannelAvatar = (data: any) => {
+        getPreviewData(data);
+        show("previewModal");
+    };
 
     const leaveChannel = (channelId: number) => {
         userChannelLeave(channelId);
@@ -42,6 +49,11 @@ const ManagaChannel = () => {
     const EditGroup = () => {
         toRouterManageCh("editChannel");
         getChannelUsers(channelData.hashId);
+    };
+
+    const copyChatLink = () => {
+        navigator.clipboard.writeText(window.location.href);
+        message.success("Copy chat link");
     };
 
     return (
@@ -67,6 +79,7 @@ const ManagaChannel = () => {
                                 : ""
                         }
                         alt=""
+                        onClick={() => PreviewChannelAvatar(channelData)}
                     />
                 </div>
             ) : (
@@ -116,6 +129,7 @@ const ManagaChannel = () => {
                     textSize={13}
                     icon="copy"
                     text={`${t("copyLink")}`}
+                    onClickItem={copyChatLink}
                 />
             </div>
             <div className={styles.channalUsers}>

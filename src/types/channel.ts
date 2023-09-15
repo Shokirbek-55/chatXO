@@ -145,6 +145,7 @@ export type SetUpdataChanelType = {
     name?: string;
     isPrivate?: boolean;
     color?: string;
+    avatar?: string;
 };
 export type generateInviteCodeType = {
     inviteCode: string;

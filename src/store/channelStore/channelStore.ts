@@ -19,6 +19,7 @@ import { AppRootStore } from "../store";
 import { Friend } from "../../types/friend";
 import { User } from "../../types/user";
 import { ChangeEvent } from "react";
+import { generatePath } from "react-router-dom";
 
 export default class ChannelStore {
     rootStore: AppRootStore;
@@ -42,6 +43,9 @@ export default class ChannelStore {
         hashId: string;
         formData: FormData;
     }>({} as { hashId: string; formData: FormData });
+    deleteChannelAvatarOperation = new Operation<{
+        hashId: string;
+    }>({} as { hashId: string });
     addUserToChannelOperation = new Operation<{ friendId: number }>(
         {} as { friendId: number }
     );
@@ -59,7 +63,10 @@ export default class ChannelStore {
 
     channelData: Channel = ChannelInitialState;
 
-    setUpdataChannel: SetUpdataChanelType = {};
+    channelAvatar: string = "";
+    channelAvatarLoading: boolean = false;
+
+    setUpdataChannel: SetUpdataChanelType = {} as SetUpdataChanelType;
 
     setCreateChannelData: CreateChannelType = {} as CreateChannelType;
 
@@ -71,6 +78,8 @@ export default class ChannelStore {
 
     adminId: number = 0;
 
+    hashId: string = "";
+
     getBlockedUser: User = {};
 
     channelsLoading: boolean = false;
@@ -81,21 +90,29 @@ export default class ChannelStore {
 
     relevanceData: relevanceDataType = relevanceDataInitial;
 
+    chFormData = new FormData();
+
     setRelevanceChange = (value: number) => {
         this.relevanceData.relevance = value;
     };
 
     getOneMember = (id: number) => {
-        this.memberRelevence = this.getChannelUsersData.find(
-            (item) => item.id === id
-        ) as never;
-        this.relevanceData = {
-            channelSlug: this.channelData.slug,
-            fromUserId: this.rootStore.authStore.user.id as never,
-            toUserId: id,
-            relevance: this.memberRelevence.relevance,
-        };
-        console.log("this.memberRelevence", toJS(this.memberRelevence));
+        runInAction(() => {
+            if (id === this.adminId) {
+                this.rootStore.visibleStore.show("RelevenceModal");
+                this.memberRelevence = this.getChannelUsersData.find(
+                    (item) => item.id === id
+                ) as never;
+                this.relevanceData = {
+                    channelSlug: this.channelData.slug,
+                    fromUserId: this.rootStore.authStore.user.id as never,
+                    toUserId: id,
+                    relevance: this.memberRelevence.relevance,
+                };
+            } else {
+                message.warning("You are not admin");
+            }
+        });
     };
 
     updateMemberRelevance = async (data: any) => {
@@ -140,19 +157,51 @@ export default class ChannelStore {
         await this.getChannelUsers(hashId);
         if (this.getChannelByHashIdOperation.isSuccess) {
             runInAction(() => {
+                const target = generatePath(`/:name`, {
+                    name: `@${this.getChannelByHashIdOperation.data.hashId}`,
+                });
                 this.channelData = this.getChannelByHashIdOperation.data;
                 this.getChannelUsersData = this.getChannelByHashIdOperation.data
                     .users as never;
                 this.adminId = this.getChannelByHashIdOperation.data.adminId;
-            });
+                console.log("admin Id", toJS(this.adminId));
 
-            this.setUpdataChannel = {
-                name: this.channelData.name,
-                isPrivate: this.channelData.isPrivate,
-                color: this.channelData.color || "",
-            };
-            runInAction(() => {
+                this.rootStore.messageStore.getHistoryMessages(
+                    this.getChannelByHashIdOperation.data.slug
+                );
+                this.setUpdataChannel = {
+                    name: this.channelData.name,
+                    isPrivate: this.channelData.isPrivate,
+                    color: this.channelData.color || "",
+                    avatar: this.channelData.avatar || "",
+                };
                 this.isLoad = false;
+                console.log("channelData", toJS(this.channelData));
+            });
+        }
+    };
+
+    getHashId = async (hashId: string) => {
+        this.hashId = hashId;
+        if (this.hashId && this.rootStore.localStore.session.accessToken) {
+            await this.getChannelByHashId(hashId);
+            runInAction(() => {
+                if (
+                    Object.values(this.channelUsers).some(
+                        (e) => e.id === this.rootStore.authStore.user.id
+                    )
+                ) {
+                    this.getMyChannels();
+                    return;
+                } else {
+                    this.rootStore.usersStore.joinUserToChannelOperation
+                        .run(() => {
+                            APIs.channels.joinChannel(this.channelData.id);
+                        })
+                        .then(() => {
+                            this.getMyChannels();
+                        });
+                }
             });
         }
     };
@@ -160,25 +209,26 @@ export default class ChannelStore {
     getChannelDataCache = async () => {
         try {
             const promises = this.myChannels.map(async (channel) => {
-                const channelUsersData =
-                    await this.getChannelUsersOperation.run(() =>
-                        APIs.channels.getChannelUsers(channel.hashId)
-                    );
-                const channelData = await this.getChannelByHashIdOperation.run(
-                    () => APIs.channels.getChannelByHashId(channel.hashId)
+                await this.getChannelUsersOperation.run(() =>
+                    APIs.channels.getChannelUsers(this.hashId)
                 );
-                if (this.getChannelByHashIdOperation.isSuccess) {
-                    this.rootStore.messageStore.setChannelDataCache(
-                        channel.slug,
-                        channelData.data
-                    );
-                }
-                if (this.getChannelUsersOperation.isSuccess) {
-                    this.rootStore.messageStore.setChannelUsersCache(
-                        channel.slug,
-                        channelUsersData.data
-                    );
-                }
+                await this.getChannelByHashIdOperation.run(() =>
+                    APIs.channels.getChannelByHashId(this.hashId)
+                );
+                runInAction(() => {
+                    if (this.getChannelByHashIdOperation.isSuccess) {
+                        this.rootStore.messageStore.setChannelDataCache(
+                            channel.slug,
+                            this.getChannelByHashIdOperation.data
+                        );
+                    }
+                    if (this.getChannelUsersOperation.isSuccess) {
+                        this.rootStore.messageStore.setChannelUsersCache(
+                            channel.slug,
+                            this.getChannelUsersOperation.data
+                        );
+                    }
+                });
             });
 
             await Promise.all(promises);
@@ -191,9 +241,11 @@ export default class ChannelStore {
         await this.getChannelUsersOperation.run(() =>
             APIs.channels.getChannelUsers(hashId)
         );
-        if (this.getChannelUsersOperation.isSuccess) {
-            this.channelUsers = this.getChannelUsersOperation.data;
-        }
+        runInAction(() => {
+            if (this.getChannelUsersOperation.isSuccess) {
+                this.channelUsers = this.getChannelUsersOperation.data;
+            }
+        });
     };
 
     setSearchChannels = (text: string) => {
@@ -227,23 +279,28 @@ export default class ChannelStore {
         }
     };
 
+    channelDataToSetData = (channel: Channel) =>
+        (this.setUpdataChannel = {
+            name: channel.name as string,
+            isPrivate: channel.isPrivate as boolean,
+            color: channel.color as string,
+            avatar: channel.avatar as string,
+        });
+
     setUpdateChannelState = (key: keyof SetUpdataChanelType, value: any) => {
-        this.channelData[key] = value as never;
-        this.setUpdataChannel[key] = value;
+        runInAction(() => {
+            this.channelData[key] = value as never;
+            this.setUpdataChannel[key] = value;
+        });
     };
 
-    updateChannel = async () => {
+    updateChannel = async (channel: Partial<Channel>) => {
         await this.updateChannelOperation.run(() =>
-            APIs.channels.updateChannel(
-                this.channelData.hashId,
-                this.setUpdataChannel
-            )
+            APIs.channels.updateChannel(this.channelData.hashId, channel)
         );
         if (this.updateChannelOperation.isSuccess) {
-            this.getMyChannels();
-            this.setUpdataChannel = {};
             runInAction(() => {
-                message.success("Updated channel");
+                this.getMyChannels();
             });
         }
     };
@@ -261,22 +318,58 @@ export default class ChannelStore {
 
     noInvitationCode = async () => {};
 
-    createChannelAvatar = async (
-        hashId: string,
-        e: ChangeEvent<HTMLInputElement>
-    ) => {
-        e.preventDefault();
-        console.log("file", e.target.files);
-        if (e.target.files?.length) {
-            let formData = new FormData();
-            formData.append("avatar", e.target.files[0]);
-            await this.createChannelAvatarOperation.run(() =>
-                APIs.channels.createChannelAvatar(hashId, formData)
-            );
+    onSelectChannelImage = (file: File) => {
+        this.chFormData.append("avatar", file, file.name);
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            this.channelAvatar = imageUrl;
         }
-        if (this.createChannelAvatarOperation.isSuccess) {
-            console.log("avatar", toJS(this.createChannelAvatarOperation.data));
-            message.success("created avatar successfully");
+    };
+
+    createChannelAvatar = async () => {
+        const config = {
+            headers: {
+                "Content-Type": "image/png",
+            },
+        };
+        runInAction(() => {
+            this.channelAvatarLoading = true;
+        });
+        await this.createChannelAvatarOperation.run(() =>
+            APIs.channels.createChannelAvatar(
+                this.channelData.hashId,
+                this.chFormData,
+                config
+            )
+        );
+        runInAction(() => {
+            if (this.createChannelAvatarOperation.isSuccess) {
+                this.setUpdateChannelState(
+                    "avatar",
+                    Object.values(
+                        this.createChannelAvatarOperation.data
+                    ).toString()
+                );
+                this.channelAvatar = "";
+                this.chFormData = new FormData();
+                this.channelAvatarLoading = false;
+                message.success("created avatar successfully");
+                this.updateChannel(this.setUpdataChannel);
+            }
+            if (this.createChannelAvatarOperation.isError) {
+                this.channelAvatarLoading = false;
+            }
+        });
+    };
+
+    deleteChannelAvatar = async (hashId: string) => {
+        await this.deleteChannelAvatarOperation.run(() => {
+            APIs.channels.delateChannelAvatar(hashId);
+        });
+        if (this.deleteChannelAvatarOperation.isSuccess) {
+            runInAction(() => {
+                this.setUpdateChannelState("avatar", "");
+            });
         }
     };
 

@@ -1,11 +1,17 @@
 import { makeAutoObservable } from "mobx";
 import { AppRootStore } from "../store";
-import { RawMessage, SearchRequest, SearchResponse, SendMessage, TimestampHistoryRequest, TimestampHistoryResponse, VoteOption } from "../../types/channel";
-
+import {
+    RawMessage,
+    SearchRequest,
+    SearchResponse,
+    SendMessage,
+    TimestampHistoryRequest,
+    TimestampHistoryResponse,
+    VoteOption,
+} from "../../types/channel";
 
 class ChatStore {
-
-    root: AppRootStore
+    root: AppRootStore;
     constructor(root: AppRootStore) {
         makeAutoObservable(this);
         this.root = root;
@@ -13,28 +19,35 @@ class ChatStore {
 
     init = () => {
         console.log("init events");
-        this.root.socketStore.socket?.once("message", (payload: RawMessage) => {
-            console.log('new message', payload);
-            this.root.messageStore.addMessageToCache(payload);
-        });
-
-        this.root.socketStore.socket?.on('mergeMessage', (payload: RawMessage) => { 
-            console.log('merge message', payload);
+        this.root.socketStore.socket?.on("message", (payload: RawMessage) => {
+            console.log("new message", payload);
             this.root.messageStore.addMessageToCache(payload);
         });
 
         this.root.socketStore.socket?.on(
-            "leaveChannel",
-            (payload: { slug: string; userId: number }) => {
-                console.log('leave channel', payload);
+            "mergeMessage",
+            (payload: RawMessage) => {
+                console.log("merge message", payload);
+                this.root.messageStore.addMessageToCache(payload);
             }
         );
-        this.root.socketStore.socket?.on("deleteChannel", (payload: { slug: string }) => {
-            console.log('delete channel', payload);
-        });
+
+        this.root.socketStore.socket?.on(
+            "leaveChannel",
+            (payload: { slug: string; userId: number }) => {
+                console.log("leave channel", payload);
+                this.root.channelStore.getMyChannels();
+            }
+        );
+        this.root.socketStore.socket?.on(
+            "deleteChannel",
+            (payload: { slug: string }) => {
+                console.log("delete channel", payload);
+            }
+        );
 
         this.root.socketStore.socket?.on("changeAdmin", (payload: any) => {
-            console.log('change admin', payload);
+            console.log("change admin", payload);
         });
 
         this.root.socketStore.socket?.on(
@@ -44,36 +57,42 @@ class ChatStore {
                 messageId: string;
                 timestamp: Date;
             }) => {
-                console.log('delete message', payload);
+                console.log("delete message", payload);
             }
         );
 
         this.root.socketStore.socket?.on(
             "blockUser",
             (payload: { slug: string; userId: number }) => {
-                console.log('block user', payload);
+                console.log("block user", payload);
             }
         );
 
-        this.root.socketStore.socket?.on("search", (payload: SearchResponse) => {
-            console.log('search', payload);
-        });
+        this.root.socketStore.socket?.on(
+            "search",
+            (payload: SearchResponse) => {
+                console.log("search", payload);
+            }
+        );
 
         this.root.socketStore.socket?.on(
             "timestampHistory",
             (payload: TimestampHistoryResponse) => {
-                console.log('timestamp history', payload);
+                console.log("timestamp history", payload);
             }
         );
 
         this.root.socketStore.socket?.on("poll", (payload: RawMessage) => {
-            console.log('poll', payload);
+            console.log("poll", payload);
         });
 
-        this.root.socketStore.socket?.on("vote", async (payload: RawMessage) => {
-            console.log('vote', payload);
-        });
-    }
+        this.root.socketStore.socket?.on(
+            "vote",
+            async (payload: RawMessage) => {
+                console.log("vote", payload);
+            }
+        );
+    };
 
     history = ({
         slug,
@@ -92,15 +111,15 @@ class ChatStore {
             relevance,
             hashtags,
         });
-    }
+    };
 
     join = (slug: string) => {
         this.root.socketStore.socket?.emit("joinRoom", slug);
-    }
+    };
 
     leave = (slug: string) => {
         this.root.socketStore.socket?.emit("leaveRoom", slug);
-    }
+    };
 
     remove = (payload: { slug: string; id: string; timestamp: Date }) => {
         console.log("emit delete event ", payload);
@@ -110,7 +129,7 @@ class ChatStore {
             channelSlug: payload.slug,
             timestamp: payload.timestamp,
         });
-    }
+    };
 
     sendPoll = (slug: string, message: SendMessage) => {
         this.root.socketStore.socket?.emit("poll", <RawMessage>{
@@ -131,18 +150,27 @@ class ChatStore {
             pollType: message?.pollType,
             options: message?.options,
         });
-    }
+    };
 
-    search = (searchMessage: string, channelSlug: string, pageState?: string) => {
+    search = (
+        searchMessage: string,
+        channelSlug: string,
+        pageState?: string
+    ) => {
         if (searchMessage && channelSlug) {
-            console.log(searchMessage, channelSlug, pageState, "search message");
+            console.log(
+                searchMessage,
+                channelSlug,
+                pageState,
+                "search message"
+            );
             this.root.socketStore.socket?.emit("search", <SearchRequest>{
                 searchMessage,
                 channelSlug,
                 pageState,
             });
         }
-    }
+    };
 
     vote = (
         pollOption: number,
@@ -157,19 +185,21 @@ class ChatStore {
             messageId,
         });
         console.log(pollOption, pollId, messageId, channelSlug, "poll message");
-    }
+    };
 
     timestampHistory = (
         channelSlug: string,
         timestamp: any,
         findOlder?: boolean
     ) => {
-        this.root.socketStore.socket?.emit("timestampHistory", <TimestampHistoryRequest>{
+        this.root.socketStore.socket?.emit("timestampHistory", <
+            TimestampHistoryRequest
+        >{
             channelSlug,
             timestamp,
             findOlder,
         });
-    }
+    };
 }
 
 export default ChatStore;

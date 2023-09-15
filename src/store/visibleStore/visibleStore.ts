@@ -9,6 +9,9 @@ class VisibleStore {
         FooterToolbar: false,
         FilterToolbar: false,
         RelevenceModal: false,
+        previewModal: false,
+        uploadFile: false,
+        chUploadFile: false,
     };
 
     toglevisible = (key: keyof typeof this.visible) => {

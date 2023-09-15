@@ -1,0 +1,52 @@
+.container {
+    position: absolute;
+    height: 100vh;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 110;
+    animation: animate 0.15s linear;
+    user-select: none;
+}
+@keyframes animate {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.iconBox {
+    position: absolute;
+    right: 0;
+    display: flex;
+    gap: 10px;
+    z-index: 120;
+    padding: 10px;
+}
+
+.box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.box img {
+    max-width: 700px;
+    width: 550px;
+    cursor: pointer;
+    transition: ease-in-out 0.15s;
+    max-height: 70vh;
+}
+
+.rowItem {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    display: flex;
+    gap: 10px;
+}

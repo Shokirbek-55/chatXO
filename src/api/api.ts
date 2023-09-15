@@ -4,7 +4,8 @@ import { CheckOAuthData, RegisterData, Session } from "../types/auth";
 import { User } from "../types/user";
 import ApiService from "./services/ApiService";
 import { Channel, SetUpdataChanelType } from "../types/channel";
-import { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
+import { TOKENS } from "../store/loacalStore/loacalStore";
 
 export type LoginEmailWithPasswordReqData = {
     email: string;
@@ -18,7 +19,7 @@ const checOAuthUrl = `${url}/verify/oauth2`;
 const friends = "friends";
 const users = "/users";
 
-const accountUrl = "users";
+const accountUrl = "/users";
 const authUrl = "/auth";
 
 const channelUrl = "channel";
@@ -64,13 +65,12 @@ const APIs = {
         delateMyAvatar: () =>
             apiService.methods.delete<User>(`${accountUrl}/me/avatar`),
 
-        usersMeAvatar: (data: FormData) => {
-            return apiService.methods.post(`${accountUrl}/me/avatar`, data, {
-                headers: {
-                    Accept: "application/json",
-                    ContentType: "multipart/form-data",
-                },
-            });
+        usersMeAvatar: (data: FormData, config: AxiosRequestConfig) => {
+            return apiService.methods.post(
+                `${accountUrl}/me/avatar`,
+                data,
+                config
+            );
         },
 
         resetPass: (email: string) => {
@@ -130,16 +130,15 @@ const APIs = {
                 isPrivate,
             }),
 
-        createChannelAvatar: (hashId: string, data: any) => {
+        createChannelAvatar: (
+            hashId: string,
+            data: any,
+            config: AxiosRequestConfig
+        ) => {
             return apiService.methods.post(
                 `${channelUrl}/${hashId}/avatar`,
                 data,
-                {
-                    headers: {
-                        Accept: "application/json",
-                        ContentType: "multipart/form-data",
-                    },
-                }
+                config
             );
         },
 
