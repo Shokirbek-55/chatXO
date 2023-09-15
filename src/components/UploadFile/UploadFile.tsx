@@ -3,7 +3,7 @@ import React from "react";
 import styles from "./UploadFile.module.css";
 import useRootStore from "../../hooks/useRootStore";
 import { TMP_URL } from "../../env";
-import { CheckIcon, CloseIcon } from "../../utils/icons";
+import { CloseIcon } from "../../utils/icons";
 import { Checkbox } from "antd";
 import Text from "../Text/Text";
 
@@ -31,7 +31,7 @@ const UploadFile = () => {
                 </div>
                 <img src={userAvatar} alt="" />
                 <div className={styles.select} onClick={uploadAvatar}>
-                    <CheckIcon color="#02bafd" size={46} />
+                    {/* <CheckIcon color="#02bafd" size={46} /> */}
                 </div>
             </div>
         </div>
