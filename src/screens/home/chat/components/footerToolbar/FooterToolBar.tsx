@@ -3,9 +3,12 @@ import styles from "./index.module.css";
 
 
 import Colors from "../../../../../utils/colors";
-import { CameraIcon, ChartIcon, DocumentIcon, HashtagIcon, HiddenIcon, ImageAddIcon } from "../../../../../utils/icons";
+import { ChartIcon, DocumentIcon, HashtagIcon, HiddenIcon, ImageAddIcon } from "../../../../../utils/icons";
 import ToolbarIcon from "../../../../../components/ToolbarIcon/ToolbarIcon";
 import ProgressBarView from "../../../../../components/Chat/progressbar";
+import { observer } from "mobx-react-lite";
+import useRootStore from "../../../../../hooks/useRootStore";
+import { SendMessage } from "../../../../../types/channel";
 
 
 interface Props {
@@ -13,11 +16,14 @@ interface Props {
   setOpenHashtags: any;
   openHashTags: boolean;
 }
+
 const FooterToolbarView: FC<Props> = ({
   props,
   setOpenHashtags,
   openHashTags,
 }) => {
+
+  const {readFile, progress} = useRootStore().messageStore
 
   const toggleSwitchPollModal = () => {
     
@@ -30,6 +36,10 @@ const FooterToolbarView: FC<Props> = ({
   const handleOpenHashtags = () => {
     setOpenHashtags(!openHashTags);
   };
+
+  const uploadFile = (e: File) => {
+    readFile(e, e.type.split('/')[0] as SendMessage['type'])
+  }
 
   return (
     <div className={styles.container} style={{display: props ? 'flex' : 'none'}}>
@@ -55,19 +65,13 @@ const FooterToolbarView: FC<Props> = ({
             </ToolbarIcon>
             <ToolbarIcon
               accept=".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .txt, .csv, .jpg, .jpeg, .png, .gif, .bmp"
-              onChange={(e: any) => {}}
+              onChange={(e) => readFile(e, 'document')}
             >
               <DocumentIcon size={17} color={Colors.GullGray} padding={10} />
             </ToolbarIcon>
             <ToolbarIcon
-              accept="video/*"
-              onChange={(e: any) => {}}
-            >
-              <CameraIcon size={17} color={Colors.GullGray} padding={10} />
-            </ToolbarIcon>
-            <ToolbarIcon
-              accept="image/*"
-              onChange={(e: any) => {}}
+              accept="image/*, video/*"
+              onChange={(e) => uploadFile(e)}
             >
               <ImageAddIcon size={17} color={Colors.GullGray} padding={10} />
             </ToolbarIcon>
@@ -77,4 +81,4 @@ const FooterToolbarView: FC<Props> = ({
     </div>
   );
 };
-export default FooterToolbarView;
+export default observer(FooterToolbarView);

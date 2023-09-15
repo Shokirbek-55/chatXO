@@ -95,7 +95,7 @@ const MessageHeader = ({
                                 src={Assets.up_downIcon}
                                 width="15px"
                                 height="15px"
-                                color={color}
+                                color={'#000'}
                             />
                         </div>
                     </div>

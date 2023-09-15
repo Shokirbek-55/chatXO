@@ -61,23 +61,7 @@ export default class MessageStore {
 
     setSendMessage: SendMessage = initialMassegeText
 
-    setReplyMessage: RawMessage = {
-        id: "",
-        type: "",
-        userId: 0,
-        message: "",
-        timestamp: new Date(),
-        username: "",
-        mediaUrl: "",
-        channelSlug: "",
-        hashtags: [],
-        pimps: [],
-        isReply: false,
-        originMessageId: "",
-        originMessageTimestamp: new Date(),
-        messageId: "",
-        taggedUserId: 0
-    }
+    setReplyMessage: RawMessage | null = null
 
     progress: number = 0
 
@@ -90,6 +74,8 @@ export default class MessageStore {
         this.app.socketStore.socket?.emit('history', {
             channelSlug: slug,
         });
+
+        this.unreadMessages();
 
         this.app.socketStore.socket?.once('history', (data: {
             messages: RawMessage[];
@@ -105,31 +91,43 @@ export default class MessageStore {
         });
     }
 
-    getHistoryMessagesPageState = () => {
-        console.log('ishladi');
+    getHistoryMessagesPageState = (setIsFetching, stop) => {
         this.app.chatStore.history({
             slug: this.slug,
             pageState: this.getMessagesPageState(this.slug)
         });
 
-        this.app.socketStore.socket?.once('history', (data: {
+        this.app.socketStore.socket?.on('history', (data: {
             messages: RawMessage[];
             pageState: string;
             end: boolean
         }) => {
-            console.log(data.end);
-            data.messages = _.reverse(toJS(data.messages));
-            runInAction(() => {
-            this.messageCache[data.messages[0]?.channelSlug || this.slug].messages = [
-                ...(this.messageCache[data.messages[0]?.channelSlug || this.slug].messages.filter(
-                    (item) => item.id === data.messages[0].id
-                ).length === 1
-                    ? []
-                    : [...data.messages]),
-                ...this.messageCache[data.messages[0]?.channelSlug || this.slug].messages
-            ]
-                this.messageCache[data.messages[0]?.channelSlug || this.slug].pageState = data.pageState;
-                this.messageCache[data.messages[0]?.channelSlug || this.slug].end = data.end;
+            if (this.messageCache[this.slug].end === false) {
+                data.messages = _.reverse(toJS(data.messages));
+                runInAction(() => {
+                    this.messageCache[this.slug].messages = [
+                        ...(this.messageCache[this.slug].messages.filter(
+                            (item) => item.id === data.messages[0].id
+                        ).length === 1
+                            ? []
+                            : [...data.messages]),
+                        ...this.messageCache[this.slug].messages
+                    ]
+                    this.messageCache[this.slug].pageState = data.pageState;
+                    this.messageCache[this.slug].end = data.end;
+                });
+                setIsFetching(false);
+            } else {
+                setIsFetching(false);
+                stop.current = true;
+            }
+        });
+    }
+
+    unreadMessages = () => {
+        this.app.socketStore.socket?.emit('unreadMessages', (payload: Record<string, number>) => {
+            Object.entries(payload).map(([slug, count]) => {
+                console.log(slug, count);
             });
         });
     }
@@ -270,6 +268,17 @@ export default class MessageStore {
         }
     }
 
+    setSendDocumentMessage = () => {
+        this.setSendMessage = {
+            type: 'document',
+            userId: this.app.authStore.user.id,
+            channelSlug: this.slug,
+            mediaTitle: this.FileUploadOperation.data.fileTitle,
+            mediaUrl: this.FileUploadOperation.data.filePath,
+            videoThumbnail: this.FileUploadOperation.data.thumbnailPath,
+        }
+    }
+
     onSendMessage = (type?: MessageType) => {
         switch (type) {
             case 'text':
@@ -303,6 +312,10 @@ export default class MessageStore {
         this.setReplyMessage = message
     }
 
+    clearReplyMessage = () => {
+        this.setReplyMessage = null
+    }
+
     onProgress = (percent: number) => {
         runInAction(() => {
             this.progress = percent
@@ -328,6 +341,8 @@ export default class MessageStore {
 
         await this.FileUploadOperation.run(() => APIs.upload(form, config))
 
+        console.log(this.FileUploadOperation.data);
+
         if (this.FileUploadOperation.isSuccess) {
             switch (type) {
                 case 'audio':
@@ -335,6 +350,12 @@ export default class MessageStore {
                     break;
                 case 'image':
                     this.setSendPhotoMessage()
+                    break;
+                case 'video':
+                    this.setSendVideoMessage()
+                    break;
+                case 'document':
+                    this.setSendDocumentMessage()
                     break;
             }
 

@@ -132,13 +132,11 @@ const MessageAudio: FC<Props> = ({ message, users, position }) => {
     <div className={styles.parentContainer} style={POSITION_MESSAGE}>
       <div className={styles.childContainer}>
         {position && (
-          <span >
             <MessageHeader
               name={message.username}
               relevance={message?.relevance}
               color={currentUser?.color}
             />
-          </span>
         )}
         <div className={styles.messageCard}>
           {position && (

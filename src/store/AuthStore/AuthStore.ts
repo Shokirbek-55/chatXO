@@ -142,10 +142,11 @@ export default class AuthStore {
             APIs.logout(this.root.localStore.session.refreshToken)
         );
         if (this.logoutOperation.data) {
-            this.root.localStore.removeToken();
-            this.root.socketStore.disconnect();
-            this.root.routerStore.routers = [];
-            message.success("Logout");
+            this.root.localStore.removeToken()
+            this.root.socketStore.disconnect()
+            this.root.routerStore.routers = []
+            this.root.channelStore.myChannels = []
+            message.success("Logout")
         }
     };
 }

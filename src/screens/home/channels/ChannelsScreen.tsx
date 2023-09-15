@@ -41,7 +41,6 @@ function ChannelsScreen() {
     const { getHistoryMessages } = useRootStore().messageStore;
     const { t } = useTranslation();
     const navigate = useNavigate();
-    console.log("myChannels", toJS(myChannels));
 
     const serachChannelHandler = (text: string) => {
         setSearchChannels(text);

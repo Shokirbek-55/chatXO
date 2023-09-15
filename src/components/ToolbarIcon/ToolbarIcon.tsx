@@ -3,7 +3,7 @@ import styles from "./index.module.css";
 
 interface Props {
   onClickButton?: () => void;
-  accept?: string;
+  accept?: 'image/*' | 'video/*' | 'audio/*' | 'application/*' | string;
   onChange?: (e: any) => void;
   children: any;
 }
@@ -19,8 +19,7 @@ const ToolbarIcon: FC<Props> = ({
       console.log("error");
       return;
     }
-    //@ts-ignore
-    onChange(e);
+    onChange && onChange(e);
   };
 
   return (
