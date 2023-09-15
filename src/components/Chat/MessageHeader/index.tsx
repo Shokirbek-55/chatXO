@@ -60,13 +60,8 @@ const MessageHeader = ({
     const { user } = useRootStore().authStore;
     const { show } = useRootStore().visibleStore;
 
-    const onRelevance = (id: number) => {
-        if (adminId === user.id) {
-            getOneMember(id);
-            show("RelevenceModal");
-        } else {
-            MessageAllert.warning("You are not admin");
-        }
+    const onRelevance = async (id: number) => {
+        getOneMember(id);
     };
 
     return (

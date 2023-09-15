@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { Navigate, Outlet } from "react-router-dom";
+import { generatePath, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import useRootStore from "../hooks/useRootStore";
 import SidebarLayout from "./Sidebar";
@@ -7,14 +7,30 @@ import EditChannel from "./home/editChannel/EditChannel";
 import EmptyScreen from "./home/emptyScreen/EmptyScreen";
 import ManageChannelLayout from "./ManageChannel";
 import Relevence from "../components/Relevence/relevence";
+import PreviewImage from "../components/PreviewImage/PreviewImage";
+import UploadFile from "../components/UploadFile/UploadFile";
+import UploadChannelFile from "../components/UploadChannelFile/UploadChannelFile";
+import { regex } from "../utils/regax";
+import { useEffect } from "react";
 
 function HomeLayout() {
     const { session } = useRootStore().localStore;
     const { isOpenRigthSideBar } = useRootStore().routerStore;
+    const { getHashId, channelData } = useRootStore().channelStore;
+    const navigate = useNavigate();
+    const hashIdArr = window.location.pathname.match(regex);
+    const hashId = hashIdArr?.[1].toString();
+    console.log("hashId", hashId);
 
-    if (!session.accessToken) {
-        return <Navigate to="/auth/welcome" />;
-    }
+    useEffect(() => {
+        if (hashId && session.accessToken) {
+            getHashId(hashId as never);
+            const target = generatePath(`/:name`, {
+                name: `@${hashId}`,
+            });
+            navigate(target);
+        }
+    }, []);
 
     return (
         <Container>
@@ -29,6 +45,9 @@ function HomeLayout() {
                 <ManageChannelLayout />
             </RightArea>
             <Relevence />
+            <PreviewImage />
+            <UploadFile />
+            <UploadChannelFile />
         </Container>
     );
 }

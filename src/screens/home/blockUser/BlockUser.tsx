@@ -20,7 +20,6 @@ const BlockUser = () => {
     } = useRootStore().channelStore;
     const { user } = useRootStore().authStore;
     const { closeModal } = useRootStore().routerStore;
-    console.log("getBlockedUser", toJS(getBlockedUser));
 
     // useEffect(() => {
     //     getChannelBlockedUsers(channelData.hashId)

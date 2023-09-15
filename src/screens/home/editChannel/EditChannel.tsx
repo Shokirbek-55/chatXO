@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
+import APIs from "../../../api/api";
 import AvatarUpload from "../../../components/AvatarUpload/AvatarUpload";
 import Header from "../../../components/Header/Header";
 import Input from "../../../components/Input";
@@ -17,6 +18,7 @@ const EditChannel = () => {
     const { closeModal, toRouter, toRouterManageCh } =
         useRootStore().routerStore;
     const { getFriends } = useRootStore().friendsStore;
+    const { show } = useRootStore().visibleStore;
     const {
         channelData,
         setUpdateChannelState,
@@ -24,11 +26,20 @@ const EditChannel = () => {
         generateNewInvitationCode,
         delateChannel,
         createChannelAvatar,
+        setUpdataChannel,
+        channelAvatar,
+        channelAvatarLoading,
+        onSelectChannelImage,
     } = useRootStore().channelStore;
 
     const updateChannelEvent = () => {
-        updateChannel();
-        toRouter("channels");
+        updateChannel(setUpdataChannel);
+    };
+    const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files?.length) {
+            onSelectChannelImage(e.target.files[0]);
+            show("chUploadFile");
+        }
     };
 
     const delateChannelEvent = (hashId: string) => {
@@ -76,19 +87,20 @@ const EditChannel = () => {
                     <div className={styles.rightBox}>
                         <AvatarUpload
                             imageUrl={
-                                channelData.avatar
-                                    ? `${TMP_URL}/${channelData.avatar}`
+                                channelAvatar
+                                    ? channelAvatar
+                                    : setUpdataChannel.avatar
+                                    ? `${TMP_URL}/${setUpdataChannel.avatar}`
                                     : ""
                             }
+                            loading={channelAvatarLoading}
                             color={
                                 channelData.color
                                     ? `linear-gradient(25deg, ${channelData.color} 30%, #ddd 100%)`
                                     : "linear-gradient(#ddd, #666)"
                             }
                             upload={true}
-                            onChange={(e) =>
-                                createChannelAvatar(channelData.hashId, e)
-                            }
+                            onChange={(e) => handleFileChange(e)}
                         />
                         <Text
                             margin="6px 0 10px 0"

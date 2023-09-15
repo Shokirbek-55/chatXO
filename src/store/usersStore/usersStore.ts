@@ -6,11 +6,24 @@ import { AppRootStore } from "../store";
 import { message } from "antd";
 import { t } from "i18next";
 import { Channel } from "../../types/channel";
+import { generatePath } from "react-router-dom";
 
 type UserStateType = {
     username: string;
     email: string;
     color: string;
+    avatar: string;
+};
+
+type PreviewDataType = {
+    dataTypes: string;
+    avatar: string;
+    id?: number;
+    username?: string;
+    color: string;
+    name?: string;
+    hashId?: string;
+    adminId?: number;
 };
 
 export default class UsersStore {
@@ -29,6 +42,7 @@ export default class UsersStore {
     getUserDataOperation = new Operation<User>({} as User);
     updateUserAccountOperation = new Operation<User>({} as User);
     userMeAvatarOperation = new Operation<User>({} as User);
+    deleteUserMeAvatarOperation = new Operation<User>({} as User);
     getFriendDetailsOperation = new Operation<User>({} as User);
     returnGroupByNumberOperation = new Operation<Channel>({} as Channel);
     userChannelLeaveOperation = new Operation<{ channelId: number }>(
@@ -46,13 +60,78 @@ export default class UsersStore {
 
     friendDetails: User = {};
 
+    formData = new FormData();
+
     forJoinChannelId: number = 0;
+    userAvatar: string = "";
+
+    previewData: PreviewDataType = {
+        dataTypes: "",
+        avatar: "",
+        id: 0,
+        username: "",
+        color: "",
+        name: "",
+        hashId: "",
+        adminId: 0,
+    };
+
+    getPreviewData = (data: PreviewDataType) => {
+        this.previewData = data;
+    };
+
+    clearPreviewData = () => {
+        runInAction(() => {
+            this.previewData = {
+                dataTypes: "",
+                avatar: "",
+                id: 0,
+                username: "",
+                color: "",
+                name: "",
+                hashId: "",
+                adminId: 0,
+            };
+        });
+    };
+
+    deletePreviewAvatar = async () => {
+        if (this.previewData.id === this.rootStore.authStore.user.id) {
+            await this.deleteUserMeAvatarOperation.run(() => {
+                APIs.Account.delateMyAvatar();
+            });
+            if (this.deleteUserMeAvatarOperation.isSuccess) {
+                this.updateUserAccount({ avatar: "" });
+                this.clearPreviewData();
+                this.rootStore.visibleStore.hide("previewModal");
+            }
+            return;
+        }
+        if (
+            this.previewData.hashId &&
+            this.previewData.adminId === this.rootStore.authStore.user.id
+        ) {
+            await this.rootStore.channelStore.deleteChannelAvatar(
+                this.previewData.hashId
+            );
+            if (
+                this.rootStore.channelStore.deleteChannelAvatarOperation
+                    .isSuccess
+            ) {
+                this.clearPreviewData();
+                this.rootStore.visibleStore.hide("previewModal");
+                this.rootStore.channelStore.channelAvatar = "";
+            }
+            return;
+        }
+    };
 
     myDataToSetData = (myData: User) =>
         (this.setMyData = {
             username: myData.username as string,
             email: myData.email as string,
             color: myData.color as string,
+            avatar: myData.avatar as string,
         });
 
     setUserState = (key: keyof UserStateType, value: string) => {
@@ -63,23 +142,49 @@ export default class UsersStore {
         await this.updateUserAccountOperation.run(() =>
             APIs.Account.updateAccount(user)
         );
+
         if (this.updateUserAccountOperation.isSuccess) {
             message.success(`${t("update_profile")}`);
             this.rootStore.authStore.getMe();
         }
     };
 
-    createMeAvatar = async (formData: FormData) => {
+    onSelectFile = async (file: File) => {
+        this.formData.append("avatar", file, file.name);
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            this.userAvatar = imageUrl;
+        }
+    };
+
+    createMeAvatar = async () => {
+        const config = {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        };
         runInAction(() => {
             this.avatarLoading = true;
         });
         await this.userMeAvatarOperation.run(() =>
-            APIs.Account.usersMeAvatar(formData)
+            APIs.Account.usersMeAvatar(this.formData, config)
         );
         if (this.userMeAvatarOperation.isSuccess) {
             runInAction(() => {
+                this.updateUserAccount({
+                    avatar: this.userMeAvatarOperation.data.avatar,
+                });
+                this.userAvatar = "";
+                this.formData = new FormData();
+                this.setUserState(
+                    "avatar",
+                    this.userMeAvatarOperation.data.avatar as never
+                );
                 this.avatarLoading = false;
             });
+        }
+        if (this.userMeAvatarOperation.isError) {
+            this.avatarLoading = false;
         }
     };
 
@@ -161,6 +266,12 @@ export default class UsersStore {
         if (this.joinUserToChannelOperation.isSuccess) {
             this.rootStore.channelStore.getMyChannels();
             this.rootStore.routerStore.toRouter("channels");
+            this.rootStore.channelStore.getChannelByHashId(
+                this.returnGroupByNumberOperation.data.hashId
+            );
+            const target = generatePath(`/:name`, {
+                name: `@${this.returnGroupByNumberOperation.data.hashId}`,
+            });
             message.success("You have joined the group");
         }
     };

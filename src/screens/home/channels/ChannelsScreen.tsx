@@ -50,7 +50,7 @@ function ChannelsScreen() {
     const handleChanel = (e) => {
         getHistoryMessages(e.slug);
         getChannelByHashId(e.hashId);
-        const target = generatePath(`/:name`, { name: `@${e.name}` });
+        const target = generatePath(`/:name`, { name: `@${e.hashId}` });
         navigate(target);
     };
 
