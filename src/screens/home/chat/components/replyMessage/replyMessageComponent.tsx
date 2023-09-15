@@ -3,106 +3,90 @@ import styles from "./replyMessage.module.css";
 import { Env } from "../../../../../env";
 import { CloseIcon, DocumentIcon, ReplyIcon, VideoPlayIcon } from "../../../../../utils/icons";
 import Colors from "../../../../../utils/colors";
+import { observer } from "mobx-react-lite";
+import useRootStore from "../../../../../hooks/useRootStore";
+import { RawMessage } from "../../../../../types/channel";
+import { relevanceFuniction } from "../../../../../utils/boxShadov";
 
 
-export type MessageReply = {
-  slug: string;
-  message: any;
-};
+const ReplyMessage = () => {
 
-interface Props {
-  replyMessages?: MessageReply[];
-  isReply: boolean;
-  other: boolean;
-}
+  const { setReplyMessage, clearReplyMessage } = useRootStore().messageStore
 
-const ReplyMessage: FC<Props> = ({ replyMessages, isReply, other }) => {
-
-  const OtherReplyMessage = other ? styles.container : styles.noneContainer;
-
-
-  const hadleCloseBtn = () => {
-    
-  };
-
-  function renderReplayMessage(messageType: any) {
+  function renderReplayMessage(message: RawMessage) {
     let result = <div />;
 
-    if (messageType.type === "text") {
+    if (message.type === "text") {
       result = (
         <div className={styles.replyTextCard}>
-          <span className={styles.userName}>{messageType.username}</span>
+          <span className={styles.userName} style={{
+            color: message.color
+          }}>{message.username}</span>
           <div className={styles.reply_message_box}>
-            <span className={styles.reply_message}>{messageType.message} </span>
+            {message.message}
           </div>
         </div>
       );
-    }
-    if (messageType.type === "image") {
-      result = (
-        <div className={styles.replyImgCard}>
-          <span className={styles.userName}>{'REPLY_USENAME'}</span>
-          <div className={styles.reply_img_message_box}>
-            {/* <span className={styles.reply_img_message}> */}
+    } else {
+      let LeftIconArea = <div />;
+      switch (message.type) {
+        case "image":
+          LeftIconArea = (
             <img
-              src={`${Env.AssetsUrl}/${messageType.mediaUrl}`}
+              src={`${Env.AssetsUrl}/${message.mediaUrl}`}
               width={40}
               height={40}
-              style={{ borderRadius: "6px" }}
+              style={{ borderRadius: "6px", objectFit: "cover" }}
               alt=""
             />
-            {/* </span> */}
-          </div>
-        </div>
-      );
-    }
-    if (messageType.type === "video") {
+          );
+          break;
+        case "video":
+          LeftIconArea = (
+            <video
+              src={`${Env.AssetsUrl}/${message.mediaUrl}`}
+              width={40}
+              height={40}
+              style={{ borderRadius: "6px", objectFit: "cover" }}
+            />
+          );
+          break;
+        case "document":
+          LeftIconArea = (
+            <DocumentIcon
+              size={30}
+              padding={0}
+              color={Colors.BaliHai}
+              hoverActive={false}
+            />
+          );
+          break;
+        case "audio":
+          LeftIconArea = (
+            <VideoPlayIcon
+              size={30}
+              padding={0}
+              color={Colors.BaliHai}
+              hoverActive={false}
+            />
+          );
+          break;
+        default:
+          LeftIconArea = <div />;
+          break;
+      }
       result = (
         <div className={styles.replyVideoCard}>
-          <span className={styles.userName}>{'REPLY_USENAME'}</span>
+          <div className={styles.replyMessage}>
+            <span className={styles.userName} style={{
+              color: message.color
+            }}>{message.username}</span>
+            <div className={styles.replyMessageType}>
+              {message.type}
+            </div>
+          </div>
           <div className={styles.reply_video_message_box}>
-            <span className={styles.reply_video_message}>
-              <VideoPlayIcon
-                size={30}
-                padding={14}
-                color={Colors.BaliHai}
-                hoverActive={false}
-              />
-            </span>
-          </div>
-        </div>
-      );
-    }
-    if (messageType.type === "document") {
-      result = (
-        <div className={styles.replyDocCard}>
-          <span className={styles.userName}>{'REPLY_USENAME'}</span>
-          <div className={styles.reply_doc_message_box}>
-            <span className={styles.reply_doc_message}>
-              <DocumentIcon
-                size={30}
-                padding={14}
-                color={Colors.BaliHai}
-                hoverActive={false}
-              />
-            </span>
-          </div>
-        </div>
-      );
-    }
-    if (messageType.type === "audio") {
-      result = (
-        <div className={styles.replyDocCard}>
-          <span className={styles.userName}>{'REPLY_USENAME'}</span>
-          <div className={styles.reply_doc_message_box}>
-            <span className={styles.reply_doc_message}>
-              <VideoPlayIcon
-                size={30}
-                padding={14}
-                color={Colors.BaliHai}
-                hoverActive={false}
-              />
-            </span>
+            {LeftIconArea}
           </div>
         </div>
       );
@@ -112,8 +96,8 @@ const ReplyMessage: FC<Props> = ({ replyMessages, isReply, other }) => {
 
   return (
     <>
-      {!!'REPLY_MESSAGE' ? (
-        <div className={OtherReplyMessage}>
+      {!!setReplyMessage ? (
+        <div className={styles.container}>
           <div className={styles.replyIcon}>
             <ReplyIcon
               size={20}
@@ -122,8 +106,8 @@ const ReplyMessage: FC<Props> = ({ replyMessages, isReply, other }) => {
               hoverActive={false}
             />
           </div>
-          {renderReplayMessage('REPLYED_MESSAGE')}
-          <div className={styles.cencelBtn} onClick={() => hadleCloseBtn()}>
+          {renderReplayMessage(setReplyMessage)}
+          <div className={styles.cencelBtn} onClick={() => clearReplyMessage()}>
             <CloseIcon size={20} padding={14} color={Colors.BaliHai} />
           </div>
         </div>
@@ -132,4 +116,4 @@ const ReplyMessage: FC<Props> = ({ replyMessages, isReply, other }) => {
   );
 };
 
-export default ReplyMessage;
+export default observer(ReplyMessage);

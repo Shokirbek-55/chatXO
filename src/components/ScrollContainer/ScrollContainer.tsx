@@ -26,28 +26,9 @@ const ScrollContainer = ({ children, header,input }:ScrollContainerProps) => {
     const prevInnerDivHeight = useRef(null);
 
     const [showScrollButton, setShowScrollButton] = useState(false);
-    const [showTopLoading, setShowTopLoading] = useState(false);
-    
-    const getMoreMessages = useCallback(() => {
-        setShowTopLoading(true);
-        getHistoryMessagesPageState();
-    }, [getHistoryMessagesPageState, messageCache, slug]);
-
-    const [isFetching, setIsFetching, stop] = useInfiniteScroll(getMoreMessages, outerDiv, innerDiv);
-
-    // scroll event listener
+   
     useEffect(() => {
-        const handleScroll = () => {     
-            if (innerDiv.current.clientHeight - outerDiv.current.clientHeight === outerDiv.current.scrollTop) {
-                setShowScrollButton(false);
-            }
-            toBottomShowArrow();
-            toBottomNoShowArrow();           
-        };
-        outerDiv.current.addEventListener('scroll', handleScroll);
-    }, []);
-
-    useEffect(() => {
+        stop.current = messageCache[slug]?.end || false;
         const outerDivHeight = outerDiv.current.clientHeight;
         const innerDivHeight = innerDiv.current.clientHeight;
         const outerDivScrollTop = outerDiv.current.scrollTop;
@@ -55,7 +36,7 @@ const ScrollContainer = ({ children, header,input }:ScrollContainerProps) => {
         if (innerDivHeight < outerDivHeight) {
             topDiv.current.style.height = `${outerDivHeight - innerDivHeight}px`;
         } else {
-            topDiv.current.style.height = `0px`;   
+            topDiv.current.style.height = `0px`;
             if (prevInnerDivHeight.current) {
                 outerDiv.current.scrollTo({
                     top: innerDivHeight - prevInnerDivHeight.current + outerDivScrollTop,
@@ -72,6 +53,24 @@ const ScrollContainer = ({ children, header,input }:ScrollContainerProps) => {
         }
         prevInnerDivHeight.current = innerDivHeight;
     }, [children]);
+
+    // scroll event listener
+    useEffect(() => {
+        const handleScroll = () => {     
+            if (innerDiv.current.clientHeight - outerDiv.current.clientHeight === outerDiv.current.scrollTop) {
+                setShowScrollButton(false);
+            }
+            toBottomShowArrow();
+            toBottomNoShowArrow();           
+        };
+        outerDiv.current.addEventListener('scroll', handleScroll);
+    }, []);
+
+    const getMoreMessages = () => {
+        getHistoryMessagesPageState(setIsFetching, stop);
+    }
+
+    const [isFetching, setIsFetching, stop] = useInfiniteScroll(getMoreMessages, outerDiv);
 
     const handleScrollButtonClick = useCallback(() => {
         const outerDivHeight = outerDiv.current.clientHeight;
@@ -149,8 +148,8 @@ const ScrollContainer = ({ children, header,input }:ScrollContainerProps) => {
                     }}
                 >
                     {
-                        showTopLoading && !messageCache[slug]?.end ? (
-                            <ScrollTopLoading animationData={topLoaderJson} autoplay={showTopLoading} />
+                        isFetching ? (
+                            <ScrollTopLoading animationData={topLoaderJson} autoplay={!!isFetching} />
                         ) : null
                     }
                     {children}

@@ -46,6 +46,9 @@ const FilterSilderComponent = () => {
           value={filter.progress}
           //   disabled={data?.adminId == friendId}
           onChange={(e) => changeRelevance(e as number)}
+          railStyle={{
+            backgroundColor: "#ffffff",
+          }}
         />
         <span>{filter.progress}</span>
       </div>

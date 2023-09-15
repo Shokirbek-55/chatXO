@@ -14,7 +14,6 @@ const useThrottledEffect = (callback, delay, deps:any[] = []) => {
         return () => {
             clearTimeout(handler);
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [delay, ...deps]);
 };
 
@@ -34,10 +33,10 @@ function debounce(func, wait, immediate) {
     };
 }
 
-const useInfiniteScroll = (callback: () => void, outerDiv, innerDiv) => {
+const useInfiniteScroll = (callback: () => void, outerDiv) => {
     const [isFetching, setIsFetching] = useState(false);
-    const stop = useRef(false); // to stop calling callback once True
-
+    const stop = useRef<boolean>(false);
+    
     useThrottledEffect(() => {
         // mounts window listener and call debounceScroll, once in every 500ms
         outerDiv.current.addEventListener("scroll", debounceScroll());
@@ -59,9 +58,8 @@ const useInfiniteScroll = (callback: () => void, outerDiv, innerDiv) => {
     );
 
     function handleScroll() {
-        console.log("scroll");
         if (
-            innerDiv.current.clientHeight + outerDiv.current.scrollTop <=
+            outerDiv.current.scrollTop >=
             Math.floor(outerDiv.current.clientHeight * 0.75) ||
             isFetching
         )
@@ -77,7 +75,7 @@ const useInfiniteScroll = (callback: () => void, outerDiv, innerDiv) => {
     }
 
     // sharing logic
-    return [isFetching, setIsFetching, stop];
+    return [isFetching, setIsFetching, stop as any];
 };
 
 export { useInfiniteScroll };

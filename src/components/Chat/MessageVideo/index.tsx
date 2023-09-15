@@ -27,13 +27,6 @@ const MessageVideo: FC<Props> = ({ message, users, own }) => {
 
   const MESSAGE_STYLE = relevanceFuniction(message);
   const boxShadov = MESSAGE_STYLE?.boxShadow;
-  const textSize = MESSAGE_STYLE?.fontSize;
-  const textWeight = MESSAGE_STYLE?.fontWeight;
-  const textLineHeight = MESSAGE_STYLE?.lineHeight;
-
-  const handleRelevenceModal = () => {
-    
-  }
 
   return (
     <div className={styles.container} style={isOwn}>
@@ -52,11 +45,10 @@ const MessageVideo: FC<Props> = ({ message, users, own }) => {
             id="player"
             playsInline
             controls
-            // data-poster="/path/to/poster.jpg"
+            data-poster="/path/to/poster.jpg"
             className={styles.videoPlayer}
           >
             <source src={`${Env.AssetsUrl}/${url}`} type="video/mp4" />
-
             <track
               kind="captions"
               label="English captions"

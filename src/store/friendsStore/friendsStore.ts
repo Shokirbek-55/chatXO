@@ -70,6 +70,7 @@ export default class FriendsStore {
             APIs.Friends.createFriend(friendId)
         );
         if (this.createFriendOperation.data) {
+            this.getFriends();
             runInAction(() => {
                 this.rootStore.usersStore.nonFriends =
                     this.rootStore.usersStore.nonFriends.filter(

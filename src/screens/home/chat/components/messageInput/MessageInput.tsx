@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
 
-import styles from "./index.module.css";
-import { SendMessage } from "../../../../../types/channel";
+import { observer } from "mobx-react-lite";
+import { styled } from "styled-components";
+import { formatMinutes, formatSeconds } from "../../../../../components/VoiceRecorder/format-time";
+import useRecorder from "../../../../../components/VoiceRecorder/useRecorder";
+import useRootStore from "../../../../../hooks/useRootStore";
 import { ArrowDowunIcon, ArrowUpIcon, DeleteIcon, FillterIcon, MicrophoneIcon, SendIcon } from "../../../../../utils/icons";
-import AddHashtags from "../../../../../components/AddHashtags/addhashtags";
 import FilterToolbar from "../filterToolbar/FilterToolBar";
 import FooterToolbarView from "../footerToolbar/FooterToolBar";
+import styles from "./index.module.css";
 import ReplyMessage from "../replyMessage/replyMessageComponent";
-import { styled } from "styled-components";
-import useRootStore from "../../../../../hooks/useRootStore";
-import { observer } from "mobx-react-lite";
-import useRecorder from "../../../../../components/VoiceRecorder/useRecorder";
-import { formatMinutes, formatSeconds } from "../../../../../components/VoiceRecorder/format-time";
 
 function MessageInput({ sendCurrentCurrentMessageOnScroll }: any) {
   const { recorderState, ...handlers } = useRecorder();
@@ -48,6 +46,7 @@ function MessageInput({ sendCurrentCurrentMessageOnScroll }: any) {
 
   return (
     <MessageInputContainer>
+      <ReplyMessage/>
       <FilterToolbar isOpen={openFilter} />
       <FooterToolbarView
         props={open}
@@ -58,11 +57,6 @@ function MessageInput({ sendCurrentCurrentMessageOnScroll }: any) {
         isOpen={true}
         otherCard={true}
         setopenhashtags={setOpenhastag}
-      /> */}
-      {/* <ReplyMessage
-        isReply={false}
-        other={false}
-        replyMessages={undefined}
       /> */}
       <div className={styles.inputmessage}>
         <div className="icon" onClick={() => setOpenFilter(!openFilter)}>
@@ -128,12 +122,11 @@ const MessageInputContainer = styled.div`
     padding: 7px 5px 7px 5px;
     background-color: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(25px);
-    display: flex;
     box-shadow: 0px -8px 48px 0px rgba(32, 35, 39, 0.02), 0px -4px 8px 0px rgba(32, 35, 39, 0.04), 0px 0px 1px 0px rgba(32, 35, 39, 0.16);
     display: flex;
     flex-direction: column;
     gap: 10px;
-    transition: height height .15s ease-out,opacity .15s ease-out;
+    transition: height .15s ease-out,opacity .15s ease-out;
     
     .inputContainer{
         width: 100%;
