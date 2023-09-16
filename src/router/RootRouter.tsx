@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import AuthLayout from "../screens/AuthLayout";
 import HomeLayout from "../screens/HomeLayout";
 import Login from "../screens/auth/sign-in/Login";
@@ -9,12 +9,18 @@ import ChangeLanguageView from "../screens/auth/change-language/ChangeLanguage";
 import SignUpSocial from "../screens/auth/sign-up-social/SignUpSocial";
 import Chat from "../screens/home/chat/Chat";
 import useRootStore from "../hooks/useRootStore";
+import { useEffect } from "react";
 
 function RootRouter() {
     const { session } = useRootStore().localStore;
-    if (!session.accessToken) {
-        <Navigate to="/auth/welcome" />;
-    }
+    const navigation = useNavigate();
+
+    useEffect(() => {
+        if (!session.accessToken) {
+            navigation("/auth/welcome");
+        }
+    }, []);
+
     return (
         <Routes>
             <Route path="/" element={<HomeLayout />}>

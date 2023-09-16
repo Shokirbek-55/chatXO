@@ -12,23 +12,24 @@ import UploadFile from "../components/UploadFile/UploadFile";
 import UploadChannelFile from "../components/UploadChannelFile/UploadChannelFile";
 import { regex } from "../utils/regax";
 import { useEffect } from "react";
+import { log } from "console";
 
 function HomeLayout() {
     const { session } = useRootStore().localStore;
     const { isOpenRigthSideBar } = useRootStore().routerStore;
-    const { getHashId, channelData } = useRootStore().channelStore;
+    const { setChannelHashId } = useRootStore().channelStore;
     const navigate = useNavigate();
     const hashIdArr = window.location.pathname.match(regex);
     const hashId = hashIdArr?.[1].toString();
-    console.log("hashId", hashId);
 
     useEffect(() => {
         if (hashId && session.accessToken) {
-            getHashId(hashId as never);
             const target = generatePath(`/:name`, {
                 name: `@${hashId}`,
             });
-            navigate(target);
+            setChannelHashId(hashId, () => navigate(target));
+        } else if (!session.accessToken) {
+            navigate("/auth/welcome");
         }
     }, []);
 

@@ -19,7 +19,6 @@ const Chat = () => {
     const navigate = useNavigate();
     const { messageCache, slug } = useRootStore().messageStore;
     const { user } = useRootStore().authStore;
-    const { channelData } = useRootStore().channelStore;
 
     const { toRouterManageCh, openRightSideBar } = useRootStore().routerStore;
 
@@ -43,11 +42,11 @@ const Chat = () => {
     const Header = () => {
         return (
             <ChatHeader
-                img_url={channelData.avatar}
-                color={channelData.color}
-                name={channelData.name}
-                onTextSearch={() => {}}
-                pageState={channelData.pageState}
+                img_url={messageCache[slug]?.channelData.avatar}
+                color={messageCache[slug]?.channelData.color}
+                name={messageCache[slug]?.channelData.name}
+                onTextSearch={() => { }}
+                pageState={messageCache[slug]?.channelData.pageState}
                 onPress={OpenManageChannel}
             />
         );

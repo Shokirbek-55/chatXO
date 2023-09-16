@@ -266,9 +266,6 @@ export default class UsersStore {
         if (this.joinUserToChannelOperation.isSuccess) {
             this.rootStore.channelStore.getMyChannels();
             this.rootStore.routerStore.toRouter("channels");
-            this.rootStore.channelStore.getChannelByHashId(
-                this.returnGroupByNumberOperation.data.hashId
-            );
             const target = generatePath(`/:name`, {
                 name: `@${this.returnGroupByNumberOperation.data.hashId}`,
             });

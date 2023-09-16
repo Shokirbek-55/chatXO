@@ -65,17 +65,20 @@ export default class MessageStore {
 
     progress: number = 0
 
+    setChannelSlug = (slug: string) => {
+        runInAction(() => {
+            this.slug = slug;
+        });
+    }
+
     getHistoryMessages = (slug: string) => {
         runInAction(() => {
             this.isLoadMessages = true;
-            this.slug = slug;
         });
 
         this.app.socketStore.socket?.emit('history', {
             channelSlug: slug,
         });
-
-        this.unreadMessages();
 
         this.app.socketStore.socket?.once('history', (data: {
             messages: RawMessage[];
@@ -121,14 +124,6 @@ export default class MessageStore {
                 setIsFetching(false);
                 stop.current = true;
             }
-        });
-    }
-
-    unreadMessages = () => {
-        this.app.socketStore.socket?.emit('unreadMessages', (payload: Record<string, number>) => {
-            Object.entries(payload).map(([slug, count]) => {
-                console.log(slug, count);
-            });
         });
     }
 
