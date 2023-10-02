@@ -1,15 +1,12 @@
 import { FC } from "react";
-import styles from "./index.module.css";
-import DropDownMenu from "../DropDownMenu/dropdownmenu";
-import { ChannelsUsersType, RawMessage } from "../../../types/channel";
-import { User } from "../../../types/user";
-import { relevanceFuniction } from "../../../utils/boxShadov";
-import SmallAvatar from "../../SmallAvatar/smallAvatar";
 import { Env } from "../../../env";
+import { ChannelsUsersType, RawMessage } from "../../../types/channel";
+import MessageComponent from "../MessageComponent/MessageComponent";
+import styles from "./index.module.css";
 
 interface Props {
   message: RawMessage;
-  own?: boolean;
+  own: boolean;
   users?: {
     [key: string]: ChannelsUsersType;
   };
@@ -18,32 +15,10 @@ interface Props {
 const MessageVideo: FC<Props> = ({ message, users, own }) => {
   const url = message.mediaUrl;
 
-  const isOwnAvatarCard = own ? { display: "none" } : { display: "block" };
-  const isOwn = own
-    ? { justifyContent: "flex-end" }
-    : { justifyContent: "flex-start" };
-  const currentUser: ChannelsUsersType | undefined =
-    users?.[message.userId];
-
-  const MESSAGE_STYLE = relevanceFuniction(message);
-  const boxShadov = MESSAGE_STYLE?.boxShadow;
-
   return (
-    <div className={styles.container} style={isOwn}>
-      <div className={styles.avatarCard} style={isOwnAvatarCard}>
-        <SmallAvatar
-          style={{ justifyContent: "flex-end" }}
-          color={currentUser?.color}
-          imageUrl={
-            currentUser?.avatar ? `${Env.AssetsUrl}/${currentUser?.avatar}` : ""
-          }
-        />
-      </div>
-      <DropDownMenu massage={message}>
-        <div style={{ boxShadow: boxShadov }} className={styles.messageCard}>
+    <MessageComponent position={own} message={message} users={users}>
           <video
             id="player"
-            playsInline
             controls
             data-poster="/path/to/poster.jpg"
             className={styles.videoPlayer}
@@ -56,10 +31,8 @@ const MessageVideo: FC<Props> = ({ message, users, own }) => {
               srcLang="en"
               default
             />
-          </video>
-        </div>
-      </DropDownMenu>
-    </div>
+      </video>
+    </MessageComponent>
   );
 };
 

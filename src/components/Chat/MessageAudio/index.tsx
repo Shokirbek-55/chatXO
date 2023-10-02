@@ -11,6 +11,7 @@ import DropDownMenu from "../DropDownMenu/dropdownmenu";
 import MessageHeader from "../MessageHeader";
 import styles from "./index.module.css";
 import getBlobDuration from "../../../helper/getBlobDuration";
+import MessageComponent from "../MessageComponent/MessageComponent";
 
 interface Props {
     message: RawMessage;
@@ -62,16 +63,6 @@ const MessageAudio: FC<Props> = ({ message, users, position }) => {
 
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  const POSITION_MESSAGE = position
-    ? { justifyContent: "flex-start" }
-    : { justifyContent: "flex-end" };
-
-    const currentUser: ChannelsUsersType | undefined = users?.[message.userId];
-
-    const MESSAGE_STYLE = relevanceFuniction(message);
-    const boxShadov = MESSAGE_STYLE?.boxShadow;
-
-  const messageUSerId = message.userId
   const messageId = message.id
 
   const playAudio = async (audio: string) => {
@@ -129,32 +120,7 @@ const MessageAudio: FC<Props> = ({ message, users, position }) => {
   }
 
   return (
-    <div className={styles.parentContainer} style={POSITION_MESSAGE}>
-      <div className={styles.childContainer}>
-        {position && (
-            <MessageHeader
-              name={message.username}
-              relevance={message?.relevance}
-              color={currentUser?.color}
-            />
-        )}
-        <div className={styles.messageCard}>
-          {position && (
-            <div className={styles.avatarCard}>
-              {currentUser && (
-                <SmallAvatar
-                  color={currentUser?.color}
-                  imageUrl={
-                    currentUser?.avatar
-                      ? `${Env.AssetsUrl}/${currentUser?.avatar}`
-                      : ""
-                  }
-                />
-              )}
-            </div>
-          )}
-          <DropDownMenu massage={message}>
-            <BoxShadow $boxShodow={boxShadov}>
+    <MessageComponent message={message} position={position} users={users}>
             <AudioPlayContainer>
                 <button className="playBtn" onClick={handlePlayPause}>{
                 !!isPlayAudio[messageId] ? (
@@ -175,12 +141,8 @@ const MessageAudio: FC<Props> = ({ message, users, position }) => {
                     value={value} min={0} max={100} />
                 </div>
                 <audio ref={audioRef} id="noteAudioPlayer" />
-              </AudioPlayContainer>
-            </BoxShadow>
-          </DropDownMenu>
-        </div>
-      </div>
-    </div>
+      </AudioPlayContainer>
+    </MessageComponent>
     );
 };
 
@@ -191,12 +153,9 @@ const AudioPlayContainer = styled.div`
     display: flex;
     gap: 10px;
     width: 100%;
+    min-width: 300px;
     height: 100%;
-    overflow: hidden;
     padding: 15px;
-    border-radius: 30px;
-    background-color: rgb(242, 242, 240);
-    z-index: 1;
 
     .playBtn {
         width: 50px;
@@ -233,13 +192,3 @@ const AudioPlayContainer = styled.div`
     border-radius: 5px;
   }
 `
-
-const BoxShadow = styled.div<{ $boxShodow?: string }>`
-    position: relative;
-    width: 300px;
-    min-height: 50px;
-    border-radius: 30px;
-    background-color: #fff;
-    box-shadow: ${({ $boxShodow }) => $boxShodow || "none"};
-    z-index: auto;
-`;

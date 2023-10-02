@@ -11,14 +11,14 @@ import FooterToolbarView from "../footerToolbar/FooterToolBar";
 import styles from "./index.module.css";
 import ReplyMessage from "../replyMessage/replyMessageComponent";
 
-function MessageInput({ sendCurrentCurrentMessageOnScroll }: any) {
+function MessageInput() {
   const { recorderState, ...handlers } = useRecorder();
   const [open, setOpen] = useState<boolean>(false);
   const [openFilter, setOpenFilter] = useState<boolean>(false);
   const [openhastag, setOpenhastag] = useState<boolean>(false);
   const [isOPen, setIsOpen] = useState(true);
 
-  const { setMessageText, messageTextState, onSendMessage } = useRootStore().messageStore
+  const { setMessageText, messageTextState, onSendMessage, setReplyMessage } = useRootStore().messageStore
 
   const handleonSendMessage = () => {
     onSendMessage('text')
@@ -26,21 +26,17 @@ function MessageInput({ sendCurrentCurrentMessageOnScroll }: any) {
   };
 
   useEffect(() => {
-
     var textarea: any = document.getElementById("textarea");
-
     textarea.oninput = function () {
       textarea.style.height = "";
       textarea.style.height = textarea.scrollHeight + "px"
     };
-
   }, []);
 
   const onSendEnter = (e: any) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      onSendMessage('text');
+      handleonSendMessage();
       e.preventDefault();
-      setMessageText("");
     }
   };
 

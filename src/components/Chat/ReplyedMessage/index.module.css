@@ -32,13 +32,23 @@
   border-radius: 10px;
 }
 .replyedMediaCard {
+  position: relative;
   padding: 2px 0 2px 8px;
   width: fit-content;
   height: 40px;
   align-items: center;
   display: flex;
   justify-content: center;
-  border-left: 2px solid rgb(0, 170, 255);
+}
+
+.replyedMediaCard::before {
+  position: absolute;
+  content: "";
+  width: 2px;
+  height: 100%;
+  left: 3px;
+  top: 0;
+  background-color: #1E74F5
 }
 
 .replyedMessage {

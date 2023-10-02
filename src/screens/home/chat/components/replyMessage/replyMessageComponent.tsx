@@ -1,4 +1,3 @@
-import { FC } from "react";
 import styles from "./replyMessage.module.css";
 import { Env } from "../../../../../env";
 import { CloseIcon, DocumentIcon, ReplyIcon, VideoPlayIcon } from "../../../../../utils/icons";
@@ -6,7 +5,6 @@ import Colors from "../../../../../utils/colors";
 import { observer } from "mobx-react-lite";
 import useRootStore from "../../../../../hooks/useRootStore";
 import { RawMessage } from "../../../../../types/channel";
-import { relevanceFuniction } from "../../../../../utils/boxShadov";
 
 
 const ReplyMessage = () => {

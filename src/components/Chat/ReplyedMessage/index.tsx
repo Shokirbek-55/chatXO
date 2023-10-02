@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { RawMessage } from "../../../types/channel";
+import { ChannelsUsersType, RawMessage } from "../../../types/channel";
 import { User } from "../../../types/user";
 import DropDownMenu from "../DropDownMenu/dropdownmenu";
 import MessageHeader from "../MessageHeader";
@@ -14,13 +14,14 @@ import Colors from "../../../utils/colors";
 interface Props {
   message: RawMessage;
   position?: boolean;
-  users?: User[];
+  users?: {
+    [key: string]: ChannelsUsersType;
+  };
 }
 
 const RepliedMessage: FC<Props> = ({ message, position, users }) => {
 
-  const currentUser: User | null =
-    users?.find((user) => user.id === message.userId) ?? null;
+  const currentUser: ChannelsUsersType | undefined = users?.[message.userId];
   
   const positionMessage = position
     ? { justifyContent: "flex-end" }

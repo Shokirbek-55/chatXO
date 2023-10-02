@@ -191,7 +191,9 @@ export default class ChannelStore {
                         channel.slug
                     );
                     this.getChannelByHashId(this.hashId);
-                    this.rootStore.messageStore.setChannelSlug(channel.slug);
+                    this.rootStore.messageStore.setChannelSlug(
+                        channel.slug
+                    );
                     this.navigateChannel();
                     return true;
                 }
@@ -233,13 +235,12 @@ export default class ChannelStore {
                 }
             });
 
-            await Promise.all(promises)
-                .then(() => {
-                    this.getHashId();
-                })
-                .catch((error) => {
-                    console.log("error getChannelDataCache", error);
-                });
+            await Promise.all(promises).then(() => {
+                this.getHashId();
+            }).catch((error) => {
+                console.log("error getChannelDataCache", error);
+                this.getHashId();
+            })
         } catch (error) {
             console.log("Error:", error);
         }

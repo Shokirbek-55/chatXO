@@ -75,8 +75,8 @@ const BubbleHeader: FC<Props> = ({ title, color, padding, textSize }) => {
       className="bubble-header"
       style={{
         width: "fitContent",
-        height: 30,
-        padding: 15,
+        maxHeight: "30px",
+        padding: "5px 15px",
         clipPath: randomClipPath(),
         backgroundColor: color,
         display: "flex",
