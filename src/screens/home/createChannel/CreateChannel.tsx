@@ -48,7 +48,7 @@ const CreateChannel = () => {
                         upload={false}
                     />
                     <Text
-                        text="Random color"
+                        children={t("random_color")}
                         handleLink={() => randomChannelColor(getRandomColor())}
                     />
                 </div>

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 import { useTranslation } from "react-i18next";
 import Header from "../../../components/Header/Header";
@@ -36,7 +37,6 @@ const FriendsScreen = () => {
     const { toRouter } = useRootStore().routerStore;
     const { getFriendDetails } = useRootStore().usersStore;
     const { t } = useTranslation();
-
     const handleChangeText = (key: string) => {
         getFriendsFilter(key);
     };
@@ -63,8 +63,7 @@ const FriendsScreen = () => {
                 />
                 <Text
                     center
-                    numbers={friends?.length}
-                    children={t("friends")}
+                    children={`${friends?.length} ${t("friends")}`}
                     style={{
                         fontSize: "16px",
                         paddingBottom: "5px",

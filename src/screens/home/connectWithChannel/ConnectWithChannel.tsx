@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { generatePath, useNavigate } from "react-router-dom";
 import ButtonView from "../../../components/Button";
 import Header from "../../../components/Header/Header";
 import Input from "../../../components/Input";
@@ -12,14 +12,19 @@ import styles from "./ConnectWithChannel.module.css";
 const ConnectWithChannel = () => {
     const { t } = useTranslation();
     const { toRouter } = useRootStore().routerStore;
-    const { forJoinChannelId } = useRootStore().usersStore;
-    const [gNumber, setGNumber] = useState("");
+    const { forJoinChannelId, setConnectChannelData, connectChannelData } =
+        useRootStore().usersStore;
+    const { visible } = useRootStore().visibleStore;
+    const navigation = useNavigate();
 
     const { returnGroupByNumber, joinUserToChannel } =
         useRootStore().usersStore;
 
     const JoinChannel = async () => {
-        returnGroupByNumber(gNumber);
+        const target = (e) => generatePath(`/:name`, { name: `@${e}` });
+        returnGroupByNumber(connectChannelData.channelNumber, (e) =>
+            navigation(target(e))
+        );
     };
 
     return (
@@ -28,13 +33,37 @@ const ConnectWithChannel = () => {
             <div className={styles.main}>
                 <div className={styles.connectBox}>
                     <div className={styles.connect}>
-                        <Text text={`${t("groupsNumber")}`} margin="2px 6px" />
+                        <Text
+                            children={`${t("groupsNumber")}`}
+                            margin="2px 6px"
+                        />
                         <Input
                             borderred
-                            value={gNumber}
+                            value={connectChannelData.channelNumber}
                             placeholder="Enter group number"
-                            setUserName={(e) => setGNumber(e)}
+                            setUserName={(e) =>
+                                setConnectChannelData("channelNumber", e)
+                            }
                         />
+                        {visible.passwordInput ? (
+                            <>
+                                <Text
+                                    children={`${t("groupsInvite")}`}
+                                    margin="10px 6px 2px 6px"
+                                />
+                                <Input
+                                    borderred
+                                    value={connectChannelData.channelInviteCode}
+                                    placeholder="Enter group invitation code"
+                                    setUserName={(e) =>
+                                        setConnectChannelData(
+                                            "channelInviteCode",
+                                            e
+                                        )
+                                    }
+                                />
+                            </>
+                        ) : null}
                         <ButtonView
                             title={`${t("join_group")}`}
                             style={{

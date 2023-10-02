@@ -3,8 +3,7 @@ import React from "react";
 import styles from "./UploadFile.module.css";
 import useRootStore from "../../hooks/useRootStore";
 import { TMP_URL } from "../../env";
-import { CloseIcon } from "../../utils/icons";
-import { Checkbox } from "antd";
+import { CheckIcon, CloseIcon } from "../../utils/icons";
 import Text from "../Text/Text";
 
 const UploadFile = () => {
@@ -27,11 +26,11 @@ const UploadFile = () => {
                     <span onClick={() => hide("uploadFile")}>
                         <CloseIcon />
                     </span>
-                    <Text text="Upload this image" />
+                    <Text children="Upload this image" />
                 </div>
                 <img src={userAvatar} alt="" />
                 <div className={styles.select} onClick={uploadAvatar}>
-                    {/* <CheckIcon color="#02bafd" size={46} /> */}
+                    <CheckIcon color="#02bafd" size={46} />
                 </div>
             </div>
         </div>

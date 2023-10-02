@@ -51,6 +51,10 @@ const APIs = {
         apiService.methods.post<{ accessToken: string }>(`/token/refresh`, {
             refreshToken,
         }),
+    resetPass: (email: string) =>
+        apiService.methods.patch(`${url}/password/reset`, {
+            email,
+        }),
 
     Account: {
         getMyAccount: () => apiService.methods.get<User>(`${accountUrl}/me`),
@@ -96,7 +100,7 @@ const APIs = {
 
     Users: {
         getAllUsers: () =>
-            apiService.methods.get<User[]>(`${users}/nonfriends`),
+            apiService.methods.get<User[]>(`${users}/non-friends`),
 
         getFriendDetails: (friendId: number) =>
             apiService.methods.get(`${users}/get/${friendId}`),
@@ -155,7 +159,7 @@ const APIs = {
                 inviteCode,
             }),
 
-        joinChannel: (channelId: number) =>
+        joinChannel: (channelId: number, invitationCode: string) =>
             apiService.methods.post<{ user: User; channel: Channel }>(
                 `${usersUrl}/${channelUrl}/join`,
                 {

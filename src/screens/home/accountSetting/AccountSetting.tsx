@@ -2,6 +2,7 @@ import { message } from "antd";
 import { observer } from "mobx-react-lite";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import APIs from "../../../api/api";
 import AvatarView from "../../../components/AvatarUpload/AvatarUpload";
 import ButtonView from "../../../components/Button";
@@ -26,6 +27,11 @@ const AccountSetting = () => {
     const { closeModal, toRouter } = useRootStore().routerStore;
     const { show } = useRootStore().visibleStore;
     const { t } = useTranslation();
+    const navigation = useNavigate();
+
+    const onLogout = () => {
+        logout(() => navigation("/auth/welcome"));
+    };
 
     const randomUserColor = (Color: string) => {
         setUserState("color", Color);
@@ -45,7 +51,7 @@ const AccountSetting = () => {
                 text={t("edit_profile")}
                 leftIcon="arrowLeft"
                 rightIcon="logout"
-                onRightIconPress={logout}
+                onRightIconPress={onLogout}
                 onLeftIconPress={() => closeModal()}
             />
             <div className={styles.ImageBox}>

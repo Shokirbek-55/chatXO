@@ -32,8 +32,7 @@ const item = {
 const NewAdmin = () => {
     const { t } = useTranslation();
     const { closeModal, toRouterManageCh } = useRootStore().routerStore;
-    const { getChannelUsersData, newAdmin, channelData } =
-        useRootStore().channelStore;
+    const { newAdmin, channelData, channelUsers } = useRootStore().channelStore;
     const { user } = useRootStore().authStore;
 
     const NewAdmin = async (id) => {
@@ -61,8 +60,8 @@ const NewAdmin = () => {
                     initial="hidden"
                     animate="visible"
                 >
-                    {getChannelUsersData.length > 0 ? (
-                        getChannelUsersData.map((e, index) => {
+                    {channelUsers.length > 0 ? (
+                        channelUsers.map((e, index) => {
                             return (
                                 <motion.div
                                     variants={item}

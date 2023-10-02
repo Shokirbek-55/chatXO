@@ -1,34 +1,28 @@
+import { observer } from "mobx-react-lite";
 import React, { CSSProperties, FC } from "react";
 import styles from "./index.module.css";
 
 interface Props {
-  numbers?: any;
-  text?: string;
-  children?: any;
-  center?: boolean;
-  color?: any;
-  value?: string;
-  handleLink?: () => void;
-  style?: CSSProperties;
-  onClick?: () => void;
-  margin?: string;
+    children?: any;
+    center?: boolean;
+    color?: any;
+    handleLink?: () => void;
+    style?: CSSProperties;
+    margin?: string;
+    backgroundColor?: string;
 }
 
 const Text: FC<Props> = ({
-  children,
-  handleLink,
-  center,
-  style,
-  color,
-  text,
-  value,
-  numbers,
-  onClick,
-  margin
+    children,
+    handleLink,
+    center,
+    style,
+    color,
+    backgroundColor,
+    margin,
 }) => {
-  return (
-    <>
-      {/* {isHttp ? (
+    return (
+        /* {isHttp ? (
         <a
           href={`${text}`}
           target="_blank"
@@ -38,17 +32,21 @@ const Text: FC<Props> = ({
         >
           {numbers} {children} {onClick} {value} {text}
         </a>
-      ) : ( */}
-        <p
-          className={center ? styles.centerText : styles.text}
-          onClick={() => handleLink && handleLink()}
-          style={{ ...style, margin: margin ? margin : "3px 0", color }}
+      ) : ( 
+          /* )} */
+        <div
+            className={center ? styles.centerText : styles.text}
+            onClick={handleLink}
+            style={{
+                ...style,
+                margin: margin ? margin : "3px 0",
+                color,
+                background: backgroundColor,
+            }}
         >
-          {numbers} {children} {onClick} {value} {text}
-        </p>
-      {/* )} */}
-    </>
-  );
+            <div>{children}</div>
+        </div>
+    );
 };
 
-export default Text;
+export default observer(Text);

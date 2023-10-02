@@ -26,6 +26,11 @@ type PreviewDataType = {
     adminId?: number;
 };
 
+type ConnectChannelaDataType = {
+    channelNumber: string;
+    channelInviteCode?: string;
+};
+
 export default class UsersStore {
     rootStore: AppRootStore;
 
@@ -61,6 +66,11 @@ export default class UsersStore {
     friendDetails: User = {};
 
     formData = new FormData();
+
+    connectChannelData: ConnectChannelaDataType = {
+        channelNumber: "",
+        channelInviteCode: "",
+    };
 
     forJoinChannelId: number = 0;
     userAvatar: string = "";
@@ -246,43 +256,86 @@ export default class UsersStore {
         }
     };
 
-    returnGroupByNumber = async (channelNumber: string) => {
+    setConnectChannelData = (
+        key: keyof ConnectChannelaDataType,
+        value: string
+    ) => {
+        this.connectChannelData[key] = value;
+    };
+
+    returnGroupByNumber = async (
+        channelNumber: string,
+        callback: (e) => void
+    ) => {
         await this.returnGroupByNumberOperation.run(() =>
             APIs.channels.connectToChannel(channelNumber)
         );
         runInAction(() => {
             if (this.returnGroupByNumberOperation.isSuccess) {
-                this.forJoinChannelId =
-                    this.returnGroupByNumberOperation.data.id;
-                this.joinUserToChannel(this.forJoinChannelId);
+                if (
+                    !this.returnGroupByNumberOperation.data.isPrivate ||
+                    (this.connectChannelData.channelInviteCode
+                        ?.length as never) > 1
+                ) {
+                    this.forJoinChannelId =
+                        this.returnGroupByNumberOperation.data.id;
+                    this.joinUserToChannel(
+                        this.forJoinChannelId,
+                        this.connectChannelData.channelInviteCode as never,
+                        () =>
+                            callback(
+                                this.returnGroupByNumberOperation.data.hashId
+                            )
+                    );
+                    this.rootStore.channelStore.getChannelByHashId(
+                        this.returnGroupByNumberOperation.data.hashId
+                    );
+                    this.connectChannelData = {
+                        channelNumber: "",
+                        channelInviteCode: "",
+                    };
+                } else {
+                    this.rootStore.visibleStore.show("passwordInput");
+                    message.warning(
+                        "Channel is private please enter group's invitation code"
+                    );
+                }
             }
         });
     };
 
-    joinUserToChannel = async (channleId: number) => {
+    joinUserToChannel = async (
+        channleId: number,
+        invitationCode: string,
+        callback: () => void
+    ) => {
         await this.joinUserToChannelOperation.run(() =>
-            APIs.channels.joinChannel(channleId)
+            APIs.channels.joinChannel(channleId, invitationCode)
         );
         if (this.joinUserToChannelOperation.isSuccess) {
-            this.rootStore.channelStore.getMyChannels();
-            this.rootStore.routerStore.toRouter("channels");
-            const target = generatePath(`/:name`, {
-                name: `@${this.returnGroupByNumberOperation.data.hashId}`,
+            runInAction(() => {
+                this.rootStore.channelStore.getMyChannels();
+                this.rootStore.routerStore.setCurrentRoute("channels");
+                callback();
+                message.success("You have joined the group");
             });
-            message.success("You have joined the group");
         }
     };
 
-    userChannelLeave = async (channelId: number) => {
+    userChannelLeave = async (channelId: number, callback: () => void) => {
         await this.userChannelLeaveOperation.run(() =>
             APIs.Users.leaveFromChannel(channelId)
         );
         if (this.userChannelLeaveOperation.isSuccess) {
-            this.rootStore.channelStore.myChannels =
-                this.rootStore.channelStore.myChannels.filter(
-                    (i) => i.id !== channelId
-                );
-            message.success("Exited the channel");
+            runInAction(() => {
+                this.rootStore.channelStore.myChannels =
+                    this.rootStore.channelStore.myChannels.filter(
+                        (i) => i.id !== channelId
+                    );
+                this.rootStore.channelStore.hashId = "";
+                callback();
+                message.success("Exited the channel");
+            });
         }
     };
 }

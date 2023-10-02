@@ -11,19 +11,15 @@ import useRootStore from "../../../hooks/useRootStore";
 const BlockUser = () => {
     const { t } = useTranslation();
     const {
-        getChannelUsersData,
         unblockUser,
         getBlockedUser,
         channelData,
         blockUser,
+        channelUsers,
         adminId,
     } = useRootStore().channelStore;
     const { user } = useRootStore().authStore;
     const { closeModal } = useRootStore().routerStore;
-
-    // useEffect(() => {
-    //     getChannelBlockedUsers(channelData.hashId)
-    // }, [])
 
     const UnBlockUser = (id) => {
         unblockUser(channelData.hashId, id);
@@ -37,7 +33,8 @@ const BlockUser = () => {
                 onLeftIconPress={() => closeModal()}
             />
             <div>
-                {getChannelUsersData
+                {channelUsers
+                    .filter((e) => e.id !== adminId)
                     .filter((e) =>
                         Object.values(getBlockedUser).every(
                             (i) => e.id !== i.id

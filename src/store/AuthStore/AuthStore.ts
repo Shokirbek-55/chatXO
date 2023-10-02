@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable, runInAction, toJS } from "mobx";
 import APIs, { LoginEmailWithPasswordReqData } from "../../api/api";
 import { Session } from "../../types/auth";
 import { Operation } from "../../utils/Operation";
@@ -29,6 +29,11 @@ export default class AuthStore {
     logoutOperation = new Operation<any>({} as any);
     getMeOperation = new Operation<User>({} as User);
     loginOAuthOperation = new Operation<Session>({} as Session);
+    resetPassOperation = new Operation<{ email: string }>(
+        {} as { email: string }
+    );
+
+    navigateAuth: () => void = () => {};
 
     isLoginLoading: boolean = false;
     isGetMeLoading: boolean = false;
@@ -136,17 +141,40 @@ export default class AuthStore {
         }
     };
 
-    logout = async () => {
+    logout = async (callabck: () => void) => {
         console.log(this.root.localStore.session.refreshToken);
+        runInAction(() => {
+            this.navigateAuth = callabck;
+        });
         await this.logoutOperation.run(() =>
             APIs.logout(this.root.localStore.session.refreshToken)
         );
         if (this.logoutOperation.data) {
-            this.root.localStore.removeToken()
-            this.root.socketStore.disconnect()
-            this.root.routerStore.routers = []
-            this.root.channelStore.myChannels = []
-            message.success("Logout")
+            runInAction(() => {
+                this.root.localStore.removeToken();
+                this.root.socketStore.disconnect();
+                this.root.routerStore.routers = [];
+                this.root.channelStore.myChannels = [];
+                this.navigateAuth();
+                message.success("Logout");
+            });
         }
+    };
+
+    resetPass = async (email: string, callback: () => void) => {
+        runInAction(() => {
+            this.navigateAuth = callback;
+        });
+        await this.resetPassOperation.run(() => {
+            APIs.resetPass(email);
+        });
+        runInAction(() => {
+            if (this.resetPassOperation.isSuccess) {
+                message.success(`The new password has been sent to ${email}`);
+            } else {
+                message.success(`${this.resetPassOperation.isError}`);
+            }
+            this.navigateAuth();
+        });
     };
 }

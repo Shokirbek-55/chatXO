@@ -10,6 +10,7 @@ import SignUpSocial from "../screens/auth/sign-up-social/SignUpSocial";
 import Chat from "../screens/home/chat/Chat";
 import useRootStore from "../hooks/useRootStore";
 import { useEffect } from "react";
+import ForgotPasswordView from "../screens/auth/forgot-password/ForgotPassword";
 
 function RootRouter() {
     const { session } = useRootStore().localStore;
@@ -32,6 +33,7 @@ function RootRouter() {
                 <Route path="sign-up" element={<SignUp />} />
                 <Route path="sign-up-social" element={<SignUpSocial />} />
                 <Route path="changeLanguage" element={<ChangeLanguageView />} />
+                <Route path="forgot-pass" element={<ForgotPasswordView />} />
             </Route>
         </Routes>
     );

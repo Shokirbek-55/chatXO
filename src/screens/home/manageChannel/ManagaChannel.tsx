@@ -17,10 +17,9 @@ import styles from "./ManagaChannel.module.css";
 const ManagaChannel = () => {
     const { t } = useTranslation();
     const {
-        getChannelUsersData,
         channelData,
         getChannelBlockedUsers,
-        // channelUsers,
+        channelUsers,
         getChannelUsers,
         adminId,
     } = useRootStore().channelStore;
@@ -30,6 +29,7 @@ const ManagaChannel = () => {
     const { messageCache, slug } = useRootStore().messageStore;
     const { user } = useRootStore().authStore;
     const { show } = useRootStore().visibleStore;
+    const navigation = useNavigate();
 
     const PreviewChannelAvatar = (data: any) => {
         getPreviewData(data);
@@ -37,7 +37,7 @@ const ManagaChannel = () => {
     };
 
     const leaveChannel = (channelId: number) => {
-        userChannelLeave(channelId);
+        userChannelLeave(channelId, () => navigation("", { replace: true }));
         closeRightSideBar();
     };
 
@@ -104,7 +104,7 @@ const ManagaChannel = () => {
                 style={{ fontSize: "25px" }}
             />
             <Text
-                children={`${getChannelUsersData.length} members`}
+                children={`${channelUsers.length} members`}
                 center
                 style={{ fontSize: "13px" }}
             />
@@ -133,7 +133,7 @@ const ManagaChannel = () => {
                 />
             </div>
             <div className={styles.channalUsers}>
-                {getChannelUsersData
+                {channelUsers
                     .slice()
                     .sort((a) => (a.id === user.id ? -1 : 1))
                     .map((e, index) => {

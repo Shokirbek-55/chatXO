@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { TMP_URL } from "../../env";
 import useRootStore from "../../hooks/useRootStore";
 import Colors from "../../utils/colors";
+import { saveAs } from "file-saver";
 import {
     CloserNoCirculIcon,
     DeleteIcon,
@@ -45,6 +46,10 @@ const PreviewImage = () => {
         deletePreviewAvatar();
     };
 
+    const downloadFile = () => {
+        saveAs(`${TMP_URL}/${previewData.avatar}`, `${previewData.avatar}`);
+    };
+
     return (
         <div
             className={styles.container}
@@ -62,7 +67,7 @@ const PreviewImage = () => {
                 </div>
                 <div>
                     <Text
-                        text={
+                        children={
                             previewData.username
                                 ? previewData.username
                                 : previewData.name
@@ -71,7 +76,7 @@ const PreviewImage = () => {
                         color={Colors.White}
                     />
                     <Text
-                        text="Profile photo"
+                        children="Profile photo"
                         style={{ fontSize: "12px" }}
                         color={Colors.White}
                     />
@@ -84,7 +89,9 @@ const PreviewImage = () => {
                         <DeleteIcon size={22} color="#fff" />
                     </span>
                 ) : null}
-                <DownloadIcon size={22} color="#fff" />
+                <span onClick={downloadFile}>
+                    <DownloadIcon size={22} color="#fff" />
+                </span>
                 <ZoomOutIcon onClick={clickZoomOut} size={22} color="#fff" />
                 <ZoomInIcon onClick={clickZoomIn} size={22} color="#fff" />
                 <span onClick={() => hide("previewModal")}>

@@ -38,17 +38,22 @@ const FriendDetail = () => {
     const { friendDetails, weChannels } = useRootStore().usersStore;
     const { closeModal } = useRootStore().routerStore;
     const { t } = useTranslation();
-    const { getHistoryMessages } = useRootStore().messageStore;
-    const { getChannelByHashId } = useRootStore().channelStore;
+    const { setChannelSlug } = useRootStore().messageStore;
+    const { getChannelByHashId, myChannels } = useRootStore().channelStore;
     const navigate = useNavigate();
     const { show } = useRootStore().visibleStore;
-    const { getPreviewData, previewData } = useRootStore().usersStore;
-    console.log("previewData", toJS(previewData));
+    const { getPreviewData } = useRootStore().usersStore;
 
     const handleChanel = (e) => {
-        getHistoryMessages(e.slug);
-        getChannelByHashId(e.hashId);
-        const target = generatePath(`/:name`, { name: `@${e.name}` });
+        setChannelSlug(e.slug);
+        getChannelByHashId(
+            myChannels.find((item) => item.id === e.id)?.hashId as never
+        );
+        const target = generatePath(`/:name`, {
+            name: `@${
+                myChannels.find((item) => item.id === e.id)?.hashId as never
+            }`,
+        });
         navigate(target);
     };
 
@@ -80,7 +85,7 @@ const FriendDetail = () => {
                     }
                 />
                 <Text
-                    text={
+                    children={
                         friendDetails.username ? friendDetails.username : "User"
                     }
                 />
