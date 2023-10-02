@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import { BiCheckbox, BiCheckCircle, BiCheckSquare } from "react-icons/bi";
 import { ImCancelCircle } from "react-icons/im";
+import { TMP_URL } from "../../env";
 import useRootStore from "../../hooks/useRootStore";
 import RowItemView from "../RowItem";
 import styles from "./Relevence.module.css";
@@ -11,7 +12,6 @@ import styles from "./Relevence.module.css";
 const Relevence = () => {
     const { visible, hide } = useRootStore().visibleStore;
     const {
-        getChannelUsersData,
         memberRelevence,
         updateMemberRelevance,
         setRelevanceChange,
@@ -34,6 +34,11 @@ const Relevence = () => {
                         memberRelevence?.color
                             ? `linear-gradient(25deg, ${memberRelevence?.color} 30%, #ddd 100%)`
                             : "linear-gradient(#ddd, #666)"
+                    }
+                    imageUrl={
+                        memberRelevence.avatar
+                            ? `${TMP_URL}/${memberRelevence.avatar}`
+                            : ""
                     }
                     text={memberRelevence?.username}
                     loading={false}

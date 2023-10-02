@@ -31,12 +31,12 @@ import { FiEdit, FiLogOut } from "react-icons/fi";
 import { GoSearch } from "react-icons/go";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { GrUpdate } from "react-icons/gr";
-import { TbFileText, TbPhoto, TbHash, TbEyeOff, TbX } from 'react-icons/tb'
+import { TbFileText, TbPhoto, TbHash, TbEyeOff, TbX } from "react-icons/tb";
 import {
-  AiFillCamera,
-  AiOutlineBarChart,
-  AiOutlineMenu,
-  AiOutlinePlusCircle,
+    AiFillCamera,
+    AiOutlineBarChart,
+    AiOutlineMenu,
+    AiOutlinePlusCircle,
 } from "react-icons/ai";
 import {
     MdOutlineKeyboardArrowLeft,
@@ -101,6 +101,31 @@ export const BsFillPersonPlusFillIcon = ({
             }}
         >
             <BsFillPersonPlusFill />
+        </span>
+    );
+};
+export const CheckIcon = ({
+    size = 28,
+    padding = 5,
+    radius = 50,
+    background = "transparent",
+    color = "black",
+    hoverActive = true,
+}: MdgroupProp) => {
+    return (
+        <span
+            className={hoverActive ? styles.iconsHoverAndActive : ""}
+            style={{
+                fontSize: `${size}px`,
+                display: "flex",
+                padding: `${padding}px`,
+                cursor: "pointer",
+                borderRadius: `${radius}%`,
+                backgroundColor: `${background}`,
+                color: `${color}`,
+            }}
+        >
+            <HiCheckCircle />
         </span>
     );
 };
@@ -504,22 +529,22 @@ export const HiddenIcon = ({
     color = "black",
     hoverActive = true,
 }: MdgroupProp) => {
-  return (
-    <span
-      className={hoverActive ? styles.iconsHoverAndActive : ""}
-      style={{
-        fontSize: `${size}px`,
-        display: "flex",
-        padding: `${padding}px`,
-        cursor: "pointer",
-        borderRadius: `${radius}%`,
-        backgroundColor: `${background}`,
-        color: `${color}`,
-      }}
-    >
-      <TbEyeOff />
-    </span>
-  );
+    return (
+        <span
+            className={hoverActive ? styles.iconsHoverAndActive : ""}
+            style={{
+                fontSize: `${size}px`,
+                display: "flex",
+                padding: `${padding}px`,
+                cursor: "pointer",
+                borderRadius: `${radius}%`,
+                backgroundColor: `${background}`,
+                color: `${color}`,
+            }}
+        >
+            <TbEyeOff />
+        </span>
+    );
 };
 
 export const HashtagIcon = ({
@@ -530,22 +555,22 @@ export const HashtagIcon = ({
     color = "black",
     hoverActive = true,
 }: MdgroupProp) => {
-  return (
-    <span
-      className={hoverActive ? styles.iconsHoverAndActive : ""}
-      style={{
-        fontSize: `${size}px`,
-        display: "flex",
-        padding: `${padding}px`,
-        cursor: "pointer",
-        borderRadius: `${radius}%`,
-        backgroundColor: `${background}`,
-        color: `${color}`,
-      }}
-    >
-      <TbHash />
-    </span>
-  );
+    return (
+        <span
+            className={hoverActive ? styles.iconsHoverAndActive : ""}
+            style={{
+                fontSize: `${size}px`,
+                display: "flex",
+                padding: `${padding}px`,
+                cursor: "pointer",
+                borderRadius: `${radius}%`,
+                backgroundColor: `${background}`,
+                color: `${color}`,
+            }}
+        >
+            <TbHash />
+        </span>
+    );
 };
 
 export const DocumentIcon = ({
@@ -556,22 +581,22 @@ export const DocumentIcon = ({
     color = "black",
     hoverActive = true,
 }: MdgroupProp) => {
-  return (
-    <span
-      className={hoverActive ? styles.iconsHoverAndActive : ""}
-      style={{
-        fontSize: `${size}px`,
-        display: "flex",
-        padding: `${padding}px`,
-        cursor: "pointer",
-        borderRadius: `${radius}%`,
-        backgroundColor: `${background}`,
-        color: `${color}`,
-      }}
-    >
-      <TbFileText />
-    </span>
-  );
+    return (
+        <span
+            className={hoverActive ? styles.iconsHoverAndActive : ""}
+            style={{
+                fontSize: `${size}px`,
+                display: "flex",
+                padding: `${padding}px`,
+                cursor: "pointer",
+                borderRadius: `${radius}%`,
+                backgroundColor: `${background}`,
+                color: `${color}`,
+            }}
+        >
+            <TbFileText />
+        </span>
+    );
 };
 
 export const CameraIcon = ({
@@ -608,22 +633,22 @@ export const ImageAddIcon = ({
     color = "black",
     hoverActive = true,
 }: MdgroupProp) => {
-  return (
-    <span
-      className={hoverActive ? styles.iconsHoverAndActive : ""}
-      style={{
-        fontSize: `${size}px`,
-        display: "flex",
-        padding: `${padding}px`,
-        cursor: "pointer",
-        borderRadius: `${radius}%`,
-        backgroundColor: `${background}`,
-        color: `${color}`,
-      }}
-    >
-      <TbPhoto />
-    </span>
-  );
+    return (
+        <span
+            className={hoverActive ? styles.iconsHoverAndActive : ""}
+            style={{
+                fontSize: `${size}px`,
+                display: "flex",
+                padding: `${padding}px`,
+                cursor: "pointer",
+                borderRadius: `${radius}%`,
+                backgroundColor: `${background}`,
+                color: `${color}`,
+            }}
+        >
+            <TbPhoto />
+        </span>
+    );
 };
 
 export const PasswordIcon = ({
@@ -738,22 +763,22 @@ export const CloseIcon = ({
     color = "black",
     hoverActive = true,
 }: MdgroupProp) => {
-  return (
-    <span
-      className={hoverActive ? styles.iconsHoverAndActive : ""}
-      style={{
-        fontSize: `${size}px`,
-        display: "flex",
-        padding: `${padding}px`,
-        cursor: "pointer",
-        borderRadius: `${radius}%`,
-        backgroundColor: `${background}`,
-        color: `${color}`,
-      }}
-    >
-      <TbX />
-    </span>
-  );
+    return (
+        <span
+            className={hoverActive ? styles.iconsHoverAndActive : ""}
+            style={{
+                fontSize: `${size}px`,
+                display: "flex",
+                padding: `${padding}px`,
+                cursor: "pointer",
+                borderRadius: `${radius}%`,
+                backgroundColor: `${background}`,
+                color: `${color}`,
+            }}
+        >
+            <TbX />
+        </span>
+    );
 };
 
 export const ReplyIcon = ({

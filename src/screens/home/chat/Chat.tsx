@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import MessageBox from "../../../components/Chat/MessageBox";
@@ -7,19 +7,20 @@ import MessageCard from "../../../components/Chat/MessageCard";
 import ScrollContainer from "../../../components/ScrollContainer/ScrollContainer";
 import useRootStore from "../../../hooks/useRootStore";
 import { RawMessage } from "../../../types/channel";
-import { ChatHeader } from "../../../utils/chatHeader";
 import MessageInput from "./components/messageInput/MessageInput";
 import MessageImg from "../../../components/Chat/MessageImg";
 import MessageVideo from "../../../components/Chat/MessageVideo";
 import MessageAudio from "../../../components/Chat/MessageAudio";
 import MessageDoc from "../../../components/Chat/MessageDoc";
 import LinkPriview from "../../../components/Chat/LinkPreView/linkPriview";
+import ChatHeader from "../../../utils/chatHeader";
 
 const Chat = () => {
     const navigate = useNavigate();
-    const { messageCache, slug } = useRootStore().messageStore;
+    const { messageCache, slug, searchMessage, searchMessageState } =
+        useRootStore().messageStore;
     const { user } = useRootStore().authStore;
-
+    const { visible } = useRootStore().visibleStore;
     const { toRouterManageCh, openRightSideBar } = useRootStore().routerStore;
 
     const OpenManageChannel = () => {
@@ -45,9 +46,10 @@ const Chat = () => {
                 img_url={messageCache[slug]?.channelData.avatar}
                 color={messageCache[slug]?.channelData.color}
                 name={messageCache[slug]?.channelData.name}
-                onTextSearch={() => { }}
+                onTextSearch={() => {}}
                 pageState={messageCache[slug]?.channelData.pageState}
                 onPress={OpenManageChannel}
+                inputValue={visible.setSearch ? searchMessageState : ""}
             />
         );
     };

@@ -11,7 +11,7 @@ import {
     SetUpdataChanelType,
     generateInviteCodeType,
     relevanceDataInitial,
-    relevanceDataType
+    relevanceDataType,
 } from "../../types/channel";
 import { User } from "../../types/user";
 import { Operation } from "../../utils/Operation";
@@ -68,14 +68,13 @@ export default class ChannelStore {
 
     getChannelUsersData: ChannelsUsersType[] = [];
 
-    channelUsers: {
-        [key: string]: ChannelsUsersType;
-    } = {};
+    channelUsers: ChannelsUsersType[] = [];
 
     adminId: number = 0;
 
     hashId: string = "";
-    navigateChannel: () => void = () => { };
+    navigateChannel: () => void = () => {};
+    generateNavigateChannel: () => void = () => {};
 
     getBlockedUser: User = {};
 
@@ -95,20 +94,24 @@ export default class ChannelStore {
 
     getOneMember = (id: number) => {
         runInAction(() => {
-            if (id === this.adminId) {
-                this.rootStore.visibleStore.show("RelevenceModal");
-                this.memberRelevence = this.getChannelUsersData.find(
-                    (item) => item.id === id
-                ) as never;
-                this.relevanceData = {
-                    channelSlug: this.channelData.slug,
-                    fromUserId: this.rootStore.authStore.user.id as never,
-                    toUserId: id,
-                    relevance: this.memberRelevence.relevance,
-                };
-            } else {
-                message.warning("You are not admin");
-            }
+            runInAction(() => {
+                if (this.rootStore.authStore.user.id === this.adminId) {
+                    this.rootStore.visibleStore.show("RelevenceModal");
+                    this.memberRelevence = this.channelUsers.find(
+                        (item) => item.id === id
+                    ) as never;
+                    this.relevanceData = {
+                        channelSlug: this.channelData.slug,
+                        fromUserId: this.rootStore.authStore.user.id as never,
+                        toUserId: id,
+                        relevance: this.memberRelevence.relevance,
+                    };
+                    return;
+                } else {
+                    message.warning("You are not admin");
+                    return;
+                }
+            });
         });
     };
 
@@ -145,7 +148,6 @@ export default class ChannelStore {
     };
 
     getChannelByHashId = async (hashId: string) => {
-        console.log("hashId", hashId);
         runInAction(() => {
             this.isLoad = true;
         });
@@ -179,19 +181,17 @@ export default class ChannelStore {
             this.hashId = hashId;
             this.navigateChannel = callback;
         });
-    }
+    };
 
-    getHashId = async () => {
+    getHashId = async (callback?: () => void) => {
         if (this.hashId && this.rootStore.localStore.session.accessToken) {
             const isHas = this.myChannels.some((channel) => {
                 if (channel.hashId === this.hashId) {
                     this.rootStore.messageStore.getHistoryMessages(
-                        this.getChannelByHashIdOperation.data.slug
+                        channel.slug
                     );
                     this.getChannelByHashId(this.hashId);
-                    this.rootStore.messageStore.setChannelSlug(
-                        this.getChannelByHashIdOperation.data.slug
-                    );
+                    this.rootStore.messageStore.setChannelSlug(channel.slug);
                     this.navigateChannel();
                     return true;
                 }
@@ -200,11 +200,14 @@ export default class ChannelStore {
             if (!isHas) {
                 await this.getChannelByHashId(this.hashId);
                 await this.rootStore.usersStore.joinUserToChannel(
-                    this.channelData.id
+                    this.channelData.id,
+                    this.rootStore.usersStore.connectChannelData
+                        .channelInviteCode as never,
+                    () => callback
                 );
             }
         }
-    }
+    };
 
     getChannelDataCache = async () => {
         try {
@@ -230,16 +233,17 @@ export default class ChannelStore {
                 }
             });
 
-            await Promise.all(promises).then(() => {
-                this.getHashId();
-            }).catch((error) => {
-                console.log("error getChannelDataCache", error);
-            })
+            await Promise.all(promises)
+                .then(() => {
+                    this.getHashId();
+                })
+                .catch((error) => {
+                    console.log("error getChannelDataCache", error);
+                });
         } catch (error) {
             console.log("Error:", error);
         }
     };
-
 
     getChannelUsers = async (hashId: string) => {
         await this.getChannelUsersOperation.run(() =>
@@ -247,7 +251,9 @@ export default class ChannelStore {
         );
         runInAction(() => {
             if (this.getChannelUsersOperation.isSuccess) {
-                this.channelUsers = this.getChannelUsersOperation.data;
+                this.channelUsers = Object.values(
+                    this.getChannelUsersOperation.data
+                );
             }
         });
     };
@@ -261,11 +267,11 @@ export default class ChannelStore {
     };
 
     createChannelDataToSetData = () =>
-    (this.setCreateChannelData = {
-        name: "",
-        description: "",
-        color: "",
-    });
+        (this.setCreateChannelData = {
+            name: "",
+            description: "",
+            color: "",
+        });
 
     setCreateChannelState = (key: keyof CreateChannelType, value: string) => {
         this.setCreateChannelData[key] = value;
@@ -284,12 +290,12 @@ export default class ChannelStore {
     };
 
     channelDataToSetData = (channel: Channel) =>
-    (this.setUpdataChannel = {
-        name: channel.name as string,
-        isPrivate: channel.isPrivate as boolean,
-        color: channel.color as string,
-        avatar: channel.avatar as string,
-    });
+        (this.setUpdataChannel = {
+            name: channel.name as string,
+            isPrivate: channel.isPrivate as boolean,
+            color: channel.color as string,
+            avatar: channel.avatar as string,
+        });
 
     setUpdateChannelState = (key: keyof SetUpdataChanelType, value: any) => {
         runInAction(() => {
@@ -302,32 +308,53 @@ export default class ChannelStore {
         await this.updateChannelOperation.run(() =>
             APIs.channels.updateChannel(this.channelData.hashId, channel)
         );
-        if (this.updateChannelOperation.isSuccess) {
-            runInAction(() => {
-                this.getMyChannels();
-            });
-        }
+        runInAction(() => {
+            if (this.updateChannelOperation.isSuccess) {
+                runInAction(() => {
+                    this.getMyChannels();
+                });
+            }
+        });
     };
 
-    generateNewInvitationCode = async (groupNumber: string) => {
+    generateNewInvitationCode = async (
+        groupNumber: string,
+        callBack: (e: string) => void
+    ) => {
         await this.generateNewInvitationCodeOperation.run(() =>
             APIs.channels.generateNewInviteCode(groupNumber)
         );
-        if (this.generateNewInvitationCodeOperation.isSuccess) {
-            this.channelData.invitationCodes[0].code =
-                this.generateNewInvitationCodeOperation.data.inviteCode;
-            this.getMyChannels();
-        }
+        runInAction(() => {
+            if (this.generateNewInvitationCodeOperation.isSuccess) {
+                this.channelData.invitationCodes[0].code =
+                    this.generateNewInvitationCodeOperation.data.inviteCode;
+                this.hashId =
+                    this.generateNewInvitationCodeOperation.data.hashId;
+                this.getChannelByHashId(
+                    this.generateNewInvitationCodeOperation.data.hashId
+                );
+                callBack(this.generateNewInvitationCodeOperation.data.hashId);
+            }
+        });
     };
 
-    noInvitationCode = async () => { };
+    noInvitationCode = async () => {};
 
-    onSelectChannelImage = (file: File) => {
-        this.chFormData.append("avatar", file, file.name);
-        if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            this.channelAvatar = imageUrl;
-        }
+    onSelectChannelImage = async (file: File) => {
+        runInAction(() => {
+            this.chFormData.append("avatar", file, file.name);
+            if (file) {
+                const imageUrl = URL.createObjectURL(file);
+                this.channelAvatar = imageUrl;
+            }
+        });
+    };
+
+    closeSelectImage = () => {
+        runInAction(() => {
+            this.channelAvatar = "";
+            this.rootStore.visibleStore.hide("chUploadFile");
+        });
     };
 
     createChannelAvatar = async () => {
@@ -381,10 +408,12 @@ export default class ChannelStore {
         await this.delateChannelOperation.run(() =>
             APIs.channels.deleteChannel(hashId)
         );
-        if (this.delateChannelOperation.isSuccess) {
-            message.success("The channel is deleted succefully!");
-            this.getMyChannels();
-        }
+        runInAction(() => {
+            if (this.delateChannelOperation.isSuccess) {
+                message.success("The channel is deleted succefully!");
+                this.getMyChannels();
+            }
+        });
     };
 
     addUserToChannel = async (hashId: string, friendId: number) => {
@@ -392,18 +421,20 @@ export default class ChannelStore {
             APIs.channels.addUsersToChannel(hashId, [friendId])
         );
         if (this.addUserToChannelOperation.isSuccess) {
-            this.getChannelUsersData.push(
-                this.rootStore.friendsStore.usersListForAdd.find(
-                    (e) => e.id === friendId
-                ) as never
-            );
-            this.rootStore.friendsStore.usersListForAdd =
-                this.rootStore.friendsStore.friends.map((users) => ({
-                    ...users,
-                    isAdded: this.getChannelUsersData.some(
-                        (e) => e.id === users.id
-                    ),
-                }));
+            runInAction(() => {
+                this.channelUsers.push(
+                    this.rootStore.friendsStore.usersListForAdd.find(
+                        (e) => e.id === friendId
+                    ) as never
+                );
+                this.rootStore.friendsStore.usersListForAdd =
+                    this.rootStore.friendsStore.friends.map((users) => ({
+                        ...users,
+                        isAdded: this.channelUsers.some(
+                            (e) => e.id === users.id
+                        ),
+                    }));
+            });
         }
     };
 
@@ -411,53 +442,63 @@ export default class ChannelStore {
         await this.delateUserFromChannelOperation.run(() =>
             APIs.channels.deleteUsersFromChannel(hashId, userId)
         );
-        if (this.delateUserFromChannelOperation.isSuccess) {
-            this.getChannelUsersData = this.getChannelUsersData.filter(
-                (u) => u.id !== userId
-            ) as never;
-            message.success("delated user form channel");
-        }
+        runInAction(() => {
+            if (this.delateUserFromChannelOperation.isSuccess) {
+                this.channelUsers = this.channelUsers.filter(
+                    (u) => u.id !== userId
+                ) as never;
+                message.success("delated user form channel");
+            }
+        });
     };
 
     getChannelBlockedUsers = async (hashId: string) => {
         await this.getChannelBlockedUsersOperation.run(() =>
             APIs.channels.getBlockedUsers(hashId)
         );
-        if (this.getChannelBlockedUsersOperation.isSuccess) {
-            this.getBlockedUser = this.getChannelBlockedUsersOperation.data;
-        }
+        runInAction(() => {
+            if (this.getChannelBlockedUsersOperation.isSuccess) {
+                this.getBlockedUser = this.getChannelBlockedUsersOperation.data;
+            }
+        });
     };
 
     blockUser = async (hashId: string, userId: number) => {
         await this.blockUserOperation.run(() =>
             APIs.channels.blockUser(hashId, userId)
         );
-        if (this.blockUserOperation.isSuccess) {
-            this.getChannelBlockedUsers(hashId);
-            message.success("this user blocked");
-        }
+        runInAction(() => {
+            if (this.blockUserOperation.isSuccess) {
+                this.getChannelBlockedUsers(hashId);
+                message.success("this user blocked");
+            }
+        });
     };
 
     unblockUser = async (hashId: string, userId: number) => {
         await this.unblockUserOperation.run(() =>
             APIs.channels.unblockUser(hashId, userId)
         );
-        if (this.unblockUserOperation.isSuccess) {
-            this.getBlockedUser = Object.values(this.getBlockedUser)?.filter(
-                (e) => e.id !== userId
-            ) as never;
-            message.success("this user unblocked");
-        }
+        runInAction(() => {
+            if (this.unblockUserOperation.isSuccess) {
+                this.getBlockedUser = Object.values(
+                    this.getBlockedUser
+                )?.filter((e) => e.id !== userId) as never;
+                message.success("this user unblocked");
+            }
+        });
     };
 
     newAdmin = async (hashId: string, userId: number) => {
         await this.newAdminOperation.run(() =>
             APIs.channels.setNewAdmin(hashId, userId)
         );
-        if (this.newAdminOperation.isSuccess) {
-            this.adminId = userId;
-            this.getChannelUsers(hashId);
-            message.success("new admin");
-        }
+        runInAction(() => {
+            if (this.newAdminOperation.isSuccess) {
+                this.adminId = userId;
+                this.getChannelUsers(hashId);
+                message.success("new admin");
+            }
+        });
     };
 }

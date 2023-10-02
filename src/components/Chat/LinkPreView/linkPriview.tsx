@@ -16,9 +16,15 @@ interface Props {
     users?: {
         [key: string]: ChannelsUsersType;
     };
+    textBackColor?: string;
 }
 
-const LinkPriviewComponent = ({ message, position, users }: Props) => {
+const LinkPriviewComponent = ({
+    message,
+    position,
+    users,
+    textBackColor,
+}: Props) => {
     const POSITION_CONTENT = position
         ? { justifyContent: "flex-start" }
         : { justifyContent: "flex-end" };
@@ -93,6 +99,7 @@ const LinkPriviewComponent = ({ message, position, users }: Props) => {
                                     fontWeight: textWeight,
                                     lineHeight: textLineHeight,
                                 }}
+                                backgroundColor={textBackColor}
                             >
                                 {renderMessage()}
                             </Text>

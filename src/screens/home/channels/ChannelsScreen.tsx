@@ -41,10 +41,17 @@ function ChannelsScreen() {
     const { setChannelSlug } = useRootStore().messageStore;
     const { t } = useTranslation();
     const navigate = useNavigate();
+    // const { routers, manageRouters } = useRootStore().routerStore;
+    // console.log("routers", toJS(routers));
+    // console.log("manageChannels", toJS(manageRouters));
 
     const serachChannelHandler = (text: string) => {
         setSearchChannels(text);
     };
+
+    // while (true) {
+    //     alert("infinity loop");
+    // }
 
     const handleChanel = (e) => {
         setChannelSlug(e.slug);
@@ -67,8 +74,7 @@ function ChannelsScreen() {
                 />
                 <Text
                     center
-                    numbers={myChannels.length}
-                    children={t("groups")}
+                    children={`${myChannels.length} ${t("groups")}`}
                     style={{
                         fontSize: "16px",
                         paddingBottom: "5px",

@@ -40,10 +40,9 @@ export default class FriendsStore {
                 this.usersListForAdd = this.rootStore.friendsStore.friends.map(
                     (users) => ({
                         ...users,
-                        isAdded:
-                            this.rootStore.channelStore.getChannelUsersData.some(
-                                (e) => e.id === users.id
-                            ),
+                        isAdded: Object.values(
+                            this.rootStore.channelStore.channelUsers
+                        ).some((e) => e.id === users.id),
                     })
                 );
                 this.loading = false;

@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction, toJS } from "mobx";
 import { AppRootStore } from "../store";
 import {
     RawMessage,
@@ -20,12 +20,7 @@ class ChatStore {
     init = () => {
         console.log("init events");
         this.root.socketStore.socket?.on("message", (payload: RawMessage) => {
-            console.log('new message', payload);
-            this.root.messageStore.addMessageToCache(payload);
-        });
-
-        this.root.socketStore.socket?.on('mergeMessage', (payload: RawMessage) => { 
-            console.log('merge message', payload);
+            console.log("new message", payload);
             this.root.messageStore.addMessageToCache(payload);
         });
 
@@ -38,10 +33,23 @@ class ChatStore {
         );
 
         this.root.socketStore.socket?.on(
+            "mergeMessage",
+            (payload: RawMessage) => {
+                console.log("merge message", payload);
+                this.root.messageStore.addMessageToCache(payload);
+            }
+        );
+
+        this.root.socketStore.socket?.on(
             "leaveChannel",
             (payload: { slug: string; userId: number }) => {
-                console.log("leave channel", payload);
-                this.root.channelStore.getMyChannels();
+                runInAction(() => {
+                    console.log("leave channel", payload);
+                    this.root.channelStore.channelUsers =
+                        this.root.channelStore.channelUsers.filter(
+                            (i) => i.id !== payload.userId
+                        );
+                });
             }
         );
         this.root.socketStore.socket?.on(
@@ -76,7 +84,14 @@ class ChatStore {
         this.root.socketStore.socket?.on(
             "search",
             (payload: SearchResponse) => {
-                console.log("search", payload);
+                runInAction(() => {
+                    console.log("search", payload);
+                    this.root.messageStore.searchMessages = payload as never;
+                    console.log(
+                        "searchMessages",
+                        toJS(this.root.messageStore.searchMessages)
+                    );
+                });
             }
         );
 
@@ -163,12 +178,6 @@ class ChatStore {
         pageState?: string
     ) => {
         if (searchMessage && channelSlug) {
-            console.log(
-                searchMessage,
-                channelSlug,
-                pageState,
-                "search message"
-            );
             this.root.socketStore.socket?.emit("search", <SearchRequest>{
                 searchMessage,
                 channelSlug,

@@ -12,6 +12,9 @@ class VisibleStore {
         previewModal: false,
         uploadFile: false,
         chUploadFile: false,
+        showPass: false,
+        passwordInput: false,
+        setSearch: false,
     };
 
     toglevisible = (key: keyof typeof this.visible) => {

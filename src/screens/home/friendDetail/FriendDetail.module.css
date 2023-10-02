@@ -1,21 +1,22 @@
 .container {
-  width: 100%;
-  height: 100%;
-  overflow-y: auto;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
 }
 
 .contentBox {
-  display: flex;
-  width: 90%;
-  height: 27%;
-  border-bottom: 2px solid rgb(201, 201, 201);
-  margin: 0 auto;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    width: 90%;
+    height: 27%;
+    border-bottom: 2px solid rgb(201, 201, 201);
+    margin: 0 auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
 }
 
 .judgementText {
-  display: flex;
-  gap: 7px;
+    display: flex;
+    gap: 7px;
 }

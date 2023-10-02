@@ -12,18 +12,17 @@ import { data } from "../../../store/dataBase";
 const ChannelSetting = () => {
     const { t } = useTranslation();
     const {
-        getChannelUsersData,
         delateUserFromChannel,
         channelData,
         adminId,
         getOneMember,
+        channelUsers,
     } = useRootStore().channelStore;
     const { user } = useRootStore().authStore;
     const { show } = useRootStore().visibleStore;
     const { closeModal } = useRootStore().routerStore;
     const getUser = (id: number) => {
         getOneMember(id);
-        show("RelevenceModal");
     };
     return (
         <div
@@ -40,7 +39,7 @@ const ChannelSetting = () => {
                 onLeftIconPress={() => closeModal()}
             />
             <div>
-                {getChannelUsersData
+                {channelUsers
                     .filter((e) => e.id !== adminId)
                     .map((e, index) => {
                         return (

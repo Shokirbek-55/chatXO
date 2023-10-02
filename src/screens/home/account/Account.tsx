@@ -12,6 +12,7 @@ import useRootStore from "../../../hooks/useRootStore";
 import styles from "./Account.module.css";
 import { motion } from "framer-motion";
 import Loading from "../../../utils/loading";
+import { toJS } from "mobx";
 
 const container = {
     hidden: { opacity: 1, scale: 0 },
@@ -41,7 +42,7 @@ const Account = () => {
         useRootStore().channelStore;
     const { friends } = useRootStore().friendsStore;
     const { toRouter, closeModal } = useRootStore().routerStore;
-    const { getHistoryMessages } = useRootStore().messageStore;
+    const { setChannelSlug } = useRootStore().messageStore;
     const navigate = useNavigate();
 
     const FriendDetails = (friendId: number) => {
@@ -49,9 +50,9 @@ const Account = () => {
         toRouter("friendDetails");
     };
     const handleChanel = (e) => {
-        getHistoryMessages(e.slug);
+        setChannelSlug(e.slug);
         getChannelByHashId(e.hashId);
-        const target = generatePath(`/:name`, { name: `@${e.name}` });
+        const target = generatePath(`/:name`, { name: `@${e.hashId}` });
         navigate(target);
     };
 
@@ -86,7 +87,7 @@ const Account = () => {
                     />
                     <Text
                         color="yellowgreen"
-                        value={user?.username ? user.username : "User"}
+                        children={user?.username ? user.username : "User"}
                     ></Text>
                     <Text
                         handleLink={() => toRouter("settings")}
@@ -144,6 +145,8 @@ const Account = () => {
                                                 onNamePress={() =>
                                                     handleChanel(e)
                                                 }
+                                                userType={e.userRelevance}
+                                                upDownIcon={true}
                                             />
                                         </motion.div>
                                     );

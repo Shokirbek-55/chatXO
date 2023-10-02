@@ -1,6 +1,9 @@
+import { message } from "antd";
+import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 import { ChangeEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { generatePath, useNavigate } from "react-router-dom";
 import APIs from "../../../api/api";
 import AvatarUpload from "../../../components/AvatarUpload/AvatarUpload";
 import Header from "../../../components/Header/Header";
@@ -10,14 +13,18 @@ import Text from "../../../components/Text/Text";
 import { TMP_URL } from "../../../env";
 import useRootStore from "../../../hooks/useRootStore";
 import { ButtonComponent } from "../../../utils/button";
+import { CoppyIcon } from "../../../utils/icons";
 import { getRandomColor } from "../../../utils/randomColor";
 import styles from "./EditChannel.module.css";
+import { BiCopy } from "react-icons/bi";
+import { BiCheck } from "react-icons/bi";
 
 const EditChannel = () => {
     const { t } = useTranslation();
     const { closeModal, toRouter, toRouterManageCh } =
         useRootStore().routerStore;
     const { getFriends } = useRootStore().friendsStore;
+    const navigation = useNavigate();
     const { show } = useRootStore().visibleStore;
     const {
         channelData,
@@ -38,8 +45,8 @@ const EditChannel = () => {
     const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.length) {
             onSelectChannelImage(e.target.files[0]);
-            show("chUploadFile");
         }
+        show("chUploadFile");
     };
 
     const delateChannelEvent = (hashId: string) => {
@@ -52,6 +59,35 @@ const EditChannel = () => {
         getFriends();
     };
 
+    const generateNew = async () => {
+        const target = (e) =>
+            generatePath(`/:name`, {
+                name: `@${e}`,
+            });
+        generateNewInvitationCode(channelData.groupNumber as string, (e) =>
+            navigation(target(e), { replace: true })
+        );
+    };
+
+    const [copyNumber, setCopyNumber] = useState(false);
+
+    const handleCopyNumber = (e) => {
+        navigator.clipboard.writeText(e);
+        setCopyNumber(true);
+        setTimeout(() => {
+            setCopyNumber(false);
+        }, 3000);
+    };
+    const [copyPass, setCopyPass] = useState(false);
+
+    const handleCopyPass = (e) => {
+        navigator.clipboard.writeText(e);
+        setCopyPass(true);
+        setTimeout(() => {
+            setCopyPass(false);
+        }, 3000);
+    };
+
     return (
         <div className={styles.editChannel}>
             <Header
@@ -62,27 +98,55 @@ const EditChannel = () => {
             <div className={styles.container}>
                 <div className={styles.topBox}>
                     <div className={styles.leftBox}>
-                        <Text text={`${t("groupsNumber")}`} />
-                        <Text
-                            text={channelData.groupNumber}
-                            style={{
-                                fontSize: "15px",
-                                fontFamily: "Montserrat5",
-                                color: "#03053F",
-                            }}
-                        />
+                        <Text children={`${t("groupsNumber")}`} />
+                        <span
+                            className={styles.copyBox}
+                            onClick={() =>
+                                handleCopyNumber(channelData.groupNumber)
+                            }
+                        >
+                            <Text
+                                children={channelData.groupNumber}
+                                style={{
+                                    fontSize: "15px",
+                                    fontFamily: "Montserrat5",
+                                    color: "#03053F",
+                                }}
+                            />
+                            {copyNumber ? (
+                                <BiCheck size={16} />
+                            ) : (
+                                <BiCopy size={14} />
+                            )}
+                        </span>
                         <Text
                             margin="10px 0 0 0"
-                            text={`${t("groupsInvite")}`}
+                            children={`${t("groupsInvite")}`}
                         />
-                        <Text
-                            text={channelData.invitationCodes[0]?.code || ""}
-                            style={{
-                                fontSize: "15px",
-                                fontFamily: "Montserrat5",
-                                color: "#03053F",
-                            }}
-                        />
+                        <span
+                            className={styles.copyBox}
+                            onClick={() =>
+                                handleCopyPass(
+                                    channelData.invitationCodes[0]?.code || ""
+                                )
+                            }
+                        >
+                            <Text
+                                children={
+                                    channelData.invitationCodes[0]?.code || ""
+                                }
+                                style={{
+                                    fontSize: "15px",
+                                    fontFamily: "Montserrat5",
+                                    color: "#03053F",
+                                }}
+                            />
+                            {copyPass ? (
+                                <BiCheck size={16} />
+                            ) : (
+                                <BiCopy size={14} />
+                            )}
+                        </span>
                     </div>
                     <div className={styles.rightBox}>
                         <AvatarUpload
@@ -105,7 +169,7 @@ const EditChannel = () => {
                         <Text
                             margin="6px 0 10px 0"
                             color="yellowgreen"
-                            text="Random color"
+                            children="Random color"
                             handleLink={() =>
                                 setUpdateChannelState("color", getRandomColor())
                             }
@@ -120,11 +184,7 @@ const EditChannel = () => {
                             iconColor="#fff"
                             textSize={14}
                             padding="5px 0"
-                            clickMe={() =>
-                                generateNewInvitationCode(
-                                    channelData.groupNumber as string
-                                )
-                            }
+                            clickMe={generateNew}
                         />
                         <ButtonComponent
                             text={`${t("newAdmin")}`}
@@ -150,7 +210,7 @@ const EditChannel = () => {
             <div className={styles.addUsersBox}>
                 <Text
                     style={{ paddingLeft: "10px" }}
-                    text={`${t("groupsName")}`}
+                    children={`${t("groupsName")}`}
                 />
                 <Input
                     borderred
