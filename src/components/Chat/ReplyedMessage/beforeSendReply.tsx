@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./index.module.css";
 import { RawMessage } from "../../../types/channel";
 import { relevanceFuniction } from "../../../utils/boxShadov";
@@ -52,7 +51,7 @@ export const ReplyTypeRender = (ReplyMessage: RawMessage) => {
       <div className={styles.replyedMediaCard}>
         <VideoPlayIcon
           size={30}
-          padding={14}
+          padding={5}
           color={Colors.BaliHai}
           hoverActive={false}
         />
@@ -65,7 +64,7 @@ export const ReplyTypeRender = (ReplyMessage: RawMessage) => {
       <div className={styles.replyedMediaCard}>
         <DocumentIcon
           size={30}
-          padding={14}
+          padding={5}
           color={Colors.BaliHai}
           hoverActive={false}
         />
@@ -77,7 +76,7 @@ export const ReplyTypeRender = (ReplyMessage: RawMessage) => {
       <div className={styles.replyedMediaCard}>
         <VideoPlayIcon
           size={30}
-          padding={14}
+          padding={5}
           color={Colors.BaliHai}
           hoverActive={false}
         />

@@ -1,6 +1,7 @@
 .videoPlayer {
-  width: 450px;
-  /* height: 30px; */
+  width: auto;
+  max-width: 450px;
+  height: 450px;
   border-radius: 10px;
   position: relative;
 }

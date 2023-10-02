@@ -581,22 +581,21 @@ export const DocumentIcon = ({
     color = "black",
     hoverActive = true,
 }: MdgroupProp) => {
-    return (
-        <span
-            className={hoverActive ? styles.iconsHoverAndActive : ""}
-            style={{
-                fontSize: `${size}px`,
-                display: "flex",
-                padding: `${padding}px`,
-                cursor: "pointer",
-                borderRadius: `${radius}%`,
-                backgroundColor: `${background}`,
-                color: `${color}`,
-            }}
-        >
-            <TbFileText />
-        </span>
-    );
+  return (
+    <span
+      className={hoverActive ? styles.iconsHoverAndActive : ""}
+      style={{
+        fontSize: `${size}px`,
+        display: "flex",
+        padding: `${padding}px`,
+        borderRadius: `${radius}%`,
+        backgroundColor: `${background}`,
+        color: `${color}`,
+      }}
+    >
+      <TbFileText />
+    </span>
+  );
 };
 
 export const CameraIcon = ({
@@ -1034,7 +1033,6 @@ export const VideoPlayIcon = ({
                 fontSize: `${size}px`,
                 display: "flex",
                 padding: `${padding}px`,
-                cursor: "pointer",
                 borderRadius: `${radius}%`,
                 backgroundColor: `${background}`,
                 color: `${color}`,

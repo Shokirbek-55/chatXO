@@ -6,7 +6,6 @@ import { relevanceFuniction } from "../../../utils/boxShadov";
 import Icon from "../../Icon";
 import Assets from "../../../utils/requireAssets";
 import useRootStore from "../../../hooks/useRootStore";
-import MessageAllert from "antd/lib/message";
 
 interface Props {
     message?: RawMessage;
@@ -37,28 +36,16 @@ interface Props {
 }
 
 const MessageHeader = ({
-    message,
     name,
     color,
     relevance,
-    openRelevence,
-    channelID,
-    channelSlug,
-    filterMsgNumber,
-    hideMessage,
-    isPimped,
-    repliedMessage,
-    showMinRelevance,
     showReply,
-    style,
     userId,
 }: Props) => {
     const MESSAGE_STYLE = relevanceFuniction({} as RawMessage, relevance);
     const textSize = MESSAGE_STYLE.fontSize;
 
     const { getOneMember, adminId } = useRootStore().channelStore;
-    const { user } = useRootStore().authStore;
-    const { show } = useRootStore().visibleStore;
 
     const onRelevance = async (id: number) => {
         getOneMember(id);

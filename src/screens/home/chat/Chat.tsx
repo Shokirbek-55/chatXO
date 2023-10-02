@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import MessageBox from "../../../components/Chat/MessageBox";
-import MessageCard from "../../../components/Chat/MessageCard";
 import ScrollContainer from "../../../components/ScrollContainer/ScrollContainer";
 import useRootStore from "../../../hooks/useRootStore";
 import { RawMessage } from "../../../types/channel";
@@ -14,6 +13,7 @@ import MessageAudio from "../../../components/Chat/MessageAudio";
 import MessageDoc from "../../../components/Chat/MessageDoc";
 import LinkPriview from "../../../components/Chat/LinkPreView/linkPriview";
 import ChatHeader from "../../../utils/chatHeader";
+import RepliedMessage from "../../../components/Chat/ReplyedMessage";
 
 const Chat = () => {
     const navigate = useNavigate();
@@ -61,12 +61,12 @@ const Chat = () => {
     const renderTextMessage = (message: RawMessage) => {
         switch (message.userId) {
             case user.id:
-                return <LinkPriview message={message} position={false} />;
+                return <LinkPriview message={message} position={true} />;
             default:
                 return (
                     <LinkPriview
                         message={message}
-                        position={true}
+                        position={false}
                         users={messageCache[slug]?.channelUsers}
                     />
                 );
@@ -106,12 +106,12 @@ const Chat = () => {
     const renderAudioMessage = (message: RawMessage) => {
         switch (message.userId) {
             case user.id:
-                return <MessageAudio message={message} position={false} />;
+                return <MessageAudio message={message} position={true} />;
             default:
                 return (
                     <MessageAudio
                         message={message}
-                        position={true}
+                        position={false}
                         users={messageCache[slug]?.channelUsers}
                     />
                 );
@@ -145,6 +145,22 @@ const Chat = () => {
                 );
         }
     };
+
+    const repliedMessage = (message: RawMessage) => {
+        switch (message.userId) {
+            case user.id:
+                return (
+                    <RepliedMessage message={message} position />
+                );
+            default:
+                return (
+                    <RepliedMessage
+                        message={message}
+                        users={messageCache[slug]?.channelUsers}
+                    />
+                );
+        }
+    }
 
     const renderMessage = (message: RawMessage) => {
         switch (message.type) {

@@ -1,38 +1,22 @@
-import React, { FC, ReactElement, useEffect, useRef, useState } from "react";
-import styles from "./index.module.css";
-import MessageHeader from "../MessageHeader";
-import DropDownMenu from "../DropDownMenu/dropdownmenu";
-import { ChannelsUsersType, RawMessage } from "../../../types/channel";
-import { User } from "../../../types/user";
-import { relevanceFuniction } from "../../../utils/boxShadov";
-import { TMP_URL } from "../../../env";
-import Text from "../../Text/Text";
-import SmallAvatar from "../../SmallAvatar/smallAvatar";
 import { styled } from "styled-components";
+import { ChannelsUsersType, RawMessage } from "../../../types/channel";
+import { relevanceFuniction } from "../../../utils/boxShadov";
+import Text from "../../Text/Text";
+import MessageComponent from "../MessageComponent/MessageComponent";
+import styles from "./index.module.css";
 
 interface Props {
     message: RawMessage;
-    position?: boolean;
+    position: boolean;
     users?: {
         [key: string]: ChannelsUsersType;
     };
     textBackColor?: string;
 }
 
-const LinkPriviewComponent = ({
-    message,
-    position,
-    users,
-    textBackColor,
-}: Props) => {
-    const POSITION_CONTENT = position
-        ? { justifyContent: "flex-start" }
-        : { justifyContent: "flex-end" };
-
-    const currentUser: User | null = users?.[message.userId] || null;
+const LinkPriviewComponent = ({ message, position, users }: Props) => {
 
     const MESSAGE_STYLE = relevanceFuniction(message);
-    const boxShadov = MESSAGE_STYLE?.boxShadow;
     const textSize = MESSAGE_STYLE?.fontSize;
     const textWeight = MESSAGE_STYLE?.fontWeight;
     const textLineHeight = MESSAGE_STYLE?.lineHeight;
@@ -56,58 +40,26 @@ const LinkPriviewComponent = ({
 
         const text = urlify(message.message);
         return (
-            <>
                 <Paragraph dangerouslySetInnerHTML={{ __html: text }} />
-            </>
         );
     };
 
     return (
-        <div className={styles.parentContainer} style={POSITION_CONTENT}>
-            <div className={styles.childContainer}>
-                {position && (
-                    <MessageHeader
-                        name={message.username}
-                        relevance={message?.relevance}
-                        color={currentUser?.color}
-                        userId={message.userId}
-                    />
-                )}
-                <div className={styles.messageCard}>
-                    {position && (
-                        <div className={styles.avatarCard}>
-                            {currentUser && (
-                                <SmallAvatar
-                                    color={currentUser?.color}
-                                    imageUrl={
-                                        currentUser?.avatar
-                                            ? `${TMP_URL}/${currentUser?.avatar}`
-                                            : ""
-                                    }
-                                />
-                            )}
-                        </div>
-                    )}
-                    <DropDownMenu massage={message} users={users}>
-                        <div
-                            className={styles.textCard}
-                            style={{ boxShadow: boxShadov }}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: textSize,
-                                    fontWeight: textWeight,
-                                    lineHeight: textLineHeight,
-                                }}
-                                backgroundColor={textBackColor}
-                            >
-                                {renderMessage()}
-                            </Text>
-                        </div>
-                    </DropDownMenu>
-                </div>
+        <MessageComponent message={message} position={position} users={users}>
+            <div
+                className={styles.textCard}
+            >
+                <Text
+                    style={{
+                        fontSize: textSize,
+                        fontWeight: textWeight,
+                        lineHeight: textLineHeight,
+                    }}
+                >
+                    {renderMessage()}
+                </Text>
             </div>
-        </div>
+        </MessageComponent>
     );
 };
 
