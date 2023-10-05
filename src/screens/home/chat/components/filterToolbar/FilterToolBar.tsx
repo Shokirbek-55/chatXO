@@ -2,19 +2,19 @@ import FilterSilderComponent from "../../../../../components/FilterSlider/Filter
 import styles from "./index.module.css";
 
 interface Props {
-  isOpen: boolean;
+    isOpen: boolean;
 }
 
 const FilterToolbar = ({ isOpen }: Props) => {
-  return (
-    <>
-      {isOpen ? (
-        <div className='container'>
-          <FilterSilderComponent />
-        </div>
-      ) : null}
-    </>
-  );
+    return (
+        <>
+            {isOpen ? (
+                <div className="container">
+                    <FilterSilderComponent />
+                </div>
+            ) : null}
+        </>
+    );
 };
 
 export default FilterToolbar;

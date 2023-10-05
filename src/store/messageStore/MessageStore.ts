@@ -80,19 +80,25 @@ export default class MessageStore {
 
     progress: number = 0;
 
-    setSendReplyMessageState = {}
+    setSendReplyMessageState = {};
 
-    minRelevance: number = -1
+    minRelevance: number = -1;
 
-    setSearch = (e: string) => {
+    setSearch = (text: string) => {
         runInAction(() => {
-            this.searchMessageState = e;
+            this.searchMessageState = text;
+        });
+    };
+
+    clearSearch = () => {
+        runInAction(() => {
+            this.searchMessageState = "";
         });
     };
 
     setChannelSlug = (slug: string) => {
         if (this.slug === slug) {
-            this.minRelevance = -1
+            this.minRelevance = -1;
         }
         runInAction(() => {
             this.slug = slug;
@@ -275,8 +281,8 @@ export default class MessageStore {
         this.setSendMessage = {
             ...this.setSendMessage,
             minRelevance: minRelevance,
-        }
-    }
+        };
+    };
 
     setSendTextMessage = () => {
         this.setSendMessage = {
@@ -294,17 +300,17 @@ export default class MessageStore {
             originMessage: this.setReplyMessage,
             originMessageId: this.setReplyMessage?.id,
             originMessageTimestamp: this.setReplyMessage?.timestamp,
-        }
+        };
         this.setSendMessage = {
             ...this.setSendMessage,
             ...this.setSendReplyMessageState,
-        }
-    }
+        };
+    };
 
     setSendPhotoMessage = () => {
         this.setSendMessage = {
             ...this.setSendMessage,
-            type: 'image',
+            type: "image",
             userId: this.app.authStore.user.id,
             channelSlug: this.slug,
             mediaTitle: this.FileUploadOperation.data.fileTitle,
@@ -316,7 +322,7 @@ export default class MessageStore {
     setSendVideoMessage = () => {
         this.setSendMessage = {
             ...this.setSendMessage,
-            type: 'video',
+            type: "video",
             userId: this.app.authStore.user.id,
             channelSlug: this.slug,
             mediaTitle: this.FileUploadOperation.data.fileTitle,
@@ -328,7 +334,7 @@ export default class MessageStore {
     setSendAudioMessage = () => {
         this.setSendMessage = {
             ...this.setSendMessage,
-            type: 'audio',
+            type: "audio",
             userId: this.app.authStore.user.id,
             channelSlug: this.slug,
             mediaTitle: this.FileUploadOperation.data.fileTitle,
@@ -340,7 +346,7 @@ export default class MessageStore {
     setSendDocumentMessage = () => {
         this.setSendMessage = {
             ...this.setSendMessage,
-            type: 'document',
+            type: "document",
             userId: this.app.authStore.user.id,
             channelSlug: this.slug,
             mediaTitle: this.FileUploadOperation.data.fileTitle,
@@ -369,8 +375,8 @@ export default class MessageStore {
 
         this.app.socketStore.socket?.emit("message", this.setSendMessage);
         this.setSendMessage = initialMassegeText;
-        this.clearReplyMessage()
-    }
+        this.clearReplyMessage();
+    };
 
     deleteMessage = (id: string, slug: string, timestamp: Date) => {
         this.app.chatStore.remove({
@@ -384,9 +390,9 @@ export default class MessageStore {
     };
 
     replyMessage = (message: RawMessage) => {
-        this.setReplyMessage = message
-        this.setSendReplyMessage()
-    }
+        this.setReplyMessage = message;
+        this.setSendReplyMessage();
+    };
 
     clearReplyMessage = () => {
         this.setReplyMessage = null;
