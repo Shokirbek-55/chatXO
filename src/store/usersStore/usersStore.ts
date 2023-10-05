@@ -24,6 +24,9 @@ type PreviewDataType = {
     name?: string;
     hashId?: string;
     adminId?: number;
+    mediaUrl?: string;
+    userId?: number;
+    timestamp?: string;
 };
 
 type ConnectChannelaDataType = {
@@ -84,6 +87,8 @@ export default class UsersStore {
         name: "",
         hashId: "",
         adminId: 0,
+        mediaUrl: "",
+        timestamp: "",
     };
 
     getPreviewData = (data: PreviewDataType) => {
@@ -101,6 +106,8 @@ export default class UsersStore {
                 name: "",
                 hashId: "",
                 adminId: 0,
+                mediaUrl: "",
+                timestamp: "",
             };
         });
     };

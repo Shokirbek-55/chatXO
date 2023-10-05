@@ -1,9 +1,9 @@
-import { observer } from 'mobx-react-lite';
-import React from 'react'
-import { useTranslation } from 'react-i18next';
-import Header from '../../../components/Header/Header';
-import useRootStore from '../../../hooks/useRootStore';
-import styles from "./Language.style.module.css"
+import { observer } from "mobx-react-lite";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import Header from "../../../components/Header/Header";
+import useRootStore from "../../../hooks/useRootStore";
+import styles from "./Language.style.module.css";
 
 const Language = () => {
     const { t, i18n } = useTranslation();
@@ -28,7 +28,7 @@ const Language = () => {
             nativeName: t("portuguese_language"),
         },
     };
-    const { closeModal } = useRootStore().routerStore
+    const { closeModal } = useRootStore().routerStore;
     return (
         <div className={styles.container}>
             <div className={styles.contentBox}>
@@ -45,6 +45,7 @@ const Language = () => {
                                 type="radio"
                                 name="radio"
                                 id={`${index}`}
+                                defaultChecked={lng == i18n.language}
                                 key={lng}
                                 onClick={(e) => i18n.changeLanguage(lng)}
                             />
@@ -62,8 +63,7 @@ const Language = () => {
                 </div>
             </div>
         </div>
+    );
+};
 
-    )
-}
-
-export default observer(Language)
+export default observer(Language);

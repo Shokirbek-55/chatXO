@@ -20,11 +20,12 @@ const Chat = () => {
     const { messageCache, slug, searchMessage, searchMessageState } =
         useRootStore().messageStore;
     const { user } = useRootStore().authStore;
-    const { visible } = useRootStore().visibleStore;
-    const { toRouterManageCh, openRightSideBar } = useRootStore().routerStore;
+    const { show } = useRootStore().visibleStore;
+    const { getPreviewData } = useRootStore().usersStore;
 
-    const OpenManageChannel = () => {
-        openRightSideBar();
+    const PreviewMedia = (data) => {
+        show("previewModal");
+        getPreviewData(data);
     };
 
     useEffect(() => {
@@ -41,17 +42,7 @@ const Chat = () => {
     }, []);
 
     const Header = () => {
-        return (
-            <ChatHeader
-                img_url={messageCache[slug]?.channelData.avatar}
-                color={messageCache[slug]?.channelData.color}
-                name={messageCache[slug]?.channelData.name}
-                onTextSearch={() => {}}
-                pageState={messageCache[slug]?.channelData.pageState}
-                onPress={OpenManageChannel}
-                inputValue={visible.setSearch ? searchMessageState : ""}
-            />
-        );
+        return <ChatHeader />;
     };
 
     const Input = () => {
@@ -61,13 +52,28 @@ const Chat = () => {
     const renderTextMessage = (message: RawMessage) => {
         switch (message.userId) {
             case user.id:
-                return <LinkPriview message={message} position={true} />;
+                return (
+                    <LinkPriview
+                        message={message}
+                        position={true}
+                        // textBackColor={
+                        //     message.message === searchMessageState
+                        //         ? "yellow"
+                        //         : "transparent"
+                        // }
+                    />
+                );
             default:
                 return (
                     <LinkPriview
                         message={message}
                         position={false}
                         users={messageCache[slug]?.channelUsers}
+                        // textBackColor={
+                        //     message.message === searchMessageState
+                        //         ? "#ddd"
+                        //         : "#fff"
+                        // }
                     />
                 );
         }
@@ -76,10 +82,17 @@ const Chat = () => {
     const renderImageMessage = (message: RawMessage) => {
         switch (message.userId) {
             case user.id:
-                return <MessageImg message={message} own={true} />;
+                return (
+                    <MessageImg
+                        onPress={() => PreviewMedia(message)}
+                        message={message}
+                        own={true}
+                    />
+                );
             default:
                 return (
                     <MessageImg
+                        onPress={() => PreviewMedia(message)}
                         message={message}
                         own={false}
                         users={messageCache[slug]?.channelUsers}
@@ -149,9 +162,7 @@ const Chat = () => {
     const repliedMessage = (message: RawMessage) => {
         switch (message.userId) {
             case user.id:
-                return (
-                    <RepliedMessage message={message} position />
-                );
+                return <RepliedMessage message={message} position />;
             default:
                 return (
                     <RepliedMessage
@@ -160,7 +171,7 @@ const Chat = () => {
                     />
                 );
         }
-    }
+    };
 
     const renderMessage = (message: RawMessage) => {
         switch (message.type) {

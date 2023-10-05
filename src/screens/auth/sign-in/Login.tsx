@@ -63,7 +63,10 @@ const Login = () => {
             .string()
             .trim()
             .required(`${t("error_message_password_req")}`)
-            .matches(Regex.Password, `${t("error_message_password_regex")}`)
+            .matches(
+                Regex.PasswordLogin,
+                `${t("error_message_password_regex")}`
+            )
             .min(8, `${t("error_message_password_min")}`),
     });
 
@@ -165,7 +168,7 @@ const Login = () => {
                                                 background: Colors.Blue,
                                             }}
                                         >
-                                            {t("sign_up_email")}
+                                            {t("loginScreen")}
                                         </button>
                                     </Form>
                                 </div>

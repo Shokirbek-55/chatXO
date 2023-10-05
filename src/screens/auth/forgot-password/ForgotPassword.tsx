@@ -56,21 +56,6 @@ const ForgotPasswordView = () => {
                             name="email"
                         />
                     </Form.Item>
-                    <Form.Item
-                        name="password"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please input your password!",
-                            },
-                        ]}
-                    >
-                        <Input
-                            style={{ width: 240 }}
-                            onChange={(e) => handleChange(e.target.value)}
-                            name="password"
-                        />
-                    </Form.Item>
                     <Form.Item>
                         <Button
                             className={styles.loginInputButton}

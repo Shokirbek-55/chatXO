@@ -8,67 +8,63 @@ import {
 } from "./icons";
 import { TMP_URL } from "../env";
 import { InputComponent } from "../components/InputSearch/inputComponent";
-import ChatStore from "../store/chatStore/chatStore";
 import useRootStore from "../hooks/useRootStore";
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
+import SmallAvatar from "../components/SmallAvatar/smallAvatar";
 
-interface propsType {
-    onTextSearch: (e) => void;
-    name?: string;
-    img_url?: string;
-    color?: string;
-    pageState?: string;
-    onPress?: () => void;
-    inputValue?: string;
-}
-
-const ChatHeader = ({
-    name,
-    img_url,
-    color,
-    onPress,
-    onTextSearch,
-    inputValue,
-}: propsType) => {
+const ChatHeader = () => {
     const { visible, toglevisible } = useRootStore().visibleStore;
-    const { setSearch, searchMessageState, searchMessage, slug } =
-        useRootStore().messageStore;
+    const { openRightSideBar } = useRootStore().routerStore;
+    const {
+        setSearch,
+        searchMessageState,
+        searchMessage,
+        slug,
+        messageCache,
+        clearSearch,
+    } = useRootStore().messageStore;
     const searchHandle = (e: string) => {
         setSearch(e);
         searchMessage(e, slug);
     };
-    console.log("searchMessageState", toJS(searchMessageState));
+
+    const ToggleSearchInput = () => {
+        clearSearch();
+        toglevisible("setSearch");
+    };
+
+    const OpenManageChannel = () => {
+        openRightSideBar();
+    };
 
     return (
         <BassComponent>
             <header>
-                <div onClick={onPress}>
-                    <nav>
-                        {img_url ? (
-                            <img src={TMP_URL + "/" + img_url} alt={img_url} />
-                        ) : color ? (
-                            <BackgroundGradent
-                                style={{ background: `${color}` }}
-                            />
-                        ) : (
-                            <BackgroundGradent
-                                style={{ background: `${color}` }}
-                            />
-                        )}
-                    </nav>
-                    <h3>{name}</h3>
+                <div onClick={OpenManageChannel}>
+                    <SmallAvatar
+                        imageUrl={
+                            messageCache[slug]?.channelData.avatar
+                                ? `${TMP_URL}/${messageCache[slug]?.channelData.avatar}`
+                                : ""
+                        }
+                        color={
+                            messageCache[slug]?.channelData.color
+                                ? messageCache[slug]?.channelData.color
+                                : ""
+                        }
+                    />
+                    <h3>{messageCache[slug]?.channelData.name}</h3>
                 </div>
             </header>
             <div>
                 {visible.setSearch && (
                     <>
                         <InputComponent
-                            type="text"
                             onChangeText={(e) => searchHandle(e)}
                             backColor="transparent"
                             width="300px"
-                            value={inputValue}
+                            value={searchMessageState}
                         />
                         <span>
                             <ArrowDowunIcon size={24} padding={1} />
@@ -89,7 +85,7 @@ const ChatHeader = ({
                         )} */}
                     </>
                 )}
-                <span onClick={() => toglevisible("setSearch")}>
+                <span onClick={ToggleSearchInput}>
                     {visible.setSearch ? (
                         <CloserNoCirculIcon size={24} color="#303030" />
                     ) : (

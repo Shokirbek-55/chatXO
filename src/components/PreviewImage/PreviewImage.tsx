@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
-import { TMP_URL } from "../../env";
+import { Env, TMP_URL } from "../../env";
 import useRootStore from "../../hooks/useRootStore";
 import Colors from "../../utils/colors";
 import { saveAs } from "file-saver";
@@ -18,9 +18,25 @@ import styles from "./PreviewImage.module.css";
 
 const PreviewImage = () => {
     const { visible, hide } = useRootStore().visibleStore;
+    const { getChannelUsersData } = useRootStore().channelStore;
     const { user } = useRootStore().authStore;
     const [zoom, setZoom] = useState(1);
     const { previewData, deletePreviewAvatar } = useRootStore().usersStore;
+
+    const newDate = new Date(
+        previewData.timestamp ? previewData.timestamp : ("" as never)
+    );
+    newDate.setSeconds(0);
+    newDate.setMilliseconds(0);
+
+    const options = {
+        day: "numeric",
+        month: "short",
+        hour: "numeric",
+        minute: "numeric",
+    };
+    const formattedDate = newDate.toLocaleDateString("uz-UZ", options as never);
+
     const clickZoomIn = () => {
         let zoomClone = zoom;
         if (zoomClone < 1.75) {
@@ -47,8 +63,19 @@ const PreviewImage = () => {
     };
 
     const downloadFile = () => {
-        saveAs(`${TMP_URL}/${previewData.avatar}`, `${previewData.avatar}`);
+        saveAs(
+            previewData.avatar
+                ? `${TMP_URL}/${previewData.avatar}`
+                : `${TMP_URL}/${previewData.mediaUrl}`,
+            previewData.avatar
+                ? `${previewData.avatar}`
+                : `${previewData.mediaUrl}`
+        );
     };
+
+    const mediaUrlOwnerImg = getChannelUsersData.find(
+        (e) => e.id === previewData.userId
+    );
 
     return (
         <div
@@ -62,7 +89,13 @@ const PreviewImage = () => {
                 <div>
                     <SmallAvatar
                         color={previewData.color}
-                        imageUrl={`${TMP_URL}/${previewData.avatar}`}
+                        imageUrl={
+                            previewData.avatar
+                                ? `${TMP_URL}/${previewData.avatar}`
+                                : mediaUrlOwnerImg?.avatar
+                                ? `${TMP_URL}/${mediaUrlOwnerImg?.avatar}`
+                                : ""
+                        }
                     />
                 </div>
                 <div>
@@ -76,7 +109,11 @@ const PreviewImage = () => {
                         color={Colors.White}
                     />
                     <Text
-                        children="Profile photo"
+                        children={
+                            previewData.timestamp
+                                ? formattedDate
+                                : "Profile photo"
+                        }
                         style={{ fontSize: "12px" }}
                         color={Colors.White}
                     />
@@ -100,7 +137,13 @@ const PreviewImage = () => {
             </div>
             <div className={styles.box} onClick={() => hide("previewModal")}>
                 <img
-                    src={`${TMP_URL}/${previewData.avatar}`}
+                    src={
+                        previewData.avatar
+                            ? `${TMP_URL}/${previewData.avatar}`
+                            : previewData.mediaUrl
+                            ? `${TMP_URL}/${previewData.mediaUrl}`
+                            : ""
+                    }
                     style={{ transform: `scale(${zoom})` }}
                 />
             </div>

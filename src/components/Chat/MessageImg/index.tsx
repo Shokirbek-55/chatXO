@@ -5,28 +5,27 @@ import MessageComponent from "../MessageComponent/MessageComponent";
 import styles from "./index.module.css";
 
 interface Props {
-  message: RawMessage;
-  own: boolean;
-  users?: {
-    [key: string]: ChannelsUsersType;
-  };
+    message: RawMessage;
+    own: boolean;
+    users?: {
+        [key: string]: ChannelsUsersType;
+    };
+    onPress?: () => void;
 }
 
-const MessageImg: FC<Props> = ({ message, own, users }) => {
+const MessageImg: FC<Props> = ({ message, own, users, onPress }) => {
+    const url = message.mediaUrl;
 
-  const url = message.mediaUrl;
-
-  return (
-    <MessageComponent position={own} message={message} users={users}>
+    return (
+        <MessageComponent position={own} message={message} users={users}>
             <img
-              src={`${Env.AssetsUrl}/${url}`}
-              alt="#"
-              className={styles.imgCard}
-              onClick={() => {
-              }}
-      />
-    </MessageComponent>  
-  );
+                src={`${Env.AssetsUrl}/${url}`}
+                alt="#"
+                className={styles.imgCard}
+                onClick={onPress}
+            />
+        </MessageComponent>
+    );
 };
 
 export default MessageImg;

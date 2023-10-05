@@ -14,8 +14,12 @@ interface Props {
     textBackColor?: string;
 }
 
-const LinkPriviewComponent = ({ message, position, users }: Props) => {
-
+const LinkPriviewComponent = ({
+    message,
+    position,
+    users,
+    textBackColor,
+}: Props) => {
     const MESSAGE_STYLE = relevanceFuniction(message);
     const textSize = MESSAGE_STYLE?.fontSize;
     const textWeight = MESSAGE_STYLE?.fontWeight;
@@ -39,21 +43,18 @@ const LinkPriviewComponent = ({ message, position, users }: Props) => {
         }
 
         const text = urlify(message.message);
-        return (
-                <Paragraph dangerouslySetInnerHTML={{ __html: text }} />
-        );
+        return <Paragraph dangerouslySetInnerHTML={{ __html: text }} />;
     };
 
     return (
         <MessageComponent message={message} position={position} users={users}>
-            <div
-                className={styles.textCard}
-            >
+            <div className={styles.textCard}>
                 <Text
                     style={{
                         fontSize: textSize,
                         fontWeight: textWeight,
                         lineHeight: textLineHeight,
+                        backgroundColor: textBackColor,
                     }}
                 >
                     {renderMessage()}
