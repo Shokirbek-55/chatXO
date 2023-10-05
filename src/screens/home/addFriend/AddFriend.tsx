@@ -50,7 +50,7 @@ const AddFriend = () => {
                 style={{ zIndex: 1000 }}
                 text={t("addFriend")}
                 leftIcon="arrowLeft"
-                onLeftIconPress={() => closeModal()}
+                onLeftIconPress={() => closeModal('left')}
             />
             <div style={{ width: "90%", margin: "3px auto" }}>
                 <InputComponent

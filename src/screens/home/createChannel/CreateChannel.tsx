@@ -30,7 +30,7 @@ const CreateChannel = () => {
             <Header
                 text={t("createGroup")}
                 leftIcon={"arrowLeft"}
-                onLeftIconPress={() => closeModal()}
+                onLeftIconPress={() => closeModal('left')}
             />
             <div className={styles.contentBox}>
                 <div className={styles.contentTop}>

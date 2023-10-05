@@ -21,8 +21,10 @@ function MessageInput() {
   const { setMessageText, messageTextState, onSendMessage, setReplyMessage } = useRootStore().messageStore
 
   const handleonSendMessage = () => {
-    onSendMessage('text')
-    setMessageText("")
+    if (messageTextState) {
+      onSendMessage('text')
+      setMessageText("")
+    }
   };
 
   useEffect(() => {
@@ -42,69 +44,71 @@ function MessageInput() {
 
   return (
     <MessageInputContainer>
-      <ReplyMessage/>
-      <FilterToolbar isOpen={openFilter} />
-      <FooterToolbarView
-        props={open}
-        openHashTags={open}
-        setOpenHashtags={setOpenhastag}
-      />
-      {/* <AddHashtags
+      <div className="container">
+        <ReplyMessage />
+        <FilterToolbar isOpen={openFilter} />
+        <FooterToolbarView
+          props={open}
+          openHashTags={open}
+          setOpenHashtags={setOpenhastag}
+        />
+        {/* <AddHashtags
         isOpen={true}
         otherCard={true}
         setopenhashtags={setOpenhastag}
       /> */}
-      <div className={styles.inputmessage}>
-        <div className="icon" onClick={() => setOpenFilter(!openFilter)}>
-          <FillterIcon size={17} color="#303030" />
-        </div>
-        {!open ? (
-          <div className="icon" onClick={() => setOpen(!open)}>
-            <ArrowUpIcon color="#303030" />
+        <div className={styles.inputmessage}>
+          <div className="icon" onClick={() => setOpenFilter(!openFilter)}>
+            <FillterIcon size={17} color="#303030" />
           </div>
-        ) : (
-          <div className="icon" onClick={() => setOpen(!open)}>
-            <ArrowDowunIcon color="#303030" />
+          {!open ? (
+            <div className="icon" onClick={() => setOpen(!open)}>
+              <ArrowUpIcon color="#303030" />
+            </div>
+          ) : (
+            <div className="icon" onClick={() => setOpen(!open)}>
+              <ArrowDowunIcon color="#303030" />
+            </div>
+          )}
+          <div className="inputContainer">
+            <textarea
+              id="textarea"
+              placeholder={
+                recorderState.initRecording
+                  ? `${formatMinutes(
+                    recorderState.recordingMinutes
+                  )} : ${formatSeconds(recorderState.recordingSeconds)}`
+                  : "Write a message..."
+              }
+              value={messageTextState}
+              onKeyDown={(e) => onSendEnter(e)}
+              autoFocus
+              disabled={recorderState.initRecording}
+              onChange={(e) => setMessageText(e.target.value)}
+              className="textAreaInput"
+            />
           </div>
-        )}
-        <div className="inputContainer">
-          <textarea
-            id="textarea"
-            placeholder={
-              recorderState.initRecording
-                ? `${formatMinutes(
-                  recorderState.recordingMinutes
-                )} : ${formatSeconds(recorderState.recordingSeconds)}`
-                : "Write a message..."
-            }
-            value={messageTextState}
-            onKeyDown={(e) => onSendEnter(e)}
-            autoFocus
-            disabled={recorderState.initRecording}
-            onChange={(e) => setMessageText(e.target.value)}
-            className="textAreaInput"
-          />
-        </div>
-        {messageTextState ? (
-          <div className="icon" onClick={handleonSendMessage}>
+          {messageTextState ? (
+            <div className="icon" onClick={handleonSendMessage}>
               <SendIcon color="#303030" />
             </div>
-        ) : recorderState.initRecording ? (
-          <div className="iconBox">
-            <div className={`icon ${!isOPen && 'iconDelete'}`}
+          ) : recorderState.initRecording ? (
+            <div className="iconBox">
+              <div className={`icon ${!isOPen && 'iconDelete'}`}
                 onClick={handlers.cancelRecording}
-            >
-              <DeleteIcon color="#e74c3c" />
-            </div>
+              >
+                <DeleteIcon color="#e74c3c" />
+              </div>
               <div className="icon" onClick={handlers.saveRecording}>
-              <SendIcon color="#303030" />
+                <SendIcon color="#303030" />
+              </div>
             </div>
-          </div>
-        ) : (
-          <div className="icon" onClick={handlers.startRecording}>
-            <MicrophoneIcon color="#303030" />
-          </div>
-        )}
+          ) : (
+            <div className="icon" onClick={handlers.startRecording}>
+              <MicrophoneIcon color="#303030" />
+            </div>
+          )}
+        </div>
       </div>
     </MessageInputContainer>
   );
@@ -113,17 +117,27 @@ export default observer(MessageInput)
 
 
 const MessageInputContainer = styled.div`
+    position: absolute;
+    bottom: 0;
+    left: 0;
     width: 100%;
     height: auto;
-    padding: 7px 5px 7px 5px;
     background-color: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(25px);
     box-shadow: 0px -8px 48px 0px rgba(32, 35, 39, 0.02), 0px -4px 8px 0px rgba(32, 35, 39, 0.04), 0px 0px 1px 0px rgba(32, 35, 39, 0.16);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    transition: height .15s ease-out,opacity .15s ease-out;
+    z-index: 15;
     
+    .container{
+      position: relative;
+      width: 100%;
+      height: auto;
+      padding: 7px 5px 7px 5px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: height .15s ease-out,opacity .15s ease-out;
+    }
+
     .inputContainer{
         width: 100%;
         display: flex;

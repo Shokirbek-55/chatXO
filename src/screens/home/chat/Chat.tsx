@@ -1,32 +1,13 @@
 import { observer } from "mobx-react-lite";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
-import MessageBox from "../../../components/Chat/MessageBox";
 import ScrollContainer from "../../../components/ScrollContainer/ScrollContainer";
-import useRootStore from "../../../hooks/useRootStore";
-import { RawMessage } from "../../../types/channel";
-import MessageInput from "./components/messageInput/MessageInput";
-import MessageImg from "../../../components/Chat/MessageImg";
-import MessageVideo from "../../../components/Chat/MessageVideo";
-import MessageAudio from "../../../components/Chat/MessageAudio";
-import MessageDoc from "../../../components/Chat/MessageDoc";
-import LinkPriview from "../../../components/Chat/LinkPreView/linkPriview";
 import ChatHeader from "../../../utils/chatHeader";
-import RepliedMessage from "../../../components/Chat/ReplyedMessage";
+import MessageInput from "./components/messageInput/MessageInput";
 
 const Chat = () => {
     const navigate = useNavigate();
-    const { messageCache, slug, searchMessage, searchMessageState } =
-        useRootStore().messageStore;
-    const { user } = useRootStore().authStore;
-    const { show } = useRootStore().visibleStore;
-    const { getPreviewData } = useRootStore().usersStore;
-
-    const PreviewMedia = (data) => {
-        show("previewModal");
-        getPreviewData(data);
-    };
 
     useEffect(() => {
         const handleEsc = (event: any) => {
@@ -41,176 +22,11 @@ const Chat = () => {
         };
     }, []);
 
-    const Header = () => {
-        return <ChatHeader />;
-    };
-
-    const Input = () => {
-        return <MessageInput />;
-    };
-
-    const renderTextMessage = (message: RawMessage) => {
-        switch (message.userId) {
-            case user.id:
-                return (
-                    <LinkPriview
-                        message={message}
-                        position={true}
-                        // textBackColor={
-                        //     message.message === searchMessageState
-                        //         ? "yellow"
-                        //         : "transparent"
-                        // }
-                    />
-                );
-            default:
-                return (
-                    <LinkPriview
-                        message={message}
-                        position={false}
-                        users={messageCache[slug]?.channelUsers}
-                        // textBackColor={
-                        //     message.message === searchMessageState
-                        //         ? "#ddd"
-                        //         : "#fff"
-                        // }
-                    />
-                );
-        }
-    };
-
-    const renderImageMessage = (message: RawMessage) => {
-        switch (message.userId) {
-            case user.id:
-                return (
-                    <MessageImg
-                        onPress={() => PreviewMedia(message)}
-                        message={message}
-                        own={true}
-                    />
-                );
-            default:
-                return (
-                    <MessageImg
-                        onPress={() => PreviewMedia(message)}
-                        message={message}
-                        own={false}
-                        users={messageCache[slug]?.channelUsers}
-                    />
-                );
-        }
-    };
-
-    const renderVideoMessage = (message: RawMessage) => {
-        switch (message.userId) {
-            case user.id:
-                return <MessageVideo message={message} own={true} />;
-            default:
-                return (
-                    <MessageVideo
-                        message={message}
-                        own={false}
-                        users={messageCache[slug]?.channelUsers}
-                    />
-                );
-        }
-    };
-
-    const renderAudioMessage = (message: RawMessage) => {
-        switch (message.userId) {
-            case user.id:
-                return <MessageAudio message={message} position={true} />;
-            default:
-                return (
-                    <MessageAudio
-                        message={message}
-                        position={false}
-                        users={messageCache[slug]?.channelUsers}
-                    />
-                );
-        }
-    };
-
-    const renderDocumentMessage = (message: RawMessage) => {
-        switch (message.userId) {
-            case user.id:
-                return (
-                    <MessageDoc
-                        own={true}
-                        mediaLocation={message.mediaUrl}
-                        mediaTitle={message.mediaTitle}
-                        loading={false}
-                        status={"Download"}
-                        message={message}
-                    />
-                );
-            default:
-                return (
-                    <MessageDoc
-                        mediaLocation={message.mediaUrl}
-                        mediaTitle={message.mediaTitle}
-                        own={false}
-                        loading={false}
-                        status={"Download"}
-                        message={message}
-                        users={messageCache[slug]?.channelUsers}
-                    />
-                );
-        }
-    };
-
-    const repliedMessage = (message: RawMessage) => {
-        switch (message.userId) {
-            case user.id:
-                return <RepliedMessage message={message} position />;
-            default:
-                return (
-                    <RepliedMessage
-                        message={message}
-                        users={messageCache[slug]?.channelUsers}
-                    />
-                );
-        }
-    };
-
-    const renderMessage = (message: RawMessage) => {
-        switch (message.type) {
-            case "text":
-                return renderTextMessage(message);
-            case "image":
-                return renderImageMessage(message);
-            case "video":
-                return renderVideoMessage(message);
-            case "audio":
-                return renderAudioMessage(message);
-            case "document":
-                return renderDocumentMessage(message);
-            default:
-                return <MessageBox text={message.message} own={0} />;
-        }
-    };
-
     return (
         <ChatContainer id="chatView">
-            <ScrollContainer header={<Header />} input={<Input />}>
-                {messageCache[slug]?.messages.map((message, index) => {
-                    return (
-                        <div
-                            key={index}
-                            style={{
-                                paddingBottom:
-                                    messageCache[slug].messages?.length - 1 ==
-                                    index
-                                        ? "7.5vh"
-                                        : "0",
-                                paddingTop: 0 == index ? "7vh" : "0",
-                            }}
-                        >
-                            {renderMessage(message)}
-                        </div>
-                    );
-                })}
-            </ScrollContainer>
+            <ChatHeader/>
+            <ScrollContainer />
+            <MessageInput />
         </ChatContainer>
     );
 };

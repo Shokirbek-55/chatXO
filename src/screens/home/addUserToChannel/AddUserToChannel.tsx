@@ -47,7 +47,7 @@ const AddUserToChannel = () => {
             <Header
                 text={`${t("addParticipant")}`}
                 leftIcon="close"
-                onLeftIconPress={() => closeModal()}
+                onLeftIconPress={() => closeModal('right')}
             />
             <div style={{ marginTop: "5px" }}>
                 <motion.div

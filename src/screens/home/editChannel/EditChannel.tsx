@@ -93,7 +93,7 @@ const EditChannel = () => {
             <Header
                 leftIcon="close"
                 text={t("editGroup")}
-                onLeftIconPress={() => closeModal()}
+                onLeftIconPress={() => closeModal('right')}
             />
             <div className={styles.container}>
                 <div className={styles.topBox}>

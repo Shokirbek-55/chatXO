@@ -30,7 +30,7 @@ const BlockUser = () => {
             <Header
                 text={t("block_user_button")}
                 leftIcon="close"
-                onLeftIconPress={() => closeModal()}
+                onLeftIconPress={() => closeModal('right')}
             />
             <div>
                 {channelUsers

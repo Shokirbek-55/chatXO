@@ -68,7 +68,7 @@ const Account = () => {
             <Header
                 text={t("account")}
                 leftIcon="arrowLeft"
-                onLeftIconPress={() => closeModal()}
+                onLeftIconPress={() => closeModal('left')}
             />
             <div className={styles.container}>
                 <div className={styles.avatarBox}>

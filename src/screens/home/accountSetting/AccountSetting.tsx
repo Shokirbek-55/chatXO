@@ -52,7 +52,7 @@ const AccountSetting = () => {
                 leftIcon="arrowLeft"
                 rightIcon="logout"
                 onRightIconPress={onLogout}
-                onLeftIconPress={() => closeModal()}
+                onLeftIconPress={() => closeModal('left')}
             />
             <div className={styles.ImageBox}>
                 <AvatarView
