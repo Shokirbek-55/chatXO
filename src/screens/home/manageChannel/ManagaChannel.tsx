@@ -62,7 +62,7 @@ const ManagaChannel = () => {
                 leftIcon="arrowRight"
                 text="Profile"
                 rightIcon={user.id === adminId ? "setting" : "logout"}
-                onLeftIconPress={() => closeModal()}
+                onLeftIconPress={() => closeModal('right')}
                 onRightIconPress={() =>
                     user.id === channelData.adminId
                         ? toRouterManageCh("channelSetting")

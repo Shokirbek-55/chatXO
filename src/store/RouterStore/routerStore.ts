@@ -1,4 +1,3 @@
-import { channels } from "./../dataBase";
 import { makeAutoObservable, runInAction, set } from "mobx";
 import {
     MainRoutes,
@@ -39,6 +38,7 @@ export default class RouterStore {
             });
         }, 100);
     };
+
     toRouterManageCh = (route: keyof typeof ManageHelperRoutes) => {
         runInAction(() => {
             this.manageRouters.push(ManageHelperRoutes[route]);
@@ -50,19 +50,29 @@ export default class RouterStore {
         }, 100);
     };
 
-    closeModal = () => {
-        runInAction(() => {
-            if (this.routers.length) _.last(this.routers)!.isOpen = false;
-            if (this.manageRouters.length > 1)
-                _.last(this.manageRouters)!.isOpen = false;
-            else if (this.manageRouters.length === 1) this.closeRightSideBar();
-        });
-        setTimeout(() => {
+    closeModal = (key: "left" | 'right') => {
+        console.log(key);
+        if (key === 'left') {
             runInAction(() => {
-                this.routers.pop();
-                if (this.manageRouters.length > 1) this.manageRouters.pop();
+                if (this.routers.length) _.last(this.routers)!.isOpen = false;
             });
-        }, 300);
+            setTimeout(() => {
+                runInAction(() => {
+                    this.routers.pop();
+                });
+            }, 300);
+        } else {
+            runInAction(() => {
+                if (this.manageRouters.length > 1)
+                    _.last(this.manageRouters)!.isOpen = false;
+                else if (this.manageRouters.length === 1) this.closeRightSideBar();
+            });
+            setTimeout(() => {
+                runInAction(() => {
+                    if (this.manageRouters.length > 1) this.manageRouters.pop();
+                });
+            }, 300);
+        }
     };
 
     openRightSideBar = () => {

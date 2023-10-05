@@ -1,4 +1,3 @@
-import { message } from "antd";
 import { makeAutoObservable, runInAction, toJS } from "mobx";
 import {
     Channel,
@@ -13,14 +12,9 @@ import _ from "lodash";
 import APIs from "../../api/api";
 import { Operation } from "../../utils/Operation";
 
-type MessagesState = {
-    slug: string;
-    pageState: string | null;
-    messages: RawMessage[];
-};
-
 const initialMassegeText: SendMessage = {
     type: "text",
+    minRelevance: -1,
 };
 
 export default class MessageStore {
@@ -58,12 +52,6 @@ export default class MessageStore {
 
     searchMessageState: string = "";
 
-    messageData: MessagesState = {
-        slug: "",
-        pageState: "",
-        messages: [],
-    };
-
     searchMessages: SearchResponse = {
         messages: [],
         count: 0,
@@ -97,12 +85,12 @@ export default class MessageStore {
     };
 
     setChannelSlug = (slug: string) => {
-        if (this.slug === slug) {
-            this.minRelevance = -1;
-        }
         runInAction(() => {
             this.slug = slug;
         });
+        if (this.slug === slug) {
+            this.minRelevance = -1
+        }
     };
 
     getHistoryMessages = (slug: string) => {
@@ -123,7 +111,7 @@ export default class MessageStore {
             }) => {
                 data.messages = _.reverse(toJS(data.messages));
                 this.setHistoryMessages(
-                    data.messages[0]?.channelSlug || slug,
+                    data.messages[0].channelSlug || slug,
                     data.messages,
                     data.pageState,
                     data.end
@@ -206,7 +194,11 @@ export default class MessageStore {
 
     addMessageToCache = (message: RawMessage) => {
         if (this.messageCache[message.channelSlug]) {
-            this.messageCache[message.channelSlug].messages.push(message);
+            if(this.messageCache[message.channelSlug].messages[0]?.id === message.id) {
+                return this.messageCache[message.channelSlug].messages[0] = message
+            } else {
+                this.messageCache[message.channelSlug].messages.push(message);
+            }
         } else {
             this.messageCache[message.channelSlug] = {
                 messages: [message],
@@ -217,6 +209,12 @@ export default class MessageStore {
                     this.messageCache[message.channelSlug]?.channelUsers,
             };
         }
+    };
+
+    addMergeMessageToCache = (message: RawMessage) => {
+        runInAction(() => {
+            this.messageCache[message.channelSlug].messages[0] = message;
+        });
     };
 
     setChannelDataCache = (slug: string, channelData: Channel) => {

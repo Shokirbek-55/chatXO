@@ -13,6 +13,7 @@ import { InputComponent } from "../../../utils/inputComponent";
 import { generatePath, useNavigate } from "react-router-dom";
 import styles from "./index.module.css";
 import { toJS } from "mobx";
+import { Channel } from "../../../types/channel";
 
 const container = {
     hidden: { opacity: 1, scale: 0 },
@@ -41,21 +42,14 @@ function ChannelsScreen() {
     const { setChannelSlug } = useRootStore().messageStore;
     const { t } = useTranslation();
     const navigate = useNavigate();
-    // const { routers, manageRouters } = useRootStore().routerStore;
-    // console.log("routers", toJS(routers));
-    // console.log("manageChannels", toJS(manageRouters));
 
     const serachChannelHandler = (text: string) => {
         setSearchChannels(text);
     };
 
-    // while (true) {
-    //     alert("infinity loop");
-    // }
-
-    const handleChanel = (e) => {
+    const handleChanel = (e: Channel) => {
+        // getChannelByHashId(e.hashId);
         setChannelSlug(e.slug);
-        getChannelByHashId(e.hashId);
         const target = generatePath(`/:name`, { name: `@${e.hashId}` });
         navigate(target);
     };

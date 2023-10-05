@@ -67,7 +67,7 @@ const FriendDetail = () => {
             <Header
                 text={`${t("update_relevance")}`}
                 leftIcon="arrowLeft"
-                onLeftIconPress={() => closeModal()}
+                onLeftIconPress={() => closeModal('left')}
             />
             <div className={styles.contentBox}>
                 <AvatarUpload

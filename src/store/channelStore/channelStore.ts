@@ -147,7 +147,7 @@ export default class ChannelStore {
         }
     };
 
-    getChannelByHashId = async (hashId: string) => {
+    getChannelByHashId = async (hashId: string) => {      
         runInAction(() => {
             this.isLoad = true;
         });
@@ -211,7 +211,7 @@ export default class ChannelStore {
         }
     };
 
-    getChannelDataCache = async () => {
+    getChannelDataCache = async () => {        
         try {
             const promises = this.myChannels.map(async (channel) => {
                 const channelUsersData =
@@ -225,6 +225,9 @@ export default class ChannelStore {
                     this.rootStore.messageStore.setChannelDataCache(
                         channel.slug,
                         channelData.data
+                    );
+                    this.rootStore.messageStore.getHistoryMessages(
+                        this.getChannelByHashIdOperation.data.slug
                     );
                 }
                 if (this.getChannelUsersOperation.isSuccess) {
@@ -267,8 +270,7 @@ export default class ChannelStore {
         });
     };
 
-    createChannelDataToSetData = () =>
-        (this.setCreateChannelData = {
+    createChannelDataToSetData = () => (this.setCreateChannelData = {
             name: "",
             description: "",
             color: "",
@@ -290,8 +292,7 @@ export default class ChannelStore {
         }
     };
 
-    channelDataToSetData = (channel: Channel) =>
-        (this.setUpdataChannel = {
+    channelDataToSetData = (channel: Channel) =>(this.setUpdataChannel = {
             name: channel.name as string,
             isPrivate: channel.isPrivate as boolean,
             color: channel.color as string,

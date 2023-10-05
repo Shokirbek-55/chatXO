@@ -36,7 +36,7 @@ const ChannelSetting = () => {
             <Header
                 text={`${t("settings")}`}
                 leftIcon="close"
-                onLeftIconPress={() => closeModal()}
+                onLeftIconPress={() => closeModal('right')}
             />
             <div>
                 {channelUsers
