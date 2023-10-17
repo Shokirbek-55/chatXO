@@ -1,53 +1,53 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 @font-face {
-  font-family: "Montserrat1";
-  src: url("./assets/fonts/Montserrat-ExtraLight.ttf") format("truetype");
+    font-family: "Montserrat1";
+    src: url("./assets/fonts/Montserrat-ExtraLight.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Montserrat2";
-  src: url("./assets/fonts/Montserrat-Light.ttf") format("truetype");
+    font-family: "Montserrat2";
+    src: url("./assets/fonts/Montserrat-Light.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Montserrat3";
-  src: url("./assets/fonts/Montserrat-Regular.ttf") format("truetype");
+    font-family: "Montserrat3";
+    src: url("./assets/fonts/Montserrat-Regular.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Montserrat4";
-  src: url("./assets/fonts/Montserrat-Medium.ttf") format("truetype");
+    font-family: "Montserrat4";
+    src: url("./assets/fonts/Montserrat-Medium.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Montserrat5";
-  src: url("./assets/fonts/Montserrat-SemiBold.ttf") format("truetype");
+    font-family: "Montserrat5";
+    src: url("./assets/fonts/Montserrat-SemiBold.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Montserrat6";
-  src: url("./assets/fonts/Montserrat-Bold.ttf") format("truetype");
+    font-family: "Montserrat6";
+    src: url("./assets/fonts/Montserrat-Bold.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Montserrat7";
-  src: url("./assets/fonts/Montserrat-ExtraBold.ttf") format("truetype");
+    font-family: "Montserrat7";
+    src: url("./assets/fonts/Montserrat-ExtraBold.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Montserrat8";
-  src: url("./assets/fonts/Montserrat-Black.ttf") format("truetype");
+    font-family: "Montserrat8";
+    src: url("./assets/fonts/Montserrat-Black.ttf") format("truetype");
 }
 body {
-  background-color: #fff;
-  padding: 0;
-  font-family: "Montserrat7";
-  color: #404d66;
+    background-color: #fff;
+    padding: 0;
+    font-family: "Montserrat7";
+    color: #404d66;
 }
 
 h1,
@@ -58,26 +58,25 @@ h5,
 h6,
 p,
 span {
-  padding: 0;
-  margin: 0;
+    padding: 0;
+    margin: 0;
 }
 
 ::-webkit-scrollbar {
-  width: 4px;
+    width: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #b8b4b4;
-  border-radius: 20px;
+    background-color: #b8b4b4;
+    border-radius: 20px;
 }
 
 .unblock_user_btn {
-  white-space: nowrap;
-  background-color: crimson !important;
+    white-space: nowrap;
+    background-color: crimson !important;
 }
 
-body {
-  #map-dev{
-    outline: none;
-  }
+::placeholder {
+    color: rgba(67, 71, 77, 0.2);
+    opacity: 1;
 }

@@ -36,6 +36,12 @@ const Assets = {
     isReplyCencel: require("../assets/icons/cancel.png"),
     upload: require("../assets/icons/upload.png"),
     check: require("../assets/icons/check.png"),
+    EngIcon: require("../assets/icons/eng.png"),
+    ItIcon: require("../assets/icons/it.png"),
+    GerIcon: require("../assets/icons/ger.png"),
+    SpIcon: require("../assets/icons/sp.png"),
+    Poricon: require("../assets/icons/por.png"),
+    FrIcon: require("../assets/icons/fr.png"),
 };
 
 export default Assets;

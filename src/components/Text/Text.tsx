@@ -10,6 +10,10 @@ interface Props {
     style?: CSSProperties;
     margin?: string;
     backgroundColor?: string;
+    fontWeight?: string;
+    fontFamily?: string;
+    fontSize?: string;
+    textAlign?: string | any;
 }
 
 const Text: FC<Props> = ({
@@ -20,28 +24,24 @@ const Text: FC<Props> = ({
     color,
     backgroundColor,
     margin,
+    fontFamily,
+    fontWeight,
+    fontSize,
+    textAlign,
 }) => {
     return (
-        /* {isHttp ? (
-        <a
-          href={`${text}`}
-          target="_blank"
-          className={center ? styles.centerText : styles.text}
-          onClick={() => handleLink && handleLink()}
-          style={{ ...style, margin: margin, color }}
-        >
-          {numbers} {children} {onClick} {value} {text}
-        </a>
-      ) : ( 
-          /* )} */
         <div
             className={center ? styles.centerText : styles.text}
             onClick={handleLink}
             style={{
                 ...style,
                 margin: margin ? margin : "3px 0",
-                color,
+                color: color,
                 background: backgroundColor,
+                fontFamily: fontFamily,
+                fontSize: fontSize,
+                fontWeight: fontWeight,
+                textAlign: textAlign,
             }}
         >
             <div>{children}</div>

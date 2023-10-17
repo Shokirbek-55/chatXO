@@ -37,18 +37,17 @@ const item = {
 
 function ChannelsScreen() {
     const { toRouter } = useRootStore().routerStore;
-    const { myChannels, setSearchChannels, getChannelByHashId } =
+    const { myChannels, setSearchChannels, getChannelByHashId, hashId } =
         useRootStore().channelStore;
     const { setChannelSlug } = useRootStore().messageStore;
     const { t } = useTranslation();
     const navigate = useNavigate();
-
     const serachChannelHandler = (text: string) => {
         setSearchChannels(text);
     };
 
     const handleChanel = (e: Channel) => {
-        // getChannelByHashId(e.hashId);
+        getChannelByHashId(e.hashId);
         setChannelSlug(e.slug);
         const target = generatePath(`/:name`, { name: `@${e.hashId}` });
         navigate(target);

@@ -11,14 +11,18 @@ import Chat from "../screens/home/chat/Chat";
 import useRootStore from "../hooks/useRootStore";
 import { useEffect } from "react";
 import ForgotPasswordView from "../screens/auth/forgot-password/ForgotPassword";
+import { regex } from "../utils/regax";
 
 function RootRouter() {
     const { session } = useRootStore().localStore;
     const navigation = useNavigate();
+    const hashIdArr = window.location.pathname.match(regex);
+    const hashId = hashIdArr?.[1].toString();
 
     useEffect(() => {
         if (!session.accessToken) {
             navigation("/auth/welcome");
+            localStorage.setItem("hashId", `${hashId}`);
         }
     }, []);
 

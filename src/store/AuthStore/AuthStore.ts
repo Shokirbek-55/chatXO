@@ -29,6 +29,9 @@ export default class AuthStore {
     logoutOperation = new Operation<any>({} as any);
     getMeOperation = new Operation<User>({} as User);
     loginOAuthOperation = new Operation<Session>({} as Session);
+    deleteUserOperation = new Operation<{ userId: number }>(
+        {} as { userId: number }
+    );
     resetPassOperation = new Operation<{ email: string }>(
         {} as { email: string }
     );
@@ -67,6 +70,9 @@ export default class AuthStore {
                 });
                 this.root.runFunctionsWithLogin();
             }
+        }
+        if (this.loginOperation.isError) {
+            message.error(`${this.loginOperation.error}`);
         }
     };
 
@@ -176,5 +182,14 @@ export default class AuthStore {
             }
             this.navigateAuth();
         });
+    };
+
+    deleteUser = async (userId: number) => {
+        await this.deleteUserOperation.run(() => {
+            APIs.Account.delateAccount(userId);
+        });
+        if (this.deleteUserOperation.isSuccess) {
+            console.log("delete user success");
+        }
     };
 }

@@ -73,29 +73,29 @@ const DropDownMenu = ({ massage, users, children }: Props) => {
         },
     };
 
-  const menuLists = (
-    renderMenu(onLongPressText()).props.items || []
-  ).map((label: string, key: number) => ({
-    label,
-    key,
-    onClick: contextOptions[label],
-  }));
+    const menuLists = (renderMenu(onLongPressText()).props.items || []).map(
+        (label: string, key: number) => ({
+            label,
+            key,
+            onClick: contextOptions[label],
+        })
+    );
 
-  return (
-      <Dropdown
-        overlay={renderMenu(menuLists)}
-        trigger={["contextMenu"]}
-        overlayStyle={{
-          width: "130px",
-          height: "200px",
-          borderRadius: "10%",
-          alignItems: "center",
-          padding: "15px",
-        }}
-      >
-        <Space>{children}</Space>
-      </Dropdown>
-  );
+    return (
+        <Dropdown
+            overlay={renderMenu(menuLists)}
+            trigger={["contextMenu"]}
+            overlayStyle={{
+                width: "130px",
+                height: "200px",
+                borderRadius: "10%",
+                alignItems: "center",
+                padding: "15px",
+            }}
+        >
+            <Space>{children}</Space>
+        </Dropdown>
+    );
 };
 
 export default observer(DropDownMenu);

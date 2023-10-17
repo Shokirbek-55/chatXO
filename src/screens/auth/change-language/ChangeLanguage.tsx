@@ -3,6 +3,17 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../../components/Header/Header";
 import styles from "./ChangeLanguage.module.css";
 import i18n from "../../../translations/index";
+import LanguageSelect from "../../../components/languageSelect/LanguageSelect";
+import Text from "../../../components/Text/Text";
+import {
+    EngIcon,
+    FrIcon,
+    GerIcon,
+    ItIcon,
+    PorIcon,
+    SpIcon,
+} from "../../../assets/icons/icons";
+import Assets from "../../../utils/requireAssets";
 
 const ChangeLanguageView = () => {
     const navigation = useNavigate();
@@ -11,29 +22,29 @@ const ChangeLanguageView = () => {
     const lngs = {
         en: {
             nativeName: t("english_language"),
+            flag: Assets.EngIcon,
         },
         de: {
             nativeName: t("german_language"),
+            flag: Assets.GerIcon,
         },
         es: {
             nativeName: t("spanish_language"),
+            flag: Assets.SpIcon,
         },
         fr: {
             nativeName: t("french_language"),
+            flag: Assets.FrIcon,
         },
         it: {
             nativeName: t("italian_language"),
+            flag: Assets.ItIcon,
         },
         pt: {
             nativeName: t("portuguese_language"),
+            flag: Assets.Poricon,
         },
     };
-
-    // const changeLanguageColor = (e, index) => {
-    //   const radio = document.querySelectorAll('.radio')
-    //   console.log(radio, index);
-
-    // }
 
     return (
         <div className={styles.container}>
@@ -43,30 +54,19 @@ const ChangeLanguageView = () => {
                 onLeftIconPress={() => navigation("/auth/welcome")}
             />
             <div className={styles.contentBox}>
-                <div>
-                    {Object.keys(lngs).map((lng, index) => (
-                        <div className={styles.language} key={index}>
-                            <input
-                                className={styles.radio}
-                                type="radio"
-                                name="radio"
-                                id={`${index}`}
-                                defaultChecked={lng == i18n.language}
-                                key={lng}
-                                onClick={(e) => i18n.changeLanguage(lng)}
-                            />
-                            <label
-                                htmlFor={`${index}`}
-                                style={{ cursor: "pointer" }}
-                                onClick={(e) => i18n.changeLanguage(lng)}
-                            >
-                                <div className={styles.languagesName}>
-                                    {lngs[lng as keyof typeof lngs].nativeName}
-                                </div>
-                            </label>
-                        </div>
-                    ))}
-                </div>
+                <Text
+                    fontSize="14px"
+                    children="Please select your language to continue."
+                />
+                {Object.keys(lngs).map((lng, index) => (
+                    <LanguageSelect
+                        onPress={(e) => i18n.changeLanguage(lng)}
+                        key={index}
+                        language={lngs[lng as keyof typeof lngs].nativeName}
+                        flag={lngs[lng as keyof typeof lngs].flag}
+                        isCheck={lng === i18n.language}
+                    />
+                ))}
             </div>
         </div>
     );

@@ -1,68 +1,25 @@
 .CreateAnAccount {
-  display: flex;
-  width: 100%;
-  height: 100vh;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  font-family: "Montserrat5";
-}
-
-.CreateAnAccountTitle {
-  display: flex;
-  width: 100%;
-  height: 50px;
-  font-family: "Montserrat6";
-  font-size: 22px;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: "Montserrat5";
 }
 
 .CreateAnAccountBox {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  background: #fff;
-  flex-direction: column;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-.CreateAnAccountContent {
-  display: flex;
-  height: 80%;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-}
-
-.createAnAccountButtonBox {
-  display: flex;
-  width: 280px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 20px;
-  margin: 0;
-  bottom: 0;
-  padding: 0;
-  background-color: aqua;
-  overflow: hidden;
-}
-
-.SignUpBtn {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  height: 45px;
-  font-family: "Montserrat6";
-  border-radius: 20px;
-  margin-top: 50px;
-  color: #fff;
-  cursor: pointer;
-  border: none;
-  transition: .3s ease;
-}
-
-.SignUpBtn:hover {
-  opacity: .8;
+.socialContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
 }

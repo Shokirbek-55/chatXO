@@ -4,8 +4,9 @@ import styles from "./TextField.module.css";
 import { BiHide, BiShow } from "react-icons/bi";
 import useRootStore from "../../hooks/useRootStore";
 import { observer } from "mobx-react-lite";
+import { SearchIcon } from "../../utils/icons";
 
-const TextFieldd = ({ label, onClick, ...props }: any) => {
+const TextFieldd = ({ label, showClick, icon, ...props }: any) => {
     const [field, meta] = useField(props);
     const { visible } = useRootStore().visibleStore;
 
@@ -15,19 +16,27 @@ const TextFieldd = ({ label, onClick, ...props }: any) => {
                 {label}
             </label>
             <div className={styles.passwordInput}>
+                <div className={styles.iconBox}>{icon}</div>
                 <input
                     className={`${styles.validationInput} ${
                         meta.touched && meta.error && styles.isInValid
                     }`}
+                    style={{ ...props }}
                     {...field}
                     {...props}
                     autoComplete="off"
                 />
                 {props.visibility ? (
                     visible.showPass ? (
-                        <BiShow className={styles.showHide} onClick={onClick} />
+                        <BiShow
+                            className={styles.showHide}
+                            onClick={showClick}
+                        />
                     ) : (
-                        <BiHide className={styles.showHide} onClick={onClick} />
+                        <BiHide
+                            className={styles.showHide}
+                            onClick={showClick}
+                        />
                     )
                 ) : null}
             </div>

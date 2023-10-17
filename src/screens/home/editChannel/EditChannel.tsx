@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { Button, message, Popconfirm } from "antd";
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 import { ChangeEvent, useState } from "react";
@@ -21,7 +21,7 @@ import { BiCheck } from "react-icons/bi";
 
 const EditChannel = () => {
     const { t } = useTranslation();
-    const { closeModal, toRouter, toRouterManageCh } =
+    const { closeModal, setCurrentRoute, toRouterManageCh, closeRightSideBar } =
         useRootStore().routerStore;
     const { getFriends } = useRootStore().friendsStore;
     const navigation = useNavigate();
@@ -49,9 +49,14 @@ const EditChannel = () => {
         show("chUploadFile");
     };
 
+    const deleteEvent = () => {
+        navigation("", { replace: true });
+        closeRightSideBar();
+    };
+
     const delateChannelEvent = (hashId: string) => {
-        delateChannel(hashId);
-        toRouter("channels");
+        delateChannel(hashId, () => deleteEvent());
+        setCurrentRoute("channels");
     };
 
     const addUserToChannel = () => {
@@ -88,12 +93,18 @@ const EditChannel = () => {
         }, 3000);
     };
 
+    const confirm = () => {
+        delateChannelEvent(channelData.hashId);
+    };
+
+    const cancel = () => {};
+
     return (
         <div className={styles.editChannel}>
             <Header
                 leftIcon="close"
                 text={t("editGroup")}
-                onLeftIconPress={() => closeModal('right')}
+                onLeftIconPress={() => closeModal("right")}
             />
             <div className={styles.container}>
                 <div className={styles.topBox}>
@@ -235,16 +246,27 @@ const EditChannel = () => {
                     />
                 </div>
                 <div className={styles.rowBtnBox}>
-                    <ButtonComponent
-                        text={`${t("deleteGroup")}`}
-                        backColor="red"
-                        icon=""
-                        textSize={14}
-                        color="#fff"
-                        iconColor="#fff"
-                        iconSize={20}
-                        clickMe={() => delateChannelEvent(channelData.hashId)}
-                    />
+                    <Popconfirm
+                        title="Delete the group"
+                        description="Are you sure you want to delete the group?"
+                        onConfirm={confirm}
+                        onCancel={cancel}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <span>
+                            <ButtonComponent
+                                text={`${t("deleteGroup")}`}
+                                backColor="red"
+                                icon=""
+                                textSize={14}
+                                color="#fff"
+                                iconColor="#fff"
+                                iconSize={20}
+                                width="100%"
+                            />
+                        </span>
+                    </Popconfirm>
                     <ButtonComponent
                         text={`${t("update")}`}
                         backColor="yellowGreen"
