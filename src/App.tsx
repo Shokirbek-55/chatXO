@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import RootRouter from "./router/RootRouter";
-import DevTools from 'mobx-react-devtools';
 
 function App() {
     useEffect(() => {
