@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { generatePath, useNavigate } from "react-router-dom";
 import AvatarUpload from "../../../components/AvatarUpload/AvatarUpload";
 import ButtonView from "../../../components/Button";
 import Header from "../../../components/Header/Header";
@@ -12,7 +13,9 @@ import styles from "./CreateChannel.module.css";
 
 const CreateChannel = () => {
     const { t } = useTranslation();
-    const { closeModal, toRouter } = useRootStore().routerStore;
+    const navigation = useNavigate();
+    const { closeModal, openRightSideBar, toRouterManageCh, setCurrentRoute } =
+        useRootStore().routerStore;
     const { createChannel, setCreateChannelState, setCreateChannelData } =
         useRootStore().channelStore;
 
@@ -20,9 +23,19 @@ const CreateChannel = () => {
         setCreateChannelState("color", Color);
     };
 
+    const callbackHandle = (e) => {
+        const target = (e) =>
+            generatePath(`/:name`, {
+                name: `@${e}`,
+            });
+        setCurrentRoute("channels");
+        closeModal("left");
+        navigation(target(e));
+        openRightSideBar();
+        toRouterManageCh("editChannel");
+    };
     const CreateChannel = () => {
-        createChannel(setCreateChannelData);
-        toRouter("editChannel");
+        createChannel(setCreateChannelData, (e) => callbackHandle(e));
     };
 
     return (
@@ -30,7 +43,7 @@ const CreateChannel = () => {
             <Header
                 text={t("createGroup")}
                 leftIcon={"arrowLeft"}
-                onLeftIconPress={() => closeModal('left')}
+                onLeftIconPress={() => closeModal("left")}
             />
             <div className={styles.contentBox}>
                 <div className={styles.contentTop}>

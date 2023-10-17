@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { message, Popconfirm } from "antd";
 import { observer } from "mobx-react-lite";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -23,7 +23,7 @@ const AccountSetting = () => {
         avatarLoading,
         userAvatar,
     } = useRootStore().usersStore;
-    const { logout, user } = useRootStore().authStore;
+    const { logout, user, deleteUser } = useRootStore().authStore;
     const { closeModal, toRouter } = useRootStore().routerStore;
     const { show } = useRootStore().visibleStore;
     const { t } = useTranslation();
@@ -45,14 +45,22 @@ const AccountSetting = () => {
         }
     };
 
+    const confirm = () => {
+        deleteUser(user.id as never);
+    };
+
+    const cancel = () => {};
+
     return (
         <div className={styles.container}>
             <Header
                 text={t("edit_profile")}
                 leftIcon="arrowLeft"
                 rightIcon="logout"
-                onRightIconPress={onLogout}
-                onLeftIconPress={() => closeModal('left')}
+                popConfirm={onLogout}
+                popTitle="Logout"
+                popQuest="Are you sure you want to log out?"
+                onLeftIconPress={() => closeModal("left")}
             />
             <div className={styles.ImageBox}>
                 <AvatarView
@@ -120,14 +128,25 @@ const AccountSetting = () => {
                     title={`${t("update_profile")}`}
                     onClickbutton={() => updateUserAccount(setMyData)}
                 />
-                <ButtonView
-                    style={{
-                        width: "100%",
-                        marginTop: "10px",
-                        backgroundColor: "red",
-                    }}
-                    title={`Delate account`}
-                />
+                <Popconfirm
+                    title="Delete your account"
+                    description="Do you really want to delete your account?"
+                    onConfirm={confirm}
+                    onCancel={cancel}
+                    okText="Yes"
+                    cancelText="No"
+                >
+                    <span>
+                        <ButtonView
+                            style={{
+                                width: "100%",
+                                marginTop: "10px",
+                                backgroundColor: "red",
+                            }}
+                            title={`Delate account`}
+                        />
+                    </span>
+                </Popconfirm>
             </div>
         </div>
     );

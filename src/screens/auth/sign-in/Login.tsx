@@ -13,6 +13,14 @@ import styles from "./Login.module.css";
 import { FacebookAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, providerOAuth, providerFC } from "../../../helper/firebase";
 import { toJS } from "mobx";
+import {
+    FacebookIcon,
+    GoogleIcon,
+    SearchIcon,
+} from "../../../assets/icons/icons";
+import { ButtonComponent } from "../../../utils/button";
+import Text from "../../../components/Text/Text";
+import SocialBtn from "../../../utils/socialBtn";
 
 const Login = () => {
     const { loginEmailWithPassword, loginOAuth2 } = useRootStore().authStore;
@@ -63,10 +71,10 @@ const Login = () => {
             .string()
             .trim()
             .required(`${t("error_message_password_req")}`)
-            .matches(
-                Regex.PasswordLogin,
-                `${t("error_message_password_regex")}`
-            )
+            // .matches(
+            //     Regex.PasswordLogin,
+            //     `${t("error_message_password_regex")}`
+            // )
             .min(8, `${t("error_message_password_min")}`),
     });
 
@@ -74,107 +82,84 @@ const Login = () => {
         <div className={styles.headerBox}>
             <Header
                 leftIcon="arrowLeft"
-                text={`${t("login")}`}
+                text={`${t("Sign In")}`}
                 onLeftIconPress={() => navigation("/auth/welcome")}
             />
             <div className={styles.login_container}>
-                <div className={styles.buttonContent}>
-                    <button
-                        className={styles.loginButton}
-                        onClick={handleFacebookLogin}
+                <div className={styles.formsContent}>
+                    <Formik
+                        initialValues={{
+                            email: "",
+                            password: "",
+                        }}
+                        validationSchema={validate}
+                        onSubmit={(values) => {
+                            console.log(values);
+                            loginEmailWithPassword(values);
+                        }}
                     >
-                        {
-                            <img
-                                style={{
-                                    paddingRight: "10px",
-                                }}
-                                src={Assets.f_logo}
-                                alt=""
-                            />
-                        }
-                        {t("login_fb")}
-                    </button>
-
-                    <button
-                        onClick={handleGoogleSignIn}
-                        className={styles.loginButton}
-                    >
-                        {
-                            <img
-                                style={{
-                                    paddingRight: "10px",
-                                }}
-                                src={Assets.g_logo}
-                                alt=""
-                            />
-                        }
-                        {t("login_google")}
-                    </button>
-                </div>
-                <h3 className={styles.loginTitleOr}>{t("or")}</h3>
-                <div className={styles.inputContent}>
-                    <div className={styles.formsContent}>
-                        <Formik
-                            initialValues={{
-                                email: "",
-                                password: "",
-                            }}
-                            validationSchema={validate}
-                            onSubmit={(values) => {
-                                console.log(values);
-                                loginEmailWithPassword(values);
-                            }}
-                        >
-                            {(formik) => (
-                                <div>
-                                    <Form>
-                                        <TextFieldd
-                                            label="Email"
-                                            name="email"
-                                            type="email"
-                                            placeholder="Your email"
-                                            visibility={false}
-                                        />
-                                        <TextFieldd
-                                            label="Password"
-                                            name="password"
-                                            type={
-                                                visible.showPass
-                                                    ? "text"
-                                                    : "password"
+                        {(formik) => (
+                            <div>
+                                <Form>
+                                    <TextFieldd
+                                        name="email"
+                                        type="email"
+                                        placeholder="Your email"
+                                        visibility={false}
+                                        icon={<SearchIcon />}
+                                    />
+                                    <TextFieldd
+                                        name="password"
+                                        type={
+                                            visible.showPass
+                                                ? "text"
+                                                : "password"
+                                        }
+                                        placeholder="Your password"
+                                        visibility={true}
+                                        showClick={visibility}
+                                    />
+                                    <div className={styles.forgotBox}>
+                                        <Text
+                                            children={t("forgot_pass")}
+                                            color={Colors.Black}
+                                            fontFamily="Montserrat3"
+                                            fontSize="14px"
+                                            handleLink={() =>
+                                                navigation("/auth/forgot-pass")
                                             }
-                                            placeholder="Your password"
-                                            visibility={true}
-                                            onClick={visibility}
                                         />
-                                        <div className={styles.forgotBox}>
-                                            <a
-                                                style={{
-                                                    color: Colors.Blue,
-                                                }}
-                                                onClick={() =>
-                                                    navigation(
-                                                        "/auth/forgot-pass"
-                                                    )
-                                                }
-                                            >
-                                                {t("forgot_pass")}
-                                            </a>
-                                        </div>
-                                        <button
-                                            type="submit"
-                                            className={styles.SignUpBtn}
-                                            style={{
-                                                background: Colors.Blue,
-                                            }}
-                                        >
-                                            {t("loginScreen")}
-                                        </button>
-                                    </Form>
-                                </div>
-                            )}
-                        </Formik>
-                    </div>
+                                    </div>
+                                    <ButtonComponent
+                                        type={"submit"}
+                                        width="100%"
+                                        text="Login"
+                                        height="45px"
+                                    />
+                                </Form>
+                            </div>
+                        )}
+                    </Formik>
+                </div>
+                <Text
+                    children={t("or Login with")}
+                    color={Colors.Black}
+                    fontFamily="Montserrat3"
+                    fontSize="14px"
+                    margin="100px 0 0px 0"
+                />
+                <div className={styles.socialContent}>
+                    <SocialBtn
+                        icon={<FacebookIcon />}
+                        title={`${t("login_fb")}`}
+                        onClick={handleFacebookLogin}
+                    />
+                    <SocialBtn
+                        icon={<GoogleIcon />}
+                        title={`${t("login_google")}`}
+                        margin="20px 0 0 0"
+                        onClick={handleGoogleSignIn}
+                    />
                 </div>
             </div>
         </div>

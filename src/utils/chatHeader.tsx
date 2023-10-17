@@ -11,12 +11,18 @@ import {
 } from "./icons";
 import SmallAvatar from "../components/SmallAvatar/smallAvatar";
 
-
 const ChatHeader = () => {
     const { visible, toglevisible } = useRootStore().visibleStore;
     const { openRightSideBar } = useRootStore().routerStore;
-    const { setSearch, searchMessage, slug, messageCache, clearSearch, searchMessageState } =
-        useRootStore().messageStore;
+    const {
+        setSearch,
+        searchMessage,
+        slug,
+        messageCache,
+        clearSearch,
+        searchMessageState,
+        searchMessages,
+    } = useRootStore().messageStore;
 
     const searchHandle = (e: string) => {
         setSearch(e);
@@ -31,6 +37,7 @@ const ChatHeader = () => {
     const OpenManageChannel = () => {
         openRightSideBar();
     };
+
     const img_url = messageCache[slug]?.channelData.avatar;
     const color = messageCache[slug]?.channelData.color;
     const name = messageCache[slug]?.channelData.name;
@@ -41,47 +48,31 @@ const ChatHeader = () => {
                 <header>
                     <div onClick={OpenManageChannel}>
                         <SmallAvatar
-                            imageUrl={
-                                img_url
-                                    ? `${TMP_URL}/${img_url}`
-                                    : ""
-                            }
-                            color={
-                                color
-                                    ? color
-                                    : ""
-                            }
+                            imageUrl={img_url ? `${TMP_URL}/${img_url}` : ""}
+                            color={color ? color : ""}
                         />
                         <h3>{name}</h3>
                     </div>
                 </header>
                 <div>
                     {visible.setSearch && (
-                        <>
+                        <div>
                             <InputComponent
                                 onChangeText={(e) => searchHandle(e)}
                                 backColor="transparent"
-                                width="300px"
+                                width="200px"
                                 value={searchMessageState}
                             />
                             <span>
                                 <ArrowDowunIcon size={24} padding={1} />
                             </span>
                             <span>
+                                {searchMessageState.length > 0
+                                    ? searchMessages.count
+                                    : null}
                                 <ArrowUpIcon size={24} padding={1} />
                             </span>
-                            {/* {searchCoincidencesCount > 0 && (
-                            <span>
-                                {selectedSearchCoincidence + 1 < 0
-                                    ? 0
-                                    : selectedSearchCoincidence + 1}
-                                /
-                                {searchCoincidencesCount === -1
-                                    ? 0
-                                    : searchCoincidencesCount}
-                            </span>
-                        )} */}
-                        </>
+                        </div>
                     )}
                     <span onClick={ToggleSearchInput}>
                         {visible.setSearch ? (
@@ -119,6 +110,15 @@ const BassComponent = styled.div`
         align-items: center;
         justify-content: space-between;
         padding: 5px;
+        div {
+            div {
+                span {
+                    display: flex;
+                    align-items: center;
+                    gap: 2px;
+                }
+            }
+        }
     }
 
     header {
@@ -128,10 +128,10 @@ const BassComponent = styled.div`
         height: 100%;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 5px;
         nav {
             position: relative;
-            margin-left: 15px;
+            margin-left: 5px;
             width: 45px;
             height: 45px;
             border-radius: 50%;
@@ -150,7 +150,6 @@ const BassComponent = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-right: 15px;
         gap: 10px;
     }
 `;

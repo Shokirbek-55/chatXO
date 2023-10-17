@@ -147,7 +147,7 @@ export default class ChannelStore {
         }
     };
 
-    getChannelByHashId = async (hashId: string) => {      
+    getChannelByHashId = async (hashId: string) => {
         runInAction(() => {
             this.isLoad = true;
         });
@@ -191,9 +191,7 @@ export default class ChannelStore {
                         channel.slug
                     );
                     this.getChannelByHashId(this.hashId);
-                    this.rootStore.messageStore.setChannelSlug(
-                        channel.slug
-                    );
+                    this.rootStore.messageStore.setChannelSlug(channel.slug);
                     this.navigateChannel();
                     return true;
                 }
@@ -211,7 +209,7 @@ export default class ChannelStore {
         }
     };
 
-    getChannelDataCache = async () => {        
+    getChannelDataCache = async () => {
         try {
             const promises = this.myChannels.map(async (channel) => {
                 const channelUsersData =
@@ -238,12 +236,19 @@ export default class ChannelStore {
                 }
             });
 
-            await Promise.all(promises).then(() => {
-                this.getHashId();
-            }).catch((error) => {
-                console.log("error getChannelDataCache", error);
-                this.getHashId();
-            })
+            await Promise.all(promises)
+                .then(() => {
+                    if (
+                        this.hashId ||
+                        JSON.stringify(localStorage.getItem("hashId"))
+                    ) {
+                        this.getHashId();
+                    }
+                })
+                .catch((error) => {
+                    console.log("error getChannelDataCache", error);
+                    this.getHashId();
+                });
         } catch (error) {
             console.log("Error:", error);
         }
@@ -270,7 +275,8 @@ export default class ChannelStore {
         });
     };
 
-    createChannelDataToSetData = () => (this.setCreateChannelData = {
+    createChannelDataToSetData = () =>
+        (this.setCreateChannelData = {
             name: "",
             description: "",
             color: "",
@@ -280,19 +286,34 @@ export default class ChannelStore {
         this.setCreateChannelData[key] = value;
     };
 
-    createChannel = async (data: CreateChannelType) => {
+    createChannel = async (
+        data: CreateChannelType,
+        callback: (e: string) => void
+    ) => {
         await this.createChannelOperation.run(() =>
             APIs.channels.createChannel(data.name, data.description, data.color)
         );
         if (this.createChannelOperation.isSuccess) {
             runInAction(() => {
-                this.channelData = this.createChannelOperation.data;
-                this.myChannels.push(this.channelData);
+                console.log(
+                    "this.createChannelOperation.data",
+                    toJS(this.createChannelOperation.data)
+                );
+                this.myChannels.push(this.createChannelOperation.data);
+                this.rootStore.messageStore.setChannelSlug(
+                    this.createChannelOperation.data.slug
+                );
+                this.getChannelByHashId(
+                    this.createChannelOperation.data.hashId
+                );
+                this.rootStore.routerStore.setCurrentRoute("channels");
+                callback(this.createChannelOperation.data.slug);
             });
         }
     };
 
-    channelDataToSetData = (channel: Channel) =>(this.setUpdataChannel = {
+    channelDataToSetData = (channel: Channel) =>
+        (this.setUpdataChannel = {
             name: channel.name as string,
             isPrivate: channel.isPrivate as boolean,
             color: channel.color as string,
@@ -406,14 +427,18 @@ export default class ChannelStore {
         }
     };
 
-    delateChannel = async (hashId: string) => {
+    delateChannel = async (hashId: string, callback: () => void) => {
         await this.delateChannelOperation.run(() =>
             APIs.channels.deleteChannel(hashId)
         );
         runInAction(() => {
             if (this.delateChannelOperation.isSuccess) {
                 message.success("The channel is deleted succefully!");
-                this.getMyChannels();
+                this.myChannels = this.myChannels.filter(
+                    (ch) => ch.hashId !== hashId
+                );
+                this.hashId = "";
+                callback();
             }
         });
     };

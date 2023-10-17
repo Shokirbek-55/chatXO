@@ -12,15 +12,16 @@ import UploadFile from "../components/UploadFile/UploadFile";
 import UploadChannelFile from "../components/UploadChannelFile/UploadChannelFile";
 import { regex } from "../utils/regax";
 import { useEffect } from "react";
-import { log } from "console";
 
 function HomeLayout() {
     const { session } = useRootStore().localStore;
     const { isOpenRigthSideBar } = useRootStore().routerStore;
-    const { setChannelHashId } = useRootStore().channelStore;
+    const { setChannelHashId, getChannelByHashId } =
+        useRootStore().channelStore;
     const navigate = useNavigate();
     const hashIdArr = window.location.pathname.match(regex);
     const hashId = hashIdArr?.[1].toString();
+    const localHashId = JSON.stringify(localStorage.getItem("hashId"));
 
     useEffect(() => {
         if (hashId && session.accessToken) {

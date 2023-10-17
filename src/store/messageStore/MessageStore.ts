@@ -89,7 +89,7 @@ export default class MessageStore {
             this.slug = slug;
         });
         if (this.slug === slug) {
-            this.minRelevance = -1
+            this.minRelevance = -1;
         }
     };
 
@@ -110,12 +110,13 @@ export default class MessageStore {
                 end: boolean;
             }) => {
                 data.messages = _.reverse(toJS(data.messages));
-                this.setHistoryMessages(
-                    data.messages[0].channelSlug || slug,
-                    data.messages,
-                    data.pageState,
-                    data.end
-                );
+                if (data.messages)
+                    this.setHistoryMessages(
+                        data.messages[0]?.channelSlug || slug,
+                        data.messages,
+                        data.pageState,
+                        data.end
+                    );
             }
         );
 
@@ -137,7 +138,7 @@ export default class MessageStore {
                 pageState: string;
                 end: boolean;
             }) => {
-                if (this.messageCache[this.slug].end === false) {
+                if (this.messageCache[this.slug]?.end === false) {
                     data.messages = _.reverse(toJS(data.messages));
                     runInAction(() => {
                         this.messageCache[this.slug].messages = [
@@ -194,8 +195,12 @@ export default class MessageStore {
 
     addMessageToCache = (message: RawMessage) => {
         if (this.messageCache[message.channelSlug]) {
-            if(this.messageCache[message.channelSlug].messages[0]?.id === message.id) {
-                return this.messageCache[message.channelSlug].messages[0] = message
+            if (
+                this.messageCache[message.channelSlug].messages[0]?.id ===
+                message.id
+            ) {
+                return (this.messageCache[message.channelSlug].messages[0] =
+                    message);
             } else {
                 this.messageCache[message.channelSlug].messages.push(message);
             }

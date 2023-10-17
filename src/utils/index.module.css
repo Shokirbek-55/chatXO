@@ -1,27 +1,32 @@
 .iconsHoverAndActive:hover {
-  transition: ease-in-out 0.15s;
-  background-color: rgba(95, 95, 95, 0.202) !important;
+    transition: ease-in-out 0.15s;
+    background-color: rgba(95, 95, 95, 0.202) !important;
 }
 
 .iconsHoverAndActive:active {
-  transition: ease-in-out 0.15s;
-  background-color: rgba(68, 68, 68, 0.322) !important;
+    transition: ease-in-out 0.15s;
+    background-color: rgba(68, 68, 68, 0.322) !important;
 }
 .buttonHoverAndActive:hover {
-  transition: ease-in-out 0.15s;
-  opacity: 0.8;
+    transition: 0.2s ease-in-out;
+    opacity: 0.6;
 }
 .buttonHoverAndActive:active {
-  transition: ease-in-out 0.15s;
-  opacity: 1;
+    transition: ease-in-out 0.15s;
+    opacity: 1;
 }
 .inputComonent:focus {
-  border-bottom: 2px solid #444 !important;
+    border-bottom: 2px solid #444 !important;
 }
 .inputComonent::placeholder {
-  color: #999;
+    color: #999;
 }
 .react-contexify__item:not(.react-contexify__item--disabled):hover
-  > .react-contexify__item__content {
-  background-color: red;
+    > .react-contexify__item__content {
+    background-color: red;
+}
+
+.socialBtnHover:hover {
+    opacity: 0.6;
+    transition: 0.2s ease-in-out;
 }

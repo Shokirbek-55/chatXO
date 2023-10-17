@@ -1,0 +1,31 @@
+.language {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: transparent;
+    padding: 2px 5px;
+    border-radius: 10px;
+    height: 40px;
+    border: 1px solid transparent;
+}
+
+.left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.isChecked {
+    background-color: #f4f5f6;
+    border: 1px solid #d8dadc;
+}
+
+.language:hover {
+    background-color: #f4f5f6;
+    transition: 0.2s ease-in-out;
+}
+
+.flag {
+    width: 25px;
+    height: 28px;
+}

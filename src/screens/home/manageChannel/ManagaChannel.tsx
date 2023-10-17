@@ -36,9 +36,14 @@ const ManagaChannel = () => {
         show("previewModal");
     };
 
-    const leaveChannel = (channelId: number) => {
-        userChannelLeave(channelId, () => navigation("", { replace: true }));
-        closeRightSideBar();
+    const leaveChannel = () => {
+        if (user.id === channelData.adminId) toRouterManageCh("channelSetting");
+        else {
+            userChannelLeave(channelData.id, () =>
+                navigation("", { replace: true })
+            );
+            closeRightSideBar();
+        }
     };
 
     const OpenBlogUser = () => {
@@ -62,11 +67,14 @@ const ManagaChannel = () => {
                 leftIcon="arrowRight"
                 text="Profile"
                 rightIcon={user.id === adminId ? "setting" : "logout"}
-                onLeftIconPress={() => closeModal('right')}
+                onLeftIconPress={() => closeModal("right")}
+                popConfirm={leaveChannel}
+                popTitle="Leave the group"
+                popQuest="Do you really want to leave the group?"
                 onRightIconPress={() =>
                     user.id === channelData.adminId
                         ? toRouterManageCh("channelSetting")
-                        : leaveChannel(channelData.id)
+                        : {}
                 }
             />
             {channelData?.avatar ? (
@@ -98,15 +106,11 @@ const ManagaChannel = () => {
                     }
                 />
             )}
-            <Text
-                children={channelData?.name}
-                center
-                style={{ fontSize: "25px" }}
-            />
+            <Text children={channelData?.name} center fontSize="25px" />
             <Text
                 children={`${channelUsers.length} members`}
                 center
-                style={{ fontSize: "13px" }}
+                fontSize="14px"
             />
             {adminId === user.id ? (
                 <div className={styles.itemsRow}>

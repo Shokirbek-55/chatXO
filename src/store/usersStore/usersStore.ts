@@ -325,6 +325,7 @@ export default class UsersStore {
                 this.rootStore.routerStore.setCurrentRoute("channels");
                 callback();
                 message.success("You have joined the group");
+                localStorage.removeItem("hashId");
             });
         }
     };

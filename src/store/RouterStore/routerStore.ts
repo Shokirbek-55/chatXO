@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction, set } from "mobx";
+import { makeAutoObservable, runInAction, set, toJS } from "mobx";
 import {
     MainRoutes,
     MainRoutesType,
@@ -50,9 +50,9 @@ export default class RouterStore {
         }, 100);
     };
 
-    closeModal = (key: "left" | 'right') => {
+    closeModal = (key: "left" | "right") => {
         console.log(key);
-        if (key === 'left') {
+        if (key === "left") {
             runInAction(() => {
                 if (this.routers.length) _.last(this.routers)!.isOpen = false;
             });
@@ -65,7 +65,8 @@ export default class RouterStore {
             runInAction(() => {
                 if (this.manageRouters.length > 1)
                     _.last(this.manageRouters)!.isOpen = false;
-                else if (this.manageRouters.length === 1) this.closeRightSideBar();
+                else if (this.manageRouters.length === 1)
+                    this.closeRightSideBar();
             });
             setTimeout(() => {
                 runInAction(() => {
