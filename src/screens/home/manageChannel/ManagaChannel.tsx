@@ -26,7 +26,6 @@ const ManagaChannel = () => {
     const { toRouterManageCh, closeModal, closeRightSideBar } =
         useRootStore().routerStore;
     const { userChannelLeave, getPreviewData } = useRootStore().usersStore;
-    const { messageCache, slug } = useRootStore().messageStore;
     const { user } = useRootStore().authStore;
     const { show } = useRootStore().visibleStore;
     const navigation = useNavigate();
