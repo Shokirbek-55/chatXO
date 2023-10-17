@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction, toJS } from "mobx";
+import { action, makeAutoObservable, runInAction, toJS } from "mobx";
 import {
     Channel,
     ChannelsUsersType,
@@ -28,14 +28,13 @@ export default class MessageStore {
         filePath: string;
         fileTitle: string;
         thumbnailPath: string;
-    }>(
-        {} as {
-            filePath: string;
-            fileTitle: string;
-            thumbnailPath: string;
-        }
-    );
+    }>({} as {
+        filePath: string;
+        fileTitle: string;
+        thumbnailPath: string;
+    });
 
+    slug: string = "";
     messageCache: {
         [key: string]: {
             messages: RawMessage[];
@@ -48,7 +47,20 @@ export default class MessageStore {
         };
     } = {};
 
-    slug: string = "";
+    prevInnerDivHeight: {
+        [key: string]: number;
+    } = {};
+
+    messagesInChannel: {
+        messages: RawMessage[];
+        pageState: string | null;
+        end?: boolean;
+    }
+    dataInChannel: Channel | null = null;
+    usersInChannel: {
+        [key: string]: ChannelsUsersType;
+    } = {};
+
 
     searchMessageState: string = "";
 
@@ -71,6 +83,11 @@ export default class MessageStore {
     setSendReplyMessageState = {};
 
     minRelevance: number = -1;
+    goToBottom = false;
+
+    setPrevInnerDivHeight = (slug: string, height: number) => {
+        this.prevInnerDivHeight[slug] = height;
+    }
 
     setSearch = (text: string) => {
         runInAction(() => {
@@ -93,42 +110,41 @@ export default class MessageStore {
         }
     };
 
+    getMessagesInChannel = (slug: string) => {
+        if (this.messageCache[slug]) {
+            runInAction(() => {
+                this.messagesInChannel = {
+                    messages: this.messageCache[slug].messages,
+                    pageState: this.messageCache[slug].pageState,
+                    end: this.messageCache[slug].end,
+                };
+            });
+        }
+    }
+
+    getDataInChannel = (slug: string) => {
+        if (this.messageCache[slug]) {
+            runInAction(() => {
+                this.dataInChannel = this.messageCache[slug].channelData;
+            });
+        }
+    }
+
+    getUsersInChannel = (slug: string) => {
+        if (this.messageCache[slug]) {
+            runInAction(() => {
+                this.usersInChannel = this.messageCache[slug].channelUsers;
+            });
+        }
+    }
+
     getHistoryMessages = (slug: string) => {
         runInAction(() => {
             this.isLoadMessages = true;
         });
 
-        this.app.socketStore.socket?.emit("history", {
-            channelSlug: slug,
-        });
-
-        this.app.socketStore.socket?.once(
-            "history",
-            (data: {
-                messages: RawMessage[];
-                pageState: string;
-                end: boolean;
-            }) => {
-                data.messages = _.reverse(toJS(data.messages));
-                if (data.messages)
-                    this.setHistoryMessages(
-                        data.messages[0]?.channelSlug || slug,
-                        data.messages,
-                        data.pageState,
-                        data.end
-                    );
-            }
-        );
-
-        runInAction(() => {
-            this.isLoadMessages = false;
-        });
-    };
-
-    getHistoryMessagesPageState = (setIsFetching, stop) => {
         this.app.chatStore.history({
-            slug: this.slug,
-            pageState: this.getMessagesPageState(this.slug),
+            slug
         });
 
         this.app.socketStore.socket?.on(
@@ -138,28 +154,34 @@ export default class MessageStore {
                 pageState: string;
                 end: boolean;
             }) => {
-                if (this.messageCache[this.slug]?.end === false) {
-                    data.messages = _.reverse(toJS(data.messages));
-                    runInAction(() => {
-                        this.messageCache[this.slug].messages = [
-                            ...(this.messageCache[this.slug].messages.filter(
-                                (item) => item.id === data.messages[0].id
-                            ).length === 1
-                                ? []
-                                : [...data.messages]),
-                            ...this.messageCache[this.slug].messages,
-                        ];
-                        this.messageCache[this.slug].pageState = data.pageState;
-                        this.messageCache[this.slug].end = data.end;
+                console.log(toJS(data.messages));
+                data.messages = _.reverse(toJS(data.messages));
+                this.setHistoryMessages(
+                    data.messages[0]?.channelSlug || slug,
+                    data.messages,
+                    data.pageState,
+                    data.end
+                );
+            }
+        );
+        runInAction(() => {
+            this.isLoadMessages = false;
+        });
+    };
+
+    getHistoryMessagesPageState = (setIsFetching, stop) => {
+                console.log('pagestate');
+                if (this.messageCache[this.slug].end === false) {
+                    this.app.chatStore.history({
+                        slug: this.slug,
+                        pageState: this.getMessagesPageState(this.slug),
                     });
                     setIsFetching(false);
                 } else {
                     setIsFetching(false);
                     stop.current = true;
                 }
-            }
-        );
-    };
+            };
 
     setHistoryMessages = (
         slug: string,
@@ -172,12 +194,12 @@ export default class MessageStore {
                 return;
             } else {
                 this.messageCache[slug].messages = [
-                    ...this.messageCache[slug].messages,
                     ...(this.messageCache[slug].messages.filter(
-                        (item) => item.id === messages[0].id
+                        (item) => item.id === messages[0]?.id
                     ).length === 1
                         ? []
                         : [...messages]),
+                    ...this.messageCache[slug].messages,
                 ];
                 this.messageCache[slug].pageState = pageState;
                 this.messageCache[slug].end = end;
@@ -195,30 +217,36 @@ export default class MessageStore {
 
     addMessageToCache = (message: RawMessage) => {
         if (this.messageCache[message.channelSlug]) {
-            if (
-                this.messageCache[message.channelSlug].messages[0]?.id ===
-                message.id
-            ) {
-                return (this.messageCache[message.channelSlug].messages[0] =
-                    message);
+            if (_.last(this.messageCache[message.channelSlug].messages)?.id === message.id) {
+                runInAction(() => {
+                    this.messageCache[message.channelSlug].messages[0] = message
+                })
             } else {
-                this.messageCache[message.channelSlug].messages.push(message);
+                runInAction(() => {
+                    this.messageCache[message.channelSlug].messages.push(message);
+                });
             }
         } else {
-            this.messageCache[message.channelSlug] = {
-                messages: [message],
-                pageState: "",
-                channelData:
-                    this.messageCache[message.channelSlug]?.channelData,
-                channelUsers:
-                    this.messageCache[message.channelSlug]?.channelUsers,
-            };
+            runInAction(() => {
+                this.messageCache[message.channelSlug] = {
+                    messages: [message],
+                    pageState: "",
+                    channelData:
+                        this.messageCache[message.channelSlug]?.channelData,
+                    channelUsers:
+                        this.messageCache[message.channelSlug]?.channelUsers,
+                };
+            });
         }
     };
 
     addMergeMessageToCache = (message: RawMessage) => {
         runInAction(() => {
-            this.messageCache[message.channelSlug].messages[0] = message;
+            this.messageCache[message.channelSlug].messages.pop();
+            this.messageCache[message.channelSlug].messages = [
+                ...this.messageCache[message.channelSlug].messages,
+                message,
+            ]
         });
     };
 

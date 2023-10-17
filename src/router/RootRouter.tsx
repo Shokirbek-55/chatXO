@@ -1,7 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import AuthLayout from "../screens/AuthLayout";
-import HomeLayout from "../screens/HomeLayout";
 import Login from "../screens/auth/sign-in/Login";
 import SignUp from "../screens/auth/sign-up/SignUp";
 import WelcomeView from "../screens/auth/welcome/Welcome";
@@ -9,9 +8,11 @@ import ChangeLanguageView from "../screens/auth/change-language/ChangeLanguage";
 import SignUpSocial from "../screens/auth/sign-up-social/SignUpSocial";
 import Chat from "../screens/home/chat/Chat";
 import useRootStore from "../hooks/useRootStore";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import ForgotPasswordView from "../screens/auth/forgot-password/ForgotPassword";
 import { regex } from "../utils/regax";
+
+const HomeLayout = React.lazy(() => import("../screens/HomeLayout"));
 
 function RootRouter() {
     const { session } = useRootStore().localStore;
@@ -28,7 +29,11 @@ function RootRouter() {
 
     return (
         <Routes>
-            <Route path="/" element={<HomeLayout />}>
+            <Route path="/" element={
+                <React.Suspense fallback={null}>
+                <HomeLayout />
+                </React.Suspense>
+            }>
                 <Route path=":name" element={<Chat />} />
             </Route>
             <Route path="/auth" element={<AuthLayout />}>

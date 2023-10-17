@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite";
 import React, { CSSProperties, FC } from "react";
 import styles from "./index.module.css";
 
@@ -49,4 +48,4 @@ const Text: FC<Props> = ({
     );
 };
 
-export default observer(Text);
+export default Text;

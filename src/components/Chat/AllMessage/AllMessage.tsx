@@ -1,40 +1,41 @@
-import { observer } from "mobx-react-lite";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { styled } from "styled-components";
-import ScrollContainer from "../../../components/ScrollContainer/ScrollContainer";
-import ChatHeader from "../../../utils/chatHeader";
-import MessageInput from "./components/messageInput/MessageInput";
-import LinkPriview from "../../../components/Chat/LinkPreView/linkPriview";
-import MessageAudio from "../../../components/Chat/MessageAudio";
-import MessageDoc from "../../../components/Chat/MessageDoc";
-import MessageImg from "../../../components/Chat/MessageImg";
-import MessageVideo from "../../../components/Chat/MessageVideo";
+import { ReactNode, memo, useCallback } from "react";
 import { RawMessage } from "../../../types/channel";
-import MessageBox from "../../../components/Chat/MessageBox";
+import LinkPriview from "../LinkPreView/linkPriview";
+import MessageAudio from "../MessageAudio";
+import MessageBox from "../MessageBox";
+import MessageDoc from "../MessageDoc";
+import MessageImg from "../MessageImg";
+import MessageVideo from "../MessageVideo";
 import useRootStore from "../../../hooks/useRootStore";
-import _ from "lodash";
-
-const Chat = () => {
-
-    const navigate = useNavigate();
-    const { messageCache, slug } =
-        useRootStore().messageStore;
-    const { user } = useRootStore().authStore;
+import { observer } from "mobx-react";
+import { toJS } from "mobx";
 
 
-    useEffect(() => {
-        const handleEsc = (event: any) => {
-            if (event.keyCode === 27) {
-                navigate("/");
-            }
-        };
-        window.addEventListener("keydown", handleEsc);
+const MessageContainer = memo(({ children, messages, index }: { children: ReactNode, messages: RawMessage[], index: number }) => {
+    return <div
+        key={index}
+        style={{
+            paddingBottom:
+                messages?.length - 1 ==
+                    index
+                    ? "7.5vh"
+                    : "0",
+            paddingTop: 0 == index ? "7vh" : "0",
+        }}
+    >
+        {children}
+    </div>
+})
 
-        return () => {
-            window.removeEventListener("keydown", handleEsc);
-        };
-    }, []);
+const AllMessage = () => {
+
+    const { messageCache, slug } = useRootStore().messageStore
+    const { user } = useRootStore().authStore
+
+    console.log(toJS(messageCache[slug]?.messages[0]));
+    
+    
+    console.log('ishladi AllMessage');
 
     const renderTextMessage = (message: RawMessage) => {
         switch (message.userId) {
@@ -141,40 +142,18 @@ const Chat = () => {
         }
     };
 
-    console.log(messageCache[slug]?.messages[0]?.message);
-
     return (
-        <ChatContainer id="chatView">
-            <ChatHeader />
-            <ScrollContainer>
-                {_.map(messageCache[slug]?.messages, (message, index) => {
-                    return (
-                        <div
-                            key={index}
-                            style={{
-                                paddingBottom:
-                                    messageCache[slug].messages?.length - 1 ==
-                                        index
-                                        ? "7.5vh"
-                                        : "0",
-                                paddingTop: 0 == index ? "7vh" : "0",
-                            }}
-                        >
-                            {renderMessage(message)}
-                        </div>
-                    );
-                })}
-            </ScrollContainer>
-            <MessageInput />
-        </ChatContainer>
+        <>
+            {messageCache[slug]?.messages.map((message, index) => {
+                return (
+                    <MessageContainer messages={messageCache[slug]?.messages} index={index} >
+                        {renderMessage(message)}
+                    </MessageContainer>
+                );
+            })}
+        </>
     );
-};
+}
 
-export default observer(Chat);
+export default observer(AllMessage)
 
-const ChatContainer = styled.div`
-    width: 100%;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-`;

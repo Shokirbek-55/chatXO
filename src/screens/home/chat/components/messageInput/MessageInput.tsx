@@ -18,7 +18,7 @@ function MessageInput() {
   const [openhastag, setOpenhastag] = useState<boolean>(false);
   const [isOPen, setIsOpen] = useState(true);
 
-  const { setMessageText, messageTextState, onSendMessage, setReplyMessage } = useRootStore().messageStore
+  const { setMessageText, messageTextState, onSendMessage } = useRootStore().messageStore
 
   const handleonSendMessage = () => {
     if (messageTextState) {

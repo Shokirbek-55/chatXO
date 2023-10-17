@@ -3,7 +3,7 @@ import { generatePath, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import useRootStore from "../hooks/useRootStore";
 import SidebarLayout from "./Sidebar";
-import EditChannel from "./home/editChannel/EditChannel";
+
 import EmptyScreen from "./home/emptyScreen/EmptyScreen";
 import ManageChannelLayout from "./ManageChannel";
 import Relevence from "../components/Relevence/relevence";
@@ -28,29 +28,29 @@ function HomeLayout() {
             const target = generatePath(`/:name`, {
                 name: `@${hashId}`,
             });
-            setChannelHashId(hashId, () => navigate(target));
+            // setChannelHashId(hashId, () => navigate(target));
         } else if (!session.accessToken) {
             navigate("/auth/welcome");
         }
     }, []);
 
     return (
-        <Container>
-            <Sidebar>
-                <SidebarLayout />
-            </Sidebar>
-            <ChatArea>
-                <Outlet />
-                <EmptyScreen />
-            </ChatArea>
-            <RightArea $isopen={isOpenRigthSideBar}>
-                <ManageChannelLayout />
-            </RightArea>
-            <Relevence />
-            <PreviewImage />
-            <UploadFile />
-            <UploadChannelFile />
-        </Container>
+            <Container>
+                <Sidebar>
+                    <SidebarLayout />
+                </Sidebar>
+                <ChatArea>
+                    <Outlet />
+                    <EmptyScreen />
+                </ChatArea>
+                <RightArea $isopen={isOpenRigthSideBar}>
+                    <ManageChannelLayout />
+                </RightArea>
+                <Relevence />
+                <PreviewImage />
+                <UploadFile />
+                <UploadChannelFile />
+            </Container>
     );
 }
 
