@@ -22,11 +22,17 @@ class ChatStore {
         this.root.socketStore.socket?.on("message", (payload: RawMessage) => {
             console.log("new message", payload);
             this.root.messageStore.addMessageToCache(payload);
+            if (this.root.hashtagStore.isOpenHashTagScreen) {
+                this.root.hashtagStore.addMessageHashTags(payload);
+            }
         });
 
         this.root.socketStore.socket?.on("mergeMessage", (payload: RawMessage) => {
             console.log("merge message", payload);
             this.root.messageStore.addMergeMessageToCache(payload);
+            if (this.root.hashtagStore.isOpenHashTagScreen) {
+                this.root.hashtagStore.addMessageHashTags(payload);
+            }
         });
 
         this.root.socketStore.socket?.on(

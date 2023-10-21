@@ -14,6 +14,7 @@ import ChatStore from './chatStore/chatStore';
 import VisibleStore from './visibleStore/visibleStore';
 import HelperStore from './helperStore/helperStore';
 import AudioStore from './AudioStore/AudioStore';
+import HashtagStore from './hashtagStore/hashtagStore';
 
 
 export class AppRootStore {
@@ -29,6 +30,7 @@ export class AppRootStore {
     visibleStore: VisibleStore
     helperStore: HelperStore
     audioStore: AudioStore
+    hashtagStore: HashtagStore
 
     constructor() {
         makeAutoObservable(this);
@@ -44,6 +46,7 @@ export class AppRootStore {
         this.visibleStore = new VisibleStore()
         this.helperStore = new HelperStore()
         this.audioStore = new AudioStore(this)
+        this.hashtagStore = new HashtagStore(this)
         this.run();
     }
 

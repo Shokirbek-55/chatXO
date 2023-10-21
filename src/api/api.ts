@@ -238,6 +238,9 @@ const APIs = {
 
         getPollOptionInfo: (pollOptionId: number) =>
             apiService.methods.get(`/poll/option/${pollOptionId}`),
+        
+        getChannelAllHashtags: (hashId: string) =>
+            apiService.methods.get(`${channelUrl}/${hashId}/hashtags`),
     },
 
     upload: (form: FormData, config: AxiosRequestConfig) =>

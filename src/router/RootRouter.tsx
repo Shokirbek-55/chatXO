@@ -11,6 +11,7 @@ import useRootStore from "../hooks/useRootStore";
 import React, { useEffect } from "react";
 import ForgotPasswordView from "../screens/auth/forgot-password/ForgotPassword";
 import { regex } from "../utils/regax";
+import ChatHashtag from "../screens/home/chat/ChatHashtag";
 
 const HomeLayout = React.lazy(() => import("../screens/HomeLayout"));
 
@@ -31,10 +32,11 @@ function RootRouter() {
         <Routes>
             <Route path="/" element={
                 <React.Suspense fallback={null}>
-                <HomeLayout />
+                    <HomeLayout />
                 </React.Suspense>
             }>
                 <Route path=":name" element={<Chat />} />
+                <Route path=":name/:hashTag" element={<ChatHashtag />} />
             </Route>
             <Route path="/auth" element={<AuthLayout />}>
                 <Route index path="welcome" element={<WelcomeView />} />

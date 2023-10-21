@@ -35,7 +35,11 @@ class SocketStore {
     }
 
     connect = (user?: User) => {
-        console.log('connecting...', toJS(user));
+        console.log('connecting...', toJS(this._socket));
+
+        if (this._socket && !this._connected) {
+            return this._socket?.open();
+        }
 
         this._socket = io(Env.SocketUrl, {
             autoConnect: true,

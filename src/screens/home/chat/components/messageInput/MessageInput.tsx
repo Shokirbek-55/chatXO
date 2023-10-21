@@ -10,13 +10,13 @@ import FilterToolbar from "../filterToolbar/FilterToolBar";
 import FooterToolbarView from "../footerToolbar/FooterToolBar";
 import styles from "./index.module.css";
 import ReplyMessage from "../replyMessage/replyMessageComponent";
+import AddHashtags from "../../../../../components/AddHashtags/addhashtags";
 
 function MessageInput() {
   const { recorderState, ...handlers } = useRecorder();
   const [open, setOpen] = useState<boolean>(false);
   const [openFilter, setOpenFilter] = useState<boolean>(false);
   const [openhastag, setOpenhastag] = useState<boolean>(false);
-  const [isOPen, setIsOpen] = useState(true);
 
   const { setMessageText, messageTextState, onSendMessage } = useRootStore().messageStore
 
@@ -47,16 +47,15 @@ function MessageInput() {
       <div className="container">
         <ReplyMessage />
         <FilterToolbar isOpen={openFilter} />
+        <AddHashtags
+          isOpen={openhastag}
+          setopenhashtags={setOpenhastag}
+        />
         <FooterToolbarView
           props={open}
-          openHashTags={open}
+          openHashTags={openhastag}
           setOpenHashtags={setOpenhastag}
         />
-        {/* <AddHashtags
-        isOpen={true}
-        otherCard={true}
-        setopenhashtags={setOpenhastag}
-      /> */}
         <div className={styles.inputmessage}>
           <div className="icon" onClick={() => setOpenFilter(!openFilter)}>
             <FillterIcon size={17} color="#303030" />
@@ -94,7 +93,7 @@ function MessageInput() {
             </div>
           ) : recorderState.initRecording ? (
             <div className="iconBox">
-              <div className={`icon ${!isOPen && 'iconDelete'}`}
+              <div className={`icon`}
                 onClick={handlers.cancelRecording}
               >
                 <DeleteIcon color="#e74c3c" />
