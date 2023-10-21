@@ -34,10 +34,6 @@ const FooterToolbarView: FC<Props> = ({
 
   const toggleSwitchPollModal = () => { };
 
-  if (!props) {
-    return null;
-  }
-
   const handleCancelVisibility = () => {
     setOpen(false);
     setMinRelevance(-1);
@@ -100,8 +96,8 @@ const FooterToolbarView: FC<Props> = ({
             <SilderContainer $open={open}>
               <div className="textBox">
                 <Text style={{
-                  fontSize: 12,
-                  fontWeight: 300,
+                  fontSize: '12px',
+                  fontWeight: 400,
                   color: '#97a6bc'
                 }}>Min Relevance {minRelevance === -1 ? 0 : minRelevance}</Text>
               </div>

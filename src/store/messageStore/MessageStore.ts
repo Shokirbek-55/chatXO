@@ -1,4 +1,4 @@
-import { action, makeAutoObservable, runInAction, toJS } from "mobx";
+import {  makeAutoObservable, runInAction, toJS } from "mobx";
 import {
     Channel,
     ChannelsUsersType,
@@ -15,6 +15,12 @@ import { Operation } from "../../utils/Operation";
 const initialMassegeText: SendMessage = {
     type: "text",
     minRelevance: -1,
+    isReply: false,
+    hashtags: [],
+    taggedUserId: 0,
+    mediaTitle: undefined,
+    mediaUrl: undefined,
+    msgLocation: undefined,
 };
 
 export default class MessageStore {
@@ -154,14 +160,17 @@ export default class MessageStore {
                 pageState: string;
                 end: boolean;
             }) => {
-                console.log(toJS(data.messages));
                 data.messages = _.reverse(toJS(data.messages));
-                this.setHistoryMessages(
-                    data.messages[0]?.channelSlug || slug,
-                    data.messages,
-                    data.pageState,
-                    data.end
-                );
+                if (this.app.hashtagStore.isOpenHashTagScreen) {
+                    this.app.hashtagStore.setAllHashTagsMessages(data)
+                } else {
+                    this.setHistoryMessages(
+                        data.messages[0]?.channelSlug || slug,
+                        data.messages,
+                        data.pageState,
+                        data.end
+                    );
+                }
             }
         );
         runInAction(() => {
@@ -404,6 +413,10 @@ export default class MessageStore {
                 break;
         }
 
+        this.setSendMessage = {
+            ...this.setSendMessage,
+            hashtags: this.app.hashtagStore.hashTags,
+        };
         this.app.socketStore.socket?.emit("message", this.setSendMessage);
         this.setSendMessage = initialMassegeText;
         this.clearReplyMessage();

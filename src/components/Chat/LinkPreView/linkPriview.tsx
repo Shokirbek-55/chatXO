@@ -25,13 +25,19 @@ const LinkPriviewComponent = ({
     const textWeight = MESSAGE_STYLE?.fontWeight;
     const textLineHeight = MESSAGE_STYLE?.lineHeight;
 
-    const renderMessage = () => {
+    const renderMessage = ({ fontSize, fontWeight, lineHeight }: {
+        fontSize:string, fontWeight:string, lineHeight:string
+    }) => {
         const regex =
             /(http:\/\/|https:\/\/)?(www\.)?([a-zA-Z0-9-]+\.)*([a-zA-Z0-9-]+)\.[a-zA-Z]{2,}(\S*)/g;
         const links = message.message.match(regex);
 
         if (!links || links.length === 0)
-            return <Paragraph>{message.message}</Paragraph>;
+            return <Paragraph
+                $fontSize={fontSize}
+                $fontWeight={fontWeight}
+                $lineHeight={lineHeight}
+            >{message.message}</Paragraph>;
 
         function urlify(text: string) {
             const replacedText = text.replace(regex, (match) => {
@@ -43,7 +49,7 @@ const LinkPriviewComponent = ({
         }
 
         const text = urlify(message.message);
-        return <Paragraph dangerouslySetInnerHTML={{ __html: text }} />;
+        return <Paragraph dangerouslySetInnerHTML={{ __html: text }} $fontSize={fontSize} $fontWeight={fontWeight} $lineHeight={lineHeight} />;
     };
 
     return (
@@ -51,13 +57,10 @@ const LinkPriviewComponent = ({
             <div className={styles.textCard}>
                 <Text
                     style={{
-                        fontSize: textSize,
-                        fontWeight: textWeight,
-                        lineHeight: textLineHeight,
                         backgroundColor: textBackColor,
                     }}
                 >
-                    {renderMessage()}
+                    {renderMessage({ fontSize: textSize, fontWeight: textWeight, lineHeight: textLineHeight })}
                 </Text>
             </div>
         </MessageComponent>
@@ -66,8 +69,12 @@ const LinkPriviewComponent = ({
 
 export default LinkPriviewComponent;
 
-const Paragraph = styled.p`
+const Paragraph = styled.p<{ $fontSize?: string, $fontWeight?: string, $lineHeight?:string  }>`
     white-space: pre-wrap;
     word-wrap: break-word;
     word-break: break-word;
+
+    font-size: ${({ $fontSize }) => $fontSize};
+    font-weight: ${({ $fontWeight }) => $fontWeight};
+    line-height: ${({ $lineHeight }) => $lineHeight};
 `;

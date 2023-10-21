@@ -45,7 +45,7 @@ const MessageHeader = ({
     const MESSAGE_STYLE = relevanceFuniction({} as RawMessage, relevance);
     const textSize = MESSAGE_STYLE.fontSize;
 
-    const { getOneMember, adminId } = useRootStore().channelStore;
+    const { getOneMember } = useRootStore().channelStore;
 
     const onRelevance = async (id: number) => {
         getOneMember(id);
@@ -63,7 +63,7 @@ const MessageHeader = ({
                 {!showReply && (
                     <div
                         className={styles.relevence}
-                        onClick={() => onRelevance(userId as number)}
+                        onClick={() => onRelevance(userId || 0)}
                     >
                         <button
                             style={{

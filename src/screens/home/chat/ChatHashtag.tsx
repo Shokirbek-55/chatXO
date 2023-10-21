@@ -1,9 +1,8 @@
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import ScrollContainer from "../../../components/ScrollContainer/ScrollContainer";
-import ChatHeader from "../../../utils/chatHeader";
 import MessageInput from "./components/messageInput/MessageInput";
 import LinkPriview from "../../../components/Chat/LinkPreView/linkPriview";
 import MessageAudio from "../../../components/Chat/MessageAudio";
@@ -14,14 +13,18 @@ import { RawMessage } from "../../../types/channel";
 import MessageBox from "../../../components/Chat/MessageBox";
 import useRootStore from "../../../hooks/useRootStore";
 import _ from "lodash";
+import ChatHeaderHashtag from "../../../utils/chatHeaderHashtag";
 
-const Chat = () => {
+const ChatHashtag = () => {
 
     const navigate = useNavigate();
+    const { allHashTagsMessages, exit } = useRootStore().hashtagStore
     const { messageCache, slug } =
         useRootStore().messageStore;
     const { user } = useRootStore().authStore;
 
+    // console.log('allHashTagsMessages', toJS(allHashTagsMessages));
+    
 
     useEffect(() => {
         const handleEsc = (event: any) => {
@@ -30,9 +33,11 @@ const Chat = () => {
             }
         };
         window.addEventListener("keydown", handleEsc);
+        window.addEventListener('popstate', exit)
 
         return () => {
             window.removeEventListener("keydown", handleEsc);
+            window.addEventListener('popstate', exit)
         };
     }, []);
 
@@ -143,15 +148,15 @@ const Chat = () => {
 
     return (
         <ChatContainer id="chatView">
-            <ChatHeader />
+            <ChatHeaderHashtag />
             <ScrollContainer>
-                {_.map(messageCache[slug]?.messages, (message, index) => {
+                {_.map(allHashTagsMessages.messages, (message, index) => {
                     return (
                         <div
                             key={index}
                             style={{
                                 paddingBottom:
-                                    messageCache[slug].messages?.length - 1 ==
+                                    allHashTagsMessages.messages?.length - 1 ==
                                         index
                                         ? "7.5vh"
                                         : "0",
@@ -168,7 +173,7 @@ const Chat = () => {
     );
 };
 
-export default observer(Chat);
+export default observer(ChatHashtag);
 
 const ChatContainer = styled.div`
     width: 100%;

@@ -148,6 +148,7 @@ export default class ChannelStore {
     };
 
     getChannelByHashId = async (hashId: string) => {
+        this.rootStore.hashtagStore.setHashId(hashId);
         runInAction(() => {
             this.isLoad = true;
         });

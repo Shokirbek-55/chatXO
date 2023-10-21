@@ -28,7 +28,7 @@ function HomeLayout() {
             const target = generatePath(`/:name`, {
                 name: `@${hashId}`,
             });
-            // setChannelHashId(hashId, () => navigate(target));
+            setChannelHashId(hashId, () => navigate(target));
         } else if (!session.accessToken) {
             navigate("/auth/welcome");
         }

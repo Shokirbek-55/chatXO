@@ -5,6 +5,7 @@ import { TMP_URL } from "../env";
 import useRootStore from "../hooks/useRootStore";
 import {
     ArrowDowunIcon,
+    ArrowLeftIcon,
     ArrowUpIcon,
     CloserNoCirculIcon,
     HashtagIcon,
@@ -16,9 +17,11 @@ import Text from "../components/Text/Text";
 import { Spin } from 'antd';
 import React from "react";
 import { GrFormClose } from "react-icons/gr";
+import { useNavigate } from "react-router-dom";
 
-const ChatHeader = () => {
+const ChatHeaderHashtag = () => {
 
+    const navigate = useNavigate();
     const [isOpenAllHashTags, setIsOpenAllHashTags] = React.useState<boolean>(false);
     const { visible, toglevisible } = useRootStore().visibleStore;
     const { openRightSideBar } = useRootStore().routerStore;
@@ -32,7 +35,7 @@ const ChatHeader = () => {
         searchMessages,
     } = useRootStore().messageStore;
 
-    const { hashTags, removeHashTags, getChannelAllHashTags, isLoading, allChatHashTags } = useRootStore().hashtagStore
+    const { hashTags, removeHashTags, getChannelAllHashTags, isLoading, allChatHashTags, exit } = useRootStore().hashtagStore
 
     const searchHandle = (e: string) => {
         setSearch(e);
@@ -52,6 +55,11 @@ const ChatHeader = () => {
         removeHashTags(removedTag)
     };
 
+    const GoToBack = () => {
+        navigate(-1);
+        exit();
+    }
+
     const img_url = messageCache[slug]?.channelData?.avatar
     const color = messageCache[slug]?.channelData?.color;
     const name = messageCache[slug]?.channelData?.name;
@@ -60,6 +68,15 @@ const ChatHeader = () => {
         <BassComponent>
             <div className="container">
                 <header>
+                    <button style={{
+                        outline: "none",
+                        border: "none",
+                        background: "transparent",
+                    }}
+                        onClick={GoToBack}
+                    >
+                        <ArrowLeftIcon color={'#444'} />
+                    </button>
                     <div onClick={OpenManageChannel}>
                         <SmallAvatar
                             imageUrl={img_url ? `${TMP_URL}/${img_url}` : ""}
@@ -178,7 +195,7 @@ const ChatHeader = () => {
     );
 };
 
-export default observer(ChatHeader);
+export default observer(ChatHeaderHashtag);
 
 const BassComponent = styled.div`
     position: absolute;

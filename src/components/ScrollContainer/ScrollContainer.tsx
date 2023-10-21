@@ -19,15 +19,14 @@ const ScrollContainer = ({ children }: ScrollContainerProps) => {
     const innerDiv = useRef<HTMLDivElement | any>(null);
 
     const { getHistoryMessagesPageState, messageCache, slug, prevInnerDivHeight, setPrevInnerDivHeight } = useRootStore().messageStore
+    const { isOpenHashTagScreen, getHistoryHashTagsMessagesPageState, allHashTagsMessages } = useRootStore().hashtagStore
 
     const topDiv = useRef<HTMLDivElement | any>(null);
 
     const [showScrollButton, setShowScrollButton] = useState(false);
 
-    console.log('ScrollContainer render');
-
     useEffect(() => {
-        stop.current = messageCache[slug]?.end || false;
+        stop.current = messageCache[slug]?.end || allHashTagsMessages?.end || false;
         const outerDivHeight = outerDiv.current.clientHeight;
         const innerDivHeight = innerDiv.current.clientHeight;
         const outerDivScrollTop = outerDiv.current.scrollTop;
@@ -66,6 +65,9 @@ const ScrollContainer = ({ children }: ScrollContainerProps) => {
     }, []);
 
     const getMoreMessages = () => {
+        if (isOpenHashTagScreen) {
+            return getHistoryHashTagsMessagesPageState(setIsFetching, stop);
+        }
         getHistoryMessagesPageState(setIsFetching, stop);
     }
 
