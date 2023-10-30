@@ -1,5 +1,6 @@
 // import { IMessage } from 'react-native-gifted-chat';
 import { MsgLocation } from "../types/auth";
+import { pollMessage, PollOptionsType } from "./messageType";
 import { User } from "./user";
 
 export type Hashtag = {
@@ -13,6 +14,7 @@ export type MessageType =
     | "video"
     | "image"
     | "document"
+    | "poll"
     | "RELEVANCE"
     | "NORMAL";
 
@@ -36,7 +38,7 @@ export type Message = IMessage & {
     index?: number;
     topic?: string;
     pollType?: "NORMAL" | "RELEVANCE";
-    options?: string[] | object[];
+    options?: PollOptionsType[];
     pollId?: number;
     votes?: any[];
     votesCount?: number;
@@ -64,6 +66,7 @@ export interface IMessage {
     pending?: boolean;
     quickReplies?: any;
     message?: string;
+    pollId?: number;
 }
 export type RawMessage = {
     id: string;
@@ -86,8 +89,8 @@ export type RawMessage = {
     originMessageId: string;
     originMessageTimestamp: Date;
     topic?: string;
-    pollType?: "NORMAL" | "RELEVANCE";
-    options?: string[];
+    pollType?: string;
+    options?: PollOptionsType[];
     pollId?: number;
     votes?: any[];
     votesCount?: number;

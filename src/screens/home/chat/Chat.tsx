@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import ScrollContainer from "../../../components/ScrollContainer/ScrollContainer";
@@ -14,14 +14,12 @@ import { RawMessage } from "../../../types/channel";
 import MessageBox from "../../../components/Chat/MessageBox";
 import useRootStore from "../../../hooks/useRootStore";
 import _ from "lodash";
+import MessagePoll from "../../../components/Chat/MessagePoll";
 
 const Chat = () => {
-
     const navigate = useNavigate();
-    const { messageCache, slug } =
-        useRootStore().messageStore;
+    const { messageCache, slug } = useRootStore().messageStore;
     const { user } = useRootStore().authStore;
-
 
     useEffect(() => {
         const handleEsc = (event: any) => {
@@ -124,6 +122,30 @@ const Chat = () => {
         }
     };
 
+    const renderPollMessage = (message: RawMessage) => {
+        switch (message.userId) {
+            case user.id:
+                return (
+                    <MessagePoll
+                        isReply={message.isReply}
+                        pollId={message.pollId ? message.pollId : 0}
+                        own={true}
+                        message={message}
+                    />
+                );
+            default:
+                return (
+                    <MessagePoll
+                        isReply={message.isReply}
+                        pollId={message.pollId ? message.pollId : 0}
+                        own={false}
+                        message={message}
+                        users={messageCache[slug]?.channelUsers}
+                    />
+                );
+        }
+    };
+
     const renderMessage = (message: RawMessage) => {
         switch (message.type) {
             case "text":
@@ -136,6 +158,10 @@ const Chat = () => {
                 return renderAudioMessage(message);
             case "document":
                 return renderDocumentMessage(message);
+            case "NORMAL":
+                return renderPollMessage(message);
+            case "RELEVANCE":
+                return renderPollMessage(message);
             default:
                 return <MessageBox text={message.message} own={0} />;
         }
@@ -152,7 +178,7 @@ const Chat = () => {
                             style={{
                                 paddingBottom:
                                     messageCache[slug].messages?.length - 1 ==
-                                        index
+                                    index
                                         ? "7.5vh"
                                         : "0",
                                 paddingTop: 0 == index ? "7vh" : "0",

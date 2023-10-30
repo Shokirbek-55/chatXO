@@ -15,6 +15,8 @@ class VisibleStore {
         showPass: false,
         passwordInput: false,
         setSearch: false,
+        pollMesssageCard: false,
+        openFooterMediaBar: false,
     };
 
     toglevisible = (key: keyof typeof this.visible) => {

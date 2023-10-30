@@ -24,7 +24,6 @@ function RootRouter() {
     useEffect(() => {
         if (!session.accessToken) {
             navigation("/auth/welcome");
-            localStorage.setItem("hashId", `${hashId}`);
         }
     }, []);
 

@@ -10,7 +10,15 @@ interface Props {
     margin?: string;
     backgroundColor?: string;
     fontWeight?: string;
-    fontFamily?: "Montserrat1" | "Montserrat2" | "Montserrat3" | "Montserrat4" | "Montserrat5" | "Montserrat6" | "Montserrat7" | "Montserrat8";
+    fontFamily?:
+        | "Montserrat1"
+        | "Montserrat2"
+        | "Montserrat3"
+        | "Montserrat4"
+        | "Montserrat5"
+        | "Montserrat6"
+        | "Montserrat7"
+        | "Montserrat8";
     fontSize?: string;
     textAlign?: string | any;
 }

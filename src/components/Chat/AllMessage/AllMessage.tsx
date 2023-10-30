@@ -10,32 +10,38 @@ import useRootStore from "../../../hooks/useRootStore";
 import { observer } from "mobx-react";
 import { toJS } from "mobx";
 
-
-const MessageContainer = memo(({ children, messages, index }: { children: ReactNode, messages: RawMessage[], index: number }) => {
-    return <div
-        key={index}
-        style={{
-            paddingBottom:
-                messages?.length - 1 ==
-                    index
-                    ? "7.5vh"
-                    : "0",
-            paddingTop: 0 == index ? "7vh" : "0",
-        }}
-    >
-        {children}
-    </div>
-})
+const MessageContainer = memo(
+    ({
+        children,
+        messages,
+        index,
+    }: {
+        children: ReactNode;
+        messages: RawMessage[];
+        index: number;
+    }) => {
+        return (
+            <div
+                key={index}
+                style={{
+                    paddingBottom:
+                        messages?.length - 1 == index ? "7.5vh" : "0",
+                    paddingTop: 0 == index ? "7vh" : "0",
+                }}
+            >
+                {children}
+            </div>
+        );
+    }
+);
 
 const AllMessage = () => {
-
-    const { messageCache, slug } = useRootStore().messageStore
-    const { user } = useRootStore().authStore
+    const { messageCache, slug } = useRootStore().messageStore;
+    const { user } = useRootStore().authStore;
 
     console.log(toJS(messageCache[slug]?.messages[0]));
-    
-    
-    console.log('ishladi AllMessage');
+
+    console.log("ishladi AllMessage");
 
     const renderTextMessage = (message: RawMessage) => {
         switch (message.userId) {
@@ -146,14 +152,16 @@ const AllMessage = () => {
         <>
             {messageCache[slug]?.messages.map((message, index) => {
                 return (
-                    <MessageContainer messages={messageCache[slug]?.messages} index={index} >
+                    <MessageContainer
+                        messages={messageCache[slug]?.messages}
+                        index={index}
+                    >
                         {renderMessage(message)}
                     </MessageContainer>
                 );
             })}
         </>
     );
-}
+};
 
-export default observer(AllMessage)
-
+export default observer(AllMessage);

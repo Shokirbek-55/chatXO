@@ -94,24 +94,22 @@ export default class ChannelStore {
 
     getOneMember = (id: number) => {
         runInAction(() => {
-            runInAction(() => {
-                if (this.rootStore.authStore.user.id === this.adminId) {
-                    this.rootStore.visibleStore.show("RelevenceModal");
-                    this.memberRelevence = this.channelUsers.find(
-                        (item) => item.id === id
-                    ) as never;
-                    this.relevanceData = {
-                        channelSlug: this.channelData.slug,
-                        fromUserId: this.rootStore.authStore.user.id as never,
-                        toUserId: id,
-                        relevance: this.memberRelevence.relevance,
-                    };
-                    return;
-                } else {
-                    message.warning("You are not admin");
-                    return;
-                }
-            });
+            if (this.rootStore.authStore.user.id === this.adminId) {
+                this.rootStore.visibleStore.show("RelevenceModal");
+                this.memberRelevence = this.channelUsers.find(
+                    (item) => item.id === id
+                ) as never;
+                this.relevanceData = {
+                    channelSlug: this.channelData?.slug,
+                    fromUserId: this.rootStore.authStore.user.id as never,
+                    toUserId: id,
+                    relevance: this.memberRelevence?.relevance,
+                };
+                return;
+            } else {
+                message.warning("You are not admin");
+                return;
+            }
         });
     };
 
@@ -120,14 +118,14 @@ export default class ChannelStore {
             APIs.channels.updateRelevance(data)
         );
         if (this.updateMemberRelevanceOperation.isSuccess) {
-            this.memberRelevence.relevance = data.relevance;
+            this.memberRelevence.relevance = data?.relevance;
             message.success(
-                `update ${this.memberRelevence.username} relevance successfully`
+                `update ${this.memberRelevence?.username} relevance successfully`
             );
         }
         if (this.updateMemberRelevanceOperation.isError) {
             message.error(
-                `update ${this.memberRelevence.username} relevance Error`
+                `update ${this.memberRelevence?.username} relevance Error`
             );
             return;
         }
@@ -239,16 +237,10 @@ export default class ChannelStore {
 
             await Promise.all(promises)
                 .then(() => {
-                    if (
-                        this.hashId ||
-                        JSON.stringify(localStorage.getItem("hashId"))
-                    ) {
-                        this.getHashId();
-                    }
+                    this.getHashId();
                 })
                 .catch((error) => {
                     console.log("error getChannelDataCache", error);
-                    this.getHashId();
                 });
         } catch (error) {
             console.log("Error:", error);

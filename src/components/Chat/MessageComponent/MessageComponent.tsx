@@ -14,156 +14,197 @@ import useRootStore from "../../../hooks/useRootStore";
 import { observer } from "mobx-react-lite";
 
 interface Props {
-  message: RawMessage;
-  position: boolean;
-  users?: {
-    [key: string]: ChannelsUsersType;
-  };
-  children: React.ReactNode;
+    message: RawMessage;
+    position: boolean;
+    users?: {
+        [key: string]: ChannelsUsersType;
+    };
+    children: React.ReactNode;
+    options?: [];
+    pollId?: number;
 }
 
-const MessageComponent: FC<Props> = ({ message, users, position, children }) => {
+const MessageComponent: FC<Props> = ({
+    message,
+    users,
+    position,
+    children,
+}) => {
+    const navigate = useNavigate();
+    const { name } = useParams();
+    const { isOpenHashTagScreen, setHashTags, enter } =
+        useRootStore().hashtagStore;
+    const { openRightSideBar, toRouterManageCh } = useRootStore().routerStore;
+    const { getFriendDetails } = useRootStore().usersStore;
+    const currentUser: ChannelsUsersType | undefined = users?.[message.userId];
 
-  const navigate = useNavigate();
-  const { name } = useParams();
-  const { isOpenHashTagScreen, setHashTags, enter } = useRootStore().hashtagStore;
-  const currentUser: ChannelsUsersType | undefined = users?.[message.userId];
+    const MESSAGE_STYLE = relevanceFuniction(message);
+    const boxShadov = MESSAGE_STYLE?.boxShadow;
 
-  const MESSAGE_STYLE = relevanceFuniction(message);
-  const boxShadov = MESSAGE_STYLE?.boxShadow;
+    const handleHashTagClick = (tag: string) => {
+        if (isOpenHashTagScreen) {
+            setHashTags(tag);
+            enter();
+        } else {
+            setHashTags(tag);
+            enter();
+            navigate(
+                generatePath("/:name", {
+                    name: name || "",
+                }) +
+                    generatePath("/:hashtag", {
+                        hashtag: tag,
+                    })
+            );
+        }
+    };
 
-  const handleHashTagClick = (tag: string) => {
-    if (isOpenHashTagScreen) {
-      setHashTags(tag);
-      enter();
-    } else {
-      setHashTags(tag);
-      enter();
-      navigate(
-        generatePath("/:name", {
-          name: name || "",
-        }) + generatePath("/:hashtag", {
-          hashtag: tag,
-        })
-      );
-    }
-  }
+    const openUserAccount = (userId: number) => {
+        getFriendDetails(userId);
+        openRightSideBar();
+        toRouterManageCh("channelInUser");
+    };
 
-
-  return (
-    <Container $position={position} $isRaplayed={message.isReply}>
-      <div className='childContainer'>
-        {!position && (
-          <MessageHeader
-            name={message.username}
-            relevance={message.relevance}
-            color={currentUser?.color || message.color}
-            userId={message.userId}
-          />
-        )}
-        <div className='messageCard'>
-          {!position && (
-            <div className='avatarCard'>
-              <SmallAvatar
-                color={currentUser?.color || message.color}
-                imageUrl={
-                  currentUser?.avatar
-                    ? `${Env.AssetsUrl}/${currentUser?.avatar}`
-                    : ""
-                }
-              />
-            </div>
-          )}
-          <DropDownMenu massage={message}>
-            <BoxShadow $boxShodow={boxShadov}>
-              <AudioPlayContainer>
-                {
-                  message.isReply
-                  && (<div className="replayMessage" onClick={() => { }}>
+    return (
+        <Container $position={position} $isRaplayed={message.isReply}>
+            <div className="childContainer">
+                {!position && (
                     <MessageHeader
-                      name={message.originMessage?.username}
-                      showReply
-                      color={message?.color}
-                      style={{
-                        fontFamily: "sans-serif",
-                        fontSize: "20px",
-                      }}
+                        name={message.username}
+                        relevance={message.relevance}
+                        color={currentUser?.color || message.color}
+                        userId={message.userId}
                     />
-                    <div className="messageMain">
-                      {ReplyTypeRender(message)}
-                    </div>
-                  </div>)
-                }
-                {children}
-                <HashTagsContainer $isHas={message.hashtags && message.hashtags.length > 0}>
-                  {message.hashtags && message.hashtags.map((tag, index) => {
-                    const isLongTag = tag.length > 20;
-                    const tagElem = (
-                      <Tag
-                        key={index}
-                        onClick={() => handleHashTagClick(tag)}
-                      >
-                        <Text fontSize='12px' fontFamily="Montserrat5" margin="0">
-                          #{isLongTag ? `${tag.slice(0, 20)}...` : tag}
-                        </Text>
-                      </Tag>
-                    );
-                    return isLongTag ? (
-                      <Tooltip title={tag} key={tag}>
-                        {tagElem}
-                      </Tooltip>
-                    ) : (
-                      tagElem
-                    );
-                  })}
-                </HashTagsContainer>
-              </AudioPlayContainer>
-            </BoxShadow>
-          </DropDownMenu>
-        </div>
-      </div>
-    </Container>
-  );
+                )}
+                <div className="messageCard">
+                    {!position && (
+                        <div className="avatarCard">
+                            <SmallAvatar
+                                onPress={() =>
+                                    openUserAccount(currentUser?.id as never)
+                                }
+                                color={currentUser?.color || message.color}
+                                imageUrl={
+                                    currentUser?.avatar
+                                        ? `${Env.AssetsUrl}/${currentUser?.avatar}`
+                                        : ""
+                                }
+                            />
+                        </div>
+                    )}
+                    <DropDownMenu massage={message}>
+                        <BoxShadow $boxShodow={boxShadov}>
+                            <AudioPlayContainer>
+                                {message.isReply && (
+                                    <div
+                                        className="replayMessage"
+                                        onClick={() => {}}
+                                    >
+                                        <MessageHeader
+                                            name={
+                                                message.originMessage?.username
+                                            }
+                                            showReply
+                                            color={message?.color}
+                                            style={{
+                                                fontFamily: "sans-serif",
+                                                fontSize: "20px",
+                                            }}
+                                        />
+                                        <div className="messageMain">
+                                            {ReplyTypeRender(message)}
+                                        </div>
+                                    </div>
+                                )}
+                                {children}
+                                <HashTagsContainer
+                                    $isHas={
+                                        message.hashtags &&
+                                        message.hashtags.length > 0
+                                    }
+                                >
+                                    {message.hashtags &&
+                                        message.hashtags.map((tag, index) => {
+                                            const isLongTag = tag.length > 20;
+                                            const tagElem = (
+                                                <Tag
+                                                    key={index}
+                                                    onClick={() =>
+                                                        handleHashTagClick(tag)
+                                                    }
+                                                >
+                                                    <Text
+                                                        fontSize="12px"
+                                                        fontFamily="Montserrat5"
+                                                        margin="0"
+                                                    >
+                                                        #
+                                                        {isLongTag
+                                                            ? `${tag.slice(
+                                                                  0,
+                                                                  20
+                                                              )}...`
+                                                            : tag}
+                                                    </Text>
+                                                </Tag>
+                                            );
+                                            return isLongTag ? (
+                                                <Tooltip title={tag} key={tag}>
+                                                    {tagElem}
+                                                </Tooltip>
+                                            ) : (
+                                                tagElem
+                                            );
+                                        })}
+                                </HashTagsContainer>
+                            </AudioPlayContainer>
+                        </BoxShadow>
+                    </DropDownMenu>
+                </div>
+            </div>
+        </Container>
+    );
 };
 
 export default observer(MessageComponent);
 
-const Container = styled.div<{ $isRaplayed?: boolean, $position?: boolean }>`
-  width: 100%;
-  padding: 10px 15px;
-  display: flex;
-  align-items: center;
-  justify-content: ${({ $position }) => $position ? "flex-end" : "flex-start"};
-
-  .childContainer {
-    width: fit-content;
-  }
-
-  .messageCard {
+const Container = styled.div<{ $isRaplayed?: boolean; $position?: boolean }>`
+    width: 100%;
+    padding: 10px 15px;
     display: flex;
-    flex-direction: row;
-    gap: 10px;
+    align-items: center;
+    justify-content: ${({ $position }) =>
+        $position ? "flex-end" : "flex-start"};
 
-    .avatarCard {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
+    .childContainer {
+        width: fit-content;
     }
 
-    .replayMessage{
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      padding: 0 10px;
-      margin-top: 5px;
-      cursor: pointer;
+    .messageCard {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
 
-      .messageMain{
-        margin-bottom: 5px;
-      }
+        .avatarCard {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .replayMessage {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 0 10px;
+            margin-top: 5px;
+            cursor: pointer;
+
+            .messageMain {
+                margin-bottom: 5px;
+            }
+        }
     }
-  }
-`
+`;
 
 const AudioPlayContainer = styled.div`
     position: relative;
@@ -173,7 +214,7 @@ const AudioPlayContainer = styled.div`
     border-radius: 15px;
     background-color: rgb(242, 242, 240);
     z-index: 1;
-`
+`;
 
 const BoxShadow = styled.div<{ $boxShodow?: string }>`
     position: relative;
@@ -185,14 +226,13 @@ const BoxShadow = styled.div<{ $boxShodow?: string }>`
     z-index: auto;
 `;
 
-
 const HashTagsContainer = styled.div<{ $isHas: boolean }>`
     width: 100%;
     height: auto;
     padding: 0 15px 10px 15px;
-    display: ${({ $isHas }) => $isHas ? 'flex' : 'none'};
+    display: ${({ $isHas }) => ($isHas ? "flex" : "none")};
     align-items: center;
     justify-content: flex-start;
     gap: 5px;
     flex-wrap: wrap;
-`
+`;

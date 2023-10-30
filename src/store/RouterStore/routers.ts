@@ -13,6 +13,7 @@ import ManagaChannel from "../../screens/home/manageChannel/ManagaChannel";
 import NewAdmin from "../../screens/home/newAdmin/NewAdmin";
 import ChannelSetting from "../../screens/home/channelSetting/ChannelSetting";
 import BlockUser from "../../screens/home/blockUser/BlockUser";
+import ChannelInUser from "../../screens/home/channelInUser/ChannelInUser";
 
 export const MainRoutes = {
     channels: "channels",
@@ -179,6 +180,12 @@ export const ManageHelperRoutes = {
         id: 8,
         key: "blockUserM",
         components: BlockUser,
+        isOpen: false,
+    },
+    channelInUser: {
+        id: 9,
+        key: "channelInUserM",
+        components: ChannelInUser,
         isOpen: false,
     },
 };
