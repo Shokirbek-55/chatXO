@@ -66,9 +66,10 @@ const ScrollContainer = ({ children }: ScrollContainerProps) => {
 
     const getMoreMessages = () => {
         if (isOpenHashTagScreen) {
-            return getHistoryHashTagsMessagesPageState(setIsFetching, stop);
+            getHistoryHashTagsMessagesPageState(setIsFetching, stop);
+        } else {
+            getHistoryMessagesPageState(setIsFetching, stop);
         }
-        getHistoryMessagesPageState(setIsFetching, stop);
     }
 
     const [isFetching, setIsFetching, stop] = useInfiniteScroll(getMoreMessages, outerDiv);

@@ -4,7 +4,7 @@ import { relevanceFuniction } from "../../../utils/boxShadov";
 import Text from "../../Text/Text";
 import Colors from "../../../utils/colors";
 import { Env } from "../../../env";
-import { DocumentIcon, VideoPlayIcon } from "../../../utils/icons";
+import { DocumentIcon, VideoPlayIcon, ChartIcon } from "../../../utils/icons";
 
 export const ReplyTypeRender = (ReplyMessage: RawMessage) => {
   const originMedialUrl = ReplyMessage.originMessage?.mediaUrl;
@@ -71,6 +71,7 @@ export const ReplyTypeRender = (ReplyMessage: RawMessage) => {
       </div>
     );
   }
+
   if (ReplyMessage.originMessage?.type === "audio") {
     return (
       <div className={styles.replyedMediaCard}>
@@ -82,5 +83,27 @@ export const ReplyTypeRender = (ReplyMessage: RawMessage) => {
         />
       </div>
     );
+  }
+
+  if (ReplyMessage.originMessage?.type === 'NORMAL' || ReplyMessage.originMessage?.type === 'RELEVANCE') {
+    return (
+      <div className={styles.replyedMediaCard}>
+        <ChartIcon
+          size={30}
+          padding={5}
+          color={Colors.BaliHai}
+          hoverActive={false}
+        />
+        <Text
+          children={`Poll: ${ReplyMessage.originMessage?.type.toLocaleLowerCase()}`}
+          style={{
+            fontFamily: "sans-serif",
+            color: Colors.ChatText,
+            fontSize: '12px',
+            fontWeight: 700,
+          }}
+        />
+      </div>
+    )
   }
 };

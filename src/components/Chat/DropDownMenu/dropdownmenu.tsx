@@ -48,7 +48,6 @@ const DropDownMenu = ({ massage, users, children }: Props) => {
 
     const contextOptions = {
         [t("delete")]: () => {
-            console.log("delete message ", massage);
             if (isAdmin || massage.userId == user?.id) {
                 deleteMessage(
                     massage.id,
@@ -68,7 +67,6 @@ const DropDownMenu = ({ massage, users, children }: Props) => {
             }
         },
         [t("reply")]: () => {
-            console.log("message ", massage);
             replyMessage(massage);
         },
     };

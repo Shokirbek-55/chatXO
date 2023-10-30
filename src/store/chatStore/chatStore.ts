@@ -69,6 +69,7 @@ class ChatStore {
                 timestamp: Date;
             }) => {
                 console.log("delete message", payload);
+                this.root.messageStore.onDeleteMessage(payload.messageId)
             }
         );
 

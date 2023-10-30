@@ -7,7 +7,6 @@ import MessageComponent from "../MessageComponent/MessageComponent";
 import styles from "./index.module.css";
 import { useAsyncFn } from "react-use";
 import useRootStore from "../../../hooks/useRootStore";
-import { toJS } from "mobx";
 import { pollMessage } from "../../../types/messageType";
 import APIs from "../../../api/api";
 import { Skeleton, Tooltip } from "antd";
