@@ -2,13 +2,13 @@ import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import useRootStore from "../../hooks/useRootStore";
 
 
 const StyleRangeSilder = styled.div`
   position: relative;
   overflow: hidden;
   width: 95%;
-  padding: 10px 15px;
   display: flex;
   flex-direction: column;
   margin: auto;
@@ -26,13 +26,13 @@ interface propsType {
   friendRelevance: number;
 }
 const FilterSilderComponent = () => {
-  const [filter, setFilter] = useState({
-    progress: 0,
-  });
+
+  const { setMessageFilterValue, messagesFilterValue } = useRootStore().messageStore
+  const [filter, setFilter] = useState(messagesFilterValue);
+
   const changeRelevance = (e: number) => {
-    setFilter({
-      progress: e
-    })
+    setFilter(e)
+    setMessageFilterValue(e)
   };
 
   return (
@@ -43,14 +43,13 @@ const FilterSilderComponent = () => {
           min={0}
           max={100}
           step={1}
-          value={filter.progress}
-          //   disabled={data?.adminId == friendId}
+          value={filter}
           onChange={(e) => changeRelevance(e as number)}
           railStyle={{
             backgroundColor: "#ffffff",
           }}
         />
-        <span>{filter.progress}</span>
+        <span>{filter}</span>
       </div>
     </StyleRangeSilder>
   );

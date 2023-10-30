@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
-import { useEffect, useRef } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import ScrollContainer from "../../../components/ScrollContainer/ScrollContainer";
 import ChatHeader from "../../../utils/chatHeader";
@@ -18,7 +18,8 @@ import MessagePoll from "../../../components/Chat/MessagePoll";
 
 const Chat = () => {
     const navigate = useNavigate();
-    const { messageCache, slug } = useRootStore().messageStore;
+    const { messageCache, slug, messagesFilterValue } =
+        useRootStore().messageStore;
     const { user } = useRootStore().authStore;
 
     useEffect(() => {
@@ -33,6 +34,8 @@ const Chat = () => {
             window.removeEventListener("keydown", handleEsc);
         };
     }, []);
+
+    const messages = useMemo(() => messagesFilterValue != 0 && messageCache[slug]?.messages.length >= 0 ? messageCache[slug]?.messages.filter((e) => e.relevance && e.relevance >= messagesFilterValue) : messageCache[slug]?.messages, [messageCache[slug]?.messages, slug, messagesFilterValue])
 
     const renderTextMessage = (message: RawMessage) => {
         switch (message.userId) {
@@ -171,7 +174,7 @@ const Chat = () => {
         <ChatContainer id="chatView">
             <ChatHeader />
             <ScrollContainer>
-                {_.map(messageCache[slug]?.messages, (message, index) => {
+                {_.map(messages, (message, index) => {
                     return (
                         <div
                             key={index}

@@ -1,6 +1,6 @@
 import styles from "./replyMessage.module.css";
 import { Env } from "../../../../../env";
-import { CloseIcon, DocumentIcon, ReplyIcon, VideoPlayIcon } from "../../../../../utils/icons";
+import { ChartIcon, CloseIcon, DocumentIcon, ReplyIcon, VideoPlayIcon } from "../../../../../utils/icons";
 import Colors from "../../../../../utils/colors";
 import { observer } from "mobx-react-lite";
 import useRootStore from "../../../../../hooks/useRootStore";
@@ -62,6 +62,26 @@ const ReplyMessage = () => {
         case "audio":
           LeftIconArea = (
             <VideoPlayIcon
+              size={30}
+              padding={0}
+              color={Colors.BaliHai}
+              hoverActive={false}
+            />
+          );
+          break;
+        case "NORMAL":
+          LeftIconArea = (
+            <ChartIcon
+              size={30}
+              padding={0}
+              color={Colors.BaliHai}
+              hoverActive={false}
+            />
+          );
+          break;
+        case "RELEVANCE":
+          LeftIconArea = (
+            <ChartIcon
               size={30}
               padding={0}
               color={Colors.BaliHai}
