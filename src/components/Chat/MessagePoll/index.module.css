@@ -1,0 +1,76 @@
+.pollTop {
+    padding: 10px;
+    max-width: 300px;
+    min-width: 250px;
+    height: 100%;
+}
+
+.voteBox {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 4px;
+    cursor: pointer;
+    height: 100%;
+}
+.option {
+    width: 100%;
+}
+.line {
+    width: 100%;
+    height: 1px;
+    background-color: grey;
+}
+.radioBox {
+    width: 40px;
+}
+.radio {
+    margin-top: 2px;
+    min-width: 15px;
+    max-width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 1px solid grey;
+}
+
+.votedBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 40px;
+}
+
+.checkedIcon {
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+    bottom: 0;
+    left: 25px;
+}
+
+.checkedLine {
+    height: 4px;
+    width: 100%;
+    background-color: #006aff;
+    border-radius: 5px;
+}
+
+.votedDot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: #006aff;
+}
+
+.tooltip {
+    width: 80%;
+}
+
+.skeleton {
+    padding: 10px;
+    min-width: 250px;
+    max-width: 280px;
+    min-height: 160px;
+}

@@ -12,6 +12,7 @@ import UploadFile from "../components/UploadFile/UploadFile";
 import UploadChannelFile from "../components/UploadChannelFile/UploadChannelFile";
 import { regex } from "../utils/regax";
 import { useEffect } from "react";
+import PollMessageCard from "../components/Chat/PollMessageCard";
 
 function HomeLayout() {
     const { session } = useRootStore().localStore;
@@ -21,7 +22,6 @@ function HomeLayout() {
     const navigate = useNavigate();
     const hashIdArr = window.location.pathname.match(regex);
     const hashId = hashIdArr?.[1].toString();
-    const localHashId = JSON.stringify(localStorage.getItem("hashId"));
 
     useEffect(() => {
         if (hashId && session.accessToken) {
@@ -35,22 +35,23 @@ function HomeLayout() {
     }, []);
 
     return (
-            <Container>
-                <Sidebar>
-                    <SidebarLayout />
-                </Sidebar>
-                <ChatArea>
-                    <Outlet />
-                    <EmptyScreen />
-                </ChatArea>
-                <RightArea $isopen={isOpenRigthSideBar}>
-                    <ManageChannelLayout />
-                </RightArea>
-                <Relevence />
-                <PreviewImage />
-                <UploadFile />
-                <UploadChannelFile />
-            </Container>
+        <Container>
+            <Sidebar>
+                <SidebarLayout />
+            </Sidebar>
+            <ChatArea>
+                <Outlet />
+                <EmptyScreen />
+            </ChatArea>
+            <RightArea $isopen={isOpenRigthSideBar}>
+                <ManageChannelLayout />
+            </RightArea>
+            <Relevence />
+            <PreviewImage />
+            <UploadFile />
+            <UploadChannelFile />
+            <PollMessageCard />
+        </Container>
     );
 }
 

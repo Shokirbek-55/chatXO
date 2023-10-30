@@ -1,187 +1,137 @@
-import { FC, useMemo, useState } from "react";
-
-import MessageHeader from "../MessageHeader";
-
-import { TMP_URL } from "../../../env";
-import { ChannelsUsersType, RawMessage } from "../../../types/channel";
-import { RELEVANCE_TYPE, pollMessage } from "../../../types/messageType";
-import { User } from "../../../types/user";
-import { relevanceFuniction } from "../../../utils/boxShadov";
-import Colors from "../../../utils/colors";
-import RadioButton from "../../RadioButton/radioButton";
-import SmallAvatar from "../../SmallAvatar/smallAvatar";
+import { Switch } from "antd";
+import { observer } from "mobx-react-lite";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import useRootStore from "../../../hooks/useRootStore";
+import { ButtonComponent } from "../../../utils/button";
+import { CloseIcon, CloserNoCirculIcon, MenuIcon } from "../../../utils/icons";
+import Input from "../../Input";
+import SimpleSwitch from "../../SimpleSwitch/switch";
 import Text from "../../Text/Text";
-import DropDownMenu from "../DropDownMenu/dropdownmenu";
 import styles from "./index.module.css";
+import { toJS } from "mobx";
+import { NORMAL_TYPE, RELEVANCE_TYPE } from "../../../types/messageType";
 
-interface Props {
-  message: RawMessage;
-  users?: {
-    [key: string]: ChannelsUsersType;
-  }
-  position: boolean;
-}
+const PollMessageCard = () => {
+    const { visible, hide } = useRootStore().visibleStore;
+    const {
+        setPollMessageState,
+        pollMessageState,
+        pollMessageOptionState,
+        addPollOption,
+        removePollOption,
+        setChangePollOption,
+        clearPollMessageState,
+        onSendPoll,
+    } = useRootStore().messageStore;
+    const [isCheck, setIsCheck] = useState(false);
 
-const PollMessageCard: FC<Props> = ({ message, position, users }) => {
-  const [selectedOption, selectOption] = useState(null);
+    const onChange = (checked: boolean) => {
+        setIsCheck(checked);
+        setPollMessageState("type", checked ? RELEVANCE_TYPE : NORMAL_TYPE);
+    };
+    const { t } = useTranslation();
 
-  const POLL_ID = message.pollId || 0;
-  const IS_REPLY = message.isReply;
-  const [messsageDetails, setMessageDetails] = useState<pollMessage>();
-  const channelSlug = message.channelSlug;
-  const messagePollId = message.pollId || 0;
+    const createPollMessage = () => {
+        onSendPoll(pollMessageState.type as never);
+        hide("pollMesssageCard");
+        hide("openFooterMediaBar");
+        clearPollMessageState();
+    };
 
-  const MESSAGE_STYLE = relevanceFuniction(message);
-  const boxShadov = MESSAGE_STYLE?.boxShadow;
-  const textSize = MESSAGE_STYLE?.fontSize;
-  const textWeight = MESSAGE_STYLE?.fontWeight;
-  const textLineHeight = MESSAGE_STYLE?.lineHeight;
-
-
-  const canVote = useMemo(() => {
-    return !messsageDetails?.options?.find((option) => option.voted);
-  }, [messsageDetails]);
-
-  const handleRelevenceModal = () => {
-    
-  };
-
-  const voteHandler = () => {
-   
-  };
-
-  const displayTotalVotes = () => {
-    if (!canVote) {
-      return "";
-    }
-    return messsageDetails?.votersCount !== 0
-      ? `${messsageDetails?.votersCount || 0} votes`
-      : "noVotes";
-  };
-
-  const votedInPoll = useMemo(() => {
-    return !!messsageDetails?.options?.find((option) => option?.voted);
-  }, [messsageDetails]);
-
-  const POSITION_CONTENT = position
-    ? { justifyContent: "flex-start" }
-    : { justifyContent: "flex-end" };
-
-  const currentUser: User | null =
-    users?.[message.userId] || null;
-
-  const renderAnswer = (option: any) => {
-    const percentages = Math.round(
-      //@ts-ignore
-      (option?.votes / messsageDetails?.votesCount) * 100 || 0
-    );
+    const cancelPollMessage = () => {
+        hide("pollMesssageCard");
+        clearPollMessageState();
+    };
 
     return (
-      <div
-        style={{ marginTop: "3px" }}
-        className={styles.rowPercentage}
-        key={option.id}
-      >
-        <RadioButton
-          onClick={() =>
-            {}
-          }
-          //@ts-ignore
-          selected={selectedOption?.id === option.id || option.voted}
+        <div
+            className={styles.container}
+            style={{ display: visible.pollMesssageCard ? "block" : "none" }}
         >
-          {option.name}
-        </RadioButton>
-        {!canVote && (
-          <Text
-            style={{
-              fontSize: "15px",
-              fontWeight: "600",
-              fontFamily: "initial",
-              color: Colors.BaliHai,
-            }}
-          >
-            {percentages}%
-          </Text>
-        )}
-      </div>
-    );
-  };
-  return (
-    <>
-      <div className={styles.parentContainer} style={POSITION_CONTENT}>
-        {(messsageDetails?.options || []).length ? (
-          <div className={styles.childContainer}>
-            {position && (
-              <span onClick={() => handleRelevenceModal()}>
-                <MessageHeader
-                  name={message.username}
-                  relevance={message?.relevance}
-                  color={currentUser?.color}
-                />
-              </span>
-            )}
-            <div className={styles.messageCard}>
-              {position && (
-                <div className={styles.avatarCard}>
-                  {currentUser && (
-                    <SmallAvatar
-                      color={currentUser?.color}
-                      imageUrl={
-                        currentUser?.avatar
-                          ? `${TMP_URL}/${currentUser?.avatar}`
-                          : ""
-                      }
-                    />
-                  )}
-                </div>
-              )}
-              {!!POLL_ID && (
-                <DropDownMenu massage={message} users={users}>
-                  <div
-                    className={styles.pollMessageCard}
-                    style={{ boxShadow: boxShadov }}
-                  >
-                    <div className={styles.pollTopic}>
-                      {messsageDetails?.topic ? messsageDetails?.topic : ""}
-                    </div>
-                    <Text>
-                      Poll:
-                      {messsageDetails?.type === RELEVANCE_TYPE ? (
-                        <span>byRelevance</span>
-                      ) : (
-                        <span>byNormal</span>
-                      )}
-                    </Text>
-
-                    <div className={styles.optionsCard}>
-                      <hr />
-                      {(messsageDetails?.options || [])
-                        ?.slice()
-                        ?.sort((option1, option2) => option1.id - option2.id)
-                        ?.map(renderAnswer)}
-                      {canVote ? (
-                        <button
-                          onClick={voteHandler}
-                          className={styles.voteButton}
-                        >
-                          <Text color="blue">vote</Text>
-                        </button>
-                      ) : (
-                        <Text>voted!</Text>
-                      )}
-                      <Text color="dark">{displayTotalVotes()}</Text>
-                    </div>
-                  </div>
-                </DropDownMenu>
-              )}
+            <div
+                className={styles.closeCard}
+                onClick={() => hide("pollMesssageCard")}
+            >
+                <CloserNoCirculIcon size={24} color="#fff" />
             </div>
-          </div>
-        ) : (
-          <Text>Loading...</Text>
-        )}
-      </div>
-    </>
-  );
+            <div className={styles.content}>
+                <div className={styles.titleBox}>
+                    <Text children="New poll" />
+                    <Text
+                        children={isCheck ? "By relevance" : "By Normal"}
+                        fontSize="14px"
+                    />
+                </div>
+                <div>
+                    <Text children="Poll question" fontSize="15px" />
+                    <Input
+                        borderred
+                        placeholder="Enter poll question"
+                        value={pollMessageState?.topic}
+                        setUserName={(e) => setPollMessageState("topic", e)}
+                    />
+                    <Text
+                        margin="10px 0 0 0"
+                        children="Answer options"
+                        fontSize="15px"
+                    />
+                    <div className={styles.answerBox}>
+                        {pollMessageOptionState.map((e, index) => {
+                            return (
+                                <div className={styles.answer} key={index}>
+                                    <MenuIcon padding={5} size={20} />
+                                    <Input
+                                        borderred
+                                        placeholder="Enter answer"
+                                        value={e as never}
+                                        setUserName={(e) =>
+                                            setChangePollOption(e, index)
+                                        }
+                                    />
+                                    <span
+                                        onClick={() =>
+                                            removePollOption(e, index)
+                                        }
+                                    >
+                                        <CloseIcon padding={5} size={20} />
+                                    </span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <Text
+                        margin="15px 0 5px 0"
+                        fontSize="15px"
+                        children={`you can add
+                            ${10 - pollMessageOptionState?.length} 
+                            more option`}
+                    />
+                    <ButtonComponent
+                        text="+ Add an option"
+                        clickMe={() => addPollOption()}
+                    />
+                    <Text
+                        margin="15px 0 5px 0"
+                        fontSize="15px"
+                        children={"Show result by relevance"}
+                    />
+                    <Switch onChange={onChange} />
+                    <div className={styles.backOrCreate}>
+                        <ButtonComponent
+                            backColor="red"
+                            text="cancel"
+                            clickMe={cancelPollMessage}
+                        />
+                        <ButtonComponent
+                            text="create"
+                            clickMe={createPollMessage}
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 };
 
-export default PollMessageCard;
+export default observer(PollMessageCard);

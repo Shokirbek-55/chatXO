@@ -53,7 +53,10 @@ const MessageHeader = ({
 
     return (
         <div className={styles.container}>
-            <div className={styles.replayContainer}>
+            <div
+                className={styles.replayContainer}
+                onClick={() => onRelevance(userId || 0)}
+            >
                 <BubbleHeader
                     title={name}
                     color={color}
@@ -61,10 +64,7 @@ const MessageHeader = ({
                     textSize={textSize}
                 />
                 {!showReply && (
-                    <div
-                        className={styles.relevence}
-                        onClick={() => onRelevance(userId || 0)}
-                    >
+                    <div className={styles.relevence}>
                         <button
                             style={{
                                 fontFamily: "sans-serif",
@@ -82,7 +82,7 @@ const MessageHeader = ({
                                 src={Assets.up_downIcon}
                                 width="15px"
                                 height="15px"
-                                color={'#000'}
+                                color={"#000"}
                             />
                         </div>
                     </div>

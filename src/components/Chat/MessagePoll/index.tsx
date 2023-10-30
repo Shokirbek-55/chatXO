@@ -1,0 +1,185 @@
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { AiFillCheckCircle } from "react-icons/ai";
+import { observer } from "mobx-react-lite";
+import { ChannelsUsersType, RawMessage } from "../../../types/channel";
+import Text from "../../Text/Text";
+import MessageComponent from "../MessageComponent/MessageComponent";
+import styles from "./index.module.css";
+import { useAsyncFn } from "react-use";
+import useRootStore from "../../../hooks/useRootStore";
+import { toJS } from "mobx";
+import { pollMessage } from "../../../types/messageType";
+import APIs from "../../../api/api";
+import { Skeleton, Tooltip } from "antd";
+interface Props {
+    message: RawMessage;
+    own: boolean;
+    pollId: number;
+    isReply: boolean;
+    users?: {
+        [key: string]: ChannelsUsersType;
+    };
+}
+
+const MessagePoll: FC<Props> = ({ message, users, own, pollId, isReply }) => {
+    const { getPollId } = useRootStore().messageStore;
+    const { vote } = useRootStore().chatStore;
+    const [messsageDetails, setMessageDetails] = useState<pollMessage>();
+
+    const canVote = useMemo(() => {
+        return !messsageDetails?.options?.find((option) => option.voted);
+    }, [messsageDetails]);
+
+    const voteHandle = (
+        pollOption: number,
+        channelSlug: string,
+        pollId: number,
+        messageId: string,
+        callback: () => void
+    ) => {
+        if (canVote) vote(pollOption, channelSlug, pollId, messageId, callback);
+        getPollId(pollId, true);
+    };
+
+    const [{}, getPollInfo] = useAsyncFn(async () => {
+        const { data }: any = await APIs.channels.getPollDetails(pollId, true);
+        delete data.createdAt; //BE returns wrong timestamp
+        setMessageDetails({ ...data });
+        getPollId(pollId, true);
+    }, [message, pollId, isReply]);
+
+    const votedInPoll = useMemo(() => {
+        return !!messsageDetails?.options?.find((option) => option?.voted);
+    }, [messsageDetails]);
+
+    useEffect(() => {
+        getPollInfo();
+    }, [pollId, getPollInfo]);
+
+    const renderAnswer = (option: any) => {
+        const percentages = Math.round(
+            //@ts-ignore
+            (option?.votes / messsageDetails?.votesCount) * 100 || 0
+        );
+
+        return (
+            <div
+                key={option.id}
+                className={styles.voteBox}
+                onClick={() =>
+                    voteHandle(
+                        option.id,
+                        message.channelSlug,
+                        messsageDetails?.id as never,
+                        message.id,
+                        () => getPollInfo()
+                    )
+                }
+            >
+                {canVote && (
+                    <div className={styles.radioBox}>
+                        <div className={styles.radio}></div>
+                    </div>
+                )}
+                {!canVote && (
+                    <div className={styles.votedBox}>
+                        <Text fontSize="13px" children={`${percentages}%`} />
+                        <div className={styles.checkedIcon}>
+                            {option.voted ? <AiFillCheckCircle /> : null}
+                        </div>
+                    </div>
+                )}
+                {!canVote ? (
+                    <Tooltip
+                        trigger={"click"}
+                        title={`${
+                            option.votes > 1
+                                ? option.votes + " votes"
+                                : option.votes + " vote"
+                        }`}
+                    >
+                        <div className={styles.option}>
+                            <Text
+                                margin="0 0 10px 0"
+                                fontSize="14px"
+                                children={option.name}
+                            />
+                            {canVote ? (
+                                <div className={styles.line}></div>
+                            ) : !option.votes ? (
+                                <div className={styles.votedDot}></div>
+                            ) : (
+                                <div className={styles.checkedLine}></div>
+                            )}
+                        </div>
+                    </Tooltip>
+                ) : (
+                    <div className={styles.option}>
+                        <Text
+                            margin="0 0 10px 0"
+                            fontSize="14px"
+                            children={option.name}
+                        />
+                        {canVote ? (
+                            <div className={styles.line}></div>
+                        ) : !option.votes ? (
+                            <div className={styles.votedDot}></div>
+                        ) : (
+                            <div className={styles.checkedLine}></div>
+                        )}
+                    </div>
+                )}
+            </div>
+        );
+    };
+
+    return (
+        <MessageComponent position={own} message={message} users={users}>
+            {(messsageDetails?.options || []).length ? (
+                <div className={styles.pollTop}>
+                    <Text fontSize="15px" children={messsageDetails?.topic} />
+                    <Text
+                        fontSize="12px"
+                        children={`${
+                            message.pollType === "NORMAL"
+                                ? "Normal Poll"
+                                : "Relevance Poll"
+                        }`}
+                    />
+                    <div>
+                        {(messsageDetails?.options || [])
+                            ?.slice()
+                            ?.sort(
+                                (option1, option2) => option1.id - option2.id
+                            )
+                            ?.map(renderAnswer)}
+                    </div>
+                    <Text
+                        center
+                        fontSize="13px"
+                        margin="5px 0"
+                        children={
+                            messsageDetails?.votesCount
+                                ? `${
+                                      messsageDetails?.votesCount > 1
+                                          ? messsageDetails?.votesCount +
+                                            " votes"
+                                          : messsageDetails?.votesCount +
+                                            " vote"
+                                  }`
+                                : "no voted yet"
+                        }
+                    />
+                </div>
+            ) : (
+                <Skeleton
+                    active
+                    paragraph={{ rows: 5 }}
+                    className={styles.skeleton}
+                />
+            )}
+        </MessageComponent>
+    );
+};
+
+export default observer(MessagePoll);

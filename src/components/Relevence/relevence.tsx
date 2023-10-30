@@ -36,8 +36,8 @@ const Relevence = () => {
                             : "linear-gradient(#ddd, #666)"
                     }
                     imageUrl={
-                        memberRelevence.avatar
-                            ? `${TMP_URL}/${memberRelevence.avatar}`
+                        memberRelevence?.avatar
+                            ? `${TMP_URL}/${memberRelevence?.avatar}`
                             : ""
                     }
                     text={memberRelevence?.username}

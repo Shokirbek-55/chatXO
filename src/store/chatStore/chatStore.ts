@@ -27,13 +27,16 @@ class ChatStore {
             }
         });
 
-        this.root.socketStore.socket?.on("mergeMessage", (payload: RawMessage) => {
-            console.log("merge message", payload);
-            this.root.messageStore.addMergeMessageToCache(payload);
-            if (this.root.hashtagStore.isOpenHashTagScreen) {
-                this.root.hashtagStore.addMessageHashTags(payload);
+        this.root.socketStore.socket?.on(
+            "mergeMessage",
+            (payload: RawMessage) => {
+                console.log("merge message", payload);
+                this.root.messageStore.addMergeMessageToCache(payload);
+                if (this.root.hashtagStore.isOpenHashTagScreen) {
+                    this.root.hashtagStore.addMessageHashTags(payload);
+                }
             }
-        });
+        );
 
         this.root.socketStore.socket?.on(
             "leaveChannel",
@@ -99,6 +102,10 @@ class ChatStore {
 
         this.root.socketStore.socket?.on("poll", (payload: RawMessage) => {
             console.log("poll", payload);
+            this.root.messageStore.addMessageToCache(payload);
+            if (this.root.hashtagStore.isOpenHashTagScreen) {
+                this.root.hashtagStore.addMessageHashTags(payload);
+            }
         });
 
         this.root.socketStore.socket?.on(
@@ -185,7 +192,8 @@ class ChatStore {
         pollOption: number,
         channelSlug: string,
         pollId: number,
-        messageId: string
+        messageId: string,
+        callback: () => void
     ) => {
         this.root.socketStore.socket?.emit("vote", <VoteOption>{
             pollOption,
@@ -193,6 +201,7 @@ class ChatStore {
             pollId,
             messageId,
         });
+        callback();
         console.log(pollOption, pollId, messageId, channelSlug, "poll message");
     };
 
@@ -203,11 +212,11 @@ class ChatStore {
     ) => {
         this.root.socketStore.socket?.emit("timestampHistory", <
             TimestampHistoryRequest
-            >{
-                channelSlug,
-                timestamp,
-                findOlder,
-            });
+        >{
+            channelSlug,
+            timestamp,
+            findOlder,
+        });
     };
 }
 
