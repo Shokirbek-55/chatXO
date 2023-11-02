@@ -20,7 +20,9 @@ const Chat = () => {
     const navigate = useNavigate();
     const { messageCache, slug, messagesFilterValue } =
         useRootStore().messageStore;
+    const { getPreviewData } = useRootStore().usersStore;
     const { user } = useRootStore().authStore;
+    const { show } = useRootStore().visibleStore;
 
     useEffect(() => {
         const handleEsc = (event: any) => {
@@ -35,7 +37,19 @@ const Chat = () => {
         };
     }, []);
 
-    const messages = useMemo(() => messagesFilterValue != 0 && messageCache[slug]?.messages.length >= 0 ? messageCache[slug]?.messages.filter((e) => e.relevance && e.relevance >= messagesFilterValue) : messageCache[slug]?.messages, [messageCache[slug]?.messages, slug, messagesFilterValue])
+    const messages = useMemo(
+        () =>
+            messagesFilterValue != 0 && messageCache[slug]?.messages.length >= 0
+                ? messageCache[slug]?.messages.filter(
+                      (e) => e.relevance && e.relevance >= messagesFilterValue
+                  )
+                : messageCache[slug]?.messages,
+        [messageCache[slug]?.messages, slug, messagesFilterValue]
+    );
+    const getPreview = (data: any) => {
+        getPreviewData(data);
+        show("previewModal");
+    };
 
     const renderTextMessage = (message: RawMessage) => {
         switch (message.userId) {
@@ -55,10 +69,17 @@ const Chat = () => {
     const renderImageMessage = (message: RawMessage) => {
         switch (message.userId) {
             case user.id:
-                return <MessageImg message={message} own={true} />;
+                return (
+                    <MessageImg
+                        onPress={() => getPreview(message)}
+                        message={message}
+                        own={true}
+                    />
+                );
             default:
                 return (
                     <MessageImg
+                        onPress={() => getPreview(message)}
                         message={message}
                         own={false}
                         users={messageCache[slug]?.channelUsers}

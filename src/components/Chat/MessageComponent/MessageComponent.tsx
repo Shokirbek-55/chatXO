@@ -74,6 +74,7 @@ const MessageComponent: FC<Props> = ({
                         relevance={message.relevance}
                         color={currentUser?.color || message.color}
                         userId={message.userId}
+                        message={message}
                     />
                 )}
                 <div className="messageCard">
