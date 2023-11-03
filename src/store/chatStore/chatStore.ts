@@ -206,6 +206,33 @@ class ChatStore {
         console.log(pollOption, pollId, messageId, channelSlug, "poll message");
     };
 
+    pimpMessage = (
+        userId: any,
+        messageId: any,
+        channelSlug: string,
+        timestamp: any
+    ) => {
+        this.root.socketStore.socket?.emit("pimpMessage", {
+            userId,
+            messageId,
+            channelSlug,
+            timestamp,
+        });
+    };
+    unPimpMessage = (
+        userId: any,
+        messageId: any,
+        channelSlug: string,
+        timestamp: any
+    ) => {
+        this.root.socketStore.socket?.emit("unPimpMessage", {
+            userId,
+            messageId,
+            channelSlug,
+            timestamp,
+        });
+    };
+
     timestampHistory = (
         channelSlug: string,
         timestamp: any,
