@@ -15,6 +15,9 @@ import MessageBox from "../../../components/Chat/MessageBox";
 import useRootStore from "../../../hooks/useRootStore";
 import _ from "lodash";
 import MessagePoll from "../../../components/Chat/MessagePoll";
+import Text from "../../../components/Text/Text";
+import EmptyScreen from "../emptyScreen/EmptyScreen";
+import { toJS } from "mobx";
 
 const Chat = () => {
     const navigate = useNavigate();
@@ -23,6 +26,7 @@ const Chat = () => {
     const { getPreviewData } = useRootStore().usersStore;
     const { user } = useRootStore().authStore;
     const { show } = useRootStore().visibleStore;
+    const { manageRouters } = useRootStore().routerStore;
 
     useEffect(() => {
         const handleEsc = (event: any) => {
@@ -46,6 +50,7 @@ const Chat = () => {
                 : messageCache[slug]?.messages,
         [messageCache[slug]?.messages, slug, messagesFilterValue]
     );
+
     const getPreview = (data: any) => {
         getPreviewData(data);
         show("previewModal");
@@ -194,25 +199,30 @@ const Chat = () => {
     return (
         <ChatContainer id="chatView">
             <ChatHeader />
-            <ScrollContainer>
-                {_.map(messages, (message, index) => {
-                    return (
-                        <div
-                            key={index}
-                            style={{
-                                paddingBottom:
-                                    messageCache[slug].messages?.length - 1 ==
-                                    index
-                                        ? "7.5vh"
-                                        : "0",
-                                paddingTop: 0 == index ? "7vh" : "0",
-                            }}
-                        >
-                            {renderMessage(message)}
-                        </div>
-                    );
-                })}
-            </ScrollContainer>
+            {messages?.length === 0 ? (
+                <EmptyScreen text="No message here yet" />
+            ) : (
+                <ScrollContainer>
+                    {_.map(messages, (message, index) => {
+                        return (
+                            <div
+                                key={index}
+                                style={{
+                                    paddingBottom:
+                                        messageCache[slug].messages?.length -
+                                            1 ==
+                                        index
+                                            ? "7.5vh"
+                                            : "0",
+                                    paddingTop: 0 == index ? "7vh" : "0",
+                                }}
+                            >
+                                {renderMessage(message)}
+                            </div>
+                        );
+                    })}
+                </ScrollContainer>
+            )}
             <MessageInput />
         </ChatContainer>
     );

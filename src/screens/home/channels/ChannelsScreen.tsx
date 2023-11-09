@@ -36,7 +36,8 @@ const item = {
 };
 
 function ChannelsScreen() {
-    const { toRouter } = useRootStore().routerStore;
+    const { toRouter, closeRightSideBar, closeChannelInUser } =
+        useRootStore().routerStore;
     const { myChannels, setSearchChannels, getChannelByHashId } =
         useRootStore().channelStore;
     const { setChannelSlug } = useRootStore().messageStore;
@@ -52,6 +53,12 @@ function ChannelsScreen() {
         setChannelSlug(e.slug);
         const target = generatePath(`/:name`, { name: `@${e.hashId}` });
         navigate(target);
+        closeChannelInUser();
+    };
+
+    const onAccount = () => {
+        closeChannelInUser();
+        toRouter("account");
     };
 
     return (
@@ -59,7 +66,7 @@ function ChannelsScreen() {
             <Header
                 text={t("groups")}
                 rightIcon="account"
-                onRightIconPress={() => toRouter("account")}
+                onRightIconPress={onAccount}
             />
             <div className={styles.SearchBox}>
                 <InputComponent

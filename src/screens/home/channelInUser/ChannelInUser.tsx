@@ -36,7 +36,7 @@ const item = {
 const ChannelInUser = () => {
     const navigation = useNavigate();
     const { friendDetails, weChannels } = useRootStore().usersStore;
-    const { closeModal } = useRootStore().routerStore;
+    const { closeModal, closeInUser } = useRootStore().routerStore;
     const { t } = useTranslation();
     const { setChannelSlug } = useRootStore().messageStore;
     const { getChannelByHashId, myChannels } = useRootStore().channelStore;
@@ -67,7 +67,7 @@ const ChannelInUser = () => {
             <Header
                 text={`${t("update_relevance")}`}
                 leftIcon="arrowLeft"
-                onLeftIconPress={() => closeModal("right")}
+                onLeftIconPress={closeInUser}
             />
             <div className={styles.contentBox}>
                 <AvatarUpload
