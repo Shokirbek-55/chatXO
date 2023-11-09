@@ -94,22 +94,17 @@ export default class ChannelStore {
 
     getOneMember = (id: number) => {
         runInAction(() => {
-            if (this.rootStore.authStore.user.id === this.adminId) {
-                this.rootStore.visibleStore.show("RelevenceModal");
-                this.memberRelevence = this.channelUsers.find(
-                    (item) => item.id === id
-                ) as never;
-                this.relevanceData = {
-                    channelSlug: this.channelData?.slug,
-                    fromUserId: this.rootStore.authStore.user.id as never,
-                    toUserId: id,
-                    relevance: this.memberRelevence?.relevance,
-                };
-                return;
-            } else {
-                message.warning("You are not admin");
-                return;
-            }
+            this.rootStore.visibleStore.show("RelevenceModal");
+            this.memberRelevence = this.channelUsers.find(
+                (item) => item.id === id
+            ) as never;
+            this.relevanceData = {
+                channelSlug: this.channelData?.slug,
+                fromUserId: this.rootStore.authStore.user.id as never,
+                toUserId: id,
+                relevance: this.memberRelevence?.relevance,
+            };
+            return;
         });
     };
 

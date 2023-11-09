@@ -23,12 +23,23 @@ const ManagaChannel = () => {
         getChannelUsers,
         adminId,
     } = useRootStore().channelStore;
-    const { toRouterManageCh, closeModal, closeRightSideBar } =
-        useRootStore().routerStore;
-    const { userChannelLeave, getPreviewData } = useRootStore().usersStore;
+    const {
+        toRouterManageCh,
+        closeModal,
+        closeRightSideBar,
+        openRightSideBar,
+    } = useRootStore().routerStore;
+    const { userChannelLeave, getPreviewData, getFriendDetails } =
+        useRootStore().usersStore;
     const { user } = useRootStore().authStore;
     const { show } = useRootStore().visibleStore;
     const navigation = useNavigate();
+
+    const FriendDetails = (friendId: number) => {
+        getFriendDetails(friendId);
+        openRightSideBar();
+        toRouterManageCh("channelInUser");
+    };
 
     const PreviewChannelAvatar = (data: any) => {
         getPreviewData(data);
@@ -162,6 +173,7 @@ const ManagaChannel = () => {
                                             ? "Admin"
                                             : ""
                                     }
+                                    onNamePress={() => FriendDetails(e.id)}
                                 />
                             </div>
                         );

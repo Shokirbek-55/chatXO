@@ -16,12 +16,14 @@ import Text from "../components/Text/Text";
 import { Spin } from "antd";
 import React from "react";
 import { GrFormClose } from "react-icons/gr";
+import { toJS } from "mobx";
 
 const ChatHeader = () => {
     const [isOpenAllHashTags, setIsOpenAllHashTags] =
         React.useState<boolean>(false);
     const { visible, toglevisible } = useRootStore().visibleStore;
-    const { openRightSideBar } = useRootStore().routerStore;
+    const { openRightSideBar, closeModal, manageRouters } =
+        useRootStore().routerStore;
     const {
         setSearch,
         searchMessage,

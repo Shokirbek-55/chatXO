@@ -1,13 +1,20 @@
-import React from 'react'
-import styles from "./EmptyScreen.module.css"
+import { observer } from "mobx-react-lite";
+import React from "react";
+import Text from "../../../components/Text/Text";
+import styles from "./EmptyScreen.module.css";
 
-const EmptyScreen = () => {
-    return (
-        <div className={styles.container}>
-            <div className={styles.card}>Select a chat to start messaging !</div>
-            {/* <span className={styles.project_version}>{project_version}</span> */}
-        </div>
-    )
+interface Props {
+    text: string;
 }
 
-export default EmptyScreen
+const EmptyScreen: React.FC<Props> = ({ text }) => {
+    return (
+        <div className={styles.container}>
+            <div className={styles.card}>
+                <Text children={text} />
+            </div>
+        </div>
+    );
+};
+
+export default observer(EmptyScreen);

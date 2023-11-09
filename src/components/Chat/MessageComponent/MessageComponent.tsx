@@ -34,8 +34,10 @@ const MessageComponent: FC<Props> = ({
     const { name } = useParams();
     const { isOpenHashTagScreen, setHashTags, enter } =
         useRootStore().hashtagStore;
-    const { openRightSideBar, toRouterManageCh } = useRootStore().routerStore;
+    const { toRouterManageCh, manageRouters, openInUser } =
+        useRootStore().routerStore;
     const { getFriendDetails } = useRootStore().usersStore;
+    const { show } = useRootStore().visibleStore;
     const currentUser: ChannelsUsersType | undefined = users?.[message.userId];
 
     const MESSAGE_STYLE = relevanceFuniction(message);
@@ -61,8 +63,7 @@ const MessageComponent: FC<Props> = ({
 
     const openUserAccount = (userId: number) => {
         getFriendDetails(userId);
-        openRightSideBar();
-        toRouterManageCh("channelInUser");
+        openInUser();
     };
 
     return (

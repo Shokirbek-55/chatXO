@@ -53,8 +53,6 @@ const MessageHeader = ({
         getOneMember(id);
     };
 
-    console.log("message", toJS(message));
-
     const PimpMesssage = (
         userId: any,
         messageId: any,
@@ -88,10 +86,7 @@ const MessageHeader = ({
         timestamp: any
     ) => {
         unPimpMessage(userId, messageId, channelSlug, timestamp);
-        console.log("ccccc");
     };
-
-    console.log("ispImp", toJS(hasKey265));
 
     return (
         <div className={styles.container}>

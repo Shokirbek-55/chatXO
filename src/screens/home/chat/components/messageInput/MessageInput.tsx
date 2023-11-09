@@ -158,7 +158,7 @@ const MessageInputContainer = styled.div`
         position: relative;
         width: 100%;
         height: auto;
-        padding: 7px 5px 7px 5px;
+        padding: 6px 5px;
         display: flex;
         flex-direction: column;
         gap: 10px;

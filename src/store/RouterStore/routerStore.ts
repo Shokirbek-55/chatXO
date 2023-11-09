@@ -8,17 +8,18 @@ import {
     ManageHelperRoutes,
 } from "./routers";
 import _ from "lodash";
+import { AppRootStore } from "../store";
 
 export default class RouterStore {
-    constructor() {
-        makeAutoObservable(this);
-    }
+    rootStore: AppRootStore;
 
+    constructor(rootStore: AppRootStore) {
+        makeAutoObservable(this);
+        this.rootStore = rootStore;
+    }
     currentRoute: MainRoutesType = mainRoutes[0];
     routers: SideBarHelperRoutesType[] = [];
-    manageRouters: SideBarHelperRoutesType[] = [
-        ManageHelperRoutes["manageChannel"],
-    ];
+    manageRouters: SideBarHelperRoutesType[] = [];
 
     isOpenRigthSideBar = "-340px";
 
@@ -26,6 +27,7 @@ export default class RouterStore {
         this.currentRoute = mainRoutes.find(
             (item) => item.key === route
         ) as MainRoutesType;
+        this.closeChannelInUser();
     };
 
     toRouter = (route: keyof typeof SideBarHelperRoutes) => {
@@ -77,10 +79,37 @@ export default class RouterStore {
     };
 
     openRightSideBar = () => {
-        this.isOpenRigthSideBar = "0px";
+        this.rootStore.visibleStore.show("rightSidebar");
+        this.manageRouters = [ManageHelperRoutes["manageChannel"]];
+    };
+
+    openInUser = () => {
+        this.toRouterManageCh("channelInUser");
+        this.rootStore.visibleStore.show("rightSidebar");
+    };
+
+    closeInUser = () => {
+        this.manageRouters = [ManageHelperRoutes["manageChannel"]];
+    };
+
+    toggleRightSidebar = () => {
+        this.rootStore.visibleStore.toglevisible("rightSidebar");
+    };
+
+    openManagaChannel = () => {
+        if (this.manageRouters.length) {
+            this.manageRouters = [ManageHelperRoutes["manageChannel"]];
+        }
     };
 
     closeRightSideBar = () => {
-        this.isOpenRigthSideBar = "-340px";
+        this.rootStore.visibleStore.hide("rightSidebar");
+    };
+
+    closeChannelInUser = () => {
+        if (this.manageRouters.some((e) => e.key === "channelInUserM")) {
+            this.rootStore.visibleStore.hide("rightSidebar");
+            this.manageRouters = [];
+        }
     };
 }
