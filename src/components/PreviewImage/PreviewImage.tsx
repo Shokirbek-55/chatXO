@@ -74,7 +74,7 @@ const PreviewImage = () => {
     };
 
     const mediaUrlOwnerImg = getChannelUsersData.find(
-        (e) => e.id === previewData.userId
+        (e) => e?.id === previewData.userId
     );
 
     return (
@@ -120,7 +120,7 @@ const PreviewImage = () => {
                 </div>
             </div>
             <div className={styles.iconBox}>
-                {previewData.id === user.id ||
+                {previewData?.id === user.id ||
                 previewData.adminId === user.id ? (
                     <span onClick={delateAvatar}>
                         <DeleteIcon size={22} color="#fff" />

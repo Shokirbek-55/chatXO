@@ -136,6 +136,8 @@ export default class ChannelStore {
                 this.myChannels = this.getChannelOperation.data;
                 this.channelsLoading = false;
             });
+            console.log("mychannels", toJS(this.getChannelOperation.data));
+
             this.getChannelDataCache();
         }
     };
@@ -158,6 +160,9 @@ export default class ChannelStore {
 
                 this.rootStore.messageStore.getHistoryMessages(
                     this.getChannelByHashIdOperation.data.slug
+                );
+                this.rootStore.chatStore.openChannel(
+                    this.rootStore.messageStore.slug
                 );
                 this.setUpdataChannel = {
                     name: this.channelData.name,
@@ -437,6 +442,7 @@ export default class ChannelStore {
         );
         if (this.addUserToChannelOperation.isSuccess) {
             runInAction(() => {
+                this.rootStore.chatStore.join(this.rootStore.messageStore.slug);
                 this.channelUsers.push(
                     this.rootStore.friendsStore.usersListForAdd.find(
                         (e) => e.id === friendId
@@ -453,6 +459,16 @@ export default class ChannelStore {
         }
     };
 
+    filterAddUser = (id: any) => {
+        runInAction(() => {
+            this.channelUsers.push(
+                this.rootStore.friendsStore.usersListForAdd.find(
+                    (e) => e.id === id
+                ) as never
+            );
+        });
+    };
+
     delateUserFromChannel = async (hashId: string, userId: number) => {
         await this.delateUserFromChannelOperation.run(() =>
             APIs.channels.deleteUsersFromChannel(hashId, userId)
@@ -464,6 +480,15 @@ export default class ChannelStore {
                 ) as never;
                 message.success("delated user form channel");
             }
+        });
+    };
+
+    filterLeftUser = (userId: any) => {
+        runInAction(() => {
+            this.channelUsers = this.channelUsers.filter(
+                (u) => u.id !== userId
+            ) as never;
+            console.log("channelUsers", toJS(this.channelUsers));
         });
     };
 

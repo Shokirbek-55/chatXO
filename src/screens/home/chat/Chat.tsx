@@ -13,11 +13,16 @@ const Chat = () => {
     const navigate = useNavigate();
     const { messageCache, slug, messagesFilterValue } =
         useRootStore().messageStore;
+    const { getPreviewData } = useRootStore().usersStore;
+    const { user } = useRootStore().authStore;
+    const { show } = useRootStore().visibleStore;
+    const { manageRouters, closeRightSideBar } = useRootStore().routerStore;
 
     useEffect(() => {
         const handleEsc = (event: any) => {
             if (event.keyCode === 27) {
                 navigate("/");
+                closeRightSideBar();
             }
         };
         window.addEventListener("keydown", handleEsc);
@@ -27,8 +32,19 @@ const Chat = () => {
         };
     }, []);
 
-    const messages = useMemo(() => messagesFilterValue != 0 && messageCache[slug]?.messages.length >= 0 ? messageCache[slug]?.messages.filter((e) => e.relevance && e.relevance >= messagesFilterValue) : messageCache[slug]?.messages, [messageCache[slug]?.messages, slug, messagesFilterValue])
-    const users = useMemo(() => messageCache[slug]?.channelUsers, [messageCache[slug]?.channelUsers])
+    const messages = useMemo(
+        () =>
+            messagesFilterValue != 0 && messageCache[slug]?.messages.length >= 0
+                ? messageCache[slug]?.messages.filter(
+                      (e) => e.relevance && e.relevance >= messagesFilterValue
+                  )
+                : messageCache[slug]?.messages,
+        [messageCache[slug]?.messages, slug, messagesFilterValue]
+    );
+    const users = useMemo(
+        () => messageCache[slug]?.channelUsers,
+        [messageCache[slug]?.channelUsers]
+    );
 
     return (
         <ChatContainer id="chatView">

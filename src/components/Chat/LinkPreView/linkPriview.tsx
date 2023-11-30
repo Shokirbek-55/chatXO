@@ -9,11 +9,7 @@ interface Props {
     textBackColor?: string;
 }
 
-const LinkPriviewComponent = ({
-    message,
-    textBackColor,
-}: Props) => {
-        
+const LinkPriviewComponent = ({ message, textBackColor }: Props) => {
     const MESSAGE_STYLE = relevanceFuniction(message);
     const textSize = MESSAGE_STYLE?.fontSize;
     const textWeight = MESSAGE_STYLE?.fontWeight;
@@ -64,19 +60,19 @@ const LinkPriviewComponent = ({
     };
 
     return (
-            <div className={styles.textCard}>
-                <Text
-                    style={{
-                        backgroundColor: textBackColor,
-                    }}
-                >
-                    {renderMessage({
-                        fontSize: textSize,
-                        fontWeight: textWeight,
-                        lineHeight: textLineHeight,
-                    })}
-                </Text>
-            </div>
+        <div className={styles.textCard}>
+            <Text
+                style={{
+                    backgroundColor: textBackColor,
+                }}
+            >
+                {renderMessage({
+                    fontSize: textSize,
+                    fontWeight: textWeight,
+                    lineHeight: textLineHeight,
+                })}
+            </Text>
+        </div>
     );
 };
 

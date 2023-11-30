@@ -11,7 +11,7 @@ import PreviewImage from "../components/PreviewImage/PreviewImage";
 import UploadFile from "../components/UploadFile/UploadFile";
 import UploadChannelFile from "../components/UploadChannelFile/UploadChannelFile";
 import { regex } from "../utils/regax";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import PollMessageCard from "../components/Chat/PollMessageCard";
 
 function HomeLayout() {
@@ -21,6 +21,8 @@ function HomeLayout() {
     const { setChannelHashId, getChannelByHashId } =
         useRootStore().channelStore;
     const navigate = useNavigate();
+    const { messageCache, slug, messagesFilterValue } =
+        useRootStore().messageStore;
     const hashIdArr = window.location.pathname.match(regex);
     const hashId = hashIdArr?.[1].toString();
 
@@ -35,6 +37,16 @@ function HomeLayout() {
         }
     }, []);
 
+    const messages = useMemo(
+        () =>
+            messagesFilterValue != 0 && messageCache[slug]?.messages.length >= 0
+                ? messageCache[slug]?.messages.filter(
+                      (e) => e.relevance && e.relevance >= messagesFilterValue
+                  )
+                : messageCache[slug]?.messages,
+        [messageCache[slug]?.messages, slug, messagesFilterValue]
+    );
+
     return (
         <Container>
             <Sidebar>
@@ -42,7 +54,13 @@ function HomeLayout() {
             </Sidebar>
             <ChatArea>
                 <Outlet />
-                <EmptyScreen text="Select a chat to start messaging !" />
+                <EmptyScreen
+                    text={
+                        messages?.length === 0
+                            ? "No messages here yet!"
+                            : "Select a chat to start messaging"
+                    }
+                />
             </ChatArea>
             <RightArea $isopen={visible.rightSidebar ? "0px" : "-340px"}>
                 <ManageChannelLayout />

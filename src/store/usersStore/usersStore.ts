@@ -338,7 +338,7 @@ export default class UsersStore {
             runInAction(() => {
                 this.rootStore.channelStore.myChannels =
                     this.rootStore.channelStore.myChannels.filter(
-                        (i) => i.id !== channelId
+                        (i) => i?.id !== channelId
                     );
                 this.rootStore.channelStore.hashId = "";
                 callback();

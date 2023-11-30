@@ -8,44 +8,43 @@ import MessagePoll from "../MessagePoll";
 import MessageVideo from "../MessageVideo";
 
 interface PropType {
-    message: RawMessage
+    message: RawMessage;
 }
 
 export const RenderMessage = ({ message }: PropType) => {
+    const renderTextMessage = (message: RawMessage) => (
+        <LinkPriviewComponent message={message} />
+    );
 
-    const renderTextMessage = (message: RawMessage) => 
-                    <LinkPriviewComponent
-                        message={message}
-                    />
+    const renderImageMessage = (message: RawMessage) => (
+        <MessageImg message={message} />
+    );
 
-    const renderImageMessage = (message: RawMessage) => 
-                    <MessageImg
-                        message={message}
-                    />
+    const renderVideoMessage = (message: RawMessage) => (
+        <MessageVideo message={message} />
+    );
 
-    const renderVideoMessage = (message: RawMessage) => 
-                    <MessageVideo
-                        message={message}
-                    />
+    const renderAudioMessage = (message: RawMessage) => (
+        <MessageAudio
+            message={message}
+            users={undefined}
+            position={undefined}
+        />
+    );
 
-    const renderAudioMessage = (message: RawMessage) => 
-                    <MessageAudio
-                        message={message}
-                    />
+    const renderDocumentMessage = (message: RawMessage) => (
+        <MessageDoc
+            mediaLocation={message.mediaUrl}
+            mediaTitle={message.mediaTitle}
+            loading={false}
+            status={"Download"}
+            message={message}
+        />
+    );
 
-    const renderDocumentMessage = (message: RawMessage) => 
-                    <MessageDoc
-                        mediaLocation={message.mediaUrl}
-                        mediaTitle={message.mediaTitle}
-                        loading={false}
-                        status={"Download"}
-                        message={message}
-                    />
-
-    const renderPollMessage = (message: RawMessage) => 
-                    <MessagePoll
-                        message={message}
-                    />
+    const renderPollMessage = (message: RawMessage) => (
+        <MessagePoll message={message} />
+    );
 
     const renderMessage = (message: RawMessage) => {
         switch (message.type) {
@@ -68,5 +67,5 @@ export const RenderMessage = ({ message }: PropType) => {
         }
     };
 
-    return renderMessage(message)
-}
+    return renderMessage(message);
+};
