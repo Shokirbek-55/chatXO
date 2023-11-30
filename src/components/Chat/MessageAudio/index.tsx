@@ -9,6 +9,8 @@ import getBlobDuration from "../../../helper/getBlobDuration";
 
 interface Props {
     message: RawMessage;
+    users: any;
+    position: any;
 }
 
 const PlayIcon = () => (
@@ -41,96 +43,99 @@ const PauseIcon = () => (
     </svg>
 );
 
-const MessageAudio: FC<Props> = ({ message }) => {
-  const url = message.mediaUrl;
+const MessageAudio: FC<Props> = ({ message, users, position }) => {
+    const url = message.mediaUrl;
 
-  const { isPlayAudio, setIsPlayAudio } = useRootStore().audioStore
+    const { isPlayAudio, setIsPlayAudio } = useRootStore().audioStore;
 
-  const [value, setValue] = useState(0)
-  const [dragging, setDragging] = useState(false)
-  const [timeUpdate, setTimeUpdate] = useState(0)
-  const [duration, setDuration] = useState(0)
+    const [value, setValue] = useState(0);
+    const [dragging, setDragging] = useState(false);
+    const [timeUpdate, setTimeUpdate] = useState(0);
+    const [duration, setDuration] = useState(0);
 
-  const audioRef = useRef<HTMLAudioElement>(null);
+    const audioRef = useRef<HTMLAudioElement>(null);
 
-  const messageId = message.id
+    const messageId = message?.id;
 
-  const playAudio = async (audio: string) => {
-    if (audioRef.current && timeUpdate === 0) {
-      const duration = await getBlobDuration(audio)
-      setDuration(duration)
-      audioRef.current.src = audio;
-      audioRef.current.load();
-      audioRef.current.play();
-      audioRef.current.addEventListener("timeupdate", () => {
-        if (audioRef.current) {
-          setTimeUpdate(audioRef.current.currentTime / duration * 100)
-          setValue(audioRef.current.currentTime / duration * 100)
-          if(audioRef.current.currentTime === duration){
-            setIsPlayAudio(messageId, false, allAudioPause)
-          }
+    const playAudio = async (audio: string) => {
+        if (audioRef.current && timeUpdate === 0) {
+            const duration = await getBlobDuration(audio);
+            setDuration(duration);
+            audioRef.current.src = audio;
+            audioRef.current.load();
+            audioRef.current.play();
+            audioRef.current.addEventListener("timeupdate", () => {
+                if (audioRef.current) {
+                    setTimeUpdate(
+                        (audioRef.current.currentTime / duration) * 100
+                    );
+                    setValue((audioRef.current.currentTime / duration) * 100);
+                    if (audioRef.current.currentTime === duration) {
+                        setIsPlayAudio(messageId, false, allAudioPause);
+                    }
+                }
+            });
+        } else {
+            audioRef.current?.play();
         }
-      });
-    } else {
-      audioRef.current?.play()
-    }
-  }
+    };
 
-  const pauseAudio = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
-  }
+    const pauseAudio = () => {
+        if (audioRef.current) {
+            audioRef.current.pause();
+        }
+    };
 
-  const allAudioPause = () => {
-    const audio = document.querySelectorAll("#noteAudioPlayer")
-    audio.forEach((item: any) => {
-      item.pause()
-      item.currentTime = 0
-    })
-  }
+    const allAudioPause = () => {
+        const audio = document.querySelectorAll("#noteAudioPlayer");
+        audio.forEach((item: any) => {
+            item.pause();
+            item.currentTime = 0;
+        });
+    };
 
-  const handlePlayPause = () => {
-    setIsPlayAudio(messageId, !isPlayAudio[messageId], allAudioPause)
-    if (!isPlayAudio[messageId]) {
-      pauseAudio()
-    } else {
-      playAudio(`${Env.AssetsUrl}/${url}`)
-    }
-  };
+    const handlePlayPause = () => {
+        setIsPlayAudio(messageId, !isPlayAudio[messageId], allAudioPause);
+        if (!isPlayAudio[messageId]) {
+            pauseAudio();
+        } else {
+            playAudio(`${Env.AssetsUrl}/${url}`);
+        }
+    };
 
-  const handleRangeChange = (e: any) => {
-    setValue(Number(e.target.value))
-    setDragging(true)
-    if (audioRef.current) {
-      audioRef.current.currentTime = Number(e.target.value) / 100 * duration
-      audioRef.current.play()
-      setIsPlayAudio(messageId, true, allAudioPause)
-    }
-  }
+    const handleRangeChange = (e: any) => {
+        setValue(Number(e.target.value));
+        setDragging(true);
+        if (audioRef.current) {
+            audioRef.current.currentTime =
+                (Number(e.target.value) / 100) * duration;
+            audioRef.current.play();
+            setIsPlayAudio(messageId, true, allAudioPause);
+        }
+    };
 
-  return (
-            <AudioPlayContainer>
-                <button className="playBtn" onClick={handlePlayPause}>{
-                !!isPlayAudio[messageId] ? (
-                  <PauseIcon />
-                ) : (
-                  <PlayIcon />
-                  )
-                }</button>
-              <div className="wavefromBox">
+    return (
+        <AudioPlayContainer>
+            <button className="playBtn" onClick={handlePlayPause}>
+                {!!isPlayAudio[messageId] ? <PauseIcon /> : <PlayIcon />}
+            </button>
+            <div className="wavefromBox">
                 <Waveform
-                  dragging={dragging}
-                  value={dragging ? value : timeUpdate} />
-                  <input
+                    dragging={dragging}
+                    value={dragging ? value : timeUpdate}
+                />
+                <input
                     disabled={!timeUpdate}
                     className="audio-slider"
                     type="range"
-                    onChange={e => handleRangeChange(e)}
-                    value={value} min={0} max={100} />
-                </div>
-                <audio ref={audioRef} id="noteAudioPlayer" />
-      </AudioPlayContainer>
+                    onChange={(e) => handleRangeChange(e)}
+                    value={value}
+                    min={0}
+                    max={100}
+                />
+            </div>
+            <audio ref={audioRef} id="noteAudioPlayer" />
+        </AudioPlayContainer>
     );
 };
 
@@ -160,23 +165,23 @@ const AudioPlayContainer = styled.div`
             background-color: #f2f2f0;
         }
     }
-    .wavefromBox{
-      position: relative;
-      flex: 1;
+    .wavefromBox {
+        position: relative;
+        flex: 1;
     }
 
-    .audio-slider{
-      width: 100%;
-      opacity: 1;
-      position: absolute;
-      outline: none;
-      touch-action: none;
-      opacity: 0;
+    .audio-slider {
+        width: 100%;
+        opacity: 1;
+        position: absolute;
+        outline: none;
+        touch-action: none;
+        opacity: 0;
     }
 
     .audio-slider::-webkit-slider-runnable-track {
-    width: 100%; /* Trackni to'liq qoplang */
-    height: 40px;
-    border-radius: 5px;
-  }
-`
+        width: 100%; /* Trackni to'liq qoplang */
+        height: 40px;
+        border-radius: 5px;
+    }
+`;

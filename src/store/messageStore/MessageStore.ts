@@ -97,7 +97,7 @@ export default class MessageStore {
 
     minRelevance: number = -1;
     goToBottom = false;
-    messagesFilterValue: number = 0
+    messagesFilterValue: number = 0;
     pollMessageState: pollMessage = pollMessageInitial;
     pollMessageOptionState: string[] = ["", ""];
     pollMessageDetails: pollMessage = {} as never;
@@ -147,23 +147,27 @@ export default class MessageStore {
         pollOption: number,
         channelSlug: string,
         pollId: number,
-        messageId: string,
-        callback: () => void
+        messageId: string
+        // callback: () => void
     ) => {
         this.app.chatStore.vote(
             pollOption,
             channelSlug,
             pollId,
-            messageId,
-            callback
+            messageId
+            // callback
         );
     };
 
-    setMessageFilterValue = _.debounce((value: number) => {
-        runInAction(() => {
-            this.messagesFilterValue = value
-        })
-    }, 400, { leading: false, trailing: true })
+    setMessageFilterValue = _.debounce(
+        (value: number) => {
+            runInAction(() => {
+                this.messagesFilterValue = value;
+            });
+        },
+        400,
+        { leading: false, trailing: true }
+    );
 
     setPrevInnerDivHeight = (slug: string, height: number) => {
         this.prevInnerDivHeight[slug] = height;
@@ -183,7 +187,7 @@ export default class MessageStore {
 
     setChannelSlug = (slug: string) => {
         runInAction(() => {
-            this.app.hashtagStore.allChatHashTags = []
+            this.app.hashtagStore.allChatHashTags = [];
             this.slug = slug;
         });
         if (this.slug === slug) {
@@ -254,7 +258,7 @@ export default class MessageStore {
     };
 
     getHistoryMessagesPageState = (setIsFetching, stop) => {
-        console.log('pagestate');
+        console.log("pagestate");
         if (this.messageCache[this.slug]?.end === false) {
             this.app.chatStore.history({
                 slug: this.slug,
@@ -534,7 +538,7 @@ export default class MessageStore {
             slug,
             timestamp,
         });
-        this.onDeleteMessage(id)
+        this.onDeleteMessage(id);
     };
 
     onDeleteMessage = (id: string) => {
@@ -542,7 +546,7 @@ export default class MessageStore {
             this.messageCache[this.slug].messages = this.messageCache[
                 this.slug
             ].messages.filter((e) => e.id != id);
-        })
+        });
     };
 
     replyMessage = (message: RawMessage) => {

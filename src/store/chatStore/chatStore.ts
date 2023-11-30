@@ -19,6 +19,15 @@ class ChatStore {
 
     init = () => {
         console.log("init events");
+
+        this.root.socketStore.socket?.on("openChannel", (data) => {
+            console.log("openChannel", toJS(data));
+        });
+
+        this.root.socketStore.socket?.on("exitChannel", (data) => {
+            console.log("exitChannel", toJS(data));
+        });
+
         this.root.socketStore.socket?.on("message", (payload: RawMessage) => {
             console.log("new message", payload);
             this.root.messageStore.addMessageToCache(payload);
@@ -43,10 +52,7 @@ class ChatStore {
             (payload: { slug: string; userId: number }) => {
                 runInAction(() => {
                     console.log("leave channel", payload);
-                    this.root.channelStore.channelUsers =
-                        this.root.channelStore.channelUsers.filter(
-                            (i) => i.id !== payload.userId
-                        );
+                    this.root.channelStore.filterLeftUser(payload.userId);
                 });
             }
         );
@@ -69,7 +75,7 @@ class ChatStore {
                 timestamp: Date;
             }) => {
                 console.log("delete message", payload);
-                this.root.messageStore.onDeleteMessage(payload.messageId)
+                this.root.messageStore.onDeleteMessage(payload.messageId);
             }
         );
 
@@ -102,19 +108,22 @@ class ChatStore {
         );
 
         this.root.socketStore.socket?.on("poll", (payload: RawMessage) => {
-            console.log("poll", payload);
+            console.log("createPoll", payload);
             this.root.messageStore.addMessageToCache(payload);
             if (this.root.hashtagStore.isOpenHashTagScreen) {
                 this.root.hashtagStore.addMessageHashTags(payload);
             }
         });
 
-        this.root.socketStore.socket?.on(
-            "vote",
-            async (payload: RawMessage) => {
-                console.log("vote", payload);
-            }
-        );
+        this.root.socketStore.socket?.on("vote", (payload: RawMessage) => {
+            console.log("vote", payload);
+        });
+
+        this.root.socketStore.socket?.on("joinRoom", (payload: any) => {
+            console.log("joinRoom", payload);
+            this.root.channelStore.filterAddUser(payload.id);
+            this.root.channelStore.getMyChannels();
+        });
     };
 
     history = ({
@@ -136,8 +145,22 @@ class ChatStore {
         });
     };
 
+    openChannel = (slug) => {
+        this.root.socketStore.socket?.emit("openChannel", slug, (data) => {
+            console.log("openChannel", data);
+        });
+    };
+
+    exitChannel = (slug) => {
+        this.root.socketStore.socket?.emit("exitChannel", slug, (data) => {
+            console.log("exitChannel", data);
+        });
+    };
+
     join = (slug: string) => {
-        this.root.socketStore.socket?.emit("joinRoom", slug);
+        this.root.socketStore.socket?.emit("joinRoom", slug, (data) => {
+            console.log("join", data);
+        });
     };
 
     leave = (slug: string) => {
@@ -193,17 +216,20 @@ class ChatStore {
         pollOption: number,
         channelSlug: string,
         pollId: number,
-        messageId: string,
-        callback: () => void
+        messageId: string
     ) => {
-        this.root.socketStore.socket?.emit("vote", <VoteOption>{
-            pollOption,
-            channelSlug,
-            pollId,
-            messageId,
-        });
-        callback();
-        console.log(pollOption, pollId, messageId, channelSlug, "poll message");
+        this.root.socketStore.socket?.emit(
+            "vote",
+            <VoteOption>{
+                pollOption,
+                channelSlug,
+                pollId,
+                messageId,
+            },
+            (data) => {
+                console.log("data", toJS(data));
+            }
+        );
     };
 
     pimpMessage = (

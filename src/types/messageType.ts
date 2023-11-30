@@ -54,12 +54,14 @@ export type pollMessage = {
     channelSlug: string;
     id: number;
     options: PollOptionsType[];
+    messageId: string;
     topic: string;
     type: string;
-    updateAt: string;
+    updateAt?: string;
     votersCount: number;
     votesCount: number;
     pollType: string;
+    voted?: string;
 };
 
 export const pollMessageInitial: pollMessage = {
@@ -67,9 +69,11 @@ export const pollMessageInitial: pollMessage = {
     id: 0,
     options: [PollOptionsInitial],
     topic: "",
+    messageId: "",
     type: NORMAL_TYPE,
     pollType: NORMAL_TYPE,
     updateAt: "",
     votersCount: 0,
     votesCount: 0,
+    voted: "",
 };

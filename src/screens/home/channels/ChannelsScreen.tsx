@@ -41,6 +41,7 @@ function ChannelsScreen() {
     const { myChannels, setSearchChannels, getChannelByHashId } =
         useRootStore().channelStore;
     const { setChannelSlug } = useRootStore().messageStore;
+    const { openChannel } = useRootStore().chatStore;
     const { t } = useTranslation();
     const navigate = useNavigate();
 
@@ -54,6 +55,7 @@ function ChannelsScreen() {
         const target = generatePath(`/:name`, { name: `@${e.hashId}` });
         navigate(target);
         closeChannelInUser();
+        openChannel(e.slug);
     };
 
     const onAccount = () => {

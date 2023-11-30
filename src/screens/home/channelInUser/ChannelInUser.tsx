@@ -47,11 +47,11 @@ const ChannelInUser = () => {
     const handleChanel = (e) => {
         setChannelSlug(e.slug);
         getChannelByHashId(
-            myChannels.find((item) => item.id === e.id)?.hashId as never
+            myChannels.find((item) => item?.id === e.id)?.hashId as never
         );
         const target = generatePath(`/:name`, {
             name: `@${
-                myChannels.find((item) => item.id === e.id)?.hashId as never
+                myChannels.find((item) => item?.id === e.id)?.hashId as never
             }`,
         });
         navigate(target);

@@ -154,26 +154,28 @@ const ManagaChannel = () => {
                         return (
                             <div key={index} style={{ width: "100%" }}>
                                 <RowItemView
-                                    text={e.username}
+                                    text={e?.username}
                                     color={
-                                        e.color
-                                            ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)`
+                                        e?.color
+                                            ? `linear-gradient(25deg, ${e?.color} 30%, #ddd 100%)`
                                             : "linear-gradient(#ddd, #666)"
                                     }
                                     imageUrl={
-                                        e.avatar ? `${TMP_URL}/${e.avatar}` : ""
+                                        e?.avatar
+                                            ? `${TMP_URL}/${e?.avatar}`
+                                            : ""
                                     }
                                     loading={false}
                                     userType={
-                                        adminId === user.id && e.id === user.id
+                                        adminId === user.id && e?.id === user.id
                                             ? "You admin"
-                                            : user.id === e.id
+                                            : user.id === e?.id
                                             ? "You"
-                                            : adminId === e.id
+                                            : adminId === e?.id
                                             ? "Admin"
                                             : ""
                                     }
-                                    onNamePress={() => FriendDetails(e.id)}
+                                    onNamePress={() => FriendDetails(e?.id)}
                                 />
                             </div>
                         );

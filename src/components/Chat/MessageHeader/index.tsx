@@ -1,4 +1,10 @@
-import { CSSProperties, Dispatch, SetStateAction, useMemo, useState } from "react";
+import {
+    CSSProperties,
+    Dispatch,
+    SetStateAction,
+    useMemo,
+    useState,
+} from "react";
 import BubbleHeader from "../BubbleHeader";
 import styles from "./index.module.css";
 import { RawMessage } from "../../../types/channel";
@@ -18,11 +24,16 @@ interface Props {
     showReply?: boolean;
     color?: string;
     userId?: number;
-    style?: CSSProperties,
-    setPimp?: Dispatch<SetStateAction<{
-        pimpType: 'pimp' | 'unPimp',
-        value: number | undefined
-    } | undefined>>
+    style?: CSSProperties;
+    setPimp?: Dispatch<
+        SetStateAction<
+            | {
+                  pimpType: "pimp" | "unPimp";
+                  value: number | undefined;
+              }
+            | undefined
+        >
+    >;
 }
 
 const MessageHeader = ({
@@ -32,23 +43,25 @@ const MessageHeader = ({
     relevance,
     showReply,
     userId,
-    setPimp
+    setPimp,
 }: Props) => {
-    
     const MESSAGE_STYLE = relevanceFuniction({} as RawMessage, relevance);
     const textSize = MESSAGE_STYLE.fontSize;
 
     const { getOneMember, channelUsers } = useRootStore().channelStore;
     const { pimpMessage, unPimpMessage } = useRootStore().chatStore;
     const { user } = useRootStore().authStore;
-    const [activePimp, setActivePimp] = useState(false)
-    
-    const myself = useMemo(() => channelUsers.find((e) => e.id === user.id), [channelUsers, user]);
+    const [activePimp, setActivePimp] = useState(false);
 
-    const jsonStr = message?.pimps as never
+    const myself = useMemo(
+        () => channelUsers.find((e) => e.id === user.id),
+        [channelUsers, user]
+    );
+
+    const jsonStr = message?.pimps as never;
 
     const data: {
-        [key:string]: number
+        [key: string]: number;
     } = useMemo(() => {
         try {
             return JSON.parse(jsonStr);
@@ -59,8 +72,8 @@ const MessageHeader = ({
     }, [jsonStr]);
 
     const hasKey265 = useMemo(() => {
-        setActivePimp((user?.id as never) in data)       
-    }, [data, user])
+        setActivePimp((user?.id as never) in data);
+    }, [data, user]);
 
     const onRelevance = (id: number) => {
         getOneMember(id);
@@ -74,11 +87,12 @@ const MessageHeader = ({
     ) => {
         pimpMessage(userId, messageId, channelSlug, timestamp);
         console.log(toJS(myself));
-        setPimp && setPimp({
-            pimpType: 'pimp',
-            value: myself?.relevance
-        })
-        setActivePimp(true)
+        setPimp &&
+            setPimp({
+                pimpType: "pimp",
+                value: myself?.relevance,
+            });
+        setActivePimp(true);
     };
 
     const UnPimpMesssage = (
@@ -88,14 +102,15 @@ const MessageHeader = ({
         timestamp: any
     ) => {
         unPimpMessage(userId, messageId, channelSlug, timestamp);
-        const keys = Object.keys(data)
-        const il = keys[0] === `${user?.id}` ? 1 : 0
+        const keys = Object.keys(data);
+        const il = keys[0] === `${user?.id}` ? 1 : 0;
         console.log(toJS(message));
-        setPimp && setPimp({
-            pimpType: 'unPimp',
-            value: data[`${keys[il]}`]
-        })
-        setActivePimp(false)
+        setPimp &&
+            setPimp({
+                pimpType: "unPimp",
+                value: data[`${keys[il]}`],
+            });
+        setActivePimp(false);
     };
 
     return (
@@ -161,4 +176,4 @@ const MessageHeader = ({
         </div>
     );
 };
-export default observer(MessageHeader)
+export default observer(MessageHeader);

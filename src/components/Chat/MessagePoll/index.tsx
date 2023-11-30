@@ -9,6 +9,7 @@ import useRootStore from "../../../hooks/useRootStore";
 import { pollMessage } from "../../../types/messageType";
 import APIs from "../../../api/api";
 import { Skeleton, Tooltip } from "antd";
+import { toJS } from "mobx";
 interface Props {
     message: RawMessage;
 }
@@ -16,6 +17,7 @@ interface Props {
 const MessagePoll: FC<Props> = ({ message }) => {
     const { getPollId } = useRootStore().messageStore;
     const { vote } = useRootStore().chatStore;
+    const { socket } = useRootStore().socketStore;
     const [messsageDetails, setMessageDetails] = useState<pollMessage>();
 
     const canVote = useMemo(() => {
@@ -26,19 +28,30 @@ const MessagePoll: FC<Props> = ({ message }) => {
         pollOption: number,
         channelSlug: string,
         pollId: number,
-        messageId: string,
-        callback: () => void
+        messageId: string
     ) => {
-        if (canVote) vote(pollOption, channelSlug, pollId, messageId, callback);
+        if (canVote) vote(pollOption, channelSlug, pollId, messageId);
         getPollId(pollId, true);
     };
 
+    socket?.on("vote", async (payload: pollMessage) => {
+        if (message?.id === payload.messageId) {
+            const { data }: any = await APIs.channels.getPollDetails(
+                message.pollId as never,
+                true
+            );
+            setMessageDetails({ ...data });
+        }
+    });
+
     const [{}, getPollInfo] = useAsyncFn(async () => {
-        const { data }: any = await APIs.channels.getPollDetails(message.pollId || 0, true);
+        const { data }: any = await APIs.channels.getPollDetails(
+            message.pollId || 0,
+            true
+        );
         delete data.createdAt; //BE returns wrong timestamp
         setMessageDetails({ ...data });
-        getPollId(message.pollId || 0, true);
-    }, [message]);
+    }, [message, message.pollId, message.isReply]);
 
     const votedInPoll = useMemo(() => {
         return !!messsageDetails?.options?.find((option) => option?.voted);
@@ -63,8 +76,7 @@ const MessagePoll: FC<Props> = ({ message }) => {
                         option.id,
                         message.channelSlug,
                         messsageDetails?.id as never,
-                        message.id,
-                        () => getPollInfo()
+                        message.id
                     )
                 }
             >
@@ -142,7 +154,7 @@ const MessagePoll: FC<Props> = ({ message }) => {
                         {(messsageDetails?.options || [])
                             ?.slice()
                             ?.sort(
-                                (option1, option2) => option1.id - option2.id
+                                (option1, option2) => option1?.id - option2?.id
                             )
                             ?.map(renderAnswer)}
                     </div>

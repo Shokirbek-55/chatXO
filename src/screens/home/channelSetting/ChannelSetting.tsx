@@ -30,11 +30,11 @@ const ChannelSetting = () => {
             <Header
                 text={`${t("settings")}`}
                 leftIcon="close"
-                onLeftIconPress={() => closeModal('right')}
+                onLeftIconPress={() => closeModal("right")}
             />
             <div>
                 {channelUsers
-                    .filter((e) => e.id !== adminId)
+                    .filter((e) => e?.id !== adminId)
                     .map((e, index) => {
                         return (
                             <div key={index}>

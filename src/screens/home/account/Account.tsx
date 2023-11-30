@@ -68,7 +68,7 @@ const Account = () => {
             <Header
                 text={t("account")}
                 leftIcon="arrowLeft"
-                onLeftIconPress={() => closeModal('left')}
+                onLeftIconPress={() => closeModal("left")}
             />
             <div className={styles.container}>
                 <div className={styles.avatarBox}>
@@ -190,7 +190,9 @@ const Account = () => {
                                         >
                                             <RowItemView
                                                 onNamePress={() =>
-                                                    FriendDetails(e.id as never)
+                                                    FriendDetails(
+                                                        e?.id as never
+                                                    )
                                                 }
                                                 key={index}
                                                 text={e.username}
