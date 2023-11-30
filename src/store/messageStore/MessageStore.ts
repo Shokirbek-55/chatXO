@@ -13,9 +13,7 @@ import APIs from "../../api/api";
 import { Operation } from "../../utils/Operation";
 import {
     pollMessage,
-    pollMessageInitial,
-    PollOptionsInitial,
-    PollOptionsType,
+    pollMessageInitial
 } from "../../types/messageType";
 
 const initialMassegeText: SendMessage = {

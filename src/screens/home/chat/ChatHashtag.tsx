@@ -1,29 +1,20 @@
 import { observer } from "mobx-react-lite";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import ScrollContainer from "../../../components/ScrollContainer/ScrollContainer";
 import MessageInput from "./components/messageInput/MessageInput";
-import LinkPriview from "../../../components/Chat/LinkPreView/linkPriview";
-import MessageAudio from "../../../components/Chat/MessageAudio";
-import MessageDoc from "../../../components/Chat/MessageDoc";
-import MessageImg from "../../../components/Chat/MessageImg";
-import MessageVideo from "../../../components/Chat/MessageVideo";
-import { RawMessage } from "../../../types/channel";
-import MessageBox from "../../../components/Chat/MessageBox";
 import useRootStore from "../../../hooks/useRootStore";
 import _ from "lodash";
 import ChatHeaderHashtag from "../../../utils/chatHeaderHashtag";
+import MessageComponent from "../../../components/Chat/MessageComponent/MessageComponent";
 
 const ChatHashtag = () => {
 
     const navigate = useNavigate();
     const { allHashTagsMessages, exit } = useRootStore().hashtagStore
-    const { messageCache, slug } =
+    const { messageCache, slug, messagesFilterValue } =
         useRootStore().messageStore;
-    const { user } = useRootStore().authStore;
-
-    // console.log('allHashTagsMessages', toJS(allHashTagsMessages));
     
 
     useEffect(() => {
@@ -41,129 +32,27 @@ const ChatHashtag = () => {
         };
     }, []);
 
-    const renderTextMessage = (message: RawMessage) => {
-        switch (message.userId) {
-            case user.id:
-                return <LinkPriview message={message} position={true} />;
-            default:
-                return (
-                    <LinkPriview
-                        message={message}
-                        position={false}
-                        users={messageCache[slug]?.channelUsers}
-                    />
-                );
-        }
-    };
-
-    const renderImageMessage = (message: RawMessage) => {
-        switch (message.userId) {
-            case user.id:
-                return <MessageImg message={message} own={true} />;
-            default:
-                return (
-                    <MessageImg
-                        message={message}
-                        own={false}
-                        users={messageCache[slug]?.channelUsers}
-                    />
-                );
-        }
-    };
-
-    const renderVideoMessage = (message: RawMessage) => {
-        switch (message.userId) {
-            case user.id:
-                return <MessageVideo message={message} own={true} />;
-            default:
-                return (
-                    <MessageVideo
-                        message={message}
-                        own={false}
-                        users={messageCache[slug]?.channelUsers}
-                    />
-                );
-        }
-    };
-
-    const renderAudioMessage = (message: RawMessage) => {
-        switch (message.userId) {
-            case user.id:
-                return <MessageAudio message={message} position={true} />;
-            default:
-                return (
-                    <MessageAudio
-                        message={message}
-                        position={false}
-                        users={messageCache[slug]?.channelUsers}
-                    />
-                );
-        }
-    };
-
-    const renderDocumentMessage = (message: RawMessage) => {
-        switch (message.userId) {
-            case user.id:
-                return (
-                    <MessageDoc
-                        own={true}
-                        mediaLocation={message.mediaUrl}
-                        mediaTitle={message.mediaTitle}
-                        loading={false}
-                        status={"Download"}
-                        message={message}
-                    />
-                );
-            default:
-                return (
-                    <MessageDoc
-                        mediaLocation={message.mediaUrl}
-                        mediaTitle={message.mediaTitle}
-                        own={false}
-                        loading={false}
-                        status={"Download"}
-                        message={message}
-                        users={messageCache[slug]?.channelUsers}
-                    />
-                );
-        }
-    };
-
-    const renderMessage = (message: RawMessage) => {
-        switch (message.type) {
-            case "text":
-                return renderTextMessage(message);
-            case "image":
-                return renderImageMessage(message);
-            case "video":
-                return renderVideoMessage(message);
-            case "audio":
-                return renderAudioMessage(message);
-            case "document":
-                return renderDocumentMessage(message);
-            default:
-                return <MessageBox text={message.message} own={0} />;
-        }
-    };
+    const messages = useMemo(() => messagesFilterValue !== 0 && allHashTagsMessages.messages.length >= 0 ? allHashTagsMessages.messages.filter((e) => e.relevance && e.relevance >= messagesFilterValue) : allHashTagsMessages.messages, [allHashTagsMessages.messages, slug, messagesFilterValue])
+    const users = useMemo(() => messageCache[slug]?.channelUsers, [messageCache[slug]?.channelUsers, slug])
 
     return (
         <ChatContainer id="chatView">
             <ChatHeaderHashtag />
             <ScrollContainer>
-                {_.map(allHashTagsMessages.messages, (message, index) => {
+                {_.map(messages, (message, index) => {
                     return (
                         <div
                             key={index}
                             style={{
                                 paddingBottom:
-                                    allHashTagsMessages.messages?.length - 1 ==
+                                    allHashTagsMessages.messages?.length - 1 ===
                                         index
                                         ? "7.5vh"
                                         : "0",
-                                paddingTop: 0 == index ? "7vh" : "0",
+                                paddingTop: 0 === index ? "7vh" : "0",
                             }}
                         >
-                            {renderMessage(message)}
+                            <MessageComponent message={message} users={users} />
                         </div>
                     );
                 })}

@@ -1,53 +1,23 @@
-import { observer } from "mobx-react-lite";
 import { styled } from "styled-components";
-import { ChannelsUsersType, RawMessage } from "../../../types/channel";
+import { RawMessage } from "../../../types/channel";
 import { relevanceFuniction } from "../../../utils/boxShadov";
 import Text from "../../Text/Text";
-import MessageComponent from "../MessageComponent/MessageComponent";
 import styles from "./index.module.css";
-import { useState } from "react";
-import { useMemo } from "react";
-import useRootStore from "../../../hooks/useRootStore";
 
 interface Props {
     message: RawMessage;
-    position: boolean;
-    users?: {
-        [key: string]: ChannelsUsersType;
-    };
     textBackColor?: string;
 }
 
 const LinkPriviewComponent = ({
     message,
-    position,
-    users,
     textBackColor,
 }: Props) => {
-    const { user } = useRootStore().authStore;
-    const { channelUsers } = useRootStore().channelStore;
-    const [pimp, setPimp] = useState(false);
-
+        
     const MESSAGE_STYLE = relevanceFuniction(message);
     const textSize = MESSAGE_STYLE?.fontSize;
     const textWeight = MESSAGE_STYLE?.fontWeight;
     const textLineHeight = MESSAGE_STYLE?.lineHeight;
-
-    const myself = channelUsers.find((e) => e.id === user.id);
-    const jsonStr = message?.pimps as never;
-
-    // useMemo orqali JSON matnini obyektda ajratib olamiz
-    const data = useMemo(() => {
-        try {
-            return JSON.parse(jsonStr);
-        } catch (error) {
-            console.error("JSON parsing error:", error);
-            return {};
-        }
-    }, [jsonStr]);
-
-    // data obyekti ichida 265 kalitining mavjudligini tekshiramiz
-    const hasKey = (user?.id as never) in data;
 
     const renderMessage = ({
         fontSize,
@@ -94,7 +64,6 @@ const LinkPriviewComponent = ({
     };
 
     return (
-        <MessageComponent message={message} position={position} users={users}>
             <div className={styles.textCard}>
                 <Text
                     style={{
@@ -108,11 +77,10 @@ const LinkPriviewComponent = ({
                     })}
                 </Text>
             </div>
-        </MessageComponent>
     );
 };
 
-export default observer(LinkPriviewComponent);
+export default LinkPriviewComponent;
 
 const Paragraph = styled.p<{
     $fontSize?: string;

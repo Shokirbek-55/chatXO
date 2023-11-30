@@ -15,6 +15,7 @@ const BubbleHeader: FC<Props> = ({
     textSize,
     onPress,
 }) => {
+
     const randomClipPath = useCallback(() => {
         let clipPath = "polygon(";
         for (let i = 1; i <= 12; i++) {
@@ -85,7 +86,7 @@ const BubbleHeader: FC<Props> = ({
         }
         clipPath += ")";
         return clipPath;
-    }, [title, color, padding, textSize]);
+    }, [textSize]);
 
     return (
         <div
@@ -101,7 +102,6 @@ const BubbleHeader: FC<Props> = ({
                 alignItems: "center",
                 zIndex: 1,
             }}
-            onClick={onPress}
         >
             <div
                 className="bubble-header__title"

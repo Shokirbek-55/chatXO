@@ -1,7 +1,7 @@
-import { CSSProperties, useMemo } from "react";
+import { CSSProperties, Dispatch, SetStateAction, useMemo, useState } from "react";
 import BubbleHeader from "../BubbleHeader";
 import styles from "./index.module.css";
-import { Message, RawMessage } from "../../../types/channel";
+import { RawMessage } from "../../../types/channel";
 import { relevanceFuniction } from "../../../utils/boxShadov";
 import Icon from "../../Icon";
 import Assets from "../../../utils/requireAssets";
@@ -9,28 +9,20 @@ import useRootStore from "../../../hooks/useRootStore";
 import { AiOutlineStar } from "react-icons/ai";
 import { AiFillStar } from "react-icons/ai";
 import { toJS } from "mobx";
+import { observer } from "mobx-react-lite";
 
 interface Props {
     message?: RawMessage;
-    onStarPress?: () => void;
-    isPimped?: boolean;
-    showStar?: boolean;
-    timeStamp?: string;
     relevance?: number;
-    openRelevence?: () => void;
-    position?: string;
-    channelSlug?: string;
-    channelID?: number;
     name?: string;
     showReply?: boolean;
-    showMinRelevance?: boolean;
-    hideMessage?: () => void;
-    repliedMessage?: Message;
-    channelId?: number;
     color?: string;
-    filterMsgNumber?: number | null | undefined;
-    style?: CSSProperties;
     userId?: number;
+    style?: CSSProperties,
+    setPimp?: Dispatch<SetStateAction<{
+        pimpType: 'pimp' | 'unPimp',
+        value: number | undefined
+    } | undefined>>
 }
 
 const MessageHeader = ({
@@ -40,16 +32,37 @@ const MessageHeader = ({
     relevance,
     showReply,
     userId,
-    onStarPress,
+    setPimp
 }: Props) => {
+    
     const MESSAGE_STYLE = relevanceFuniction({} as RawMessage, relevance);
     const textSize = MESSAGE_STYLE.fontSize;
 
     const { getOneMember, channelUsers } = useRootStore().channelStore;
     const { pimpMessage, unPimpMessage } = useRootStore().chatStore;
     const { user } = useRootStore().authStore;
+    const [activePimp, setActivePimp] = useState(false)
+    
+    const myself = useMemo(() => channelUsers.find((e) => e.id === user.id), [channelUsers, user]);
 
-    const onRelevance = async (id: number) => {
+    const jsonStr = message?.pimps as never
+
+    const data: {
+        [key:string]: number
+    } = useMemo(() => {
+        try {
+            return JSON.parse(jsonStr);
+        } catch (error) {
+            console.error("JSON parsing error:", error);
+            return {};
+        }
+    }, [jsonStr]);
+
+    const hasKey265 = useMemo(() => {
+        setActivePimp((user?.id as never) in data)       
+    }, [data, user])
+
+    const onRelevance = (id: number) => {
         getOneMember(id);
     };
 
@@ -60,24 +73,13 @@ const MessageHeader = ({
         timestamp: any
     ) => {
         pimpMessage(userId, messageId, channelSlug, timestamp);
-        console.log("pimp", toJS(message?.relevance));
+        console.log(toJS(myself));
+        setPimp && setPimp({
+            pimpType: 'pimp',
+            value: myself?.relevance
+        })
+        setActivePimp(true)
     };
-    const myself = channelUsers.find((e) => e.id === user.id);
-
-    const jsonStr = message?.pimps as never;
-
-    // useMemo orqali JSON matnini obyektda ajratib olamiz
-    const data = useMemo(() => {
-        try {
-            return JSON.parse(jsonStr);
-        } catch (error) {
-            console.error("JSON parsing error:", error);
-            return {};
-        }
-    }, [jsonStr]);
-
-    // data obyekti ichida 265 kalitining mavjudligini tekshiramiz
-    const hasKey265 = (user?.id as never) in data;
 
     const UnPimpMesssage = (
         userId: any,
@@ -86,6 +88,14 @@ const MessageHeader = ({
         timestamp: any
     ) => {
         unPimpMessage(userId, messageId, channelSlug, timestamp);
+        const keys = Object.keys(data)
+        const il = keys[0] === `${user?.id}` ? 1 : 0
+        console.log(toJS(message));
+        setPimp && setPimp({
+            pimpType: 'unPimp',
+            value: data[`${keys[il]}`]
+        })
+        setActivePimp(false)
     };
 
     return (
@@ -96,7 +106,6 @@ const MessageHeader = ({
                     color={color}
                     padding={5}
                     textSize={textSize}
-                    onPress={() => onRelevance(userId || 0)}
                 />
                 {!showReply && (
                     <div className={styles.relevence}>
@@ -122,7 +131,7 @@ const MessageHeader = ({
                                 color={"#000"}
                             />
                         </div>
-                        {hasKey265 ? (
+                        {activePimp ? (
                             <AiFillStar
                                 color="#FFAA33"
                                 onClick={() =>
@@ -152,4 +161,4 @@ const MessageHeader = ({
         </div>
     );
 };
-export default MessageHeader;
+export default observer(MessageHeader)

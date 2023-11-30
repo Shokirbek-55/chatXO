@@ -204,7 +204,7 @@ export type ChannelsUsersType = {
     adminId: number;
     latitude: string;
     longitude: string;
-    relevance: 0;
+    relevance: number;
     status: string;
     username: string;
 };
