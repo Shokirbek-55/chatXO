@@ -1,9 +1,8 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { AiFillCheckCircle } from "react-icons/ai";
 import { observer } from "mobx-react-lite";
-import { ChannelsUsersType, RawMessage } from "../../../types/channel";
+import { RawMessage } from "../../../types/channel";
 import Text from "../../Text/Text";
-import MessageComponent from "../MessageComponent/MessageComponent";
 import styles from "./index.module.css";
 import { useAsyncFn } from "react-use";
 import useRootStore from "../../../hooks/useRootStore";
@@ -12,15 +11,9 @@ import APIs from "../../../api/api";
 import { Skeleton, Tooltip } from "antd";
 interface Props {
     message: RawMessage;
-    own: boolean;
-    pollId: number;
-    isReply: boolean;
-    users?: {
-        [key: string]: ChannelsUsersType;
-    };
 }
 
-const MessagePoll: FC<Props> = ({ message, users, own, pollId, isReply }) => {
+const MessagePoll: FC<Props> = ({ message }) => {
     const { getPollId } = useRootStore().messageStore;
     const { vote } = useRootStore().chatStore;
     const [messsageDetails, setMessageDetails] = useState<pollMessage>();
@@ -41,11 +34,11 @@ const MessagePoll: FC<Props> = ({ message, users, own, pollId, isReply }) => {
     };
 
     const [{}, getPollInfo] = useAsyncFn(async () => {
-        const { data }: any = await APIs.channels.getPollDetails(pollId, true);
+        const { data }: any = await APIs.channels.getPollDetails(message.pollId || 0, true);
         delete data.createdAt; //BE returns wrong timestamp
         setMessageDetails({ ...data });
-        getPollId(pollId, true);
-    }, [message, pollId, isReply]);
+        getPollId(message.pollId || 0, true);
+    }, [message]);
 
     const votedInPoll = useMemo(() => {
         return !!messsageDetails?.options?.find((option) => option?.voted);
@@ -53,7 +46,7 @@ const MessagePoll: FC<Props> = ({ message, users, own, pollId, isReply }) => {
 
     useEffect(() => {
         getPollInfo();
-    }, [pollId, getPollInfo]);
+    }, [message.pollId, getPollInfo]);
 
     const renderAnswer = (option: any) => {
         const percentages = Math.round(
@@ -133,7 +126,7 @@ const MessagePoll: FC<Props> = ({ message, users, own, pollId, isReply }) => {
     };
 
     return (
-        <MessageComponent position={own} message={message} users={users}>
+        <>
             {(messsageDetails?.options || []).length ? (
                 <div className={styles.pollTop}>
                     <Text fontSize="15px" children={messsageDetails?.topic} />
@@ -177,7 +170,7 @@ const MessagePoll: FC<Props> = ({ message, users, own, pollId, isReply }) => {
                     className={styles.skeleton}
                 />
             )}
-        </MessageComponent>
+        </>
     );
 };
 

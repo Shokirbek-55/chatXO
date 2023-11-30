@@ -17,19 +17,12 @@ interface Props {
   mediaLocation?: string;
   deleteReportMessage?: () => void;
   mediaTitle?: string;
-  own: boolean;
-  isReply?: boolean;
-  users?: {
-    [key: string]: ChannelsUsersType;
-  };
 }
 
 const MessageDoc: FC<Props> = ({
   message,
-  users,
   mediaLocation,
   mediaTitle,
-  own,
 }) => {
   const [percentCompleted, setPercentCompleted] = useState<any>(0);
 
@@ -80,7 +73,6 @@ const MessageDoc: FC<Props> = ({
   };
 
   return (
-  <MessageComponent message={message} users={users} position={own}>
           <div
             className={styles.ownCard}
             onClick={() => handleClickDownloader()}
@@ -101,7 +93,6 @@ const MessageDoc: FC<Props> = ({
               {mediaTitle}
             </span>
           </div>
-        </MessageComponent>
   );
 };
 

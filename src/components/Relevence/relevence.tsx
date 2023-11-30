@@ -1,8 +1,6 @@
 import { Slider } from "antd";
-import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
-import React, { useState } from "react";
-import { BiCheckbox, BiCheckCircle, BiCheckSquare } from "react-icons/bi";
+import { BiCheckCircle } from "react-icons/bi";
 import { ImCancelCircle } from "react-icons/im";
 import { TMP_URL } from "../../env";
 import useRootStore from "../../hooks/useRootStore";

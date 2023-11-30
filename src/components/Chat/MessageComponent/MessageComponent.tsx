@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useMemo, useState } from "react";
 import { styled } from "styled-components";
 import { Env } from "../../../env";
 import { ChannelsUsersType, RawMessage } from "../../../types/channel";
@@ -12,23 +12,20 @@ import Text from "../../Text/Text";
 import { generatePath, useNavigate, useParams } from "react-router-dom";
 import useRootStore from "../../../hooks/useRootStore";
 import { observer } from "mobx-react-lite";
+import { RenderMessage } from "../AllMessage/AllMessage";
+import MessageBox from "../MessageBox";
+import { toJS } from "mobx";
 
 interface Props {
     message: RawMessage;
-    position: boolean;
-    users?: {
+    users: {
         [key: string]: ChannelsUsersType;
     };
-    children: React.ReactNode;
-    options?: [];
-    pollId?: number;
 }
 
 const MessageComponent: FC<Props> = ({
     message,
     users,
-    position,
-    children,
 }) => {
     const navigate = useNavigate();
     const { name } = useParams();
@@ -37,10 +34,18 @@ const MessageComponent: FC<Props> = ({
     const { toRouterManageCh, manageRouters, openInUser } =
         useRootStore().routerStore;
     const { getFriendDetails } = useRootStore().usersStore;
-    const { show } = useRootStore().visibleStore;
+    const { user } = useRootStore().authStore;
+    const [pimp, setPimp] = useState<{
+        pimpType: 'pimp' | 'unPimp',
+        value: number | undefined
+    } | undefined>(undefined)
+
+    const msg = useMemo(() => {
+        return pimp !== undefined ? { ...message, relevance: pimp.value } : message
+    }, [pimp?.pimpType, message])
     const currentUser: ChannelsUsersType | undefined = users?.[message.userId];
 
-    const MESSAGE_STYLE = relevanceFuniction(message);
+    const MESSAGE_STYLE = relevanceFuniction(msg);
     const boxShadov = MESSAGE_STYLE?.boxShadow;
 
     const handleHashTagClick = (tag: string) => {
@@ -66,16 +71,25 @@ const MessageComponent: FC<Props> = ({
         openInUser();
     };
 
+    const position = useMemo(() => message.userId === user.id, [user, message])
+
+    const renderMessage = useMemo(() => <RenderMessage message={msg} />, [msg.relevance])
+    
+    if (message.userId === -1) {
+        return <MessageBox text={msg.message} own={0} />;
+    }
+
     return (
-        <Container $position={position} $isRaplayed={message.isReply}>
+        <Container $position={position} $isRaplayed={msg.isReply}>
             <div className="childContainer">
                 {!position && (
                     <MessageHeader
-                        name={message.username}
-                        relevance={message.relevance}
-                        color={currentUser?.color || message.color}
-                        userId={message.userId}
-                        message={message}
+                        name={msg.username}
+                        relevance={msg.relevance}
+                        color={currentUser?.color || msg.color}
+                        userId={msg.userId}
+                        message={msg}
+                        setPimp={setPimp}
                     />
                 )}
                 <div className="messageCard">
@@ -94,39 +108,39 @@ const MessageComponent: FC<Props> = ({
                             />
                         </div>
                     )}
-                    <DropDownMenu massage={message}>
+                    <DropDownMenu massage={msg}>
                         <BoxShadow $boxShodow={boxShadov}>
                             <AudioPlayContainer>
-                                {message.isReply && (
+                                {msg.isReply && (
                                     <div
                                         className="replayMessage"
                                         onClick={() => {}}
                                     >
                                         <MessageHeader
                                             name={
-                                                message.originMessage?.username
+                                                msg.originMessage?.username
                                             }
                                             showReply
-                                            color={message?.color}
+                                            color={msg?.color}
                                             style={{
                                                 fontFamily: "sans-serif",
                                                 fontSize: "20px",
                                             }}
                                         />
                                         <div className="messageMain">
-                                            {ReplyTypeRender(message)}
+                                            {ReplyTypeRender(msg)}
                                         </div>
                                     </div>
                                 )}
-                                {children}
+                                {renderMessage}
                                 <HashTagsContainer
                                     $isHas={
-                                        message.hashtags &&
-                                        message.hashtags.length > 0
+                                        msg.hashtags &&
+                                        msg.hashtags.length > 0
                                     }
                                 >
-                                    {message.hashtags &&
-                                        message.hashtags.map((tag, index) => {
+                                    {msg.hashtags &&
+                                        msg.hashtags.map((tag, index) => {
                                             const isLongTag = tag.length > 20;
                                             const tagElem = (
                                                 <Tag

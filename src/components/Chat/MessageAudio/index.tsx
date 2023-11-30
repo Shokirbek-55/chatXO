@@ -1,24 +1,14 @@
 import { observer } from "mobx-react-lite";
-import { FC, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { styled } from "styled-components";
 import { Env } from "../../../env";
 import useRootStore from "../../../hooks/useRootStore";
-import { ChannelsUsersType, RawMessage } from "../../../types/channel";
-import { relevanceFuniction } from "../../../utils/boxShadov";
-import SmallAvatar from "../../SmallAvatar/smallAvatar";
+import { RawMessage } from "../../../types/channel";
 import Waveform from "../../Waveform/Waveform";
-import DropDownMenu from "../DropDownMenu/dropdownmenu";
-import MessageHeader from "../MessageHeader";
-import styles from "./index.module.css";
 import getBlobDuration from "../../../helper/getBlobDuration";
-import MessageComponent from "../MessageComponent/MessageComponent";
 
 interface Props {
     message: RawMessage;
-    position: boolean;
-    users?: {
-        [key: string]: ChannelsUsersType;
-    };
 }
 
 const PlayIcon = () => (
@@ -51,7 +41,7 @@ const PauseIcon = () => (
     </svg>
 );
 
-const MessageAudio: FC<Props> = ({ message, users, position }) => {
+const MessageAudio: FC<Props> = ({ message }) => {
   const url = message.mediaUrl;
 
   const { isPlayAudio, setIsPlayAudio } = useRootStore().audioStore
@@ -120,7 +110,6 @@ const MessageAudio: FC<Props> = ({ message, users, position }) => {
   }
 
   return (
-    <MessageComponent message={message} position={position} users={users}>
             <AudioPlayContainer>
                 <button className="playBtn" onClick={handlePlayPause}>{
                 !!isPlayAudio[messageId] ? (
@@ -142,7 +131,6 @@ const MessageAudio: FC<Props> = ({ message, users, position }) => {
                 </div>
                 <audio ref={audioRef} id="noteAudioPlayer" />
       </AudioPlayContainer>
-    </MessageComponent>
     );
 };
 

@@ -2,7 +2,6 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import { styled } from "styled-components";
 import Footer from "../components/Footer/Footer";
-import Relevence from "../components/Relevence/relevence";
 import useRootStore from "../hooks/useRootStore";
 
 const ModalComponent = ({

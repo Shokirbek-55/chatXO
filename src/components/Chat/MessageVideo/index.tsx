@@ -1,22 +1,16 @@
 import { FC } from "react";
 import { Env } from "../../../env";
-import { ChannelsUsersType, RawMessage } from "../../../types/channel";
-import MessageComponent from "../MessageComponent/MessageComponent";
+import { RawMessage } from "../../../types/channel";
 import styles from "./index.module.css";
 
 interface Props {
   message: RawMessage;
-  own: boolean;
-  users?: {
-    [key: string]: ChannelsUsersType;
-  };
 }
 
-const MessageVideo: FC<Props> = ({ message, users, own }) => {
+const MessageVideo: FC<Props> = ({ message}) => {
   const url = message.mediaUrl;
 
   return (
-    <MessageComponent position={own} message={message} users={users}>
           <video
             id="player"
             controls
@@ -32,7 +26,6 @@ const MessageVideo: FC<Props> = ({ message, users, own }) => {
               default
             />
       </video>
-    </MessageComponent>
   );
 };
 

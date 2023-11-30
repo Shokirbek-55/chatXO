@@ -1,13 +1,9 @@
-import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
-import React from "react";
 import { useTranslation } from "react-i18next";
 import Header from "../../../components/Header/Header";
-import Relevence from "../../../components/Relevence/relevence";
 import RowItemView from "../../../components/RowItem";
 import { TMP_URL } from "../../../env";
 import useRootStore from "../../../hooks/useRootStore";
-import { data } from "../../../store/dataBase";
 
 const ChannelSetting = () => {
     const { t } = useTranslation();
@@ -18,8 +14,6 @@ const ChannelSetting = () => {
         getOneMember,
         channelUsers,
     } = useRootStore().channelStore;
-    const { user } = useRootStore().authStore;
-    const { show } = useRootStore().visibleStore;
     const { closeModal } = useRootStore().routerStore;
     const getUser = (id: number) => {
         getOneMember(id);
