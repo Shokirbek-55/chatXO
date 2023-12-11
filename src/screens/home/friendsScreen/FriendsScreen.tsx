@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import Header from "../../../components/Header/Header";
 import MessageBox from "../../../components/MessageBox/MessageBox";
 import RowItemView from "../../../components/RowItem";
+import SearchInput from "../../../components/SearchInput/SearchInput";
 import Text from "../../../components/Text/Text";
 import { TMP_URL } from "../../../env";
 import useRootStore from "../../../hooks/useRootStore";
@@ -34,7 +35,7 @@ const item = {
 const FriendsScreen = () => {
     const { friends, deleteFriend, loading, getFriendsFilter } =
         useRootStore().friendsStore;
-    const { toRouter } = useRootStore().routerStore;
+    const { toRouter, closeModal } = useRootStore().routerStore;
     const { getFriendDetails } = useRootStore().usersStore;
     const { t } = useTranslation();
     const handleChangeText = (key: string) => {
@@ -51,23 +52,13 @@ const FriendsScreen = () => {
             <Header
                 style={{ zIndex: 1 }}
                 text={`${t("friends")}`}
-                leftIcon={"addUser"}
-                onLeftIconPress={() => toRouter("addFriends")}
-                rightIcon={"account"}
-                onRightIconPress={() => toRouter("account")}
+                leftIcon={"arrowLeft"}
+                onLeftIconPress={() => closeModal("left")}
             />
             <div className={styles.searchBox}>
-                <InputComponent
-                    onChangeText={handleChangeText}
+                <SearchInput
+                    onChange={handleChangeText}
                     placeholder={`${t("searchPlaceholder")}`}
-                />
-                <Text
-                    center
-                    children={`${friends?.length} ${t("friends")}`}
-                    style={{
-                        fontSize: "16px",
-                        paddingBottom: "5px",
-                    }}
                 />
             </div>
             <div className={styles.main}>

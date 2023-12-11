@@ -42,6 +42,7 @@ import {
     MdOutlineKeyboardArrowLeft,
     MdOutlineKeyboardArrowRight,
 } from "react-icons/md";
+import { IoIosMore } from "react-icons/io";
 import styles from "./index.module.css";
 interface MdgroupProp {
     size?: number;
@@ -75,6 +76,32 @@ export const MdGroupsIcon = ({
             }}
         >
             <MdGroups />
+        </span>
+    );
+};
+
+export const MoreDotIcon = ({
+    size = 25,
+    padding = 10,
+    radius = 50,
+    background = "transparent",
+    color = "black",
+    hoverActive = true,
+}: MdgroupProp) => {
+    return (
+        <span
+            className={hoverActive ? styles.iconsHoverAndActive : ""}
+            style={{
+                fontSize: `${size}px`,
+                display: "flex",
+                padding: `${padding}px`,
+                cursor: "pointer",
+                borderRadius: `${radius}%`,
+                backgroundColor: `${background}`,
+                color: `${color}`,
+            }}
+        >
+            <IoIosMore />
         </span>
     );
 };
@@ -581,21 +608,21 @@ export const DocumentIcon = ({
     color = "black",
     hoverActive = true,
 }: MdgroupProp) => {
-  return (
-    <span
-      className={hoverActive ? styles.iconsHoverAndActive : ""}
-      style={{
-        fontSize: `${size}px`,
-        display: "flex",
-        padding: `${padding}px`,
-        borderRadius: `${radius}%`,
-        backgroundColor: `${background}`,
-        color: `${color}`,
-      }}
-    >
-      <TbFileText />
-    </span>
-  );
+    return (
+        <span
+            className={hoverActive ? styles.iconsHoverAndActive : ""}
+            style={{
+                fontSize: `${size}px`,
+                display: "flex",
+                padding: `${padding}px`,
+                borderRadius: `${radius}%`,
+                backgroundColor: `${background}`,
+                color: `${color}`,
+            }}
+        >
+            <TbFileText />
+        </span>
+    );
 };
 
 export const CameraIcon = ({

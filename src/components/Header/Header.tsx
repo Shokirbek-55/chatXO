@@ -9,6 +9,7 @@ import {
     LogoutIcon,
     MdGroupAddIcon,
     SettingIcon,
+    MoreDotIcon,
 } from "../../utils/icons";
 import styles from "./index.module.css";
 
@@ -85,7 +86,11 @@ const Header: FC<Props> = ({
                 {text}
             </div>
             <div>
-                {rightIcon === "account" ? (
+                {rightIcon === "more" ? (
+                    <div onClick={onRightIconPress}>
+                        <MoreDotIcon color={rightIconColor} />
+                    </div>
+                ) : rightIcon === "account" ? (
                     <div onClick={onRightIconPress}>
                         <AccountIcon color={rightIconColor} />
                     </div>

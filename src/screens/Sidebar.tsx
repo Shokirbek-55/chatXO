@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import { styled } from "styled-components";
 import Footer from "../components/Footer/Footer";
+import MenuChannelScreen from "../components/MenuChannelScreen/MenuChannelScreen";
 import useRootStore from "../hooks/useRootStore";
 
 const ModalComponent = ({
@@ -41,7 +42,8 @@ function Sidebar() {
                 );
             })}
             <currentRoute.components />
-            <Footer />
+            {/* <Footer /> */}
+            <MenuChannelScreen />
         </SidebarContainer>
     );
 }

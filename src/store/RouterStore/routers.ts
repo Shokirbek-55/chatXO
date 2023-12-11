@@ -131,6 +131,12 @@ export const SideBarHelperRoutes = {
         components: BlockUser,
         isOpen: false,
     },
+    friends: {
+        id: 13,
+        key: "friends",
+        components: FriendsScreen,
+        isOpen: false,
+    },
 };
 
 export const ManageHelperRoutes = {

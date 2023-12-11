@@ -18,6 +18,7 @@ class VisibleStore {
         pollMesssageCard: false,
         openFooterMediaBar: false,
         rightSidebar: false,
+        menuChannel: false,
     };
 
     toglevisible = (key: keyof typeof this.visible) => {
