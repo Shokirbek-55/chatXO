@@ -14,6 +14,9 @@ import { generatePath, useNavigate } from "react-router-dom";
 import styles from "./index.module.css";
 import { toJS } from "mobx";
 import { Channel } from "../../../types/channel";
+import Colors from "../../../utils/colors";
+import Input from "../../../components/Input";
+import SearchInput from "../../../components/SearchInput/SearchInput";
 
 const container = {
     hidden: { opacity: 1, scale: 0 },
@@ -44,6 +47,7 @@ function ChannelsScreen() {
     const { openChannel } = useRootStore().chatStore;
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { show } = useRootStore().visibleStore;
 
     const serachChannelHandler = (text: string) => {
         setSearchChannels(text);
@@ -63,25 +67,21 @@ function ChannelsScreen() {
         toRouter("account");
     };
 
+    const openMenu = () => {
+        show("menuChannel");
+    };
+
     return (
         <LeftAreaContainer>
             <Header
                 text={t("groups")}
-                rightIcon="account"
-                onRightIconPress={onAccount}
+                rightIcon="more"
+                onRightIconPress={openMenu}
             />
             <div className={styles.SearchBox}>
-                <InputComponent
-                    onChangeText={serachChannelHandler}
+                <SearchInput
+                    onChange={serachChannelHandler}
                     placeholder={`${t("searchPlaceholder")}`}
-                />
-                <Text
-                    center
-                    children={`${myChannels.length} ${t("groups")}`}
-                    style={{
-                        fontSize: "16px",
-                        paddingBottom: "5px",
-                    }}
                 />
             </div>
             <ChannelRowContainer>
@@ -124,6 +124,19 @@ function ChannelsScreen() {
                                         e.avatar ? `${TMP_URL}/${e.avatar}` : ""
                                     }
                                 />
+                                <div className={styles.channelNameBox}>
+                                    <Text
+                                        children={e.name}
+                                        color={Colors.White}
+                                        fontSize="14px"
+                                        margin="15px 0 0 0 "
+                                    />
+                                    <Text
+                                        children={`${e.users.length} members`}
+                                        color={Colors.White}
+                                        fontSize="12px"
+                                    />
+                                </div>
                             </motion.div>
                         );
                     })}
@@ -148,4 +161,5 @@ const ChannelRowContainer = styled.div`
     position: relative;
     flex: 1;
     overflow-y: auto;
+    padding-bottom: 20px;
 `;

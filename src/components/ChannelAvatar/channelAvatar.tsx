@@ -1,5 +1,5 @@
-import React, { CSSProperties } from 'react'
-import styles from "./channelAvatar.module.css"
+import React, { CSSProperties } from "react";
+import styles from "./channelAvatar.module.css";
 interface Props {
     imageUrl?: string;
     color?: string;
@@ -15,22 +15,20 @@ const ChannelAvatar: React.FC<Props> = ({
     name,
     onPress,
     time,
-    style
+    style,
 }) => {
     style = color ? { ...style, background: color } : { ...style };
     return (
-        <div className={styles.container} onClick={onPress} style={{ ...style }}>
-            {imageUrl ?
+        <div
+            className={styles.container}
+            onClick={onPress}
+            style={{ ...style }}
+        >
+            {imageUrl ? (
                 <img className={styles.avatar} src={imageUrl} alt="" />
-                : null
-            }
-            <div className={styles.nameBox}>
-                <p className={styles.channelName}>
-                    {name && name?.length > 8 ? `${name?.slice(0, 6)}...` : name}
-                </p>
-            </div>
+            ) : null}
         </div>
-    )
-}
+    );
+};
 
-export default ChannelAvatar
+export default ChannelAvatar;
