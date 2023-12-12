@@ -9,16 +9,8 @@ interface Props {
     style?: CSSProperties;
     margin?: string;
     backgroundColor?: string;
-    fontWeight?: string;
-    fontFamily?:
-        | "Montserrat1"
-        | "Montserrat2"
-        | "Montserrat3"
-        | "Montserrat4"
-        | "Montserrat5"
-        | "Montserrat6"
-        | "Montserrat7"
-        | "Montserrat8";
+    fontWeight?: number;
+    fontFamily?: "Montserrat";
     fontSize?: string;
     textAlign?: string | any;
 }
@@ -37,7 +29,7 @@ const Text: FC<Props> = ({
     textAlign,
 }) => {
     return (
-        <div
+        <p
             className={center ? styles.centerText : styles.text}
             onClick={handleLink}
             style={{
@@ -52,7 +44,7 @@ const Text: FC<Props> = ({
             }}
         >
             {children}
-        </div>
+        </p>
     );
 };
 

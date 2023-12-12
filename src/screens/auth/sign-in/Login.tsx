@@ -123,7 +123,8 @@ const Login = () => {
                                         <Text
                                             children={t("forgot_pass")}
                                             color={Colors.Black}
-                                            fontFamily="Montserrat3"
+                                            fontFamily="Montserrat"
+                                            fontWeight={400}
                                             fontSize="14px"
                                             handleLink={() =>
                                                 navigation("/auth/forgot-pass")
@@ -144,7 +145,8 @@ const Login = () => {
                 <Text
                     children={t("or Login with")}
                     color={Colors.Black}
-                    fontFamily="Montserrat3"
+                    fontFamily="Montserrat"
+                    fontWeight={400}
                     fontSize="14px"
                     margin="100px 0 0px 0"
                 />

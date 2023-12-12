@@ -46,7 +46,6 @@ const RepliedMessage: FC<Props> = ({ message, position, users }) => {
                         <MessageHeader
                             name={message.username}
                             color={message.color}
-                            relevance={message?.relevance}
                             message={message}
                         />
                     </span>

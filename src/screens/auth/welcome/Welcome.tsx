@@ -20,8 +20,8 @@ const WelcomeView = () => {
                     </div>
                     <Text
                         textAlign={"center"}
-                        fontWeight="300"
-                        fontFamily="Montserrat3"
+                        fontWeight={400}
+                        fontFamily="Montserrat"
                         color={Colors.DarkGray}
                         margin="20px 0 0 0"
                         children={
@@ -48,7 +48,8 @@ const WelcomeView = () => {
                     />
                     <div className={styles.languageBox}>
                         <Text
-                            fontFamily="Montserrat3"
+                            fontFamily="Montserrat"
+                            fontWeight={400}
                             color={Colors.Black}
                             fontSize="14px"
                             margin="15px 0 0 0"

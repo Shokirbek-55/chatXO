@@ -149,6 +149,7 @@ const AudioPlayContainer = styled.div`
     min-width: 300px;
     height: 100%;
     padding: 15px;
+    padding-bottom: 5px;
 
     .playBtn {
         width: 50px;

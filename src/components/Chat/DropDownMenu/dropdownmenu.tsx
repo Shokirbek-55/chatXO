@@ -80,7 +80,7 @@ const DropDownMenu = ({ massage, users, children }: Props) => {
     );
 
     return (
-        <Dropdown
+        <DropdownRN
             overlay={renderMenu(menuLists)}
             trigger={["contextMenu"]}
             overlayStyle={{
@@ -92,7 +92,7 @@ const DropDownMenu = ({ massage, users, children }: Props) => {
             }}
         >
             <Space>{children}</Space>
-        </Dropdown>
+        </DropdownRN>
     );
 };
 
@@ -102,7 +102,12 @@ const MenuList = styled(Menu)`
     li {
         outline: none;
         .ant-dropdown-menu-title-content {
-            font-family: "Montserrat5";
+            font-family: "Montserrat";
+            font-weight: 600;
         }
     }
 `;
+
+const DropdownRN = styled(Dropdown)`
+    display: block;
+`

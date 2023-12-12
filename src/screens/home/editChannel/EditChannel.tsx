@@ -120,7 +120,8 @@ const EditChannel = () => {
                                 children={channelData.groupNumber}
                                 style={{
                                     fontSize: "15px",
-                                    fontFamily: "Montserrat5",
+                                    fontFamily: "Montserrat",
+                                    fontWeight: 600,
                                     color: "#03053F",
                                 }}
                             />
@@ -148,7 +149,8 @@ const EditChannel = () => {
                                 }
                                 style={{
                                     fontSize: "15px",
-                                    fontFamily: "Montserrat5",
+                                    fontFamily: "Montserrat",
+                                    fontWeight: 600,
                                     color: "#03053F",
                                 }}
                             />

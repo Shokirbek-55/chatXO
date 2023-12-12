@@ -30,7 +30,7 @@ const SimpleSwitch: FC<Props> = ({
     <>
       <div className={styles.header}>
         <Text children={t("type_group")} />
-        <p style={{ fontSize: "16px", fontFamily: "Montserrat7" }}>
+        <p style={{ fontSize: "16px", fontFamily: "Montserrat", fontWeight:800 }}>
           {title} <span>{isToggled ? onOpen : offOpen}</span>
         </p>
       </div>

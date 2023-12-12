@@ -1,9 +1,7 @@
 import { FC, useMemo, useState } from "react";
 import { styled } from "styled-components";
-import { Env } from "../../../env";
 import { ChannelsUsersType, RawMessage } from "../../../types/channel";
 import { relevanceFuniction } from "../../../utils/boxShadov";
-import SmallAvatar from "../../SmallAvatar/smallAvatar";
 import DropDownMenu from "../DropDownMenu/dropdownmenu";
 import MessageHeader from "../MessageHeader";
 import { ReplyTypeRender } from "../ReplyedMessage/beforeSendReply";
@@ -14,7 +12,7 @@ import useRootStore from "../../../hooks/useRootStore";
 import { observer } from "mobx-react-lite";
 import { RenderMessage } from "../AllMessage/AllMessage";
 import MessageBox from "../MessageBox";
-import { toJS } from "mobx";
+import { extractHourMinute } from "../../../utils/helper";
 
 interface Props {
     message: RawMessage;
@@ -59,9 +57,9 @@ const MessageComponent: FC<Props> = ({
                 generatePath("/:name", {
                     name: name || "",
                 }) +
-                    generatePath("/:hashtag", {
-                        hashtag: tag,
-                    })
+                generatePath("/:hashtag", {
+                    hashtag: tag,
+                })
             );
         }
     };
@@ -74,47 +72,30 @@ const MessageComponent: FC<Props> = ({
     const position = useMemo(() => message.userId === user.id, [user, message])
 
     const renderMessage = useMemo(() => <RenderMessage message={msg} />, [msg.relevance])
-    
+
     if (message.userId === -1) {
         return <MessageBox text={msg.message} own={0} />;
     }
 
     return (
         <Container $position={position} $isRaplayed={msg.isReply}>
-            <div className="childContainer">
-                {!position && (
-                    <MessageHeader
-                        name={msg.username}
-                        relevance={msg.relevance}
-                        color={currentUser?.color || msg.color}
-                        userId={msg.userId}
-                        message={msg}
-                        setPimp={setPimp}
-                    />
-                )}
-                <div className="messageCard">
-                    {!position && (
-                        <div className="avatarCard">
-                            <SmallAvatar
-                                onPress={() =>
-                                    openUserAccount(currentUser?.id as never)
-                                }
-                                color={currentUser?.color || message.color}
-                                imageUrl={
-                                    currentUser?.avatar
-                                        ? `${Env.AssetsUrl}/${currentUser?.avatar}`
-                                        : ""
-                                }
-                            />
-                        </div>
-                    )}
-                    <DropDownMenu massage={msg}>
-                        <BoxShadow $boxShodow={boxShadov}>
+            <BoxShadow $boxShodow={boxShadov}>
+                <MessageHeader
+                    name={msg.username}
+                    color={currentUser?.color || msg.color}
+                    userId={msg.userId}
+                    message={msg}
+                    setPimp={setPimp}
+                    titleOnPress={() => openUserAccount(currentUser?.id as never)}
+
+                >
+                    <MessageContainer>
+                        <DropDownMenu massage={msg}>
                             <AudioPlayContainer>
                                 {msg.isReply && (
                                     <div
                                         className="replayMessage"
-                                        onClick={() => {}}
+                                        onClick={() => { }}
                                     >
                                         <MessageHeader
                                             name={
@@ -126,6 +107,7 @@ const MessageComponent: FC<Props> = ({
                                                 fontFamily: "sans-serif",
                                                 fontSize: "20px",
                                             }}
+                                            message={msg?.originMessage as RawMessage}
                                         />
                                         <div className="messageMain">
                                             {ReplyTypeRender(msg)}
@@ -133,51 +115,54 @@ const MessageComponent: FC<Props> = ({
                                     </div>
                                 )}
                                 {renderMessage}
-                                <HashTagsContainer
-                                    $isHas={
-                                        msg.hashtags &&
-                                        msg.hashtags.length > 0
-                                    }
-                                >
-                                    {msg.hashtags &&
-                                        msg.hashtags.map((tag, index) => {
-                                            const isLongTag = tag.length > 20;
-                                            const tagElem = (
-                                                <Tag
-                                                    key={index}
-                                                    onClick={() =>
-                                                        handleHashTagClick(tag)
-                                                    }
-                                                >
-                                                    <Text
-                                                        fontSize="12px"
-                                                        fontFamily="Montserrat5"
-                                                        margin="0"
+                                <MessageFooter>
+                                    <HashTagsContainer>
+                                        {msg.hashtags &&
+                                            msg.hashtags.map((tag, index) => {
+                                                const isLongTag = tag.length > 20;
+                                                const tagElem = (
+                                                    <Tag
+                                                        key={index}
+                                                        onClick={() =>
+                                                            handleHashTagClick(tag)
+                                                        }
                                                     >
-                                                        #
-                                                        {isLongTag
-                                                            ? `${tag.slice(
-                                                                  0,
-                                                                  20
-                                                              )}...`
-                                                            : tag}
-                                                    </Text>
-                                                </Tag>
-                                            );
-                                            return isLongTag ? (
-                                                <Tooltip title={tag} key={tag}>
-                                                    {tagElem}
-                                                </Tooltip>
-                                            ) : (
-                                                tagElem
-                                            );
-                                        })}
-                                </HashTagsContainer>
+                                                        <Text
+                                                            fontSize="12px"
+                                                            fontFamily="Montserrat"
+                                                            fontWeight={600}
+                                                            margin="0"
+                                                        >
+                                                            #
+                                                            {isLongTag
+                                                                ? `${tag.slice(
+                                                                    0,
+                                                                    20
+                                                                )}...`
+                                                                : tag}
+                                                        </Text>
+                                                    </Tag>
+                                                );
+                                                return isLongTag ? (
+                                                    <Tooltip title={tag} key={tag}>
+                                                        {tagElem}
+                                                    </Tooltip>
+                                                ) : (
+                                                    tagElem
+                                                );
+                                            })}
+                                    </HashTagsContainer>
+                                    <TimeViewContainer>
+                                        <Text fontSize="10px" fontWeight={500} style={{
+                                            textAlign: 'end'
+                                        }}>{extractHourMinute(message.timestamp)}</Text>
+                                    </TimeViewContainer>
+                                </MessageFooter>
                             </AudioPlayContainer>
-                        </BoxShadow>
-                    </DropDownMenu>
-                </div>
-            </div>
+                        </DropDownMenu>
+                    </MessageContainer>
+                </MessageHeader>
+            </BoxShadow>
         </Container>
     );
 };
@@ -191,15 +176,11 @@ const Container = styled.div<{ $isRaplayed?: boolean; $position?: boolean }>`
     align-items: center;
     justify-content: ${({ $position }) =>
         $position ? "flex-end" : "flex-start"};
+`;
 
-    .childContainer {
-        width: fit-content;
-    }
-
-    .messageCard {
-        display: flex;
-        flex-direction: row;
-        gap: 10px;
+const MessageContainer = styled.div`
+        width: 100%;
+        height: 100%;
 
         .avatarCard {
             display: flex;
@@ -219,8 +200,7 @@ const Container = styled.div<{ $isRaplayed?: boolean; $position?: boolean }>`
                 margin-bottom: 5px;
             }
         }
-    }
-`;
+`
 
 const AudioPlayContainer = styled.div`
     position: relative;
@@ -228,27 +208,38 @@ const AudioPlayContainer = styled.div`
     height: 100%;
     overflow: hidden;
     border-radius: 15px;
-    background-color: rgb(242, 242, 240);
+    background-color: #fff;
     z-index: 1;
 `;
 
 const BoxShadow = styled.div<{ $boxShodow?: string }>`
+    width: fit-content;
     position: relative;
-    width: 100%;
     height: 100%;
     border-radius: 15px;
-    background-color: #fff;
     box-shadow: ${({ $boxShodow }) => $boxShodow || "none"};
     z-index: auto;
 `;
 
-const HashTagsContainer = styled.div<{ $isHas: boolean }>`
+const MessageFooter = styled.div`
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 30px;
+    padding: 0 15px;
+    margin-bottom: 10px;
+`
+
+const HashTagsContainer = styled.div`
     width: 100%;
     height: auto;
-    padding: 0 15px 10px 15px;
-    display: ${({ $isHas }) => ($isHas ? "flex" : "none")};
     align-items: center;
     justify-content: flex-start;
     gap: 5px;
     flex-wrap: wrap;
 `;
+
+const TimeViewContainer = styled.div`
+    width: 100%;
+    align-self: flex-end;
+    justify-self: flex-end;
+`

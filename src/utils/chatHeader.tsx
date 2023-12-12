@@ -134,7 +134,8 @@ const ChatHeader = () => {
             >
                 <Text
                     fontSize="12px"
-                    fontFamily="Montserrat5"
+                    fontFamily="Montserrat"
+                    fontWeight={600}
                     margin="0 5px 0 0"
                 >
                     All hashtags:
@@ -145,7 +146,8 @@ const ChatHeader = () => {
                         <Tag key={index} onClose={() => handleClose(tag)}>
                             <Text
                                 fontSize="12px"
-                                fontFamily="Montserrat5"
+                                fontFamily="Montserrat"
+                                fontWeight={600}
                                 margin="0"
                                 style={{
                                     cursor: "auto",
@@ -177,7 +179,8 @@ const ChatHeader = () => {
             <HashTagContainer $isHas={hashTags.length > 0}>
                 <Text
                     fontSize="12px"
-                    fontFamily="Montserrat5"
+                    fontFamily="Montserrat"
+                    fontWeight={600}
                     margin="0 5px 0 0"
                 >
                     Add hashtags:
@@ -192,7 +195,8 @@ const ChatHeader = () => {
                         >
                             <Text
                                 fontSize="12px"
-                                fontFamily="Montserrat5"
+                                fontFamily="Montserrat"
+                                fontWeight={600}
                                 margin="0"
                                 style={{
                                     cursor: "auto",

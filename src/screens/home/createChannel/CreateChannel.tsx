@@ -71,7 +71,8 @@ const CreateChannel = () => {
                         style={{
                             paddingLeft: "15px",
                             paddingBottom: "5px",
-                            fontFamily: "Montserrat4",
+                            fontFamily: "Montserrat",
+                            fontWeight: 500
                         }}
                     />
                     <Input
