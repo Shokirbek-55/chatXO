@@ -16,7 +16,8 @@
     padding: 0 5px;
     overflow: hidden;
     text-align: center;
-    font-family: "Montserrat6";
+    font-family: "Montserrat";
+    font-weight: 700;
     color: #fff;
     white-space: nowrap;
 }

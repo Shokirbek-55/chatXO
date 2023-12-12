@@ -59,7 +59,8 @@
   align-items: center;
   cursor: pointer;
   transition: 0.2s ease;
-  font-family: "Montserrat6";
+  font-family: "Montserrat";
+  font-weight: 700;
 }
 
 .loginBtn:hover {
@@ -70,7 +71,8 @@
 .createAnAccount {
   color: #0084ff;
   font-size: 18px;
-  font-family: "Montserrat6";
+  font-family: "Montserrat";
+  font-weight: 700;
   padding: 10px;
   margin-bottom: 30px;
   cursor: pointer;

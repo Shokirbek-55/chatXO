@@ -128,7 +128,7 @@ const ChatHeaderHashtag = () => {
                 </div>
             </div>
             <HashTagContainer $isHas={allChatHashTags.length > 0 && isOpenAllHashTags}>
-                <Text fontSize='12px' fontFamily="Montserrat5" margin="0 5px 0 0">
+                <Text fontSize='12px' fontFamily="Montserrat" fontWeight={600} margin="0 5px 0 0">
                     All hashtags:
                 </Text>
                 {allChatHashTags.map((tag, index) => {
@@ -138,7 +138,7 @@ const ChatHeaderHashtag = () => {
                             key={index}
                             onClose={() => handleClose(tag)}
                         >
-                            <Text fontSize='12px' fontFamily="Montserrat5" margin="0" style={{
+                            <Text fontSize='12px' fontFamily="Montserrat" fontWeight={600} margin="0" style={{
                                 cursor: 'auto'
                             }}>
                                 #{isLongTag ? `${tag.slice(0, 20)}...` : tag}
@@ -164,7 +164,7 @@ const ChatHeaderHashtag = () => {
                     onClick={() => setIsOpenAllHashTags(!isOpenAllHashTags)} />
             </HashTagContainer>
             <HashTagContainer $isHas={hashTags.length > 0}>
-                <Text fontSize='12px' fontFamily="Montserrat5" margin="0 5px 0 0">
+                <Text fontSize='12px' fontFamily="Montserrat" fontWeight={600} margin="0 5px 0 0">
                     Add hashtags:
                 </Text>
                 {hashTags.map((tag, index) => {
@@ -175,7 +175,7 @@ const ChatHeaderHashtag = () => {
                             closable
                             onClose={() => handleClose(tag)}
                         >
-                            <Text fontSize='12px' fontFamily="Montserrat5" margin="0" style={{
+                            <Text fontSize='12px' fontFamily="Montserrat" fontWeight={600} margin="0" style={{
                                 cursor: 'auto'
                             }}>
                                 {isLongTag ? `${tag.slice(0, 20)}...` : tag}

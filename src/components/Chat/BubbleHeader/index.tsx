@@ -109,7 +109,8 @@ const BubbleHeader: FC<Props> = ({
                     padding: padding,
                     fontSize: textSize,
                     color: "#000",
-                    fontFamily: "Montserrat5",
+                    fontFamily: "Montserrat",
+                    fontWeight:600
                 }}
             >
                 {title}

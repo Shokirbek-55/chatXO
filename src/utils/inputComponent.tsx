@@ -13,6 +13,7 @@ interface propType {
   backColor?: string;
   outline?: string;
   fontFamily?: string;
+  fontWeight?: number
   onChangeText: (e: any) => void;
 }
 
@@ -29,6 +30,7 @@ export const InputComponent = ({
   backColor = "#fff",
   outline = "none",
   fontFamily,
+  fontWeight,
   onChangeText,
 }: propType) => {
   return (
@@ -47,7 +49,8 @@ export const InputComponent = ({
           color: `${color}`,
           fontSize: `${size}px`,
           backgroundColor: `${backColor}`,
-          fontFamily: `${fontFamily ? fontFamily : "Montserrat5"}`,
+          fontFamily: `${fontFamily ? fontFamily : "Montserrat"}`,
+          fontWeight: fontWeight ? fontWeight : 600,
           outline: `${outline}`,
         }}
       />

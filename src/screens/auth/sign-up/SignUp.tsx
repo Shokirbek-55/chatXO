@@ -127,7 +127,8 @@ function SignUp() {
                 <Text
                     children={t("or sign up with")}
                     color={Colors.Black}
-                    fontFamily="Montserrat3"
+                    fontFamily="Montserrat"
+                    fontWeight={400}
                     fontSize="14px"
                     margin="50px 0 50px 0"
                 />

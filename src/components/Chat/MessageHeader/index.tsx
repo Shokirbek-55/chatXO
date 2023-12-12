@@ -1,25 +1,23 @@
 import {
     CSSProperties,
     Dispatch,
+    ReactNode,
     SetStateAction,
     useMemo,
     useState,
 } from "react";
-import BubbleHeader from "../BubbleHeader";
-import styles from "./index.module.css";
 import { RawMessage } from "../../../types/channel";
-import { relevanceFuniction } from "../../../utils/boxShadov";
-import Icon from "../../Icon";
-import Assets from "../../../utils/requireAssets";
+import { lightenColor, relevanceFuniction } from "../../../utils/boxShadov";
 import useRootStore from "../../../hooks/useRootStore";
 import { AiOutlineStar } from "react-icons/ai";
 import { AiFillStar } from "react-icons/ai";
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
+import styled from "styled-components";
+import Text from "../../Text/Text";
 
 interface Props {
-    message?: RawMessage;
-    relevance?: number;
+    message: RawMessage;
     name?: string;
     showReply?: boolean;
     color?: string;
@@ -28,24 +26,27 @@ interface Props {
     setPimp?: Dispatch<
         SetStateAction<
             | {
-                  pimpType: "pimp" | "unPimp";
-                  value: number | undefined;
-              }
+                pimpType: "pimp" | "unPimp";
+                value: number | undefined;
+            }
             | undefined
         >
     >;
+    children?: ReactNode;
+    titleOnPress?: () => void
 }
 
 const MessageHeader = ({
     message,
     name,
-    color,
-    relevance,
+    color = '',
     showReply,
     userId,
     setPimp,
+    children,
+    titleOnPress
 }: Props) => {
-    const MESSAGE_STYLE = relevanceFuniction({} as RawMessage, relevance);
+    const MESSAGE_STYLE = relevanceFuniction(message);
     const textSize = MESSAGE_STYLE.fontSize;
 
     const { getOneMember, channelUsers } = useRootStore().channelStore;
@@ -114,41 +115,29 @@ const MessageHeader = ({
     };
 
     return (
-        <div className={styles.container}>
-            <div className={styles.replayContainer}>
-                <BubbleHeader
-                    title={name}
-                    color={color}
-                    padding={5}
-                    textSize={textSize}
-                />
+        <Container $backColor={lightenColor(color)}>
+            <HeaderContainer>
+                <Button onClick={titleOnPress}>
+                    <Text fontSize={textSize} color={color} fontWeight={700}>{name}</Text>
+                </Button>
                 {!showReply && (
-                    <div className={styles.relevence}>
-                        <div
-                            className={styles.messageHeaderStar}
-                            onClick={() => onRelevance(userId || 0)}
-                        >
-                            <button
-                                style={{
-                                    fontFamily: "sans-serif",
-                                    fontSize: "15px",
-                                    backgroundColor: "transparent",
-                                    border: "none",
-                                    cursor: "pointer",
-                                }}
-                            >
-                                {relevance}
-                            </button>
-                            <Icon
-                                src={Assets.up_downIcon}
-                                width="15px"
-                                height="15px"
-                                color={"#000"}
-                            />
+                    <div className="relevanceBox">
+                        <div className="relevances">
+                            <Button onClick={() => onRelevance(userId || 0)}>
+                                <Text fontSize={'14px'} fontWeight={500} color='#EE35AF'>
+                                    {message.minRelevance}
+                                </Text>
+                            </Button>
+                            <Button onClick={() => onRelevance(userId || 0)}>
+                                <Text fontSize={'14px'} fontWeight={500} color='#999'>
+                                    {message.relevance}
+                                </Text>
+                            </Button>
                         </div>
                         {activePimp ? (
                             <AiFillStar
                                 color="#FFAA33"
+                                size={14}
                                 onClick={() =>
                                     UnPimpMesssage(
                                         user.id,
@@ -160,6 +149,8 @@ const MessageHeader = ({
                             />
                         ) : (
                             <AiOutlineStar
+                                size={14}
+                                color="#999"
                                 onClick={() =>
                                     PimpMesssage(
                                         user.id,
@@ -172,8 +163,50 @@ const MessageHeader = ({
                         )}
                     </div>
                 )}
-            </div>
-        </div>
+            </HeaderContainer>
+            <MessageContainer>
+                {children}
+            </MessageContainer>
+        </Container>
     );
 };
 export default observer(MessageHeader);
+
+
+const Container = styled.div<{ $backColor: string }>`
+    display: flex;
+    flex-direction: column;
+    background-color: ${props => props.$backColor};
+    border-radius: 15px;
+`
+
+const HeaderContainer = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+    gap: 15px;
+
+    .relevanceBox{
+        display: flex;
+        gap: 7px;
+        align-items: center;
+
+        .relevances{
+            display: flex;
+            gap: 7px;
+        }
+    }
+`
+
+const MessageContainer = styled.div`
+    width: 100%;
+`
+
+const Button = styled.button`
+    background-color: transparent;
+    outline: none;
+    border: none;
+    cursor: pointer;
+`

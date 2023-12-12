@@ -80,7 +80,8 @@ const ConnectWithChannel = () => {
                             style={{
                                 textAlign: "center",
                                 color: "#404d66",
-                                fontFamily: "Montserrat6",
+                                fontFamily: "Montserrat",
+                                fontWeight: 600
                             }}
                         >
                             {t("or")}

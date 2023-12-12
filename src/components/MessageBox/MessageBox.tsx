@@ -16,7 +16,8 @@ const MessageBox: React.FC<Props> = ({
             margin: "40px 0",
             opacity: 0.5,
             fontSize: size ? size : "16px",
-            fontFamily: "Montserrat5"
+            fontFamily: "Montserrat",
+            fontWeight: 600
         }}>
             {title}
         </div>

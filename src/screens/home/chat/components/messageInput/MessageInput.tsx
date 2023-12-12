@@ -175,7 +175,8 @@ const MessageInputContainer = styled.div`
         margin: 0 5px 0 5px;
 
         .textAreaInput {
-            font-family: Montserrat6;
+            font-family: Montserrat;
+            font-weight: 700;
             width: 100%;
             height: 45px;
             padding: 12.5px 15px;

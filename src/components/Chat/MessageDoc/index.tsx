@@ -87,7 +87,8 @@ const MessageDoc: FC<Props> = ({
               style={{
                 fontSize: textSize,
                 marginTop: "10px",
-                fontFamily: 'Montserrat4'
+          fontFamily: 'Montserrat',
+          fontWeight:500
               }}
             >
               {mediaTitle}

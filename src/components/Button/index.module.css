@@ -21,7 +21,8 @@
   border: 0;
   cursor: pointer;
   color: #fff;
-  font-family: "Montserrat5";
+  font-family: "Montserrat";
+  font-weight: 600;
   transition: 0.2s ease;
   white-space: nowrap;
 }
@@ -36,8 +37,9 @@
   border: 0;
   color: #fff;
   cursor: pointer;
-  font-family: "Montserrat6";
   font-size: 20px;
+  font-family: "Montserrat";
+  font-family: 700;
   transition: 0.2s ease;
   white-space: nowrap;
 }

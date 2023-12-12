@@ -43,7 +43,6 @@ const MessageCard: FC<Props> = ({ message, position, users }) => {
                         <span onClick={() => handleRelevenceModal()}>
                             <MessageHeader
                                 name={message.username}
-                                relevance={message?.relevance}
                                 color={currentUser?.color}
                                 message={message}
                             />

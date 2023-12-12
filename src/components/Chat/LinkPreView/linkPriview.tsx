@@ -21,7 +21,7 @@ const LinkPriviewComponent = ({ message, textBackColor }: Props) => {
         lineHeight,
     }: {
         fontSize: string;
-        fontWeight: string;
+        fontWeight: number;
         lineHeight: string;
     }) => {
         const regex =
@@ -80,7 +80,7 @@ export default LinkPriviewComponent;
 
 const Paragraph = styled.p<{
     $fontSize?: string;
-    $fontWeight?: string;
+    $fontWeight?: number;
     $lineHeight?: string;
 }>`
     white-space: pre-wrap;
