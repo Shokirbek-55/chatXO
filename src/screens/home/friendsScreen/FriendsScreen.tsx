@@ -101,7 +101,7 @@ const FriendsScreen = () => {
                                         onNamePress={() =>
                                             FriendDetails(e.id ? e.id : 0)
                                         }
-                                        rightButton
+                                        // rightButton
                                         loading={false}
                                     />
                                 </motion.div>

@@ -10,6 +10,7 @@ import Text from "../Text/Text";
 import SmallAvatar from "../SmallAvatar/smallAvatar";
 import Icon from "../Icon";
 import Assets from "../../utils/requireAssets";
+import Colors from "../../utils/colors";
 
 interface Props {
     item?: Friend;
@@ -76,7 +77,11 @@ const RowItemView: FC<Props> = ({
                             onNamePress && onNamePress(item?.id || "")
                         }
                     >
-                        <Text children={chsUser(text)} />
+                        <Text
+                            fontWeight={500}
+                            color={Colors.Black}
+                            children={chsUser(text)}
+                        />
                     </div>
                 </div>
             ) : null}
@@ -96,7 +101,7 @@ const RowItemView: FC<Props> = ({
                     <div className={styles.relevanceBox}>
                         <Text
                             style={{ fontSize: "12px", whiteSpace: "nowrap" }}
-                            color="yellowgreen"
+                            color={Colors.Black}
                             children={userType}
                         />
                         {upDownIcon ? (

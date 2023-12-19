@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { generatePath, useNavigate } from "react-router-dom";
 import AvatarUpload from "../../../components/AvatarUpload/AvatarUpload";
@@ -12,6 +12,9 @@ import styles from "./FriendDetail.module.css";
 import { observer } from "mobx-react-lite";
 import { motion } from "framer-motion";
 import { toJS } from "mobx";
+import Colors from "../../../utils/colors";
+import Button from "../../../components/Button";
+import { ButtonComponent } from "../../../utils/button";
 
 const container = {
     hidden: { opacity: 1, scale: 0 },
@@ -36,6 +39,7 @@ const item = {
 const FriendDetail = () => {
     const navigation = useNavigate();
     const { friendDetails, weChannels } = useRootStore().usersStore;
+    const { friends } = useRootStore().friendsStore;
     const { closeModal } = useRootStore().routerStore;
     const { t } = useTranslation();
     const { setChannelSlug } = useRootStore().messageStore;
@@ -43,6 +47,12 @@ const FriendDetail = () => {
     const navigate = useNavigate();
     const { show } = useRootStore().visibleStore;
     const { getPreviewData } = useRootStore().usersStore;
+    console.log("friendDetails", toJS(friendDetails));
+
+    const isFriend = useMemo(
+        () => friends.some((e) => e.id === friendDetails.id),
+        [friends, friendDetails]
+    );
 
     const handleChanel = (e) => {
         setChannelSlug(e.slug);
@@ -65,8 +75,9 @@ const FriendDetail = () => {
     return (
         <div className={styles.container}>
             <Header
-                text={`${t("update_relevance")}`}
+                text={`${t("Profile")}`}
                 leftIcon="arrowLeft"
+                colorText="black"
                 onLeftIconPress={() => closeModal("left")}
             />
             <div className={styles.contentBox}>
@@ -88,12 +99,80 @@ const FriendDetail = () => {
                     children={
                         friendDetails.username ? friendDetails.username : "User"
                     }
+                    margin="10px 0 0 0"
+                    fontWeight={700}
+                    center
+                    color={Colors.Black}
                 />
-                <div className={styles.judgementText}>
-                    <Text children="My Judgement" />
-                    <Text color="yellowgreen" children="in groups" />
+            </div>
+            <div className={styles.formBox}>
+                <div className={styles.formItem}>
+                    <Text
+                        children="Username"
+                        color={Colors.Black}
+                        fontWeight={600}
+                        fontSize="14px"
+                        style={{ width: "50%" }}
+                    />
+                    <input value={friendDetails.username} />
+                </div>
+                <div className={styles.formItem}>
+                    <Text
+                        children="Name"
+                        color={Colors.Black}
+                        fontWeight={600}
+                        fontSize="14px"
+                        style={{ width: "50%" }}
+                    />
+                    <input value={friendDetails.username} />
+                </div>
+                <div className={styles.formItem}>
+                    <Text
+                        children="Email"
+                        color={Colors.Black}
+                        fontWeight={600}
+                        fontSize="14px"
+                        style={{ width: "50%" }}
+                    />
+                    <input value={friendDetails.email} />
+                </div>
+                <div className={styles.formItem}>
+                    <Text
+                        children="City"
+                        color={Colors.Black}
+                        fontWeight={600}
+                        fontSize="14px"
+                        style={{ width: "50%" }}
+                    />
+                    <input value="Munic" />
+                </div>
+                <div className={styles.formItem}>
+                    <Text
+                        children="Age"
+                        color={Colors.Black}
+                        fontWeight={600}
+                        fontSize="14px"
+                        style={{ width: "50%" }}
+                    />
+                    <input value={"22"} />
+                </div>
+                <div className={styles.formItem}>
+                    <Text
+                        children="Interests"
+                        color={Colors.Black}
+                        fontWeight={600}
+                        fontSize="14px"
+                        style={{ width: "50%" }}
+                    />
+                    <input value={"Kindergarden"} />
                 </div>
             </div>
+            <Text
+                margin="15px 0 10px 7%"
+                children={"Joint groups"}
+                fontWeight={600}
+                color={Colors.Black}
+            />
             <motion.div variants={container} initial="hidden" animate="visible">
                 {weChannels?.length !== 0 ? (
                     weChannels?.map((e, index) => {
@@ -127,6 +206,12 @@ const FriendDetail = () => {
                     />
                 )}
             </motion.div>
+            <ButtonComponent
+                margin="20px 7% 15px 7%"
+                width="86%"
+                color={isFriend ? Colors.Red : Colors.White}
+                text={isFriend ? "unfriend" : "+ add as friend"}
+            />
         </div>
     );
 };
