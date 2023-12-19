@@ -109,9 +109,9 @@ function ChannelsScreen() {
                                 key={index}
                                 id="map-dev"
                                 className={styles.channelRowBox}
+                                onClick={() => handleChanel(e)}
                             >
                                 <ChannelRowItem
-                                    onPress={() => handleChanel(e)}
                                     item={e}
                                     name={e.name}
                                     color={
