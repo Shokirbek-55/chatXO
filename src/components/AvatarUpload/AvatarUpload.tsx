@@ -6,6 +6,7 @@ import Icon from "../Icon";
 import { observer } from "mobx-react-lite";
 import useRootStore from "../../hooks/useRootStore";
 import { AvatarLoading } from "../AvatarLoading/AvatarLoading";
+import { CiCamera } from "react-icons/ci";
 
 interface Props {
     style?: CSSProperties;
@@ -50,16 +51,7 @@ const AvatarUpload: FC<Props> = ({
                     ) : null}
                     {upload ? (
                         <label className={styles.uploadIcon}>
-                            <Icon
-                                src={Assets.upload}
-                                color={Colors.ActiveHastag}
-                                style={{
-                                    cursor: "pointer",
-                                    margin: "0 auto",
-                                    width: "25px",
-                                    height: "25px",
-                                }}
-                            />
+                            <CiCamera size={36} color={Colors.Green} />
                             <input
                                 type="file"
                                 multiple

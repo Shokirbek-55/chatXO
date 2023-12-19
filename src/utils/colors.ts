@@ -9,6 +9,7 @@ const Colors = {
     Chambray: "#394199",
     DoveGray: "#6c6c6c",
     GullGray: "#97a6bc",
+    Gray: "#747474",
     Porcelain: "#ebedef",
     RedDamask: "#df653e",
     Red: "#CA0813",

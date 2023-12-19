@@ -13,6 +13,10 @@ import styles from "./Account.module.css";
 import { motion } from "framer-motion";
 import Loading from "../../../utils/loading";
 import { toJS } from "mobx";
+import Input from "../../../components/Input";
+import { InputComponent } from "../../../utils/inputComponent";
+import Colors from "../../../utils/colors";
+import { ButtonComponent } from "../../../utils/button";
 
 const container = {
     hidden: { opacity: 1, scale: 0 },
@@ -58,6 +62,8 @@ const Account = () => {
 
     const { t } = useTranslation();
 
+    console.log("user", toJS(user));
+
     const PreviewAvatar = (data: any) => {
         show("previewModal");
         getPreviewData(data);
@@ -66,14 +72,14 @@ const Account = () => {
     return (
         <div className={styles.container}>
             <Header
-                text={t("account")}
+                text={t("Profile")}
                 leftIcon="arrowLeft"
                 onLeftIconPress={() => closeModal("left")}
             />
             <div className={styles.container}>
                 <div className={styles.avatarBox}>
                     <AvatarUpload
-                        upload={false}
+                        upload={true}
                         imageUrl={
                             user.avatar ? `${TMP_URL}/${user.avatar}` : ""
                         }
@@ -83,27 +89,97 @@ const Account = () => {
                                 ? `linear-gradient(25deg, ${user.color} 30%, #ddd 100%)`
                                 : "linear-gradient(#ddd, #666)"
                         }
-                        style={{ width: "140px", height: "140px" }}
                     />
-                    <Text
-                        color="yellowgreen"
-                        children={user?.username ? user.username : "User"}
-                    ></Text>
-                    <Text
-                        handleLink={() => toRouter("settings")}
-                        color="yellowgreen"
-                    >
-                        {t("settings")}
-                    </Text>
                 </div>
                 <div className={styles.groupsBox}>
                     <div className={styles.loader}>
+                        <Text
+                            margin="0 0 10px 0"
+                            children={user.username}
+                            fontWeight={700}
+                            center
+                        />
                         <div className={styles.judgementText}>
-                            <Text margin="0 0 10px 0">{t("relevance")}</Text>
-                            <Text color="yellowgreen" margin="0 0 10px 0">
-                                {t("in_channels")}
-                            </Text>
+                            <textarea placeholder="bio">
+                                I am a hard-working and driven individual who
+                                isn't afraid to face a challenge. I'm passionate
+                                about my work and I know how to get the job
+                                done.
+                            </textarea>
+                            <Text
+                                fontSize="12px"
+                                style={{ textAlign: "end" }}
+                                children="175 character"
+                            />
                         </div>
+                        <div className={styles.formBox}>
+                            <div className={styles.formItem}>
+                                <Text
+                                    children="Username"
+                                    color={Colors.Black}
+                                    fontWeight={600}
+                                    fontSize="14px"
+                                    style={{ width: "50%" }}
+                                />
+                                <input value={user.username} />
+                            </div>
+                            <div className={styles.formItem}>
+                                <Text
+                                    children="Name"
+                                    color={Colors.Black}
+                                    fontWeight={600}
+                                    fontSize="14px"
+                                    style={{ width: "50%" }}
+                                />
+                                <input value={user.username} />
+                            </div>
+                            <div className={styles.formItem}>
+                                <Text
+                                    children="Email"
+                                    color={Colors.Black}
+                                    fontWeight={600}
+                                    fontSize="14px"
+                                    style={{ width: "50%" }}
+                                />
+                                <input value={user.email} />
+                            </div>
+                            <div className={styles.formItem}>
+                                <Text
+                                    children="City"
+                                    color={Colors.Black}
+                                    fontWeight={600}
+                                    fontSize="14px"
+                                    style={{ width: "50%" }}
+                                />
+                                <input value="Munic" />
+                            </div>
+                            <div className={styles.formItem}>
+                                <Text
+                                    children="Age"
+                                    color={Colors.Black}
+                                    fontWeight={600}
+                                    fontSize="14px"
+                                    style={{ width: "50%" }}
+                                />
+                                <input value={"22"} />
+                            </div>
+                            <div className={styles.formItem}>
+                                <Text
+                                    children="Interests"
+                                    color={Colors.Black}
+                                    fontWeight={600}
+                                    fontSize="14px"
+                                    style={{ width: "50%" }}
+                                />
+                                <input value={"Kindergarden"} />
+                            </div>
+                        </div>
+                        <Text
+                            margin="15px 0 10px 7%"
+                            children={"My rating in groups"}
+                            fontWeight={600}
+                            color={Colors.Black}
+                        />
                         {!myChannels && (
                             <div className={styles.loadingError}>
                                 <MessageBox
@@ -145,8 +221,8 @@ const Account = () => {
                                                 onNamePress={() =>
                                                     handleChanel(e)
                                                 }
-                                                userType={e.userRelevance}
-                                                upDownIcon={true}
+                                                userType={`${e.userRelevance}`}
+                                                upDownIcon={false}
                                             />
                                         </motion.div>
                                     );
@@ -158,7 +234,15 @@ const Account = () => {
                             )}
                         </motion.div>
                     </div>
-                    <div className={styles.getChannelsBox}></div>
+                    <div className={styles.btnBox}>
+                        <ButtonComponent
+                            text="delete account"
+                            backColor="transparent"
+                            color="red"
+                        />
+                        <ButtonComponent text="Save" width="100%" />
+                    </div>
+                    {/* <div className={styles.getChannelsBox}></div>
                     <div className={styles.friendsBox}>
                         <div className={styles.judgementText}>
                             <Text margin="0 0 10px 0">{t("relevance")}</Text>
@@ -217,7 +301,7 @@ const Account = () => {
                                 />
                             )}
                         </motion.div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

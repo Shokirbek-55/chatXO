@@ -2,7 +2,8 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import { BsFillShareFill } from "react-icons/bs";
 import { GrUserManager } from "react-icons/gr";
-import { IoMdPerson } from "react-icons/io";
+import { IoIosSettings, IoMdPerson } from "react-icons/io";
+import { MdGroup } from "react-icons/md";
 import useRootStore from "../../hooks/useRootStore";
 import { ButtonComponent } from "../../utils/button";
 import { SearchIcon } from "../../utils/icons";
@@ -50,10 +51,10 @@ const MenuChannelScreen = () => {
                 />
                 <MenuItem
                     title="Friends"
-                    icon={<IoMdPerson size={22} />}
+                    icon={<MdGroup size={22} />}
                     onClick={onFriends}
                 />
-                <MenuItem title="Setting" icon={<IoMdPerson size={22} />} />
+                <MenuItem title="Setting" icon={<IoIosSettings size={22} />} />
             </div>
             <div className={styles.cancelBtn}>
                 <ButtonComponent

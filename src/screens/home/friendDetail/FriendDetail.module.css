@@ -6,17 +6,29 @@
 
 .contentBox {
     display: flex;
-    width: 90%;
-    height: 27%;
-    border-bottom: 2px solid rgb(201, 201, 201);
-    margin: 0 auto;
+    width: 100%;
+    padding: 0 7%;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     margin-bottom: 5px;
 }
 
-.judgementText {
+.formBox {
+    padding: 10px 7%;
+}
+
+.formItem {
     display: flex;
-    gap: 7px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 8px 0;
+}
+
+.formItem input {
+    border: none;
+    color: #747474;
+    width: 50%;
+    font-size: 14px;
+    outline: none;
 }
