@@ -100,6 +100,7 @@ const ChannelInUser = () => {
                             ? `linear-gradient(25deg, ${friendDetails.color} 30%, #ddd 100%)`
                             : "linear-gradient(#ddd, #666)"
                     }
+                    onChange={() => {}}
                 />
                 <Text
                     children={

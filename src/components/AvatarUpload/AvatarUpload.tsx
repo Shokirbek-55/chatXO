@@ -13,7 +13,7 @@ interface Props {
     color?: string;
     imageUrl?: string;
     upload: boolean;
-    onChange?: (e: any) => void;
+    onChange: (e: any) => void;
     value?: string;
     onPreview?: () => void;
     loading?: boolean;
@@ -57,7 +57,7 @@ const AvatarUpload: FC<Props> = ({
                                 multiple
                                 value={value}
                                 color={color}
-                                onChange={onChange}
+                                onChange={(e) => onChange(e)}
                                 accept="image/png, image/gif, image/jpeg"
                                 className={styles.avatarInput}
                             />

@@ -109,6 +109,7 @@ const Account = () => {
                                 ? `linear-gradient(25deg, ${user.color} 30%, #ddd 100%)`
                                 : "linear-gradient(#ddd, #666)"
                         }
+                        onChange={() => {}}
                     />
                 </div>
                 <div className={styles.groupsBox}>

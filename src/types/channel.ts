@@ -290,6 +290,7 @@ export type CreateChannelType = {
     name: string;
     description: string;
     color: string;
+    avatar: string;
     isPrivate: any;
     defaultRelevance: any;
     users: User[];
