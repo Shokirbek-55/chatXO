@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { generatePath, useNavigate } from "react-router-dom";
 import AvatarUpload from "../../../components/AvatarUpload/AvatarUpload";
@@ -12,6 +12,9 @@ import styles from "./channelInUser.module.css";
 import { observer } from "mobx-react-lite";
 import { motion } from "framer-motion";
 import { toJS } from "mobx";
+import Colors from "../../../utils/colors";
+import Button from "../../../components/Button";
+import { ButtonComponent } from "../../../utils/button";
 
 const container = {
     hidden: { opacity: 1, scale: 0 },
@@ -35,26 +38,39 @@ const item = {
 
 const ChannelInUser = () => {
     const navigation = useNavigate();
-    const { friendDetails, weChannels } = useRootStore().usersStore;
-    const { closeModal, closeInUser } = useRootStore().routerStore;
+    const { friendDetails } = useRootStore().usersStore;
+    const { friends, deleteFriend, createFriend } = useRootStore().friendsStore;
+    const { closeModal } = useRootStore().routerStore;
     const { t } = useTranslation();
     const { setChannelSlug } = useRootStore().messageStore;
     const { getChannelByHashId, myChannels } = useRootStore().channelStore;
     const navigate = useNavigate();
     const { show } = useRootStore().visibleStore;
     const { getPreviewData } = useRootStore().usersStore;
+    console.log("friendDetails", toJS(friendDetails));
+
+    const isFriend = useMemo(
+        () => friends.some((e) => e.id === friendDetails.id),
+        [friends, friendDetails]
+    );
 
     const handleChanel = (e) => {
         setChannelSlug(e.slug);
         getChannelByHashId(
-            myChannels.find((item) => item?.id === e.id)?.hashId as never
+            myChannels.find((item) => item?.id === e?.id)?.hashId as never
         );
         const target = generatePath(`/:name`, {
             name: `@${
-                myChannels.find((item) => item?.id === e.id)?.hashId as never
+                myChannels.find((item) => item?.id === e?.id)?.hashId as never
             }`,
         });
         navigate(target);
+    };
+
+    const handeCreateOrDelete = () => {
+        isFriend
+            ? deleteFriend(friendDetails?.id as never)
+            : createFriend(friendDetails?.id as never);
     };
 
     const PreviewAvatar = (data: any) => {
@@ -65,38 +81,148 @@ const ChannelInUser = () => {
     return (
         <div className={styles.container}>
             <Header
-                text={`${t("update_relevance")}`}
+                text={`${t("Profile")}`}
                 leftIcon="arrowLeft"
-                onLeftIconPress={closeInUser}
+                colorText="black"
+                onLeftIconPress={() => closeModal("right")}
             />
             <div className={styles.contentBox}>
                 <AvatarUpload
                     imageUrl={
-                        friendDetails.avatar
+                        friendDetails?.avatar
                             ? `${TMP_URL}/${friendDetails.avatar}`
                             : ""
                     }
                     onPreview={() => PreviewAvatar(friendDetails)}
                     upload={false}
                     color={
-                        friendDetails.color
+                        friendDetails?.color
                             ? `linear-gradient(25deg, ${friendDetails.color} 30%, #ddd 100%)`
                             : "linear-gradient(#ddd, #666)"
                     }
                 />
                 <Text
                     children={
-                        friendDetails.username ? friendDetails.username : "User"
+                        friendDetails?.username
+                            ? friendDetails.username
+                            : "User"
                     }
+                    margin="10px 0 0 0"
+                    fontWeight={700}
+                    center
+                    color={Colors.Black}
                 />
-                <div className={styles.judgementText}>
-                    <Text children="My Judgement" />
-                    <Text color="yellowgreen" children="in groups" />
+            </div>
+            <div className={styles.formBox}>
+                <div className={styles.formItem}>
+                    <Text
+                        children="Username"
+                        color={Colors.Black}
+                        fontWeight={600}
+                        fontSize="14px"
+                        style={{ width: "50%" }}
+                    />
+                    <Text
+                        children={friendDetails?.username}
+                        color={Colors.Gray}
+                        fontWeight={500}
+                        fontSize="13px"
+                        style={{ width: "50%" }}
+                        moreDot
+                    />
+                </div>
+                <div className={styles.formItem}>
+                    <Text
+                        children="Name"
+                        color={Colors.Black}
+                        fontWeight={600}
+                        fontSize="14px"
+                        style={{ width: "50%" }}
+                    />
+                    <Text
+                        children={friendDetails?.name}
+                        color={Colors.Gray}
+                        fontWeight={600}
+                        fontSize="13px"
+                        style={{ width: "50%" }}
+                        moreDot
+                    />
+                </div>
+                <div className={styles.formItem}>
+                    <Text
+                        children="Email"
+                        color={Colors.Black}
+                        fontWeight={600}
+                        fontSize="14px"
+                        style={{ width: "50%" }}
+                    />
+                    <Text
+                        children={friendDetails?.email}
+                        color={Colors.Gray}
+                        fontWeight={500}
+                        fontSize="13px"
+                        style={{ width: "50%" }}
+                        moreDot
+                    />
+                </div>
+                <div className={styles.formItem}>
+                    <Text
+                        children="City"
+                        color={Colors.Black}
+                        fontWeight={500}
+                        fontSize="14px"
+                        style={{ width: "50%" }}
+                    />
+                    <Text
+                        children={friendDetails?.city}
+                        color={Colors.Gray}
+                        fontWeight={500}
+                        fontSize="13px"
+                        style={{ width: "50%" }}
+                    />
+                </div>
+                <div className={styles.formItem}>
+                    <Text
+                        children="Age"
+                        color={Colors.Black}
+                        fontWeight={600}
+                        fontSize="14px"
+                        style={{ width: "50%" }}
+                    />
+                    <Text
+                        children={friendDetails?.birth}
+                        color={Colors.Gray}
+                        fontWeight={500}
+                        fontSize="13px"
+                        style={{ width: "50%" }}
+                    />
+                </div>
+                <div className={styles.formItem}>
+                    <Text
+                        children="Interests"
+                        color={Colors.Black}
+                        fontWeight={600}
+                        fontSize="14px"
+                        style={{ width: "50%" }}
+                    />
+                    <Text
+                        children={friendDetails?.occupacy}
+                        color={Colors.Gray}
+                        fontWeight={500}
+                        fontSize="13px"
+                        style={{ width: "50%" }}
+                    />
                 </div>
             </div>
+            <Text
+                margin="15px 0 10px 7%"
+                children={"Joint groups"}
+                fontWeight={600}
+                color={Colors.Black}
+            />
             <motion.div variants={container} initial="hidden" animate="visible">
-                {weChannels?.length !== 0 ? (
-                    weChannels?.map((e, index) => {
+                {friendDetails?.channels?.length !== 0 ? (
+                    friendDetails?.channels?.map((e, index) => {
                         return (
                             <motion.div
                                 variants={item}
@@ -127,6 +253,13 @@ const ChannelInUser = () => {
                     />
                 )}
             </motion.div>
+            <ButtonComponent
+                margin="20px 7% 15px 7%"
+                width="86%"
+                color={isFriend ? Colors.Red : Colors.White}
+                text={isFriend ? "unfriend" : "+ add as friend"}
+                clickMe={handeCreateOrDelete}
+            />
         </div>
     );
 };

@@ -181,6 +181,9 @@ export default class AuthStore {
                 message.success(`${this.resetPassOperation.isError}`);
             }
             this.navigateAuth();
+            if (this.resetPassOperation.isError) {
+                message.error(`${this.resetPassOperation.error}`);
+            }
         });
     };
 

@@ -25,4 +25,5 @@
 .forgotBox {
     text-align: end;
     margin: 0 0 20px 0;
+    cursor: pointer;
 }

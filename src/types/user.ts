@@ -4,6 +4,11 @@ export interface User {
     id?: number;
     color?: string;
     email?: string;
+    name?: string;
+    birth?: any;
+    city?: string;
+    description?: string;
+    occupacy?: string;
     avatar?: string;
     active?: boolean;
     username?: string;
@@ -17,4 +22,5 @@ export interface User {
     latitude?: string;
     longitude?: string;
     isAdded?: boolean;
+    isFriend?: boolean;
 }

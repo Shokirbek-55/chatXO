@@ -14,6 +14,7 @@ import NewAdmin from "../../screens/home/newAdmin/NewAdmin";
 import ChannelSetting from "../../screens/home/channelSetting/ChannelSetting";
 import BlockUser from "../../screens/home/blockUser/BlockUser";
 import ChannelInUser from "../../screens/home/channelInUser/ChannelInUser";
+import CollectUsers from "../../screens/home/collectUsers/CollectUsers";
 
 export const MainRoutes = {
     channels: "channels",
@@ -135,6 +136,12 @@ export const SideBarHelperRoutes = {
         id: 13,
         key: "friends",
         components: FriendsScreen,
+        isOpen: false,
+    },
+    collectUsers: {
+        id: 14,
+        key: "collectUsers",
+        components: CollectUsers,
         isOpen: false,
     },
 };

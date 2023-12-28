@@ -7,6 +7,7 @@
     border-radius: 10px;
     height: 40px;
     border: 1px solid transparent;
+    cursor: pointer;
 }
 
 .left {

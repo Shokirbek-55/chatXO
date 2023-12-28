@@ -2,30 +2,29 @@ import { message, Popconfirm } from "antd";
 import { observer } from "mobx-react-lite";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { BsFillShareFill } from "react-icons/bs";
+import { GoSignOut } from "react-icons/go";
+import { IoIosSettings, IoMdNotifications, IoMdPerson } from "react-icons/io";
+import { MdGroup, MdLogout } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import APIs from "../../../api/api";
 import AvatarView from "../../../components/AvatarUpload/AvatarUpload";
 import ButtonView from "../../../components/Button";
 import Header from "../../../components/Header/Header";
 import Input from "../../../components/Input";
+import MenuItem from "../../../components/MenuItem/MenuItem";
 import Text from "../../../components/Text/Text";
 import { TMP_URL } from "../../../env";
 import useRootStore from "../../../hooks/useRootStore";
+import { ButtonComponent } from "../../../utils/button";
+import Colors from "../../../utils/colors";
 import { getRandomColor } from "../../../utils/randomColor";
 import styles from "./AccountSetting.module.css";
 
 const AccountSetting = () => {
-    const {
-        setMyData,
-        updateUserAccount,
-        setUserState,
-        onSelectFile,
-        avatarLoading,
-        userAvatar,
-    } = useRootStore().usersStore;
     const { logout, user, deleteUser } = useRootStore().authStore;
     const { closeModal, toRouter } = useRootStore().routerStore;
-    const { show } = useRootStore().visibleStore;
+    const { show, hide } = useRootStore().visibleStore;
     const { t } = useTranslation();
     const navigation = useNavigate();
 
@@ -33,120 +32,54 @@ const AccountSetting = () => {
         logout(() => navigation("/auth/welcome"));
     };
 
-    const randomUserColor = (Color: string) => {
-        setUserState("color", Color);
-        updateUserAccount({ color: Color });
+    const onFriends = () => {
+        toRouter("friends");
     };
-
-    const onImageSelect = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files?.length) {
-            onSelectFile(e.target.files[0]);
-            show("uploadFile");
-        }
-    };
-
-    const confirm = () => {
-        deleteUser(user.id as never);
-    };
-
-    const cancel = () => {};
 
     return (
         <div className={styles.container}>
             <Header
-                text={t("edit_profile")}
+                text={t("settings")}
                 leftIcon="arrowLeft"
-                rightIcon="logout"
-                popConfirm={onLogout}
-                popTitle="Logout"
-                popQuest="Are you sure you want to log out?"
                 onLeftIconPress={() => closeModal("left")}
             />
-            <div className={styles.ImageBox}>
-                <AvatarView
-                    loading={avatarLoading}
-                    upload={true}
-                    color={
-                        setMyData.color
-                            ? setMyData.color
-                            : "linear-gradient(#ddd, #666)"
-                    }
-                    imageUrl={
-                        userAvatar
-                            ? userAvatar
-                            : setMyData.avatar
-                            ? `${TMP_URL}/${setMyData.avatar}`
-                            : ""
-                    }
-                    onChange={(e) => onImageSelect(e)}
+            <div className={styles.content}>
+                <MenuItem
+                    title="Friends"
+                    icon={<MdGroup size={22} />}
+                    onClick={onFriends}
                 />
-                <Text
-                    color="yellowgreen"
-                    children={t("random_color")}
-                    handleLink={() => randomUserColor(getRandomColor())}
+                <MenuItem
+                    title="Sign Out"
+                    icon={<MdLogout size={20} />}
+                    onClick={onLogout}
                 />
-                <Text
-                    color="yellowgreen"
-                    handleLink={() => toRouter("language")}
-                    children={t("change_language")}
+                <MenuItem
+                    title="Notifications"
+                    icon={<IoMdNotifications size={22} />}
+                />
+                <MenuItem
+                    title="Terms and Conditions"
+                    icon={<IoIosSettings size={22} />}
+                />
+                <MenuItem
+                    title="Privacy Statement"
+                    icon={<IoIosSettings size={22} />}
                 />
             </div>
-            <div className={styles.ContentBox}>
-                <Text
-                    style={{
-                        paddingTop: "3px",
-                    }}
-                    children={t("username")}
+            <div className={styles.bottomBox}>
+                <ButtonComponent
+                    text="Logout"
+                    color={Colors.Black}
+                    backColor="transparent"
+                    clickMe={onLogout}
                 />
-                <Input
-                    value={setMyData.username}
-                    setUserName={(e) => {
-                        setUserState("username", e);
-                    }}
+                <ButtonComponent
+                    text="Delete account"
+                    color={Colors.Red}
+                    backColor="transparent"
+                    clickMe={() => deleteUser(user.id as never)}
                 />
-            </div>
-            <div className={styles.ContentBox}>
-                <Text
-                    style={{
-                        marginTop: "10px",
-                    }}
-                    children={t("your_email")}
-                />
-                <Input
-                    value={setMyData.email}
-                    setUserName={(e) => {
-                        setUserState("email", e);
-                    }}
-                />
-            </div>
-            <div className={styles.ContentBox}>
-                <ButtonView
-                    style={{
-                        width: "100%",
-                        marginTop: "25px",
-                    }}
-                    title={`${t("update_profile")}`}
-                    onClickbutton={() => updateUserAccount(setMyData)}
-                />
-                <Popconfirm
-                    title="Delete your account"
-                    description="Do you really want to delete your account?"
-                    onConfirm={confirm}
-                    onCancel={cancel}
-                    okText="Yes"
-                    cancelText="No"
-                >
-                    <span>
-                        <ButtonView
-                            style={{
-                                width: "100%",
-                                marginTop: "10px",
-                                backgroundColor: "red",
-                            }}
-                            title={`Delate account`}
-                        />
-                    </span>
-                </Popconfirm>
             </div>
         </div>
     );

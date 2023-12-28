@@ -1,0 +1,24 @@
+.membersBox {
+    padding: 0 7%;
+}
+
+.userRelevanceBox {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.sliderBox {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.slider {
+    width: 75%;
+}
+
+.searchBox {
+    padding: 10px 7%;
+}

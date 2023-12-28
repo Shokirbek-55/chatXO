@@ -24,6 +24,7 @@ export default class FriendsStore {
     friends: User[] = [];
 
     usersListForAdd: User[] = [];
+    collectUserList: User[] = [];
 
     loading: boolean = false;
 
@@ -37,17 +38,32 @@ export default class FriendsStore {
         if (this.getFriendsOperation.data) {
             runInAction(() => {
                 this.friends = this.getFriendsOperation.data;
-                this.usersListForAdd = this.rootStore.friendsStore.friends.map(
-                    (users) => ({
-                        ...users,
-                        isAdded: Object.values(
-                            this.rootStore.channelStore.channelUsers
-                        ).some((e) => e.id === users.id),
-                    })
-                );
+                this.usersListForAdd = this.friends.map((users) => ({
+                    ...users,
+                    isAdded: this.rootStore.channelStore.channelUsers.some(
+                        (e) => e.id === users.id
+                    ),
+                }));
+
                 this.loading = false;
             });
         }
+    };
+
+    setCollectUser = (id: number) => {
+        if (!this.collectUserList.find((e) => e.id == id)) {
+            this.collectUserList.push(
+                this.friends.find((e) => e.id == id) as never
+            );
+            this.usersListForAdd = this.friends.map((users) => ({
+                ...users,
+                isAdded: this.collectUserList.some((e) => e.id === users.id),
+            }));
+        }
+        this.rootStore.channelStore.setCreateChannelState(
+            "users",
+            this.collectUserList
+        );
     };
 
     getFriendsFilter = (key: string) => {
@@ -64,6 +80,21 @@ export default class FriendsStore {
         }
     };
 
+    setSearchUsersForAdd = (key: string) => {
+        runInAction(() => {
+            this.usersListForAdd = this.getFriendsOperation.data.filter(
+                (user) =>
+                    user.username?.toLowerCase().includes(key.toLowerCase())
+            );
+            this.usersListForAdd = this.usersListForAdd.map((users) => ({
+                ...users,
+                isAdded: this.rootStore.channelStore.channelUsers.some(
+                    (e) => e.id === users.id
+                ),
+            }));
+        });
+    };
+
     createFriend = async (friendId: number) => {
         await this.createFriendOperation.run(() =>
             APIs.Friends.createFriend(friendId)
@@ -77,6 +108,9 @@ export default class FriendsStore {
                     );
                 this.getFriends();
                 message.success(`added friends`);
+                this.rootStore.channelStore.getChannelUsers(
+                    this.rootStore.channelStore.channelData.hashId
+                );
             });
         }
     };
@@ -91,6 +125,9 @@ export default class FriendsStore {
                 this.rootStore.usersStore.getNonFriends();
                 message.success(`delated friend`);
             });
+            this.rootStore.channelStore.getChannelUsers(
+                this.rootStore.channelStore.channelData.hashId
+            );
         }
     };
 }

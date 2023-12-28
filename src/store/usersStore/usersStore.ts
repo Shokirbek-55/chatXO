@@ -13,6 +13,11 @@ type UserStateType = {
     email: string;
     color: string;
     avatar: string;
+    name?: string;
+    birth?: any;
+    city?: string;
+    description?: string;
+    occupacy?: string;
 };
 
 type PreviewDataType = {
@@ -149,6 +154,11 @@ export default class UsersStore {
             email: myData.email as string,
             color: myData.color as string,
             avatar: myData.avatar as string,
+            name: myData.name as string,
+            city: myData.city as string,
+            birth: myData.birth as string,
+            occupacy: myData.occupacy as string,
+            description: myData.description as string,
         });
 
     setUserState = (key: keyof UserStateType, value: string) => {
@@ -239,26 +249,6 @@ export default class UsersStore {
         if (this.getFriendDetailsOperation.isSuccess) {
             runInAction(() => {
                 this.friendDetails = this.getFriendDetailsOperation.data;
-                if (
-                    !!this.rootStore.channelStore.myChannels.length &&
-                    !!this.friendDetails.channels?.length
-                ) {
-                    const sortedData =
-                        this.rootStore.channelStore.myChannels.reduce(
-                            (total: Channel[] = [], myChanel) => {
-                                const slug = myChanel.slug;
-                                const currentChanel =
-                                    this.friendDetails?.channels?.filter(
-                                        (ch: any) => ch.slug === slug
-                                    ) ?? [];
-
-                                return [...total, ...currentChanel];
-                            },
-                            []
-                        );
-
-                    this.weChannels = sortedData as any;
-                }
             });
         }
     };

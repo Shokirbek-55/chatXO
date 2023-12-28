@@ -50,7 +50,7 @@ export default class ChannelStore {
     blockUserOperation = new Operation<User>({} as User);
     newAdminOperation = new Operation<User>({} as User);
     unblockUserOperation = new Operation<User>({} as User);
-    getChannelUsersOperation = new Operation<any>({} as any);
+    getChannelUsersOperation = new Operation<User>([] as User);
     updateMemberRelevanceOperation = new Operation<ChannelsUsersType>(
         {} as ChannelsUsersType
     );
@@ -256,6 +256,12 @@ export default class ChannelStore {
                 this.channelUsers = Object.values(
                     this.getChannelUsersOperation.data
                 );
+                this.channelUsers = this.channelUsers.map((users) => ({
+                    ...users,
+                    isFriend: this.rootStore.friendsStore.friends.some(
+                        (e) => e.id === users.id
+                    ),
+                }));
             }
         });
     };
@@ -267,15 +273,33 @@ export default class ChannelStore {
             );
         });
     };
+    setSearchChannelUsers = (text: string) => {
+        runInAction(() => {
+            this.channelUsers = Object.values(
+                this.getChannelUsersOperation.data
+            ).filter((user) =>
+                user.username?.toLowerCase().includes(text.toLowerCase())
+            );
+            this.channelUsers = this.channelUsers.map((users) => ({
+                ...users,
+                isFriend: this.rootStore.friendsStore.friends.some(
+                    (e) => e.id === users.id
+                ),
+            }));
+        });
+    };
 
     createChannelDataToSetData = () =>
         (this.setCreateChannelData = {
             name: "",
             description: "",
             color: "",
+            isPrivate: false,
+            defaultRelevance: 0,
+            users: [],
         });
 
-    setCreateChannelState = (key: keyof CreateChannelType, value: string) => {
+    setCreateChannelState = (key: keyof CreateChannelType, value: any) => {
         this.setCreateChannelData[key] = value;
     };
 
@@ -284,7 +308,7 @@ export default class ChannelStore {
         callback: (e: string) => void
     ) => {
         await this.createChannelOperation.run(() =>
-            APIs.channels.createChannel(data.name, data.description, data.color)
+            APIs.channels.createChannel(data)
         );
         if (this.createChannelOperation.isSuccess) {
             runInAction(() => {
@@ -311,6 +335,8 @@ export default class ChannelStore {
             isPrivate: channel.isPrivate as boolean,
             color: channel.color as string,
             avatar: channel.avatar as string,
+            defaultRelevance: channel.relevance as never,
+            description: channel.description as string,
         });
 
     setUpdateChannelState = (key: keyof SetUpdataChanelType, value: any) => {

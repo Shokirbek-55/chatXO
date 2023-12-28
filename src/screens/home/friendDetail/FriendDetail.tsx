@@ -38,8 +38,8 @@ const item = {
 
 const FriendDetail = () => {
     const navigation = useNavigate();
-    const { friendDetails, weChannels } = useRootStore().usersStore;
-    const { friends } = useRootStore().friendsStore;
+    const { friendDetails } = useRootStore().usersStore;
+    const { friends, deleteFriend, createFriend } = useRootStore().friendsStore;
     const { closeModal } = useRootStore().routerStore;
     const { t } = useTranslation();
     const { setChannelSlug } = useRootStore().messageStore;
@@ -67,6 +67,12 @@ const FriendDetail = () => {
         navigate(target);
     };
 
+    const handeCreateOrDelete = () => {
+        isFriend
+            ? deleteFriend(friendDetails?.id as never)
+            : createFriend(friendDetails?.id as never);
+    };
+
     const PreviewAvatar = (data: any) => {
         show("previewModal");
         getPreviewData(data);
@@ -83,21 +89,23 @@ const FriendDetail = () => {
             <div className={styles.contentBox}>
                 <AvatarUpload
                     imageUrl={
-                        friendDetails.avatar
+                        friendDetails?.avatar
                             ? `${TMP_URL}/${friendDetails.avatar}`
                             : ""
                     }
                     onPreview={() => PreviewAvatar(friendDetails)}
                     upload={false}
                     color={
-                        friendDetails.color
+                        friendDetails?.color
                             ? `linear-gradient(25deg, ${friendDetails.color} 30%, #ddd 100%)`
                             : "linear-gradient(#ddd, #666)"
                     }
                 />
                 <Text
                     children={
-                        friendDetails.username ? friendDetails.username : "User"
+                        friendDetails?.username
+                            ? friendDetails.username
+                            : "User"
                     }
                     margin="10px 0 0 0"
                     fontWeight={700}
@@ -114,7 +122,14 @@ const FriendDetail = () => {
                         fontSize="14px"
                         style={{ width: "50%" }}
                     />
-                    <input value={friendDetails.username} />
+                    <Text
+                        children={friendDetails?.username}
+                        color={Colors.Gray}
+                        fontWeight={500}
+                        fontSize="13px"
+                        style={{ width: "50%" }}
+                        moreDot
+                    />
                 </div>
                 <div className={styles.formItem}>
                     <Text
@@ -124,7 +139,14 @@ const FriendDetail = () => {
                         fontSize="14px"
                         style={{ width: "50%" }}
                     />
-                    <input value={friendDetails.username} />
+                    <Text
+                        children={friendDetails?.name}
+                        color={Colors.Gray}
+                        fontWeight={600}
+                        fontSize="13px"
+                        style={{ width: "50%" }}
+                        moreDot
+                    />
                 </div>
                 <div className={styles.formItem}>
                     <Text
@@ -134,17 +156,30 @@ const FriendDetail = () => {
                         fontSize="14px"
                         style={{ width: "50%" }}
                     />
-                    <input value={friendDetails.email} />
+                    <Text
+                        children={friendDetails?.email}
+                        color={Colors.Gray}
+                        fontWeight={500}
+                        fontSize="13px"
+                        style={{ width: "50%" }}
+                        moreDot
+                    />
                 </div>
                 <div className={styles.formItem}>
                     <Text
                         children="City"
                         color={Colors.Black}
-                        fontWeight={600}
+                        fontWeight={500}
                         fontSize="14px"
                         style={{ width: "50%" }}
                     />
-                    <input value="Munic" />
+                    <Text
+                        children={friendDetails?.city}
+                        color={Colors.Gray}
+                        fontWeight={500}
+                        fontSize="13px"
+                        style={{ width: "50%" }}
+                    />
                 </div>
                 <div className={styles.formItem}>
                     <Text
@@ -154,7 +189,13 @@ const FriendDetail = () => {
                         fontSize="14px"
                         style={{ width: "50%" }}
                     />
-                    <input value={"22"} />
+                    <Text
+                        children={friendDetails?.birth}
+                        color={Colors.Gray}
+                        fontWeight={500}
+                        fontSize="13px"
+                        style={{ width: "50%" }}
+                    />
                 </div>
                 <div className={styles.formItem}>
                     <Text
@@ -164,7 +205,13 @@ const FriendDetail = () => {
                         fontSize="14px"
                         style={{ width: "50%" }}
                     />
-                    <input value={"Kindergarden"} />
+                    <Text
+                        children={friendDetails?.occupacy}
+                        color={Colors.Gray}
+                        fontWeight={500}
+                        fontSize="13px"
+                        style={{ width: "50%" }}
+                    />
                 </div>
             </div>
             <Text
@@ -174,8 +221,8 @@ const FriendDetail = () => {
                 color={Colors.Black}
             />
             <motion.div variants={container} initial="hidden" animate="visible">
-                {weChannels?.length !== 0 ? (
-                    weChannels?.map((e, index) => {
+                {friendDetails?.channels?.length !== 0 ? (
+                    friendDetails?.channels?.map((e, index) => {
                         return (
                             <motion.div
                                 variants={item}
@@ -211,6 +258,7 @@ const FriendDetail = () => {
                 width="86%"
                 color={isFriend ? Colors.Red : Colors.White}
                 text={isFriend ? "unfriend" : "+ add as friend"}
+                clickMe={handeCreateOrDelete}
             />
         </div>
     );

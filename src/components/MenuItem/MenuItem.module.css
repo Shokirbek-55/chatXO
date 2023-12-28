@@ -3,7 +3,7 @@
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
-    margin: 5px 0;
+    margin: 8px 0;
     padding: 6px 0;
 }
 
@@ -14,5 +14,5 @@
 }
 
 .iconBox {
-    width: 25px;
+    min-width: 25px;
 }
