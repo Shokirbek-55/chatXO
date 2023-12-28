@@ -8,12 +8,31 @@ import styles from "./UploadChannelFIle.module.css";
 
 const UploadChannelFile = () => {
     const { visible, hide } = useRootStore().visibleStore;
-    const { channelAvatar, createChannelAvatar, closeSelectImage } =
-        useRootStore().channelStore;
+    const {
+        channelAvatar,
+        createChannelAvatar,
+        closeSelectImage,
+        createAvatar,
+        setCreateChannelState,
+    } = useRootStore().channelStore;
 
     const SelectChannelAvatar = () => {
         createChannelAvatar();
         hide("chUploadFile");
+    };
+
+    const CreateChannelAvatar = () => {
+        setCreateChannelState("avatar", createAvatar);
+        hide("chUploadFile");
+    };
+
+    const selectAvatar = () => {
+        if (channelAvatar) {
+            SelectChannelAvatar();
+        }
+        if (createAvatar) {
+            CreateChannelAvatar();
+        }
     };
 
     return (
@@ -28,8 +47,11 @@ const UploadChannelFile = () => {
                     </span>
                     <Text children="Upload this image" />
                 </div>
-                <img src={channelAvatar} alt="" />
-                <div className={styles.select} onClick={SelectChannelAvatar}>
+                <img
+                    src={channelAvatar ? channelAvatar : createAvatar}
+                    alt=""
+                />
+                <div className={styles.select} onClick={selectAvatar}>
                     <CheckIcon color="#02bafd" size={46} />
                 </div>
             </div>

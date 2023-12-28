@@ -1,7 +1,7 @@
-import { message, Slider, Switch } from "antd";
 import { toJS } from "mobx";
+import { message, Slider, Switch } from "antd";
 import { observer } from "mobx-react-lite";
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IoMdFunnel } from "react-icons/io";
 import { MdGroup } from "react-icons/md";
@@ -13,6 +13,7 @@ import Input from "../../../components/Input";
 import MenuItem from "../../../components/MenuItem/MenuItem";
 import NewInput from "../../../components/NewInput/NewInput";
 import Text from "../../../components/Text/Text";
+import { TMP_URL } from "../../../env";
 import useRootStore from "../../../hooks/useRootStore";
 import { ButtonComponent } from "../../../utils/button";
 import { getRandomColor } from "../../../utils/randomColor";
@@ -28,12 +29,24 @@ const CreateChannel = () => {
         setCurrentRoute,
         toRouter,
     } = useRootStore().routerStore;
-    const { createChannel, setCreateChannelState, setCreateChannelData } =
-        useRootStore().channelStore;
-    const { visible, toglevisible } = useRootStore().visibleStore;
+    const {
+        createChannel,
+        setCreateChannelState,
+        setCreateChannelData,
+        onCreateChannelImage,
+    } = useRootStore().channelStore;
+    const { visible, toglevisible, show } = useRootStore().visibleStore;
+    const [createAvatar, setCreateAvatar] = useState("");
 
     const isPrivateGruop = (checked: boolean) => {
         setCreateChannelState("isPrivate", checked);
+    };
+
+    const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files?.length) {
+            onCreateChannelImage(e.target.files[0]);
+        }
+        show("chUploadFile");
     };
 
     const randomChannelColor = (Color: string) => {
@@ -75,6 +88,12 @@ const CreateChannel = () => {
                                 : "linear-gradient(#ddd, #666)"
                         }
                         upload={true}
+                        imageUrl={
+                            setCreateChannelData?.avatar
+                                ? setCreateChannelData?.avatar
+                                : ""
+                        }
+                        onChange={(e) => handleFileChange(e)}
                     />
                     <NewInput
                         onChange={(e) => setCreateChannelState("name", e)}

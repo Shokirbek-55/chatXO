@@ -60,6 +60,7 @@ export default class ChannelStore {
     channelData: Channel = ChannelInitialState;
 
     channelAvatar: string = "";
+    createAvatar: string = "";
     channelAvatarLoading: boolean = false;
 
     setUpdataChannel: SetUpdataChanelType = {} as SetUpdataChanelType;
@@ -87,6 +88,7 @@ export default class ChannelStore {
     relevanceData: relevanceDataType = relevanceDataInitial;
 
     chFormData = new FormData();
+    createFormData = new FormData();
 
     setRelevanceChange = (value: number) => {
         this.relevanceData.relevance = value;
@@ -293,6 +295,7 @@ export default class ChannelStore {
         (this.setCreateChannelData = {
             name: "",
             description: "",
+            avatar: "",
             color: "",
             isPrivate: false,
             defaultRelevance: 0,
@@ -392,9 +395,20 @@ export default class ChannelStore {
         });
     };
 
+    onCreateChannelImage = async (file: File) => {
+        runInAction(() => {
+            this.createFormData.append("avatar", file, file.name);
+            if (file) {
+                const imageUrl = URL.createObjectURL(file);
+                this.createAvatar = imageUrl;
+            }
+        });
+    };
+
     closeSelectImage = () => {
         runInAction(() => {
             this.channelAvatar = "";
+            this.createAvatar = "";
             this.rootStore.visibleStore.hide("chUploadFile");
         });
     };

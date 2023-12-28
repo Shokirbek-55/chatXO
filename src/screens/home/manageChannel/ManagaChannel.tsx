@@ -95,6 +95,7 @@ const ManagaChannel = () => {
                         ? channelData.color
                         : "linear-gradient(#ddd, #666)"
                 }
+                onChange={() => {}}
             />
             <div className={styles.description}>
                 <Text
