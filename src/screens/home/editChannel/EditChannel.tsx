@@ -1,4 +1,4 @@
-import { Button, message, Popconfirm } from "antd";
+import { Button, message, Popconfirm, Slider, Switch } from "antd";
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 import { ChangeEvent, useState } from "react";
@@ -18,6 +18,13 @@ import { getRandomColor } from "../../../utils/randomColor";
 import styles from "./EditChannel.module.css";
 import { BiCopy } from "react-icons/bi";
 import { BiCheck } from "react-icons/bi";
+import NewInput from "../../../components/NewInput/NewInput";
+import MenuItem from "../../../components/MenuItem/MenuItem";
+import { MdGroup } from "react-icons/md";
+import { IoMdFunnel } from "react-icons/io";
+import { BsFillShareFill } from "react-icons/bs";
+import Colors from "../../../utils/colors";
+import { RiFileCopyFill } from "react-icons/ri";
 
 const EditChannel = () => {
     const { t } = useTranslation();
@@ -25,7 +32,7 @@ const EditChannel = () => {
         useRootStore().routerStore;
     const { getFriends } = useRootStore().friendsStore;
     const navigation = useNavigate();
-    const { show } = useRootStore().visibleStore;
+    const { show, toglevisible, visible } = useRootStore().visibleStore;
     const {
         channelData,
         setUpdateChannelState,
@@ -42,6 +49,11 @@ const EditChannel = () => {
     const updateChannelEvent = () => {
         updateChannel(setUpdataChannel);
     };
+
+    const isPrivateGruop = (checked: boolean) => {
+        setUpdateChannelState("isPrivate", checked);
+    };
+
     const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.length) {
             onSelectChannelImage(e.target.files[0]);
@@ -64,216 +76,137 @@ const EditChannel = () => {
         getFriends();
     };
 
-    const generateNew = async () => {
-        const target = (e) =>
-            generatePath(`/:name`, {
-                name: `@${e}`,
-            });
-        generateNewInvitationCode(channelData.groupNumber as string, (e) =>
-            navigation(target(e), { replace: true })
-        );
+    // const generateNew = async () => {
+    //     const target = (e) =>
+    //         generatePath(`/:name`, {
+    //             name: `@${e}`,
+    //         });
+    //     generateNewInvitationCode(channelData.groupNumber as string, (e) =>
+    //         navigation(target(e), { replace: true })
+    //     );
+    // };
+
+    // const [copyNumber, setCopyNumber] = useState(false);
+
+    // const handleCopyNumber = (e) => {
+    //     navigator.clipboard.writeText(e);
+    //     setCopyNumber(true);
+    //     setTimeout(() => {
+    //         setCopyNumber(false);
+    //     }, 3000);
+    // };
+    // const [copyPass, setCopyPass] = useState(false);
+
+    // const handleCopyPass = (e) => {
+    //     navigator.clipboard.writeText(e);
+    //     setCopyPass(true);
+    //     setTimeout(() => {
+    //         setCopyPass(false);
+    //     }, 3000);
+    // };
+
+    const copyChatLink = () => {
+        navigator.clipboard.writeText(window.location.href);
+        message.success("Copy chat link");
     };
-
-    const [copyNumber, setCopyNumber] = useState(false);
-
-    const handleCopyNumber = (e) => {
-        navigator.clipboard.writeText(e);
-        setCopyNumber(true);
-        setTimeout(() => {
-            setCopyNumber(false);
-        }, 3000);
-    };
-    const [copyPass, setCopyPass] = useState(false);
-
-    const handleCopyPass = (e) => {
-        navigator.clipboard.writeText(e);
-        setCopyPass(true);
-        setTimeout(() => {
-            setCopyPass(false);
-        }, 3000);
-    };
-
-    const confirm = () => {
-        delateChannelEvent(channelData.hashId);
-    };
-
-    const cancel = () => {};
 
     return (
         <div className={styles.editChannel}>
             <Header
-                leftIcon="close"
+                leftIcon="arrowLeft"
                 text={t("editGroup")}
                 onLeftIconPress={() => closeModal("right")}
             />
-            <div className={styles.container}>
-                <div className={styles.topBox}>
-                    <div className={styles.leftBox}>
-                        <Text children={`${t("groupsNumber")}`} />
-                        <span
-                            className={styles.copyBox}
-                            onClick={() =>
-                                handleCopyNumber(channelData.groupNumber)
-                            }
-                        >
-                            <Text
-                                children={channelData.groupNumber}
-                                style={{
-                                    fontSize: "15px",
-                                    fontFamily: "Montserrat",
-                                    fontWeight: 600,
-                                    color: "#03053F",
-                                }}
-                            />
-                            {copyNumber ? (
-                                <BiCheck size={16} />
-                            ) : (
-                                <BiCopy size={14} />
-                            )}
-                        </span>
-                        <Text
-                            margin="10px 0 0 0"
-                            children={`${t("groupsInvite")}`}
-                        />
-                        <span
-                            className={styles.copyBox}
-                            onClick={() =>
-                                handleCopyPass(
-                                    channelData.invitationCodes[0]?.code || ""
-                                )
-                            }
-                        >
-                            <Text
-                                children={
-                                    channelData.invitationCodes[0]?.code || ""
-                                }
-                                style={{
-                                    fontSize: "15px",
-                                    fontFamily: "Montserrat",
-                                    fontWeight: 600,
-                                    color: "#03053F",
-                                }}
-                            />
-                            {copyPass ? (
-                                <BiCheck size={16} />
-                            ) : (
-                                <BiCopy size={14} />
-                            )}
-                        </span>
-                    </div>
-                    <div className={styles.rightBox}>
-                        <AvatarUpload
-                            imageUrl={
-                                channelAvatar
-                                    ? channelAvatar
-                                    : setUpdataChannel.avatar
-                                    ? `${TMP_URL}/${setUpdataChannel.avatar}`
-                                    : ""
-                            }
-                            loading={channelAvatarLoading}
-                            color={
-                                channelData.color
-                                    ? `linear-gradient(25deg, ${channelData.color} 30%, #ddd 100%)`
-                                    : "linear-gradient(#ddd, #666)"
-                            }
-                            upload={true}
-                            onChange={(e) => handleFileChange(e)}
-                        />
-                        <Text
-                            margin="6px 0 10px 0"
-                            color="yellowgreen"
-                            children="Random color"
-                            handleLink={() =>
-                                setUpdateChannelState("color", getRandomColor())
-                            }
-                        />
-                    </div>
+            <div className={styles.content}>
+                <div className={styles.avatarBox}>
+                    <AvatarUpload
+                        imageUrl={
+                            channelAvatar
+                                ? channelAvatar
+                                : setUpdataChannel.avatar
+                                ? `${TMP_URL}/${setUpdataChannel.avatar}`
+                                : ""
+                        }
+                        loading={channelAvatarLoading}
+                        color={
+                            channelData.color
+                                ? `linear-gradient(25deg, ${channelData.color} 30%, #ddd 100%)`
+                                : "linear-gradient(#ddd, #666)"
+                        }
+                        upload={true}
+                        onChange={(e) => handleFileChange(e)}
+                    />
                 </div>
-                <div className={styles.centerBox}>
-                    <div className={styles.rowBtnBox}>
-                        <ButtonComponent
-                            text={`${t("generateNew")}`}
-                            icon=""
-                            iconColor="#fff"
-                            textSize={14}
-                            padding="5px 0"
-                            clickMe={generateNew}
-                        />
-                        <ButtonComponent
-                            text={`${t("newAdmin")}`}
-                            backColor="red"
-                            icon="newAdmin"
-                            clickMe={() => toRouterManageCh("newAdmin")}
-                        />
-                    </div>
-                </div>
-                <div className={styles.bottomBox}>
-                    <SimpleSwitch
-                        switchValue={channelData.isPrivate}
-                        offOpen="Public"
-                        onOpen="Private"
-                        onText={`${t("group_is_private")}`}
-                        offText={`${t("group_is_open")}`}
-                        isPrivate={(e) =>
-                            setUpdateChannelState("isPrivate", e as never)
+                <NewInput
+                    onChange={(e) => setUpdateChannelState("name", e)}
+                    placeholder="Group Name"
+                    margin="15px auto 15px auto"
+                    width="60%"
+                    fontSize="18px"
+                    textAlign={"center"}
+                    value={setUpdataChannel.name}
+                />
+                <div className={styles.descriptionBox}>
+                    <textarea
+                        className={styles.description}
+                        rows={6}
+                        placeholder="Enter description"
+                        value={setUpdataChannel.description}
+                        onChange={(e) =>
+                            setUpdateChannelState("description", e.target.value)
                         }
                     />
                 </div>
-            </div>
-            <div className={styles.addUsersBox}>
-                <Text
-                    style={{ paddingLeft: "10px" }}
-                    children={`${t("groupsName")}`}
+                <MenuItem
+                    icon={<MdGroup size={24} />}
+                    title={`Group type: ${
+                        setUpdataChannel.isPrivate ? "Private" : "Public"
+                    }`}
+                    right={
+                        <Switch
+                            onChange={isPrivateGruop}
+                            checked={setUpdataChannel.isPrivate}
+                        />
+                    }
                 />
-                <Input
-                    borderred
-                    name={channelData.name}
-                    value={channelData.name}
-                    setUserName={(e) => setUpdateChannelState("name", e)}
+                <MenuItem
+                    icon={<IoMdFunnel size={24} />}
+                    title="Default relevance"
+                    onClick={() => toglevisible("relevenceSliderEdit")}
+                    right={
+                        setUpdataChannel.defaultRelevance
+                            ? setUpdataChannel.defaultRelevance
+                            : "0"
+                    }
                 />
                 <div
+                    className={styles.sliderBox}
                     style={{
-                        margin: "20px auto",
-                        display: "flex",
-                        justifyContent: "center",
-                        width: "90%",
+                        display: visible.relevenceSliderEdit ? "block" : "none",
                     }}
                 >
-                    <ButtonComponent
-                        text={`${t("addParticipant")}`}
-                        backColor="yellowGreen"
-                        icon=""
-                        width="100%"
-                        clickMe={addUserToChannel}
+                    <Slider
+                        className={styles.slider}
+                        onChange={(e) =>
+                            setUpdateChannelState("defaultRelevance", e)
+                        }
                     />
                 </div>
-                <div className={styles.rowBtnBox}>
-                    <Popconfirm
-                        title="Delete the group"
-                        description="Are you sure you want to delete the group?"
-                        onConfirm={confirm}
-                        onCancel={cancel}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <span>
-                            <ButtonComponent
-                                text={`${t("deleteGroup")}`}
-                                backColor="red"
-                                icon=""
-                                textSize={14}
-                                color="#fff"
-                                iconColor="#fff"
-                                iconSize={20}
-                                width="100%"
-                            />
-                        </span>
-                    </Popconfirm>
+                <MenuItem
+                    icon={<MdGroup size={24} />}
+                    title="Add participiants"
+                    onClick={addUserToChannel}
+                />
+                <MenuItem
+                    icon={<RiFileCopyFill size={24} />}
+                    title="Copy chat"
+                    onClick={copyChatLink}
+                    right="  "
+                />
+                <div className={styles.btnSave}>
                     <ButtonComponent
-                        text={`${t("update")}`}
-                        backColor="yellowGreen"
-                        icon=""
-                        textSize={14}
+                        text="Save"
+                        width="100%"
                         clickMe={updateChannelEvent}
                     />
                 </div>

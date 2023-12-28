@@ -1,53 +1,42 @@
 .container {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 .contentBox {
-  display: flex;
-  flex-direction: column;
-  width: 90%;
-  margin: 0 auto;
-  height: 90%;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: 0 auto;
+    height: 90%;
 }
 
 .contentTop {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  height: 35%;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    height: 35%;
+    align-items: center;
+    justify-content: center;
 }
 
 .contentBottom {
-  height: 65%;
+    height: 65%;
 }
 
-.switchBox {
-  margin: 20px 0;
-}
-.createChannel {
-  width: 90%;
-  margin: 50px auto;
-  margin-left: 10px;
-  padding: 5px 0;
-  border: none;
-  border-radius: 20px;
-  color: #fff;
-}
-.createChannel p {
-  font-size: 20px;
+.description {
+    width: 100%;
+    padding: 5px;
+    border-radius: 8px;
+    border: none;
+    border: 1px solid rgb(182, 180, 180);
+    font-family: "Montserrat";
+    font-weight: 600;
+    color: #404d66;
+    resize: none;
+    outline: none;
 }
 
-.description{
-  width: 100%;
-  padding: 5px;
-  border-radius: 8px;
-  border: none;
-  border: 1px solid rgb(182, 180, 180);
-  font-family: "Montserrat";
-  font-weight: 600;
-  color: #404d66;
-  resize: none;
+.settings {
+    padding: 15px 0;
 }

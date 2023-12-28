@@ -3,7 +3,11 @@ import { channels, data } from "./../store/dataBase";
 import { CheckOAuthData, RegisterData, Session } from "../types/auth";
 import { User } from "../types/user";
 import ApiService from "./services/ApiService";
-import { Channel, SetUpdataChanelType } from "../types/channel";
+import {
+    Channel,
+    CreateChannelType,
+    SetUpdataChanelType,
+} from "../types/channel";
 import axios, { AxiosRequestConfig } from "axios";
 import { TOKENS } from "../store/loacalStore/loacalStore";
 
@@ -122,12 +126,8 @@ const APIs = {
             apiService.methods.get<
                 (Omit<Channel, "users"> & { users?: User[] })[]
             >(`${channelUrl}/all`),
-        createChannel: (name: string, description: string, color: string) =>
-            apiService.methods.post<Channel>(`${channelUrl}`, {
-                name,
-                description,
-                color,
-            }),
+        createChannel: (data: CreateChannelType) =>
+            apiService.methods.post<Channel>(`${channelUrl}`, data),
         createChannelWithName: (name: string, isPrivate: boolean) =>
             apiService.methods.post<Channel>(`${channelUrl}`, {
                 name,
@@ -238,7 +238,7 @@ const APIs = {
 
         getPollOptionInfo: (pollOptionId: number) =>
             apiService.methods.get(`/poll/option/${pollOptionId}`),
-        
+
         getChannelAllHashtags: (hashId: string) =>
             apiService.methods.get(`${channelUrl}/${hashId}/hashtags`),
     },

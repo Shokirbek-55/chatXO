@@ -241,7 +241,7 @@ const BassComponent = styled.div`
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 5px;
+        padding: 5px 15px;
 
         div {
             position: relative;

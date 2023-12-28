@@ -50,9 +50,9 @@ const NewAdmin = () => {
             }}
         >
             <Header
-                leftIcon="close"
+                leftIcon="arrowLeft"
                 text={t("newAdmin")}
-                onLeftIconPress={() => closeModal('right')}
+                onLeftIconPress={() => closeModal("right")}
             />
             <div>
                 <motion.div

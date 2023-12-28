@@ -1,22 +1,23 @@
-import { observer } from "mobx-react-lite";
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { observer } from "mobx-react-lite";
 import Header from "../../../components/Header/Header";
 import MessageBox from "../../../components/MessageBox/MessageBox";
 import RowItemView from "../../../components/RowItem";
 import useRootStore from "../../../hooks/useRootStore";
 import { motion } from "framer-motion";
-import styles from "./AddUserToChannel.module.css";
+import styles from "./CollectUsers.module.css";
 import { toJS } from "mobx";
 import { TMP_URL } from "../../../env";
+import { useTranslation } from "react-i18next";
 import SearchInput from "../../../components/SearchInput/SearchInput";
+
 const container = {
     hidden: { opacity: 1, scale: 0 },
     visible: {
         opacity: 1,
         scale: 1,
         transition: {
-            delayChildren: 0.3,
+            delayChildren: 0.2,
             staggerChildren: 0.2,
         },
     },
@@ -30,28 +31,26 @@ const item = {
     },
 };
 
-const AddUserToChannel = () => {
+const CollectUsers = () => {
     const { t } = useTranslation();
-    const { addUserToChannel, channelData } = useRootStore().channelStore;
-    const { usersListForAdd, setSearchUsersForAdd, friends } =
+    const { channelData } = useRootStore().channelStore;
+    const { collectUserList, setCollectUser, friends, usersListForAdd } =
         useRootStore().friendsStore;
+
+    console.log("setCollectUser", toJS(collectUserList));
 
     const { closeModal } = useRootStore().routerStore;
 
-    const handleChangeText = (key: string) => {
-        setSearchUsersForAdd(key);
-    };
-
     return (
-        <div className={styles.container}>
+        <div>
             <Header
                 text={`${t("addParticipant")}`}
                 leftIcon="arrowLeft"
-                onLeftIconPress={() => closeModal("right")}
+                onLeftIconPress={() => closeModal("left")}
             />
             <div className={styles.searchBox}>
                 <SearchInput
-                    onChange={(e) => handleChangeText(e)}
+                    onChange={() => {}}
                     placeholder={`${t("searchPlaceholder")}`}
                 />
             </div>
@@ -86,10 +85,7 @@ const AddUserToChannel = () => {
                                         }
                                         rightButton={true}
                                         onButtonPress={() =>
-                                            addUserToChannel(
-                                                channelData.hashId,
-                                                e.id as any
-                                            )
+                                            setCollectUser(e.id as never)
                                         }
                                         title={`${
                                             e.isAdded ? t("added") : t("add")
@@ -112,4 +108,4 @@ const AddUserToChannel = () => {
     );
 };
 
-export default observer(AddUserToChannel);
+export default observer(CollectUsers);

@@ -149,6 +149,8 @@ export type SetUpdataChanelType = {
     isPrivate?: boolean;
     color?: string;
     avatar?: string;
+    description?: string;
+    defaultRelevance?: any;
 };
 export type generateInviteCodeType = {
     inviteCode: string;
@@ -207,6 +209,7 @@ export type ChannelsUsersType = {
     relevance: number;
     status: string;
     username: string;
+    isFriend: boolean;
 };
 export const ChannelsUsersInitial = {
     active: false,
@@ -220,6 +223,7 @@ export const ChannelsUsersInitial = {
     relevance: 0,
     status: "",
     username: "",
+    isFriend: false,
 };
 
 export type relevanceDataType = {
@@ -286,4 +290,7 @@ export type CreateChannelType = {
     name: string;
     description: string;
     color: string;
+    isPrivate: any;
+    defaultRelevance: any;
+    users: User[];
 };

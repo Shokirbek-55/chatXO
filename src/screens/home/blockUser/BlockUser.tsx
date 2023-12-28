@@ -5,8 +5,10 @@ import { useTranslation } from "react-i18next";
 import Header from "../../../components/Header/Header";
 import MessageBox from "../../../components/MessageBox/MessageBox";
 import RowItemView from "../../../components/RowItem";
+import SearchInput from "../../../components/SearchInput/SearchInput";
 import { TMP_URL } from "../../../env";
 import useRootStore from "../../../hooks/useRootStore";
+import styles from "./BlockUser.module.css";
 
 const BlockUser = () => {
     const { t } = useTranslation();
@@ -29,41 +31,16 @@ const BlockUser = () => {
         <div>
             <Header
                 text={t("block_user_button")}
-                leftIcon="close"
-                onLeftIconPress={() => closeModal('right')}
+                leftIcon="arrowLeft"
+                onLeftIconPress={() => closeModal("right")}
             />
+            <div className={styles.searchBox}>
+                <SearchInput
+                    onChange={() => {}}
+                    placeholder={`${t("searchPlaceholder")}`}
+                />
+            </div>
             <div>
-                {channelUsers
-                    .filter((e) => e.id !== adminId)
-                    .filter((e) =>
-                        Object.values(getBlockedUser).every(
-                            (i) => e.id !== i.id
-                        )
-                    )
-                    .map((e, index) => {
-                        return (
-                            <RowItemView
-                                key={index}
-                                loading={false}
-                                color={
-                                    e.color
-                                        ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)`
-                                        : "linear-gradient(#ddd, #666)"
-                                }
-                                imageUrl={
-                                    e.avatar ? `${TMP_URL}/${e.avatar}` : ""
-                                }
-                                text={e.username}
-                                rightButton={user.id !== e.id}
-                                title={`${t("block_user_button")}`}
-                                className="component_pick_btn"
-                                onButtonPress={() =>
-                                    blockUser(channelData.hashId, e.id)
-                                }
-                            />
-                        );
-                    })}
-
                 {Object.values(getBlockedUser).length !== 0 ? (
                     Object.values(getBlockedUser)
                         .filter((e) => e.id !== adminId)

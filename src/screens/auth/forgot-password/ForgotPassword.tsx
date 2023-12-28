@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import Header from "../../../components/Header/Header";
 import useRootStore from "../../../hooks/useRootStore";
+import { ButtonComponent } from "../../../utils/button";
 import styles from "./ForgotPassword.module.css";
 
 const ForgotPasswordView = () => {
@@ -17,8 +18,12 @@ const ForgotPasswordView = () => {
         setEmail(text.toLowerCase());
     };
     const handlePress = async () => {
-        resetPass(email, () => navigation("/auth/login"));
-        setEmail("");
+        if (email) {
+            resetPass(email, () => navigation("/auth/login"));
+            setEmail("");
+        } else {
+            message.warning("Please enter your email");
+        }
     };
 
     return (
@@ -57,14 +62,11 @@ const ForgotPasswordView = () => {
                         />
                     </Form.Item>
                     <Form.Item>
-                        <Button
-                            className={styles.loginInputButton}
-                            type="primary"
-                            htmlType="submit"
-                            onClick={() => handlePress()}
-                        >
-                            {t("reset_btn")}
-                        </Button>
+                        <ButtonComponent
+                            clickMe={() => handlePress()}
+                            text={`${t("reset_btn")}`}
+                            width="220px"
+                        />
                     </Form.Item>
                 </Form>
             </div>

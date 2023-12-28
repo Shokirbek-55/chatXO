@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { useEffect } from "react";
+import React, { ChangeEvent, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { generatePath, useNavigate } from "react-router-dom";
 import AvatarUpload from "../../../components/AvatarUpload/AvatarUpload";
@@ -39,7 +39,14 @@ const item = {
 };
 
 const Account = () => {
-    const { getFriendDetails, getPreviewData } = useRootStore().usersStore;
+    const {
+        getFriendDetails,
+        getPreviewData,
+        setUserState,
+        setMyData,
+        updateUserAccount,
+        onSelectFile,
+    } = useRootStore().usersStore;
     const { show } = useRootStore().visibleStore;
     const { user } = useRootStore().authStore;
     const { myChannels, getMyChannels, getChannelByHashId } =
@@ -48,6 +55,18 @@ const Account = () => {
     const { toRouter, closeModal } = useRootStore().routerStore;
     const { setChannelSlug } = useRootStore().messageStore;
     const navigate = useNavigate();
+
+    const randomUserColor = (Color: string) => {
+        setUserState("color", Color);
+        updateUserAccount({ color: Color });
+    };
+
+    const onImageSelect = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files?.length) {
+            onSelectFile(e.target.files[0]);
+            show("uploadFile");
+        }
+    };
 
     const FriendDetails = (friendId: number) => {
         getFriendDetails(friendId);
@@ -62,6 +81,7 @@ const Account = () => {
 
     const { t } = useTranslation();
 
+    console.log("setMyData", toJS(setMyData));
     console.log("user", toJS(user));
 
     const PreviewAvatar = (data: any) => {
@@ -121,7 +141,12 @@ const Account = () => {
                                     fontSize="14px"
                                     style={{ width: "50%" }}
                                 />
-                                <input value={user.username} />
+                                <input
+                                    value={setMyData.username}
+                                    onChange={(e) =>
+                                        setUserState("username", e.target.value)
+                                    }
+                                />
                             </div>
                             <div className={styles.formItem}>
                                 <Text
@@ -131,7 +156,13 @@ const Account = () => {
                                     fontSize="14px"
                                     style={{ width: "50%" }}
                                 />
-                                <input value={user.username} />
+                                <input
+                                    value={setMyData.name}
+                                    placeholder="Name"
+                                    onChange={(e) =>
+                                        setUserState("name", e.target.value)
+                                    }
+                                />
                             </div>
                             <div className={styles.formItem}>
                                 <Text
@@ -141,7 +172,12 @@ const Account = () => {
                                     fontSize="14px"
                                     style={{ width: "50%" }}
                                 />
-                                <input value={user.email} />
+                                <input
+                                    value={setMyData.email}
+                                    onChange={(e) =>
+                                        setUserState("email", e.target.value)
+                                    }
+                                />
                             </div>
                             <div className={styles.formItem}>
                                 <Text
@@ -151,7 +187,13 @@ const Account = () => {
                                     fontSize="14px"
                                     style={{ width: "50%" }}
                                 />
-                                <input value="Munic" />
+                                <input
+                                    value={setMyData.city}
+                                    placeholder="City"
+                                    onChange={(e) =>
+                                        setUserState("city", e.target.value)
+                                    }
+                                />
                             </div>
                             <div className={styles.formItem}>
                                 <Text
@@ -161,7 +203,13 @@ const Account = () => {
                                     fontSize="14px"
                                     style={{ width: "50%" }}
                                 />
-                                <input value={"22"} />
+                                <input
+                                    value={setMyData.birth}
+                                    placeholder="Age"
+                                    onChange={(e) =>
+                                        setUserState("birth", e.target.value)
+                                    }
+                                />
                             </div>
                             <div className={styles.formItem}>
                                 <Text
@@ -171,7 +219,13 @@ const Account = () => {
                                     fontSize="14px"
                                     style={{ width: "50%" }}
                                 />
-                                <input value={"Kindergarden"} />
+                                <input
+                                    value={setMyData.occupacy}
+                                    placeholder="Interests"
+                                    onChange={(e) =>
+                                        setUserState("occupacy", e.target.value)
+                                    }
+                                />
                             </div>
                         </div>
                         <Text
@@ -240,68 +294,12 @@ const Account = () => {
                             backColor="transparent"
                             color="red"
                         />
-                        <ButtonComponent text="Save" width="100%" />
+                        <ButtonComponent
+                            text="Save"
+                            width="100%"
+                            clickMe={() => updateUserAccount(setMyData)}
+                        />
                     </div>
-                    {/* <div className={styles.getChannelsBox}></div>
-                    <div className={styles.friendsBox}>
-                        <div className={styles.judgementText}>
-                            <Text margin="0 0 10px 0">{t("relevance")}</Text>
-                            <Text color="yellowgreen" margin="0 0 10px 0">
-                                {t("per_user")}
-                            </Text>
-                        </div>
-                        {!myChannels && (
-                            <div className={styles.loadingError}>
-                                <MessageBox
-                                    title={`${t("No Internet Connection")}`}
-                                />
-                            </div>
-                        )}
-                        <motion.div
-                            variants={container}
-                            initial="hidden"
-                            animate="visible"
-                            className={styles.contentBox}
-                        >
-                            {friends?.length !== 0 ? (
-                                friends?.map((e, index) => {
-                                    return (
-                                        <motion.div
-                                            variants={item}
-                                            key={index}
-                                            id="map-dev"
-                                            className={styles.channelRowBox}
-                                        >
-                                            <RowItemView
-                                                onNamePress={() =>
-                                                    FriendDetails(
-                                                        e?.id as never
-                                                    )
-                                                }
-                                                key={index}
-                                                text={e.username}
-                                                color={
-                                                    e.color
-                                                        ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)`
-                                                        : "linear-gradient(#ddd, #666)"
-                                                }
-                                                imageUrl={
-                                                    e.avatar
-                                                        ? `${TMP_URL}/${e.avatar}`
-                                                        : ""
-                                                }
-                                                loading={false}
-                                            />
-                                        </motion.div>
-                                    );
-                                })
-                            ) : (
-                                <MessageBox
-                                    title={`${t("no_avalible_friends")}`}
-                                />
-                            )}
-                        </motion.div>
-                    </div> */}
                 </div>
             </div>
         </div>

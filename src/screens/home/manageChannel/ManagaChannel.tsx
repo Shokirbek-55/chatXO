@@ -3,16 +3,23 @@ import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { BsFillShareFill } from "react-icons/bs";
+import { IoIosSettings } from "react-icons/io";
+import { MdGroup } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import AvatarUpload from "../../../components/AvatarUpload/AvatarUpload";
 import ChannelItems from "../../../components/ChannelItems/channelItems";
 import Header from "../../../components/Header/Header";
+import MenuItem from "../../../components/MenuItem/MenuItem";
 import RowItemView from "../../../components/RowItem";
 import Text from "../../../components/Text/Text";
 import { TMP_URL } from "../../../env";
 import useRootStore from "../../../hooks/useRootStore";
 import { data } from "../../../store/dataBase";
+import { ButtonComponent } from "../../../utils/button";
 import styles from "./ManagaChannel.module.css";
+import { EditIcon } from "../../../utils/icons";
+import { RiFileCopyFill } from "react-icons/ri";
 
 const ManagaChannel = () => {
     const { t } = useTranslation();
@@ -47,16 +54,13 @@ const ManagaChannel = () => {
     };
 
     const leaveChannel = () => {
-        if (user.id === channelData.adminId) toRouterManageCh("channelSetting");
-        else {
-            userChannelLeave(channelData.id, () =>
-                navigation("", { replace: true })
-            );
-            closeRightSideBar();
-        }
+        userChannelLeave(channelData.id, () =>
+            navigation("", { replace: true })
+        );
+        closeRightSideBar();
     };
 
-    const OpenBlogUser = () => {
+    const OpenBlockUser = () => {
         toRouterManageCh("blockUser");
         getChannelBlockedUsers(channelData.hashId);
     };
@@ -75,111 +79,90 @@ const ManagaChannel = () => {
         <div className={styles.container}>
             <Header
                 leftIcon="arrowRight"
-                text="Profile"
-                rightIcon={user.id === adminId ? "setting" : "logout"}
+                text={channelData.name}
                 onLeftIconPress={() => closeModal("right")}
-                popConfirm={leaveChannel}
-                popTitle="Leave the group"
-                popQuest="Do you really want to leave the group?"
-                onRightIconPress={() =>
-                    user.id === channelData.adminId
-                        ? toRouterManageCh("channelSetting")
-                        : {}
+            />
+            <AvatarUpload
+                upload={false}
+                style={{ margin: "10px auto", width: "90%" }}
+                imageUrl={
+                    channelData?.avatar
+                        ? `${TMP_URL}/${channelData.avatar}`
+                        : ""
+                }
+                color={
+                    channelData?.color
+                        ? channelData.color
+                        : "linear-gradient(#ddd, #666)"
                 }
             />
-            {channelData?.avatar ? (
-                <div className={styles.avatarBox}>
-                    <img
-                        style={{ cursor: "pointer" }}
-                        src={
-                            channelData?.avatar
-                                ? `${TMP_URL}/${channelData.avatar}`
-                                : ""
-                        }
-                        alt=""
-                        onClick={() => PreviewChannelAvatar(channelData)}
+            <div className={styles.description}>
+                <Text
+                    fontSize="12px"
+                    children={
+                        channelData.description
+                            ? channelData.description
+                            : "Group discription"
+                    }
+                />
+            </div>
+            {adminId === user.id ? (
+                <div className={styles.itemsRow}>
+                    <MenuItem
+                        icon={<MdGroup size={24} />}
+                        title="Members"
+                        onClick={() => toRouterManageCh("channelSetting")}
+                    />
+                    <MenuItem
+                        icon={<RiFileCopyFill size={24} />}
+                        title="Copy chat"
+                        onClick={copyChatLink}
+                        right="  "
+                    />
+                    <MenuItem
+                        icon={<MdGroup size={24} />}
+                        title="Blocked members"
+                        onClick={OpenBlockUser}
+                    />
+                    <MenuItem
+                        icon={<IoIosSettings size={24} />}
+                        title="Edit group"
+                        onClick={EditGroup}
                     />
                 </div>
             ) : (
-                <AvatarUpload
-                    upload={false}
-                    style={{ margin: "10px auto" }}
-                    imageUrl={
-                        channelData?.avatar
-                            ? `${TMP_URL}/${channelData.avatar}`
-                            : ""
-                    }
-                    color={
-                        channelData?.color
-                            ? channelData.color
-                            : "linear-gradient(#ddd, #666)"
-                    }
-                />
-            )}
-            <Text children={channelData?.name} center fontSize="25px" />
-            <Text
-                children={`${channelUsers.length} members`}
-                center
-                fontSize="14px"
-            />
-            {adminId === user.id ? (
-                <div className={styles.itemsRow}>
-                    <ChannelItems
-                        textSize={13}
-                        icon="edit"
-                        text={`${t("editGroup")}`}
-                        onClickItem={EditGroup}
+                <div className={styles.items}>
+                    <MenuItem
+                        icon={<MdGroup size={24} />}
+                        title="Members"
+                        onClick={() => toRouterManageCh("channelSetting")}
                     />
-                    <ChannelItems
-                        textSize={14}
-                        icon="block"
-                        text={t("blockedUsers")}
-                        onClickItem={OpenBlogUser}
+                    <MenuItem
+                        icon={<BsFillShareFill size={24} />}
+                        title="Copy chat"
+                        onClick={copyChatLink}
                     />
                 </div>
-            ) : null}
-            <div className={styles.items}>
-                <ChannelItems
-                    textSize={13}
-                    icon="copy"
-                    text={`${t("copyLink")}`}
-                    onClickItem={copyChatLink}
-                />
-            </div>
-            <div className={styles.channalUsers}>
-                {channelUsers
-                    .slice()
-                    .sort((a) => (a.id === user.id ? -1 : 1))
-                    .map((e, index) => {
-                        return (
-                            <div key={index} style={{ width: "100%" }}>
-                                <RowItemView
-                                    text={e?.username}
-                                    color={
-                                        e?.color
-                                            ? `linear-gradient(25deg, ${e?.color} 30%, #ddd 100%)`
-                                            : "linear-gradient(#ddd, #666)"
-                                    }
-                                    imageUrl={
-                                        e?.avatar
-                                            ? `${TMP_URL}/${e?.avatar}`
-                                            : ""
-                                    }
-                                    loading={false}
-                                    userType={
-                                        adminId === user.id && e?.id === user.id
-                                            ? "You admin"
-                                            : user.id === e?.id
-                                            ? "You"
-                                            : adminId === e?.id
-                                            ? "Admin"
-                                            : ""
-                                    }
-                                    onNamePress={() => FriendDetails(e?.id)}
-                                />
-                            </div>
-                        );
-                    })}
+            )}
+            <div className={styles.bottomBox}>
+                {adminId == user.id ? (
+                    <Text fontSize="14px" children="You are admin" />
+                ) : null}
+                {adminId == user.id ? (
+                    <ButtonComponent
+                        backColor="transparent"
+                        text="change admin"
+                        color="red"
+                        clickMe={() => toRouterManageCh("newAdmin")}
+                    />
+                ) : (
+                    <ButtonComponent
+                        backColor="transparent"
+                        text="leave group"
+                        color="red"
+                        clickMe={leaveChannel}
+                    />
+                )}
             </div>
         </div>
     );

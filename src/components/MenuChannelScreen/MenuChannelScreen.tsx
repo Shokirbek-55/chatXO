@@ -14,20 +14,30 @@ interface Props {}
 
 const MenuChannelScreen = () => {
     const { visible, hide } = useRootStore().visibleStore;
-    const { toRouter } = useRootStore().routerStore;
+    const { toRouter, closeChannelInUser } = useRootStore().routerStore;
 
     const EditProfile = () => {
         toRouter("account");
         hide("menuChannel");
+        closeChannelInUser();
     };
 
     const onFriends = () => {
         toRouter("friends");
         hide("menuChannel");
+        closeChannelInUser();
     };
+
     const createNewGroup = () => {
         toRouter("createChannel");
         hide("menuChannel");
+        closeChannelInUser();
+    };
+
+    const accountSetting = () => {
+        toRouter("settings");
+        hide("menuChannel");
+        closeChannelInUser();
     };
 
     return (
@@ -54,7 +64,11 @@ const MenuChannelScreen = () => {
                     icon={<MdGroup size={22} />}
                     onClick={onFriends}
                 />
-                <MenuItem title="Setting" icon={<IoIosSettings size={22} />} />
+                <MenuItem
+                    title="Setting"
+                    icon={<IoIosSettings size={22} />}
+                    onClick={accountSetting}
+                />
             </div>
             <div className={styles.cancelBtn}>
                 <ButtonComponent

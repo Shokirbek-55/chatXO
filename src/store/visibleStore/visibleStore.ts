@@ -19,6 +19,8 @@ class VisibleStore {
         openFooterMediaBar: false,
         rightSidebar: false,
         menuChannel: false,
+        relevenceSliderCreate: false,
+        relevenceSliderEdit: false,
     };
 
     toglevisible = (key: keyof typeof this.visible) => {

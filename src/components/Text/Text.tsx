@@ -13,6 +13,7 @@ interface Props {
     fontFamily?: "Montserrat";
     fontSize?: string;
     textAlign?: string | any;
+    moreDot?: boolean;
 }
 
 const Text: FC<Props> = ({
@@ -27,6 +28,7 @@ const Text: FC<Props> = ({
     fontWeight,
     fontSize,
     textAlign,
+    moreDot,
 }) => {
     return (
         <p
@@ -43,7 +45,11 @@ const Text: FC<Props> = ({
                 ...style,
             }}
         >
-            {children}
+            {moreDot
+                ? children?.length > 18
+                    ? children?.slice(0, 15) + `...`
+                    : children
+                : children}
         </p>
     );
 };
