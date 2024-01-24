@@ -1,9 +1,9 @@
+import { saveAs } from "file-saver";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
-import { Env, TMP_URL } from "../../env";
+import { TMP_URL } from "../../env";
 import useRootStore from "../../hooks/useRootStore";
 import Colors from "../../utils/colors";
-import { saveAs } from "file-saver";
 import {
     CloserNoCirculIcon,
     DeleteIcon,
@@ -11,7 +11,6 @@ import {
     ZoomInIcon,
     ZoomOutIcon,
 } from "../../utils/icons";
-import RowItemView from "../RowItem";
 import SmallAvatar from "../SmallAvatar/smallAvatar";
 import Text from "../Text/Text";
 import styles from "./PreviewImage.module.css";
@@ -38,24 +37,12 @@ const PreviewImage = () => {
     const formattedDate = newDate.toLocaleDateString("uz-UZ", options as never);
 
     const clickZoomIn = () => {
-        let zoomClone = zoom;
-        if (zoomClone < 1.75) {
-            setZoom(zoomClone + 0.25);
-        } else {
-            setTimeout(() => {
-                setZoom(1);
-            }, 1500);
-        }
+        if (zoom === 2) return;
+        setZoom(zoom + 0.25);
     };
     const clickZoomOut = () => {
-        let zoomClone = zoom;
-        if (zoomClone > 0.5) {
-            setZoom(zoomClone - 0.25);
-        } else {
-            setTimeout(() => {
-                setZoom(1);
-            }, 1500);
-        }
+        if (zoom === 0.25) return;
+        setZoom(zoom - 0.25);
     };
 
     const delateAvatar = () => {
@@ -64,18 +51,16 @@ const PreviewImage = () => {
 
     const downloadFile = () => {
         saveAs(
-            previewData.avatar
-                ? `${TMP_URL}/${previewData.avatar}`
-                : `${TMP_URL}/${previewData.mediaUrl}`,
-            previewData.avatar
-                ? `${previewData.avatar}`
-                : `${previewData.mediaUrl}`
+            `${TMP_URL}/${previewData.avatar || previewData.mediaUrl}`,
+            `${previewData.avatar || previewData.mediaUrl}`
         );
     };
 
     const mediaUrlOwnerImg = getChannelUsersData.find(
         (e) => e?.id === previewData.userId
     );
+
+    const deleteVisible = previewData?.id === user.id || previewData?.adminId === user.id || previewData?.userId === user.id;
 
     return (
         <div
@@ -89,22 +74,12 @@ const PreviewImage = () => {
                 <div>
                     <SmallAvatar
                         color={previewData.color}
-                        imageUrl={
-                            previewData.avatar
-                                ? `${TMP_URL}/${previewData.avatar}`
-                                : mediaUrlOwnerImg?.avatar
-                                ? `${TMP_URL}/${mediaUrlOwnerImg?.avatar}`
-                                : ""
-                        }
+                        imageUrl={`${TMP_URL}/${previewData.avatar || mediaUrlOwnerImg?.avatar}`}
                     />
                 </div>
                 <div>
                     <Text
-                        children={
-                            previewData.username
-                                ? previewData.username
-                                : previewData.name
-                        }
+                        children={previewData.username || previewData.name}
                         style={{ fontSize: "20px" }}
                         color={Colors.White}
                     />
@@ -120,12 +95,11 @@ const PreviewImage = () => {
                 </div>
             </div>
             <div className={styles.iconBox}>
-                {previewData?.id === user.id ||
-                previewData.adminId === user.id ? (
+                {deleteVisible && (
                     <span onClick={delateAvatar}>
                         <DeleteIcon size={22} color="#fff" />
                     </span>
-                ) : null}
+                )}
                 <span onClick={downloadFile}>
                     <DownloadIcon size={22} color="#fff" />
                 </span>
@@ -137,14 +111,9 @@ const PreviewImage = () => {
             </div>
             <div className={styles.box} onClick={() => hide("previewModal")}>
                 <img
-                    src={
-                        previewData.avatar
-                            ? `${TMP_URL}/${previewData.avatar}`
-                            : previewData.mediaUrl
-                            ? `${TMP_URL}/${previewData.mediaUrl}`
-                            : ""
-                    }
+                    src={`${TMP_URL}/${previewData.avatar || previewData.mediaUrl}`}
                     style={{ transform: `scale(${zoom})` }}
+                    alt={previewData.username || previewData.name}
                 />
             </div>
         </div>

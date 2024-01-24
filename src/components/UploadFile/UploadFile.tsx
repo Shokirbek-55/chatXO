@@ -1,15 +1,12 @@
 import { observer } from "mobx-react-lite";
-import React from "react";
-import styles from "./UploadFile.module.css";
 import useRootStore from "../../hooks/useRootStore";
-import { TMP_URL } from "../../env";
 import { CheckIcon, CloseIcon } from "../../utils/icons";
 import Text from "../Text/Text";
+import styles from "./UploadFile.module.css";
 
 const UploadFile = () => {
     const { visible, hide } = useRootStore().visibleStore;
-    const { channelAvatar } = useRootStore().channelStore;
-    const { userAvatar, createMeAvatar, formData } = useRootStore().usersStore;
+    const { userAvatar, createMeAvatar } = useRootStore().usersStore;
 
     const uploadAvatar = () => {
         createMeAvatar();

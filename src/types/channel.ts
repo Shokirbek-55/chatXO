@@ -80,7 +80,7 @@ export type RawMessage = {
     channelSlug: string;
     hashtags: Array<string>;
     minRelevance?: number;
-    pimps: Pimp[];
+    pimps: string;
     color?: string;
     videoThumbnail?: string;
     mediaTitle?: string;

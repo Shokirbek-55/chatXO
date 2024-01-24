@@ -1,10 +1,8 @@
-import React from "react";
 import { ErrorMessage, useField } from "formik";
-import styles from "./TextField.module.css";
+import { observer } from "mobx-react-lite";
 import { BiHide, BiShow } from "react-icons/bi";
 import useRootStore from "../../hooks/useRootStore";
-import { observer } from "mobx-react-lite";
-import { SearchIcon } from "../../utils/icons";
+import styles from "./TextField.module.css";
 
 const TextFieldd = ({ label, showClick, icon, ...props }: any) => {
     const [field, meta] = useField(props);
@@ -18,9 +16,8 @@ const TextFieldd = ({ label, showClick, icon, ...props }: any) => {
             <div className={styles.passwordInput}>
                 <div className={styles.iconBox}>{icon}</div>
                 <input
-                    className={`${styles.validationInput} ${
-                        meta.touched && meta.error && styles.isInValid
-                    }`}
+                    className={`${styles.validationInput} ${meta.touched && meta.error && styles.isInValid
+                        }`}
                     style={{ ...props }}
                     {...field}
                     {...props}

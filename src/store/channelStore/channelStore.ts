@@ -50,7 +50,7 @@ export default class ChannelStore {
     blockUserOperation = new Operation<User>({} as User);
     newAdminOperation = new Operation<User>({} as User);
     unblockUserOperation = new Operation<User>({} as User);
-    getChannelUsersOperation = new Operation<User>([] as User);
+    getChannelUsersOperation = new Operation<User>([] as unknown as User);
     updateMemberRelevanceOperation = new Operation<ChannelsUsersType>(
         {} as ChannelsUsersType
     );
@@ -74,10 +74,12 @@ export default class ChannelStore {
     adminId: number = 0;
 
     hashId: string = "";
-    navigateChannel: () => void = () => {};
-    generateNavigateChannel: () => void = () => {};
+    navigateChannel: () => void = () => { };
+    generateNavigateChannel: () => void = () => { };
 
-    getBlockedUser: User = {};
+    getBlockedUser: User = {
+        id: 0
+    };
 
     channelsLoading: boolean = false;
 
@@ -292,15 +294,15 @@ export default class ChannelStore {
     };
 
     createChannelDataToSetData = () =>
-        (this.setCreateChannelData = {
-            name: "",
-            description: "",
-            avatar: "",
-            color: "",
-            isPrivate: false,
-            defaultRelevance: 0,
-            users: [],
-        });
+    (this.setCreateChannelData = {
+        name: "",
+        description: "",
+        avatar: "",
+        color: "",
+        isPrivate: false,
+        defaultRelevance: 0,
+        users: [],
+    });
 
     setCreateChannelState = (key: keyof CreateChannelType, value: any) => {
         this.setCreateChannelData[key] = value;
@@ -333,14 +335,14 @@ export default class ChannelStore {
     };
 
     channelDataToSetData = (channel: Channel) =>
-        (this.setUpdataChannel = {
-            name: channel.name as string,
-            isPrivate: channel.isPrivate as boolean,
-            color: channel.color as string,
-            avatar: channel.avatar as string,
-            defaultRelevance: channel.relevance as never,
-            description: channel.description as string,
-        });
+    (this.setUpdataChannel = {
+        name: channel.name as string,
+        isPrivate: channel.isPrivate as boolean,
+        color: channel.color as string,
+        avatar: channel.avatar as string,
+        defaultRelevance: channel.relevance as never,
+        description: channel.description as string,
+    });
 
     setUpdateChannelState = (key: keyof SetUpdataChanelType, value: any) => {
         runInAction(() => {
@@ -383,7 +385,7 @@ export default class ChannelStore {
         });
     };
 
-    noInvitationCode = async () => {};
+    noInvitationCode = async () => { };
 
     onSelectChannelImage = async (file: File) => {
         runInAction(() => {

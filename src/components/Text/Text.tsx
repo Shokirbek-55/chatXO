@@ -30,6 +30,14 @@ const Text: FC<Props> = ({
     textAlign,
     moreDot,
 }) => {
+
+    const tetx = () => {
+        if (!moreDot) return children
+        if (children?.length > 18) {
+            return children?.slice(0, 15) + `...`
+        }
+    }
+
     return (
         <p
             className={center ? styles.centerText : styles.text}
@@ -45,11 +53,7 @@ const Text: FC<Props> = ({
                 ...style,
             }}
         >
-            {moreDot
-                ? children?.length > 18
-                    ? children?.slice(0, 15) + `...`
-                    : children
-                : children}
+            {tetx()}
         </p>
     );
 };

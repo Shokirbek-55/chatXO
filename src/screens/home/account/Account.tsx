@@ -1,7 +1,9 @@
+import { motion } from "framer-motion";
 import { observer } from "mobx-react-lite";
-import React, { ChangeEvent, useEffect } from "react";
+import { ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { generatePath, useNavigate } from "react-router-dom";
+import styled from "styled-components";
 import AvatarUpload from "../../../components/AvatarUpload/AvatarUpload";
 import Header from "../../../components/Header/Header";
 import MessageBox from "../../../components/MessageBox/MessageBox";
@@ -9,14 +11,9 @@ import RowItemView from "../../../components/RowItem";
 import Text from "../../../components/Text/Text";
 import { TMP_URL } from "../../../env";
 import useRootStore from "../../../hooks/useRootStore";
-import styles from "./Account.module.css";
-import { motion } from "framer-motion";
-import Loading from "../../../utils/loading";
-import { toJS } from "mobx";
-import Input from "../../../components/Input";
-import { InputComponent } from "../../../utils/inputComponent";
-import Colors from "../../../utils/colors";
 import { ButtonComponent } from "../../../utils/button";
+import Colors from "../../../utils/colors";
+import styles from "./Account.module.css";
 
 const container = {
     hidden: { opacity: 1, scale: 0 },
@@ -39,8 +36,10 @@ const item = {
 };
 
 const Account = () => {
+    const { t } = useTranslation();
+    const navigate = useNavigate();
     const {
-        getFriendDetails,
+        // getFriendDetails,
         getPreviewData,
         setUserState,
         setMyData,
@@ -49,29 +48,32 @@ const Account = () => {
     } = useRootStore().usersStore;
     const { show } = useRootStore().visibleStore;
     const { user } = useRootStore().authStore;
-    const { myChannels, getMyChannels, getChannelByHashId } =
+    const { myChannels, getChannelByHashId } =
         useRootStore().channelStore;
-    const { friends } = useRootStore().friendsStore;
-    const { toRouter, closeModal } = useRootStore().routerStore;
+    const {
+        // toRouter,
+        closeModal
+    } = useRootStore().routerStore;
     const { setChannelSlug } = useRootStore().messageStore;
-    const navigate = useNavigate();
 
-    const randomUserColor = (Color: string) => {
-        setUserState("color", Color);
-        updateUserAccount({ color: Color });
-    };
+    // const randomUserColor = (Color: string) => {
+    //     setUserState("color", Color);
+    //     updateUserAccount({ color: Color });
+    // };
 
     const onImageSelect = (e: ChangeEvent<HTMLInputElement>) => {
+        console.log("e.target.files", e.target.files);
         if (e.target.files?.length) {
             onSelectFile(e.target.files[0]);
             show("uploadFile");
         }
     };
 
-    const FriendDetails = (friendId: number) => {
-        getFriendDetails(friendId);
-        toRouter("friendDetails");
-    };
+    // const FriendDetails = (friendId: number) => {
+    //     getFriendDetails(friendId);
+    //     toRouter("friendDetails");
+    // };
+
     const handleChanel = (e) => {
         setChannelSlug(e.slug);
         getChannelByHashId(e.hashId);
@@ -79,15 +81,12 @@ const Account = () => {
         navigate(target);
     };
 
-    const { t } = useTranslation();
-
-    console.log("setMyData", toJS(setMyData));
-    console.log("user", toJS(user));
-
     const PreviewAvatar = (data: any) => {
         show("previewModal");
         getPreviewData(data);
     };
+
+    console.log('render');
 
     return (
         <div className={styles.container}>
@@ -109,7 +108,7 @@ const Account = () => {
                                 ? `linear-gradient(25deg, ${user.color} 30%, #ddd 100%)`
                                 : "linear-gradient(#ddd, #666)"
                         }
-                        onChange={() => {}}
+                        onChange={(e) => onImageSelect(e)}
                     />
                 </div>
                 <div className={styles.groupsBox}>
@@ -121,12 +120,12 @@ const Account = () => {
                             center
                         />
                         <div className={styles.judgementText}>
-                            <textarea placeholder="bio">
-                                I am a hard-working and driven individual who
-                                isn't afraid to face a challenge. I'm passionate
-                                about my work and I know how to get the job
-                                done.
-                            </textarea>
+                            <TextArea
+                                style={{ fontFamily: "Montserrat", fontWeight: 900 }}
+                                placeholder="Write a little about yourself here..."
+                                value={setMyData.description}
+                                onChange={(e) => setUserState("description", e.target.value)}
+                            />
                             <Text
                                 fontSize="12px"
                                 style={{ textAlign: "end" }}
@@ -308,3 +307,25 @@ const Account = () => {
 };
 
 export default observer(Account);
+
+
+const TextArea = styled.textarea`
+    width: 100%;
+    height: 100px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px 0;
+    resize: none;
+    font-size: 14px;
+    font-family: 'Montserrat';
+    font-weight: 500 !important;
+    color: #333;
+    outline: none;
+    &::placeholder {
+        color: #ccc;
+    }
+    &:focus {
+        border: 1px solid #333;
+    }
+`

@@ -1,7 +1,7 @@
 import { Channel } from "./channel";
 
 export interface User {
-    id?: number;
+    id: number;
     color?: string;
     email?: string;
     name?: string;
