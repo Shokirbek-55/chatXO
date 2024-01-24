@@ -266,11 +266,11 @@ class ChatStore {
     ) => {
         this.root.socketStore.socket?.emit("timestampHistory", <
             TimestampHistoryRequest
-        >{
-            channelSlug,
-            timestamp,
-            findOlder,
-        });
+            >{
+                channelSlug,
+                timestamp,
+                findOlder,
+            });
     };
 }
 

@@ -1,6 +1,6 @@
-import { Dropdown, Menu, Space, message } from "antd";
-import { t } from "i18next";
-import { useCallback, useEffect, useState } from "react";
+import { Dropdown, Menu, MenuProps, Space, message } from "antd";
+import { t, use } from "i18next";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ChannelsUsersType, RawMessage } from "../../../types/channel";
 import useRootStore from "../../../hooks/useRootStore";
 import { observer } from "mobx-react-lite";
@@ -15,18 +15,64 @@ interface Props {
     children: React.ReactNode;
 }
 
+
 const DropDownMenu = ({ massage, users, children }: Props) => {
-    const [isAdmin, setIsAdmin] = useState(false);
 
     const { user } = useRootStore().authStore;
     const { slug, messageCache, deleteMessage, replyMessage } =
         useRootStore().messageStore;
 
-    const currentUser: User | null = users?.[massage.userId] || null;
+    const isAdmin = useMemo(() => messageCache[slug].channelData.adminId == user?.id, [user, slug, messageCache]);
 
-    useEffect(() => {
-        setIsAdmin(messageCache[slug].channelData.adminId == user?.id);
-    }, [user, slug, messageCache]);
+    // if isAdmin is true, show all options, else show only reply, report, copy, delete else show only reply, report, copy, delete
+    const items: MenuProps["items"] = [
+        {
+            key: "1",
+            label: t("reply"),
+            onClick: () => {
+                replyMessage(massage);
+            },
+        },
+        {
+            key: "2",
+            label: t("report"),
+            onClick: () => { },
+        },
+        {
+            key: "3",
+            label: t("copy"),
+            onClick: () => {
+                try {
+                    navigator.clipboard.writeText(massage.message);
+                    console.log("Copied!");
+                } catch (err) {
+                    console.log("Failed to copy!");
+                }
+            },
+        },
+        {
+            key: "4",
+            label: t("delete"),
+            onClick: () => {
+                if (isAdmin || massage.userId == user?.id) {
+                    deleteMessage(
+                        massage.id,
+                        massage.channelSlug,
+                        new Date(massage.timestamp)
+                    );
+                } else {
+                    message.error("you are not admin");
+                }
+            },
+        },
+        {
+            key: "5",
+            label: t("cancel"),
+            onClick: () => { },
+        }
+    ]
+
+    const currentUser: User | null = users?.[massage.userId] || null;
 
     const onLongPressText = useCallback(() => {
         let options: string[] = [];

@@ -1,33 +1,29 @@
-import TextFieldd from "../../../components/TextField/TextField";
+import { FacebookAuthProvider, signInWithPopup } from "firebase/auth";
 import { Form, Formik } from "formik";
 import { observer } from "mobx-react-lite";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import Header from "../../../components/Header/Header";
-import useRootStore from "../../../hooks/useRootStore";
-import Colors from "../../../utils/colors";
-import Regex from "../../../utils/regax";
-import Assets from "../../../utils/requireAssets";
-import styles from "./Login.module.css";
-import { FacebookAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth, providerOAuth, providerFC } from "../../../helper/firebase";
-import { toJS } from "mobx";
 import {
     FacebookIcon,
     GoogleIcon,
     SearchIcon,
 } from "../../../assets/icons/icons";
-import { ButtonComponent } from "../../../utils/button";
+import Header from "../../../components/Header/Header";
 import Text from "../../../components/Text/Text";
+import TextFieldd from "../../../components/TextField/TextField";
+import { auth, providerFC, providerOAuth } from "../../../helper/firebase";
+import useRootStore from "../../../hooks/useRootStore";
+import { ButtonComponent } from "../../../utils/button";
+import Colors from "../../../utils/colors";
 import SocialBtn from "../../../utils/socialBtn";
+import styles from "./Login.module.css";
 
 const Login = () => {
     const { loginEmailWithPassword, loginOAuth2 } = useRootStore().authStore;
     const { toglevisible, visible } = useRootStore().visibleStore;
     const navigation = useNavigate();
     const { t } = useTranslation();
-    console.log("visible", toJS(visible.showPass));
 
     const visibility = () => {
         toglevisible("showPass");

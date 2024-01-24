@@ -1,32 +1,24 @@
 import { message } from "antd";
-import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
-import React from "react";
-import { useTranslation } from "react-i18next";
 import { BsFillShareFill } from "react-icons/bs";
 import { IoIosSettings } from "react-icons/io";
 import { MdGroup } from "react-icons/md";
+import { RiFileCopyFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import AvatarUpload from "../../../components/AvatarUpload/AvatarUpload";
-import ChannelItems from "../../../components/ChannelItems/channelItems";
 import Header from "../../../components/Header/Header";
 import MenuItem from "../../../components/MenuItem/MenuItem";
-import RowItemView from "../../../components/RowItem";
 import Text from "../../../components/Text/Text";
 import { TMP_URL } from "../../../env";
 import useRootStore from "../../../hooks/useRootStore";
-import { data } from "../../../store/dataBase";
 import { ButtonComponent } from "../../../utils/button";
 import styles from "./ManagaChannel.module.css";
-import { EditIcon } from "../../../utils/icons";
-import { RiFileCopyFill } from "react-icons/ri";
 
 const ManagaChannel = () => {
-    const { t } = useTranslation();
+    // const { t } = useTranslation();
     const {
         channelData,
         getChannelBlockedUsers,
-        channelUsers,
         getChannelUsers,
         adminId,
     } = useRootStore().channelStore;
@@ -34,22 +26,25 @@ const ManagaChannel = () => {
         toRouterManageCh,
         closeModal,
         closeRightSideBar,
-        openRightSideBar,
+        // openRightSideBar,
     } = useRootStore().routerStore;
-    const { userChannelLeave, getPreviewData, getFriendDetails } =
-        useRootStore().usersStore;
+    const {
+        userChannelLeave,
+        getPreviewData,
+        // getFriendDetails
+    } = useRootStore().usersStore;
     const { user } = useRootStore().authStore;
     const { show } = useRootStore().visibleStore;
     const navigation = useNavigate();
 
-    const FriendDetails = (friendId: number) => {
-        getFriendDetails(friendId);
-        openRightSideBar();
-        toRouterManageCh("channelInUser");
-    };
+    // const FriendDetails = (friendId: number) => {
+    //     getFriendDetails(friendId);
+    //     openRightSideBar();
+    //     toRouterManageCh("channelInUser");
+    // };
 
-    const PreviewChannelAvatar = (data: any) => {
-        getPreviewData(data);
+    const PreviewChannelAvatar = () => {
+        getPreviewData(channelData as any);
         show("previewModal");
     };
 
@@ -85,17 +80,13 @@ const ManagaChannel = () => {
             <AvatarUpload
                 upload={false}
                 style={{ margin: "10px auto", width: "90%" }}
-                imageUrl={
-                    channelData?.avatar
-                        ? `${TMP_URL}/${channelData.avatar}`
-                        : ""
-                }
-                color={
-                    channelData?.color
-                        ? channelData.color
-                        : "linear-gradient(#ddd, #666)"
-                }
-                onChange={() => {}}
+                imageUrl={channelData?.avatar
+                    ? `${TMP_URL}/${channelData.avatar}`
+                    : ""}
+                color={channelData?.color
+                    ? channelData.color
+                    : "linear-gradient(#ddd, #666)"}
+                onPreview={() => PreviewChannelAvatar()}
             />
             <div className={styles.description}>
                 <Text
@@ -146,10 +137,10 @@ const ManagaChannel = () => {
                 </div>
             )}
             <div className={styles.bottomBox}>
-                {adminId == user.id ? (
+                {adminId === user.id ? (
                     <Text fontSize="14px" children="You are admin" />
                 ) : null}
-                {adminId == user.id ? (
+                {adminId === user.id ? (
                     <ButtonComponent
                         backColor="transparent"
                         text="change admin"

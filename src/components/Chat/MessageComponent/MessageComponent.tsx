@@ -29,7 +29,7 @@ const MessageComponent: FC<Props> = ({
     const { name } = useParams();
     const { isOpenHashTagScreen, setHashTags, enter } =
         useRootStore().hashtagStore;
-    const { toRouterManageCh, manageRouters, openInUser } =
+    const { openInUser } =
         useRootStore().routerStore;
     const { getFriendDetails } = useRootStore().usersStore;
     const { user } = useRootStore().authStore;
@@ -40,7 +40,8 @@ const MessageComponent: FC<Props> = ({
 
     const msg = useMemo(() => {
         return pimp !== undefined ? { ...message, relevance: pimp.value } : message
-    }, [pimp?.pimpType, message])
+    }, [pimp?.pimpType, pimp?.value, message])
+
     const currentUser: ChannelsUsersType | undefined = users?.[message.userId];
 
     const MESSAGE_STYLE = relevanceFuniction(msg);
@@ -71,7 +72,7 @@ const MessageComponent: FC<Props> = ({
 
     const position = useMemo(() => message.userId === user.id, [user, message])
 
-    const renderMessage = useMemo(() => <RenderMessage message={msg} />, [msg.relevance])
+    const renderMessage = useMemo(() => <RenderMessage message={msg} />, [msg, pimp])
 
     if (message.userId === -1) {
         return <MessageBox text={msg.message} own={0} />;

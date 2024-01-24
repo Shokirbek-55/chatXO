@@ -1,19 +1,16 @@
-import { CSSProperties, FC, useState } from "react";
-import styles from "./AvatarUpload.module.css";
-import Assets from "../../utils/requireAssets";
-import Colors from "../../utils/colors";
-import Icon from "../Icon";
 import { observer } from "mobx-react-lite";
-import useRootStore from "../../hooks/useRootStore";
-import { AvatarLoading } from "../AvatarLoading/AvatarLoading";
+import { CSSProperties, FC } from "react";
 import { CiCamera } from "react-icons/ci";
+import Colors from "../../utils/colors";
+import { AvatarLoading } from "../AvatarLoading/AvatarLoading";
+import styles from "./AvatarUpload.module.css";
 
 interface Props {
     style?: CSSProperties;
     color?: string;
     imageUrl?: string;
     upload: boolean;
-    onChange: (e: any) => void;
+    onChange?: (e: any) => void;
     value?: string;
     onPreview?: () => void;
     loading?: boolean;
@@ -25,12 +22,11 @@ const AvatarUpload: FC<Props> = ({
     imageUrl,
     onChange,
     upload,
-    value,
+    value = "",
     onPreview,
     loading,
 }) => {
     style = color ? { ...style, background: color } : { ...style };
-    const { visible, show } = useRootStore().visibleStore;
     return (
         <>
             <div
@@ -57,7 +53,7 @@ const AvatarUpload: FC<Props> = ({
                                 multiple
                                 value={value}
                                 color={color}
-                                onChange={(e) => onChange(e)}
+                                onChange={(e) => onChange && onChange(e)}
                                 accept="image/png, image/gif, image/jpeg"
                                 className={styles.avatarInput}
                             />

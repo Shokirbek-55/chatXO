@@ -28,7 +28,9 @@ export default class FriendsStore {
 
     loading: boolean = false;
 
-    createUsername: User = {};
+    createUsername: User = {
+        id: 0
+    };
 
     getFriends = async () => {
         runInAction(() => {

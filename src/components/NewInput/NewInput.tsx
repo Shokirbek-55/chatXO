@@ -13,7 +13,7 @@ interface Props {
 }
 
 const NewInput: React.FC<Props> = ({
-    value,
+    value = "",
     onChange,
     placeholder,
     margin,

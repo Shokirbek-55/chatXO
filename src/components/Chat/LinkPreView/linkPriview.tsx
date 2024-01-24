@@ -61,7 +61,7 @@ const LinkPriviewComponent = ({ message, textBackColor }: Props) => {
 
     return (
         <div className={styles.textCard}>
-            <Text
+            <div
                 style={{
                     backgroundColor: textBackColor,
                 }}
@@ -71,7 +71,7 @@ const LinkPriviewComponent = ({ message, textBackColor }: Props) => {
                     fontWeight: textWeight,
                     lineHeight: textLineHeight,
                 })}
-            </Text>
+            </div>
         </div>
     );
 };

@@ -1,12 +1,12 @@
 
-import { useRef, useEffect, useState, useCallback, ReactNode } from "react";
-import { ArrowDowunIcon } from "../../utils/icons";
-import { styled } from "styled-components";
 import Lottie from "lottie-react";
+import { observer } from "mobx-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { styled } from "styled-components";
 import topLoaderJson from "../../assets/topLoader.json";
 import useRootStore from "../../hooks/useRootStore";
 import { useInfiniteScroll } from "../../hooks/useThrottledEffect";
-import { observer } from "mobx-react";
+import { ArrowDowunIcon } from "../../utils/icons";
 
 type ScrollContainerProps = {
     children: React.ReactNode;
@@ -52,7 +52,6 @@ const ScrollContainer = ({ children }: ScrollContainerProps) => {
         setPrevInnerDivHeight(slug, innerDivHeight);
     }, [children]);
 
-    // scroll event listener
     useEffect(() => {
         const handleScroll = () => {
             if (innerDiv.current.clientHeight - outerDiv.current.clientHeight === outerDiv.current.scrollTop) {

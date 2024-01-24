@@ -72,7 +72,7 @@ export const relevanceFuniction = (message: RawMessage) => {
   };
 
   const messageRelevace = message?.relevance || 0
-  
+
   switch (true) {
     case messageRelevace === 100:
       return relevenceStyle.relevance100;
@@ -99,8 +99,9 @@ export const relevanceFuniction = (message: RawMessage) => {
   }
 };
 
-export const lightenColor = (color:string) => {
+export const lightenColor = (color: string) => {
   // Ensure the input color starts with '#'
+  if (color === undefined || color === '') color = '#444555';
   color = color.startsWith('#') ? color : '#' + color;
 
   // Parse the input color to get RGB values

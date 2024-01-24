@@ -3,6 +3,7 @@ import {
     Dispatch,
     ReactNode,
     SetStateAction,
+    useEffect,
     useMemo,
     useState,
 } from "react";
@@ -59,21 +60,19 @@ const MessageHeader = ({
         [channelUsers, user]
     );
 
-    const jsonStr = message?.pimps as never;
-
     const data: {
         [key: string]: number;
     } = useMemo(() => {
         try {
-            return JSON.parse(jsonStr);
+            return JSON.parse(message.pimps);
         } catch (error) {
             console.error("JSON parsing error:", error);
             return {};
         }
-    }, [jsonStr]);
+    }, [message]);
 
     const hasKey265 = useMemo(() => {
-        setActivePimp((user?.id as never) in data);
+        setActivePimp(data ? data.hasOwnProperty(user.id) : false);
     }, [data, user]);
 
     const onRelevance = (id: number) => {
@@ -125,12 +124,12 @@ const MessageHeader = ({
                         <div className="relevances">
                             <Button onClick={() => onRelevance(userId || 0)}>
                                 <Text fontSize={'14px'} fontWeight={500} color='#EE35AF'>
-                                    {message.minRelevance}
+                                    {message.minRelevance === -1 ? '' : message.minRelevance}
                                 </Text>
                             </Button>
                             <Button onClick={() => onRelevance(userId || 0)}>
                                 <Text fontSize={'14px'} fontWeight={500} color='#999'>
-                                    {message.relevance}
+                                    {message.relevance || 0}
                                 </Text>
                             </Button>
                         </div>
@@ -176,7 +175,7 @@ export default observer(MessageHeader);
 const Container = styled.div<{ $backColor: string }>`
     display: flex;
     flex-direction: column;
-    background-color: ${props => props.$backColor};
+    background-color: ${props => props.$backColor ? props.$backColor : '#f44'};
     border-radius: 15px;
 `
 
@@ -210,3 +209,6 @@ const Button = styled.button`
     border: none;
     cursor: pointer;
 `
+
+
+

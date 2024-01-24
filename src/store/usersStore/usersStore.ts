@@ -32,7 +32,7 @@ type PreviewDataType = {
     mediaUrl?: string;
     userId?: number;
     timestamp?: string;
-};
+}
 
 type ConnectChannelaDataType = {
     channelNumber: string;
@@ -71,7 +71,9 @@ export default class UsersStore {
 
     weChannels: Channel[] = [];
 
-    friendDetails: User = {};
+    friendDetails: User = {
+        id: 0
+    };
 
     formData = new FormData();
 
@@ -149,17 +151,17 @@ export default class UsersStore {
     };
 
     myDataToSetData = (myData: User) =>
-        (this.setMyData = {
-            username: myData.username as string,
-            email: myData.email as string,
-            color: myData.color as string,
-            avatar: myData.avatar as string,
-            name: myData.name as string,
-            city: myData.city as string,
-            birth: myData.birth as string,
-            occupacy: myData.occupacy as string,
-            description: myData.description as string,
-        });
+    (this.setMyData = {
+        username: myData.username || "",
+        email: myData.email || "",
+        color: myData.color || "",
+        avatar: myData.avatar || "",
+        name: myData.name || "",
+        city: myData.city || "",
+        birth: myData.birth || "",
+        occupacy: myData.occupacy || "",
+        description: myData.description || "",
+    });
 
     setUserState = (key: keyof UserStateType, value: string) => {
         this.setMyData[key] = value;
