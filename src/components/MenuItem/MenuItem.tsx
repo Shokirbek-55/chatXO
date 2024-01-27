@@ -6,7 +6,7 @@ import styles from "./MenuItem.module.css";
 interface Props {
     icon?: any;
     title?: string;
-    right?: any;
+    right?: React.ReactNode | boolean
     onClick?: () => void;
     onRightPress?: () => void;
     onTitlePress?: () => void;

@@ -84,7 +84,8 @@ export default class RouterStore {
     };
 
     openInUser = () => {
-        this.toRouterManageCh("channelInUser");
+        this.manageRouters = [ManageHelperRoutes["channelInUser"]];
+        _.last(this.manageRouters)!.isOpen = true;
         this.rootStore.visibleStore.show("rightSidebar");
     };
 

@@ -33,11 +33,11 @@ const item = {
 };
 
 const FriendsScreen = () => {
-    const { friends, deleteFriend, loading, getFriendsFilter } =
+    const { t } = useTranslation();
+    const { friends, getFriendsFilter } =
         useRootStore().friendsStore;
     const { toRouter, closeModal } = useRootStore().routerStore;
     const { getFriendDetails } = useRootStore().usersStore;
-    const { t } = useTranslation();
     const handleChangeText = (key: string) => {
         getFriendsFilter(key);
     };
@@ -95,13 +95,9 @@ const FriendsScreen = () => {
                                                 : "linear-gradient(#ddd, #666)"
                                         }
                                         text={e.username}
-                                        onButtonPress={() =>
-                                            deleteFriend(e.id ? e.id : 0)
+                                        onPressComponent={() =>
+                                            FriendDetails(e.id)
                                         }
-                                        onNamePress={() =>
-                                            FriendDetails(e.id ? e.id : 0)
-                                        }
-                                        // rightButton
                                         loading={false}
                                     />
                                 </motion.div>

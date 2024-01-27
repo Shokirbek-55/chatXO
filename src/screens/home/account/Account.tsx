@@ -272,7 +272,7 @@ const Account = () => {
                                                 }
                                                 text={e.name}
                                                 loading={false}
-                                                onNamePress={() =>
+                                                onPressComponent={() =>
                                                     handleChanel(e)
                                                 }
                                                 userType={`${e.userRelevance}`}
