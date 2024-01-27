@@ -255,6 +255,14 @@ export default class UsersStore {
         }
     };
 
+    clearFriendDetails = () => {
+        runInAction(() => {
+            this.friendDetails = {
+                id: 0
+            };
+        });
+    }
+
     setConnectChannelData = (
         key: keyof ConnectChannelaDataType,
         value: string

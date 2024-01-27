@@ -92,7 +92,7 @@ const AddFriend = () => {
                                         }
                                         text={e.username}
                                         loading={false}
-                                        onNamePress={() =>
+                                        onPressComponent={() =>
                                             createFriend(e.id ? e.id : 0)
                                         }
                                     />

@@ -13,6 +13,8 @@ import { observer } from "mobx-react-lite";
 import { RenderMessage } from "../AllMessage/AllMessage";
 import MessageBox from "../MessageBox";
 import { extractHourMinute } from "../../../utils/helper";
+import SmallAvatar from "../../SmallAvatar/smallAvatar";
+import { Env } from "../../../env";
 
 interface Props {
     message: RawMessage;
@@ -65,8 +67,8 @@ const MessageComponent: FC<Props> = ({
         }
     };
 
-    const openUserAccount = (userId: number) => {
-        getFriendDetails(userId);
+    const openUserAccount = () => {
+        getFriendDetails(currentUser?.id);
         openInUser();
     };
 
@@ -80,6 +82,14 @@ const MessageComponent: FC<Props> = ({
 
     return (
         <Container $position={position} $isRaplayed={msg.isReply}>
+            <MessageAvatar $position={position}>
+                <SmallAvatar
+                    forMessage
+                    color={currentUser?.color || msg.color}
+                    imageUrl={currentUser?.avatar && `${Env.AssetsUrl}/${currentUser?.avatar}`}
+                    onPress={openUserAccount}
+                />
+            </MessageAvatar>
             <BoxShadow $boxShodow={boxShadov}>
                 <MessageHeader
                     name={msg.username}
@@ -87,8 +97,7 @@ const MessageComponent: FC<Props> = ({
                     userId={msg.userId}
                     message={msg}
                     setPimp={setPimp}
-                    titleOnPress={() => openUserAccount(currentUser?.id as never)}
-
+                    titleOnPress={openUserAccount}
                 >
                     <MessageContainer>
                         <DropDownMenu massage={msg}>
@@ -243,4 +252,10 @@ const TimeViewContainer = styled.div`
     width: 100%;
     align-self: flex-end;
     justify-self: flex-end;
+`
+
+const MessageAvatar = styled.div<{ $position?: boolean }>`
+    display: ${({ $position }) => $position ? 'none' : 'flex'};
+    align-self: flex-end;
+    z-index: 2;
 `

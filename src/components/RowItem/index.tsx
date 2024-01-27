@@ -1,16 +1,14 @@
 import { CSSProperties, FC } from "react";
-import { useTranslation } from "react-i18next";
-import { SearchIcon } from "../../utils/icons";
 import { Channel } from "../../types/channel";
 import { Friend } from "../../types/friend";
-import styles from "./index.module.css";
-import ButtonView from "../Button";
-import AvatarView from "../AvatarUpload/AvatarUpload";
-import Text from "../Text/Text";
-import SmallAvatar from "../SmallAvatar/smallAvatar";
-import Icon from "../Icon";
-import Assets from "../../utils/requireAssets";
 import Colors from "../../utils/colors";
+import { SearchIcon } from "../../utils/icons";
+import Assets from "../../utils/requireAssets";
+import ButtonView from "../Button";
+import Icon from "../Icon";
+import SmallAvatar from "../SmallAvatar/smallAvatar";
+import Text from "../Text/Text";
+import styles from "./index.module.css";
 
 interface Props {
     item?: Friend;
@@ -33,6 +31,7 @@ interface Props {
     className?: any;
     userType?: string | number;
     upDownIcon?: boolean;
+    onPressComponent?: () => void;
 }
 
 function chsUser(username: string) {
@@ -59,16 +58,17 @@ const RowItemView: FC<Props> = ({
     className,
     userType,
     upDownIcon,
+    onPressComponent,
 }) => {
-    const { t } = useTranslation();
     return (
         <div className={styles.container}>
             {text ? (
                 <div
                     className={styles.card}
-                    onClick={() =>
-                        onGroupPress && onGroupPress(groupItem?.hashId || "")
-                    }
+                    onClick={() => {
+                        onGroupPress && onGroupPress(groupItem?.hashId || "");
+                        onPressComponent && onPressComponent();
+                    }}
                 >
                     <SmallAvatar color={color} imageUrl={imageUrl} />
                     <div

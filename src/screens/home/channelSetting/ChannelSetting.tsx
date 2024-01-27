@@ -58,7 +58,7 @@ const ChannelSetting = () => {
         >
             <Header
                 text={`${t("members")}`}
-                leftIcon="arrowLeft"
+                leftIcon="arrowRight"
                 onLeftIconPress={() => closeModal("right")}
             />
             <div className={styles.searchBox}>
@@ -72,56 +72,54 @@ const ChannelSetting = () => {
                     .filter((e) => e?.id !== adminId)
                     .map((e, index) => {
                         return (
-                            <>
-                                <div key={index}>
-                                    <MenuItem
-                                        icon={
-                                            <SmallAvatar
-                                                imageUrl={
-                                                    e.avatar
-                                                        ? `${TMP_URL}/${e.avatar}`
-                                                        : ""
-                                                }
-                                                color={
-                                                    e.color
-                                                        ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)`
-                                                        : "linear-gradient(#ddd, #666)"
+                            <div key={index}>
+                                <MenuItem
+                                    icon={
+                                        <SmallAvatar
+                                            imageUrl={
+                                                e.avatar
+                                                    ? `${TMP_URL}/${e.avatar}`
+                                                    : ""
+                                            }
+                                            color={
+                                                e.color
+                                                    ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)`
+                                                    : "linear-gradient(#ddd, #666)"
+                                            }
+                                        />
+                                    }
+                                    title={e.username}
+                                    right={
+                                        <div
+                                            className={
+                                                styles.userRelevanceBox
+                                            }
+                                        >
+                                            <Text
+                                                children={e.relevance}
+                                                handleLink={() =>
+                                                    getUser(e.id)
                                                 }
                                             />
-                                        }
-                                        title={e.username}
-                                        right={
-                                            <div
-                                                className={
-                                                    styles.userRelevanceBox
-                                                }
-                                            >
-                                                <Text
-                                                    children={e.relevance}
-                                                    handleLink={() =>
-                                                        getUser(e.id)
+                                            {e.isFriend ? null : (
+                                                <span
+                                                    onClick={() =>
+                                                        createFriend(e.id)
                                                     }
-                                                />
-                                                {e.isFriend ? null : (
-                                                    <span
-                                                        onClick={() =>
-                                                            createFriend(e.id)
-                                                        }
-                                                    >
-                                                        <BiPlus
-                                                            size={24}
-                                                            style={{
-                                                                padding: "2px",
-                                                            }}
-                                                        />
-                                                    </span>
-                                                )}
-                                            </div>
-                                        }
-                                        onTitlePress={() => FriendDetails(e.id)}
-                                    />
-                                </div>
-                            </>
+                                                >
+                                                    <BiPlus
+                                                        size={24}
+                                                        style={{
+                                                            padding: "2px",
+                                                        }}
+                                                    />
+                                                </span>
+                                            )}
+                                        </div>
+                                    }
+                                    onTitlePress={() => FriendDetails(e.id)}
+                                />
+                            </div>
                         );
                     })}
             </div>

@@ -1,4 +1,6 @@
-import React, { useMemo } from "react";
+import { motion } from "framer-motion";
+import { observer } from "mobx-react-lite";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { generatePath, useNavigate } from "react-router-dom";
 import AvatarUpload from "../../../components/AvatarUpload/AvatarUpload";
@@ -8,13 +10,9 @@ import RowItemView from "../../../components/RowItem";
 import Text from "../../../components/Text/Text";
 import { TMP_URL } from "../../../env";
 import useRootStore from "../../../hooks/useRootStore";
-import styles from "./FriendDetail.module.css";
-import { observer } from "mobx-react-lite";
-import { motion } from "framer-motion";
-import { toJS } from "mobx";
-import Colors from "../../../utils/colors";
-import Button from "../../../components/Button";
 import { ButtonComponent } from "../../../utils/button";
+import Colors from "../../../utils/colors";
+import styles from "./FriendDetail.module.css";
 
 const container = {
     hidden: { opacity: 1, scale: 0 },
@@ -37,8 +35,7 @@ const item = {
 };
 
 const FriendDetail = () => {
-    const navigation = useNavigate();
-    const { friendDetails } = useRootStore().usersStore;
+    const { friendDetails, clearFriendDetails } = useRootStore().usersStore;
     const { friends, deleteFriend, createFriend } = useRootStore().friendsStore;
     const { closeModal } = useRootStore().routerStore;
     const { t } = useTranslation();
@@ -47,7 +44,6 @@ const FriendDetail = () => {
     const navigate = useNavigate();
     const { show } = useRootStore().visibleStore;
     const { getPreviewData } = useRootStore().usersStore;
-    console.log("friendDetails", toJS(friendDetails));
 
     const isFriend = useMemo(
         () => friends.some((e) => e.id === friendDetails.id),
@@ -60,9 +56,8 @@ const FriendDetail = () => {
             myChannels.find((item) => item?.id === e?.id)?.hashId as never
         );
         const target = generatePath(`/:name`, {
-            name: `@${
-                myChannels.find((item) => item?.id === e?.id)?.hashId as never
-            }`,
+            name: `@${myChannels.find((item) => item?.id === e?.id)?.hashId as never
+                }`,
         });
         navigate(target);
     };
@@ -78,13 +73,18 @@ const FriendDetail = () => {
         getPreviewData(data);
     };
 
+    const cloesModal = () => {
+        closeModal("left");
+        clearFriendDetails()
+    }
+
     return (
         <div className={styles.container}>
             <Header
                 text={`${t("Profile")}`}
                 leftIcon="arrowLeft"
                 colorText="black"
-                onLeftIconPress={() => closeModal("left")}
+                onLeftIconPress={cloesModal}
             />
             <div className={styles.contentBox}>
                 <AvatarUpload
@@ -100,7 +100,7 @@ const FriendDetail = () => {
                             ? `linear-gradient(25deg, ${friendDetails.color} 30%, #ddd 100%)`
                             : "linear-gradient(#ddd, #666)"
                     }
-                    onChange={() => {}}
+                    onChange={() => { }}
                 />
                 <Text
                     children={
@@ -170,7 +170,7 @@ const FriendDetail = () => {
                     <Text
                         children="City"
                         color={Colors.Black}
-                        fontWeight={500}
+                        fontWeight={600}
                         fontSize="14px"
                         style={{ width: "50%" }}
                     />
@@ -242,7 +242,7 @@ const FriendDetail = () => {
                                     }
                                     text={e.name}
                                     loading={false}
-                                    onNamePress={() => handleChanel(e)}
+                                    onPressComponent={() => handleChanel(e)}
                                 />
                             </motion.div>
                         );
