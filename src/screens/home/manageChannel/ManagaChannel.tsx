@@ -17,12 +17,8 @@ import styles from "./ManagaChannel.module.css";
 
 const ManagaChannel = () => {
     // const { t } = useTranslation();
-    const {
-        channelData,
-        getChannelBlockedUsers,
-        getChannelUsers,
-        adminId,
-    } = useRootStore().channelStore;
+    const { channelData, getChannelBlockedUsers, getChannelUsers, adminId } =
+        useRootStore().channelStore;
     const {
         toRouterManageCh,
         closeModal,
@@ -81,12 +77,16 @@ const ManagaChannel = () => {
             <AvatarUpload
                 upload={false}
                 style={{ margin: "10px auto", width: "90%" }}
-                imageUrl={channelData?.avatar
-                    ? `${TMP_URL}/${channelData.avatar}`
-                    : ""}
-                color={channelData?.color
-                    ? channelData.color
-                    : "linear-gradient(#ddd, #666)"}
+                imageUrl={
+                    channelData?.avatar
+                        ? `${TMP_URL}/${channelData.avatar}`
+                        : ""
+                }
+                color={
+                    channelData?.color
+                        ? channelData.color
+                        : "linear-gradient(#ddd, #666)"
+                }
                 onPreview={() => PreviewChannelAvatar()}
             />
             <div className={styles.description}>
@@ -95,7 +95,7 @@ const ManagaChannel = () => {
                     children={
                         channelData.description
                             ? channelData.description
-                            : "Group discription"
+                            : "no description"
                     }
                 />
             </div>

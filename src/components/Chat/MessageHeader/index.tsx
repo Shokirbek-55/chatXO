@@ -27,25 +27,25 @@ interface Props {
     setPimp?: Dispatch<
         SetStateAction<
             | {
-                pimpType: "pimp" | "unPimp";
-                value: number | undefined;
-            }
+                  pimpType: "pimp" | "unPimp";
+                  value: number | undefined;
+              }
             | undefined
         >
     >;
     children?: ReactNode;
-    titleOnPress?: () => void
+    titleOnPress?: () => void;
 }
 
 const MessageHeader = ({
     message,
     name,
-    color = '',
+    color = "",
     showReply,
     userId,
     setPimp,
     children,
-    titleOnPress
+    titleOnPress,
 }: Props) => {
     const MESSAGE_STYLE = relevanceFuniction(message);
     const textSize = MESSAGE_STYLE.fontSize;
@@ -76,7 +76,9 @@ const MessageHeader = ({
     }, [data, user]);
 
     const onRelevance = (id: number) => {
-        getOneMember(id);
+        if (id !== user.id) {
+            getOneMember(id);
+        }
     };
 
     const PimpMesssage = (
@@ -117,18 +119,30 @@ const MessageHeader = ({
         <Container $backColor={lightenColor(color)}>
             <HeaderContainer>
                 <Button onClick={titleOnPress}>
-                    <Text fontSize={textSize} color={color} fontWeight={700}>{name}</Text>
+                    <Text fontSize={textSize} color={color} fontWeight={700}>
+                        {name}
+                    </Text>
                 </Button>
                 {!showReply && (
                     <div className="relevanceBox">
                         <div className="relevances">
                             <Button onClick={() => onRelevance(userId || 0)}>
-                                <Text fontSize={'14px'} fontWeight={500} color='#EE35AF'>
-                                    {message.minRelevance === -1 ? '' : message.minRelevance}
+                                <Text
+                                    fontSize={"14px"}
+                                    fontWeight={500}
+                                    color="#EE35AF"
+                                >
+                                    {message.minRelevance === -1
+                                        ? ""
+                                        : message.minRelevance}
                                 </Text>
                             </Button>
                             <Button onClick={() => onRelevance(userId || 0)}>
-                                <Text fontSize={'14px'} fontWeight={500} color='#999'>
+                                <Text
+                                    fontSize={"14px"}
+                                    fontWeight={500}
+                                    color="#999"
+                                >
                                     {message.relevance || 0}
                                 </Text>
                             </Button>
@@ -163,21 +177,19 @@ const MessageHeader = ({
                     </div>
                 )}
             </HeaderContainer>
-            <MessageContainer>
-                {children}
-            </MessageContainer>
+            <MessageContainer>{children}</MessageContainer>
         </Container>
     );
 };
 export default observer(MessageHeader);
 
-
 const Container = styled.div<{ $backColor: string }>`
     display: flex;
     flex-direction: column;
-    background-color: ${props => props.$backColor ? props.$backColor : '#f44'};
+    background-color: ${(props) =>
+        props.$backColor ? props.$backColor : "#f44"};
     border-radius: 15px;
-`
+`;
 
 const HeaderContainer = styled.div`
     width: 100%;
@@ -187,28 +199,25 @@ const HeaderContainer = styled.div`
     padding: 0 15px;
     gap: 15px;
 
-    .relevanceBox{
+    .relevanceBox {
         display: flex;
         gap: 7px;
         align-items: center;
 
-        .relevances{
+        .relevances {
             display: flex;
             gap: 7px;
         }
     }
-`
+`;
 
 const MessageContainer = styled.div`
     width: 100%;
-`
+`;
 
 const Button = styled.button`
     background-color: transparent;
     outline: none;
     border: none;
     cursor: pointer;
-`
-
-
-
+`;

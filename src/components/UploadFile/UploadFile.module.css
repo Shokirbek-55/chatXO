@@ -22,7 +22,7 @@
     overflow: hidden;
 }
 
-.fileBox img {
+.fileBox .cropper {
     min-width: 80%;
     min-height: 75%;
     max-width: 80%;
@@ -39,7 +39,6 @@
     top: 10px;
     display: flex;
     align-items: center;
-    gap: 10px;
 }
 
 .select {

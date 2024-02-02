@@ -32,7 +32,7 @@ type PreviewDataType = {
     mediaUrl?: string;
     userId?: number;
     timestamp?: string;
-}
+};
 
 type ConnectChannelaDataType = {
     channelNumber: string;
@@ -72,10 +72,12 @@ export default class UsersStore {
     weChannels: Channel[] = [];
 
     friendDetails: User = {
-        id: 0
+        id: 0,
     };
 
     formData = new FormData();
+
+    file: File = {} as never;
 
     connectChannelData: ConnectChannelaDataType = {
         channelNumber: "",
@@ -151,17 +153,17 @@ export default class UsersStore {
     };
 
     myDataToSetData = (myData: User) =>
-    (this.setMyData = {
-        username: myData.username || "",
-        email: myData.email || "",
-        color: myData.color || "",
-        avatar: myData.avatar || "",
-        name: myData.name || "",
-        city: myData.city || "",
-        birth: myData.birth || "",
-        occupacy: myData.occupacy || "",
-        description: myData.description || "",
-    });
+        (this.setMyData = {
+            username: myData.username || "",
+            email: myData.email || "",
+            color: myData.color || "",
+            avatar: myData.avatar || "",
+            name: myData.name || "",
+            city: myData.city || "",
+            birth: myData.birth || "",
+            occupacy: myData.occupacy || "",
+            description: myData.description || "",
+        });
 
     setUserState = (key: keyof UserStateType, value: string) => {
         this.setMyData[key] = value;
@@ -178,15 +180,14 @@ export default class UsersStore {
         }
     };
 
-    onSelectFile = async (file: File) => {
-        this.formData.append("avatar", file, file.name);
+    onSelectFile = async (file: any) => {
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             this.userAvatar = imageUrl;
         }
     };
 
-    createMeAvatar = async () => {
+    createMeAvatar = async (file: File) => {
         const config = {
             headers: {
                 "Content-Type": "multipart/form-data",
@@ -195,6 +196,7 @@ export default class UsersStore {
         runInAction(() => {
             this.avatarLoading = true;
         });
+        this.formData.append("avatar", file, file.name);
         await this.userMeAvatarOperation.run(() =>
             APIs.Account.usersMeAvatar(this.formData, config)
         );
@@ -258,10 +260,10 @@ export default class UsersStore {
     clearFriendDetails = () => {
         runInAction(() => {
             this.friendDetails = {
-                id: 0
+                id: 0,
             };
         });
-    }
+    };
 
     setConnectChannelData = (
         key: keyof ConnectChannelaDataType,

@@ -35,16 +35,21 @@ const ChannelSetting = () => {
     } = useRootStore().channelStore;
     const { createFriend } = useRootStore().friendsStore;
     const { getFriendDetails } = useRootStore().usersStore;
+    const { user } = useRootStore().authStore;
     const { closeModal, toRouterManageCh } = useRootStore().routerStore;
     console.log("relevanceData", toJS(relevanceData));
 
     const getUser = (id: number) => {
-        getOneMember(id);
+        if (id !== user.id) {
+            getOneMember(id);
+        }
     };
 
     const FriendDetails = (friendId: number) => {
-        getFriendDetails(friendId);
-        toRouterManageCh("channelInUser");
+        if (user.id !== friendId) {
+            getFriendDetails(friendId);
+            toRouterManageCh("channelInUser");
+        }
     };
 
     return (
@@ -91,17 +96,14 @@ const ChannelSetting = () => {
                                     title={e.username}
                                     right={
                                         <div
-                                            className={
-                                                styles.userRelevanceBox
-                                            }
+                                            className={styles.userRelevanceBox}
                                         >
                                             <Text
                                                 children={e.relevance}
-                                                handleLink={() =>
-                                                    getUser(e.id)
-                                                }
+                                                handleLink={() => getUser(e.id)}
                                             />
-                                            {e.isFriend ? null : (
+                                            {e.isFriend ||
+                                            user.id === e.id ? null : (
                                                 <span
                                                     onClick={() =>
                                                         createFriend(e.id)

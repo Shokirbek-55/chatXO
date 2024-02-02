@@ -9,7 +9,7 @@
 }
 .buttonHoverAndActive:hover {
     transition: 0.2s ease-in-out;
-    opacity: 0.6;
+    opacity: 0.95;
 }
 .buttonHoverAndActive:active {
     transition: ease-in-out 0.15s;

@@ -23,26 +23,27 @@ interface Props {
     };
 }
 
-const MessageComponent: FC<Props> = ({
-    message,
-    users,
-}) => {
+const MessageComponent: FC<Props> = ({ message, users }) => {
     const navigate = useNavigate();
     const { name } = useParams();
     const { isOpenHashTagScreen, setHashTags, enter } =
         useRootStore().hashtagStore;
-    const { openInUser } =
-        useRootStore().routerStore;
+    const { openInUser } = useRootStore().routerStore;
     const { getFriendDetails } = useRootStore().usersStore;
     const { user } = useRootStore().authStore;
-    const [pimp, setPimp] = useState<{
-        pimpType: 'pimp' | 'unPimp',
-        value: number | undefined
-    } | undefined>(undefined)
+    const [pimp, setPimp] = useState<
+        | {
+              pimpType: "pimp" | "unPimp";
+              value: number | undefined;
+          }
+        | undefined
+    >(undefined);
 
     const msg = useMemo(() => {
-        return pimp !== undefined ? { ...message, relevance: pimp.value } : message
-    }, [pimp?.pimpType, pimp?.value, message])
+        return pimp !== undefined
+            ? { ...message, relevance: pimp.value }
+            : message;
+    }, [pimp?.pimpType, pimp?.value, message]);
 
     const currentUser: ChannelsUsersType | undefined = users?.[message.userId];
 
@@ -60,21 +61,26 @@ const MessageComponent: FC<Props> = ({
                 generatePath("/:name", {
                     name: name || "",
                 }) +
-                generatePath("/:hashtag", {
-                    hashtag: tag,
-                })
+                    generatePath("/:hashtag", {
+                        hashtag: tag,
+                    })
             );
         }
     };
 
     const openUserAccount = () => {
-        getFriendDetails(currentUser?.id);
-        openInUser();
+        if (user.id !== currentUser?.id) {
+            getFriendDetails(currentUser?.id);
+            openInUser();
+        }
     };
 
-    const position = useMemo(() => message.userId === user.id, [user, message])
+    const position = useMemo(() => message.userId === user.id, [user, message]);
 
-    const renderMessage = useMemo(() => <RenderMessage message={msg} />, [msg, pimp])
+    const renderMessage = useMemo(
+        () => <RenderMessage message={msg} />,
+        [msg, pimp]
+    );
 
     if (message.userId === -1) {
         return <MessageBox text={msg.message} own={0} />;
@@ -86,7 +92,10 @@ const MessageComponent: FC<Props> = ({
                 <SmallAvatar
                     forMessage
                     color={currentUser?.color || msg.color}
-                    imageUrl={currentUser?.avatar && `${Env.AssetsUrl}/${currentUser?.avatar}`}
+                    imageUrl={
+                        currentUser?.avatar &&
+                        `${Env.AssetsUrl}/${currentUser?.avatar}`
+                    }
                     onPress={openUserAccount}
                 />
             </MessageAvatar>
@@ -105,19 +114,19 @@ const MessageComponent: FC<Props> = ({
                                 {msg.isReply && (
                                     <div
                                         className="replayMessage"
-                                        onClick={() => { }}
+                                        onClick={() => {}}
                                     >
                                         <MessageHeader
-                                            name={
-                                                msg.originMessage?.username
-                                            }
+                                            name={msg.originMessage?.username}
                                             showReply
                                             color={msg?.color}
                                             style={{
                                                 fontFamily: "sans-serif",
                                                 fontSize: "20px",
                                             }}
-                                            message={msg?.originMessage as RawMessage}
+                                            message={
+                                                msg?.originMessage as RawMessage
+                                            }
                                         />
                                         <div className="messageMain">
                                             {ReplyTypeRender(msg)}
@@ -129,12 +138,15 @@ const MessageComponent: FC<Props> = ({
                                     <HashTagsContainer>
                                         {msg.hashtags &&
                                             msg.hashtags.map((tag, index) => {
-                                                const isLongTag = tag.length > 20;
+                                                const isLongTag =
+                                                    tag.length > 20;
                                                 const tagElem = (
                                                     <Tag
                                                         key={index}
                                                         onClick={() =>
-                                                            handleHashTagClick(tag)
+                                                            handleHashTagClick(
+                                                                tag
+                                                            )
                                                         }
                                                     >
                                                         <Text
@@ -146,15 +158,18 @@ const MessageComponent: FC<Props> = ({
                                                             #
                                                             {isLongTag
                                                                 ? `${tag.slice(
-                                                                    0,
-                                                                    20
-                                                                )}...`
+                                                                      0,
+                                                                      20
+                                                                  )}...`
                                                                 : tag}
                                                         </Text>
                                                     </Tag>
                                                 );
                                                 return isLongTag ? (
-                                                    <Tooltip title={tag} key={tag}>
+                                                    <Tooltip
+                                                        title={tag}
+                                                        key={tag}
+                                                    >
                                                         {tagElem}
                                                     </Tooltip>
                                                 ) : (
@@ -163,9 +178,17 @@ const MessageComponent: FC<Props> = ({
                                             })}
                                     </HashTagsContainer>
                                     <TimeViewContainer>
-                                        <Text fontSize="10px" fontWeight={500} style={{
-                                            textAlign: 'end'
-                                        }}>{extractHourMinute(message.timestamp)}</Text>
+                                        <Text
+                                            fontSize="10px"
+                                            fontWeight={500}
+                                            style={{
+                                                textAlign: "end",
+                                            }}
+                                        >
+                                            {extractHourMinute(
+                                                message.timestamp
+                                            )}
+                                        </Text>
                                     </TimeViewContainer>
                                 </MessageFooter>
                             </AudioPlayContainer>
@@ -189,28 +212,28 @@ const Container = styled.div<{ $isRaplayed?: boolean; $position?: boolean }>`
 `;
 
 const MessageContainer = styled.div`
-        width: 100%;
-        height: 100%;
+    width: 100%;
+    height: 100%;
 
-        .avatarCard {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
+    .avatarCard {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+    }
+
+    .replayMessage {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 0 10px;
+        margin-top: 5px;
+        cursor: pointer;
+
+        .messageMain {
+            margin-bottom: 5px;
         }
-
-        .replayMessage {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            padding: 0 10px;
-            margin-top: 5px;
-            cursor: pointer;
-
-            .messageMain {
-                margin-bottom: 5px;
-            }
-        }
-`
+    }
+`;
 
 const AudioPlayContainer = styled.div`
     position: relative;
@@ -237,7 +260,7 @@ const MessageFooter = styled.div`
     grid-template-columns: auto 30px;
     padding: 0 15px;
     margin-bottom: 10px;
-`
+`;
 
 const HashTagsContainer = styled.div`
     width: 100%;
@@ -252,10 +275,10 @@ const TimeViewContainer = styled.div`
     width: 100%;
     align-self: flex-end;
     justify-self: flex-end;
-`
+`;
 
 const MessageAvatar = styled.div<{ $position?: boolean }>`
-    display: ${({ $position }) => $position ? 'none' : 'flex'};
+    display: ${({ $position }) => ($position ? "none" : "flex")};
     align-self: flex-end;
     z-index: 2;
-`
+`;

@@ -22,7 +22,7 @@
     overflow: hidden;
 }
 
-.fileBox img {
+.fileBox .cropper {
     min-width: 80%;
     min-height: 75%;
     max-width: 80%;

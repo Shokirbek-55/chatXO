@@ -183,7 +183,7 @@ const ChatHeader = () => {
                     fontWeight={600}
                     margin="0 5px 0 0"
                 >
-                    Add hashtags:
+                    Created hashtags:
                 </Text>
                 {hashTags.map((tag, index) => {
                     const isLongTag = tag.length > 20;

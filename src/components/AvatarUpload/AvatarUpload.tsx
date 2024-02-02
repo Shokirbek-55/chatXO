@@ -1,9 +1,11 @@
 import { observer } from "mobx-react-lite";
-import { CSSProperties, FC } from "react";
-import { CiCamera } from "react-icons/ci";
+import { ChangeEvent, CSSProperties, FC, useState } from "react";
+import { MdOutlineCameraAlt } from "react-icons/md";
 import Colors from "../../utils/colors";
 import { AvatarLoading } from "../AvatarLoading/AvatarLoading";
 import styles from "./AvatarUpload.module.css";
+import useRootStore from "../../hooks/useRootStore";
+import Avatar from "react-avatar-edit";
 
 interface Props {
     style?: CSSProperties;
@@ -27,6 +29,7 @@ const AvatarUpload: FC<Props> = ({
     loading,
 }) => {
     style = color ? { ...style, background: color } : { ...style };
+
     return (
         <>
             <div
@@ -47,7 +50,10 @@ const AvatarUpload: FC<Props> = ({
                     ) : null}
                     {upload ? (
                         <label className={styles.uploadIcon}>
-                            <CiCamera size={36} color={Colors.Green} />
+                            <MdOutlineCameraAlt
+                                size={36}
+                                color={Colors.Green}
+                            />
                             <input
                                 type="file"
                                 multiple

@@ -4,4 +4,7 @@
     width: 100%;
     font-size: 14px;
     outline: none;
+    border: 1px solid #b6b4b4;
+    border-radius: 7px;
+    padding: 7px 10px;
 }
