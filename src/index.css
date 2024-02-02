@@ -4,6 +4,11 @@
     box-sizing: border-box;
 }
 
+a {
+    text-decoration: none;
+    color: #404d66;
+}
+
 @font-face {
     font-family: "Montserrat";
     src: url("./assets/fonts/Montserrat-ExtraLight.ttf") format("truetype");

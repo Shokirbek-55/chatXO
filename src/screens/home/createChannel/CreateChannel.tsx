@@ -89,8 +89,8 @@ const CreateChannel = () => {
                         }
                         upload={true}
                         imageUrl={
-                            setCreateChannelData?.avatar
-                                ? setCreateChannelData?.avatar
+                            setCreateChannelData.avatar
+                                ? setCreateChannelData.avatar
                                 : ""
                         }
                         onChange={(e) => handleFileChange(e)}
@@ -98,10 +98,8 @@ const CreateChannel = () => {
                     <NewInput
                         onChange={(e) => setCreateChannelState("name", e)}
                         placeholder="Group Name"
-                        margin="20px auto 10px auto"
-                        width="60%"
+                        margin="15px 0 0 0"
                         fontSize="15px"
-                        textAlign={"center"}
                         value={setCreateChannelData.name}
                     />
                 </div>

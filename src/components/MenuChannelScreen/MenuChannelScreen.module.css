@@ -23,6 +23,7 @@
     right: 20px;
     padding: 0 10px;
     border-radius: 10px;
+    transition: 0.2s ease !important;
 }
 
 .cancelBtn {

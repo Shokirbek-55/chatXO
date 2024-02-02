@@ -17,7 +17,7 @@ import PollMessageCard from "../components/Chat/PollMessageCard";
 function HomeLayout() {
     const { session } = useRootStore().localStore;
     const { isOpenRigthSideBar } = useRootStore().routerStore;
-    const { visible } = useRootStore().visibleStore;
+    const { visible, hide } = useRootStore().visibleStore;
     const { setChannelHashId, getChannelByHashId } =
         useRootStore().channelStore;
     const navigate = useNavigate();
@@ -52,7 +52,7 @@ function HomeLayout() {
             <Sidebar>
                 <SidebarLayout />
             </Sidebar>
-            <ChatArea>
+            <ChatArea onClick={() => hide("menuChannel")}>
                 <Outlet />
                 <EmptyScreen
                     text={
@@ -62,7 +62,10 @@ function HomeLayout() {
                     }
                 />
             </ChatArea>
-            <RightArea $isopen={visible.rightSidebar ? "0px" : "-340px"}>
+            <RightArea
+                onClick={() => hide("menuChannel")}
+                $isopen={visible.rightSidebar ? "0px" : "-340px"}
+            >
                 <ManageChannelLayout />
             </RightArea>
             <Relevence />

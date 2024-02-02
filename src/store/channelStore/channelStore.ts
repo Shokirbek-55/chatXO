@@ -74,11 +74,11 @@ export default class ChannelStore {
     adminId: number = 0;
 
     hashId: string = "";
-    navigateChannel: () => void = () => { };
-    generateNavigateChannel: () => void = () => { };
+    navigateChannel: () => void = () => {};
+    generateNavigateChannel: () => void = () => {};
 
     getBlockedUser: User = {
-        id: 0
+        id: 0,
     };
 
     channelsLoading: boolean = false;
@@ -294,15 +294,15 @@ export default class ChannelStore {
     };
 
     createChannelDataToSetData = () =>
-    (this.setCreateChannelData = {
-        name: "",
-        description: "",
-        avatar: "",
-        color: "",
-        isPrivate: false,
-        defaultRelevance: 0,
-        users: [],
-    });
+        (this.setCreateChannelData = {
+            name: "",
+            description: "",
+            avatar: "",
+            color: "",
+            isPrivate: false,
+            defaultRelevance: 0,
+            users: [],
+        });
 
     setCreateChannelState = (key: keyof CreateChannelType, value: any) => {
         this.setCreateChannelData[key] = value;
@@ -331,18 +331,20 @@ export default class ChannelStore {
                 this.rootStore.routerStore.setCurrentRoute("channels");
                 callback(this.createChannelOperation.data.slug);
             });
+        } else {
+            message.error(this.createChannelOperation.error);
         }
     };
 
     channelDataToSetData = (channel: Channel) =>
-    (this.setUpdataChannel = {
-        name: channel.name as string,
-        isPrivate: channel.isPrivate as boolean,
-        color: channel.color as string,
-        avatar: channel.avatar as string,
-        defaultRelevance: channel.relevance as never,
-        description: channel.description as string,
-    });
+        (this.setUpdataChannel = {
+            name: channel.name as string,
+            isPrivate: channel.isPrivate as boolean,
+            color: channel.color as string,
+            avatar: channel.avatar as string,
+            defaultRelevance: channel.relevance as never,
+            description: channel.description as string,
+        });
 
     setUpdateChannelState = (key: keyof SetUpdataChanelType, value: any) => {
         runInAction(() => {
@@ -385,11 +387,10 @@ export default class ChannelStore {
         });
     };
 
-    noInvitationCode = async () => { };
+    noInvitationCode = async () => {};
 
     onSelectChannelImage = async (file: File) => {
         runInAction(() => {
-            this.chFormData.append("avatar", file, file.name);
             if (file) {
                 const imageUrl = URL.createObjectURL(file);
                 this.channelAvatar = imageUrl;
@@ -415,7 +416,7 @@ export default class ChannelStore {
         });
     };
 
-    createChannelAvatar = async () => {
+    createChannelAvatar = async (file: File) => {
         const config = {
             headers: {
                 "Content-Type": "image/png",
@@ -424,6 +425,7 @@ export default class ChannelStore {
         runInAction(() => {
             this.channelAvatarLoading = true;
         });
+        this.chFormData.append("avatar", file, file.name);
         await this.createChannelAvatarOperation.run(() =>
             APIs.channels.createChannelAvatar(
                 this.channelData.hashId,

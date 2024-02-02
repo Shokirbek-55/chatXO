@@ -44,6 +44,7 @@ const MenuChannelScreen = () => {
         <div
             className={styles.container}
             style={{ display: visible.menuChannel ? "block" : "none" }}
+            onClick={() => hide("menuChannel")}
         >
             <div
                 className={styles.content}

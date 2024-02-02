@@ -34,7 +34,7 @@ const Colors = {
     FalseColor: "#c9c7c9",
     TrueColor: "#81b0ff",
     DarkGray: "#3d4f63",
-    Green: "rgba(127, 168, 139, 0.6)",
+    Green: "#7fa88b",
     LightPink: "#FFBCBC",
     LightYellow: "#FAF0AF",
     BlueGreen: "#056676",

@@ -140,10 +140,8 @@ const EditChannel = () => {
                 <NewInput
                     onChange={(e) => setUpdateChannelState("name", e)}
                     placeholder="Group Name"
-                    margin="15px auto 15px auto"
-                    width="60%"
-                    fontSize="18px"
-                    textAlign={"center"}
+                    margin="15px 0"
+                    fontSize="15px"
                     value={setUpdataChannel.name}
                 />
                 <div className={styles.descriptionBox}>

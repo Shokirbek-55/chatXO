@@ -48,11 +48,10 @@ const Account = () => {
     } = useRootStore().usersStore;
     const { show } = useRootStore().visibleStore;
     const { user } = useRootStore().authStore;
-    const { myChannels, getChannelByHashId } =
-        useRootStore().channelStore;
+    const { myChannels, getChannelByHashId } = useRootStore().channelStore;
     const {
         // toRouter,
-        closeModal
+        closeModal,
     } = useRootStore().routerStore;
     const { setChannelSlug } = useRootStore().messageStore;
 
@@ -62,7 +61,6 @@ const Account = () => {
     // };
 
     const onImageSelect = (e: ChangeEvent<HTMLInputElement>) => {
-        console.log("e.target.files", e.target.files);
         if (e.target.files?.length) {
             onSelectFile(e.target.files[0]);
             show("uploadFile");
@@ -86,7 +84,7 @@ const Account = () => {
         getPreviewData(data);
     };
 
-    console.log('render');
+    console.log("render");
 
     return (
         <div className={styles.container}>
@@ -121,10 +119,15 @@ const Account = () => {
                         />
                         <div className={styles.judgementText}>
                             <TextArea
-                                style={{ fontFamily: "Montserrat", fontWeight: 900 }}
+                                style={{
+                                    fontFamily: "Montserrat",
+                                    fontWeight: 900,
+                                }}
                                 placeholder="Write a little about yourself here..."
                                 value={setMyData.description}
-                                onChange={(e) => setUserState("description", e.target.value)}
+                                onChange={(e) =>
+                                    setUserState("description", e.target.value)
+                                }
                             />
                             <Text
                                 fontSize="12px"
@@ -308,7 +311,6 @@ const Account = () => {
 
 export default observer(Account);
 
-
 const TextArea = styled.textarea`
     width: 100%;
     height: 100px;
@@ -318,7 +320,7 @@ const TextArea = styled.textarea`
     margin: 10px 0;
     resize: none;
     font-size: 14px;
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     font-weight: 500 !important;
     color: #333;
     outline: none;
@@ -328,4 +330,4 @@ const TextArea = styled.textarea`
     &:focus {
         border: 1px solid #333;
     }
-`
+`;

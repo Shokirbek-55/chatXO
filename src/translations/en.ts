@@ -45,7 +45,7 @@ export const en = {
     select_image: "Select image",
     random_color: "Random color",
     leave_group: "Leave group",
-    add_hashtag: "Add hashtag",
+    add_hashtag: "Created hashtags",
     done: "Done",
     take_photo: "Take a photo",
     photo_gallery: "Choose photo from gallery",
