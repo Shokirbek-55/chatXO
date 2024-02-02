@@ -1,20 +1,18 @@
 import { observer } from "mobx-react-lite";
 import { useRef, useState } from "react";
-import Avatar from "react-avatar-edit";
-import ReactCrop from "react-image-crop";
+import { Cropper, CropperRef } from "react-advanced-cropper";
+import "react-advanced-cropper/dist/style.css";
 import useRootStore from "../../hooks/useRootStore";
 import { CheckIcon, CloseIcon } from "../../utils/icons";
 import Text from "../Text/Text";
 import styles from "./UploadFile.module.css";
-import { CropperRef, Cropper, Coordinates } from "react-advanced-cropper";
-import "react-advanced-cropper/dist/style.css";
 
 const UploadFile = () => {
     const { visible, hide } = useRootStore().visibleStore;
     const [file, setFile] = useState(null);
     const cropperRef = useRef<CropperRef>(null);
 
-    const { userAvatar, onSelectFile, createMeAvatar } =
+    const { userAvatar, createMeAvatar } =
         useRootStore().usersStore;
 
     const onCrop = () => {

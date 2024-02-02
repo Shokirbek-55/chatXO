@@ -1,15 +1,13 @@
+import { motion } from "framer-motion";
 import { observer } from "mobx-react-lite";
-import React from "react";
 import { useTranslation } from "react-i18next";
 import Header from "../../../components/Header/Header";
 import MessageBox from "../../../components/MessageBox/MessageBox";
 import RowItemView from "../../../components/RowItem";
-import useRootStore from "../../../hooks/useRootStore";
-import { motion } from "framer-motion";
-import styles from "./AddUserToChannel.module.css";
-import { toJS } from "mobx";
-import { TMP_URL } from "../../../env";
 import SearchInput from "../../../components/SearchInput/SearchInput";
+import { TMP_URL } from "../../../env";
+import useRootStore from "../../../hooks/useRootStore";
+import styles from "./AddUserToChannel.module.css";
 const container = {
     hidden: { opacity: 1, scale: 0 },
     visible: {
@@ -33,7 +31,7 @@ const item = {
 const AddUserToChannel = () => {
     const { t } = useTranslation();
     const { addUserToChannel, channelData } = useRootStore().channelStore;
-    const { usersListForAdd, setSearchUsersForAdd, friends } =
+    const { usersListForAdd, setSearchUsersForAdd } =
         useRootStore().friendsStore;
 
     const { closeModal } = useRootStore().routerStore;
@@ -91,9 +89,8 @@ const AddUserToChannel = () => {
                                                 e.id as any
                                             )
                                         }
-                                        title={`${
-                                            e.isAdded ? t("added") : t("add")
-                                        }`}
+                                        title={`${e.isAdded ? t("added") : t("add")
+                                            }`}
                                         className={
                                             e.isAdded
                                                 ? styles.added

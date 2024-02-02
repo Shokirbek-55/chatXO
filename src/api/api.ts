@@ -1,15 +1,13 @@
-import { LoginOAuth2Payload } from "./../store/AuthStore/AuthStore";
-import { channels, data } from "./../store/dataBase";
+import { AxiosRequestConfig } from "axios";
 import { CheckOAuthData, RegisterData, Session } from "../types/auth";
-import { User } from "../types/user";
-import ApiService from "./services/ApiService";
 import {
     Channel,
     CreateChannelType,
     SetUpdataChanelType,
 } from "../types/channel";
-import axios, { AxiosRequestConfig } from "axios";
-import { TOKENS } from "../store/loacalStore/loacalStore";
+import { User } from "../types/user";
+import { LoginOAuth2Payload } from "./../store/AuthStore/AuthStore";
+import ApiService from "./services/ApiService";
 
 export type LoginEmailWithPasswordReqData = {
     email: string;
@@ -190,8 +188,7 @@ const APIs = {
 
         generateNewInviteCode: (channelNumber: string, onlyQr?: string) =>
             apiService.methods.get<{ inviteCode: string; qrCode: string }>(
-                `${channelUrl}/${channelNumber}/generate-invite-code${
-                    onlyQr || ""
+                `${channelUrl}/${channelNumber}/generate-invite-code${onlyQr || ""
                 }`
             ),
 

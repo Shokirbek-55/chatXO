@@ -1,10 +1,10 @@
-import { makeAutoObservable, runInAction, toJS } from "mobx";
+import { message } from "antd";
+import { makeAutoObservable, runInAction } from "mobx";
 import APIs, { LoginEmailWithPasswordReqData } from "../../api/api";
 import { Session } from "../../types/auth";
+import { User } from "../../types/user";
 import { Operation } from "../../utils/Operation";
 import { AppRootStore } from "../store";
-import { User } from "../../types/user";
-import { message } from "antd";
 
 export type LoginOAuth2Payload = {
     authType: "googleToken" | "facebookToken";
@@ -36,7 +36,7 @@ export default class AuthStore {
         {} as { email: string }
     );
 
-    navigateAuth: () => void = () => {};
+    navigateAuth: () => void = () => { };
 
     isLoginLoading: boolean = false;
     isGetMeLoading: boolean = false;

@@ -26,3 +26,7 @@ export type RequestChannel<D = unknown, E = string> = {
   // method: string;
   status: Status;
 };
+
+export interface DataObject {
+  [key: string]: number;
+}

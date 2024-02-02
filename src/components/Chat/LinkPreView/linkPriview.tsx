@@ -1,7 +1,6 @@
 import { styled } from "styled-components";
 import { RawMessage } from "../../../types/channel";
 import { relevanceFuniction } from "../../../utils/boxShadov";
-import Text from "../../Text/Text";
 import styles from "./index.module.css";
 
 interface Props {

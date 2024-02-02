@@ -1,15 +1,14 @@
-import React from "react";
+import { motion } from "framer-motion";
+import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import Header from "../../../components/Header/Header";
 import MessageBox from "../../../components/MessageBox/MessageBox";
 import RowItemView from "../../../components/RowItem";
-import useRootStore from "../../../hooks/useRootStore";
-import { motion } from "framer-motion";
-import styles from "./CollectUsers.module.css";
-import { toJS } from "mobx";
-import { TMP_URL } from "../../../env";
-import { useTranslation } from "react-i18next";
 import SearchInput from "../../../components/SearchInput/SearchInput";
+import { TMP_URL } from "../../../env";
+import useRootStore from "../../../hooks/useRootStore";
+import styles from "./CollectUsers.module.css";
 
 const container = {
     hidden: { opacity: 1, scale: 0 },
@@ -33,8 +32,7 @@ const item = {
 
 const CollectUsers = () => {
     const { t } = useTranslation();
-    const { channelData } = useRootStore().channelStore;
-    const { collectUserList, setCollectUser, friends, usersListForAdd } =
+    const { collectUserList, setCollectUser, usersListForAdd } =
         useRootStore().friendsStore;
 
     console.log("setCollectUser", toJS(collectUserList));
@@ -50,7 +48,7 @@ const CollectUsers = () => {
             />
             <div className={styles.searchBox}>
                 <SearchInput
-                    onChange={() => {}}
+                    onChange={() => { }}
                     placeholder={`${t("searchPlaceholder")}`}
                 />
             </div>
@@ -87,9 +85,8 @@ const CollectUsers = () => {
                                         onButtonPress={() =>
                                             setCollectUser(e.id as never)
                                         }
-                                        title={`${
-                                            e.isAdded ? t("added") : t("add")
-                                        }`}
+                                        title={`${e.isAdded ? t("added") : t("add")
+                                            }`}
                                         className={
                                             e.isAdded
                                                 ? styles.added

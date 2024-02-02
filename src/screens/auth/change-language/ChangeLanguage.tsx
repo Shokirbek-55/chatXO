@@ -1,19 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import Header from "../../../components/Header/Header";
-import styles from "./ChangeLanguage.module.css";
-import i18n from "../../../translations/index";
-import LanguageSelect from "../../../components/languageSelect/LanguageSelect";
 import Text from "../../../components/Text/Text";
-import {
-    EngIcon,
-    FrIcon,
-    GerIcon,
-    ItIcon,
-    PorIcon,
-    SpIcon,
-} from "../../../assets/icons/icons";
+import LanguageSelect from "../../../components/languageSelect/LanguageSelect";
+import i18n from "../../../translations/index";
 import Assets from "../../../utils/requireAssets";
+import styles from "./ChangeLanguage.module.css";
 
 const ChangeLanguageView = () => {
     const navigation = useNavigate();

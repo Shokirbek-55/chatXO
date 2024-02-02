@@ -1,22 +1,19 @@
-import { styled } from "styled-components";
-import Header from "../../../components/Header/Header";
+import { motion } from "framer-motion";
+import { observer } from "mobx-react-lite";
 import { useTranslation } from "react-i18next";
-import Text from "../../../components/Text/Text";
+import { generatePath, useNavigate } from "react-router-dom";
+import { styled } from "styled-components";
+import ChannelRowItem from "../../../components/ChanneItem/ChannelItem";
+import Header from "../../../components/Header/Header";
 import { Loading } from "../../../components/Loading/Loading";
 import MessageBox from "../../../components/MessageBox/MessageBox";
-import ChannelRowItem from "../../../components/ChanneItem/ChannelItem";
-import useRootStore from "../../../hooks/useRootStore";
-import { observer } from "mobx-react-lite";
+import SearchInput from "../../../components/SearchInput/SearchInput";
+import Text from "../../../components/Text/Text";
 import { TMP_URL } from "../../../env";
-import { motion } from "framer-motion";
-import { InputComponent } from "../../../utils/inputComponent";
-import { generatePath, useNavigate } from "react-router-dom";
-import styles from "./index.module.css";
-import { toJS } from "mobx";
+import useRootStore from "../../../hooks/useRootStore";
 import { Channel } from "../../../types/channel";
 import Colors from "../../../utils/colors";
-import Input from "../../../components/Input";
-import SearchInput from "../../../components/SearchInput/SearchInput";
+import styles from "./index.module.css";
 
 const container = {
     hidden: { opacity: 1, scale: 0 },
@@ -39,7 +36,7 @@ const item = {
 };
 
 function ChannelsScreen() {
-    const { toRouter, closeRightSideBar, closeChannelInUser } =
+    const { closeChannelInUser } =
         useRootStore().routerStore;
     const { myChannels, setSearchChannels, getChannelByHashId } =
         useRootStore().channelStore;
@@ -62,10 +59,10 @@ function ChannelsScreen() {
         openChannel(e.slug);
     };
 
-    const onAccount = () => {
-        closeChannelInUser();
-        toRouter("account");
-    };
+    // const onAccount = () => {
+    //     closeChannelInUser();
+    //     toRouter("account");
+    // };
 
     const openMenu = () => {
         show("menuChannel");

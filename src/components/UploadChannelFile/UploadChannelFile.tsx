@@ -1,11 +1,10 @@
 import { observer } from "mobx-react-lite";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { Cropper, CropperRef } from "react-advanced-cropper";
 import useRootStore from "../../hooks/useRootStore";
-import { TMP_URL } from "../../env";
 import { CheckIcon, CloseIcon } from "../../utils/icons";
 import Text from "../Text/Text";
 import styles from "./UploadChannelFIle.module.css";
-import { Cropper, CropperRef } from "react-advanced-cropper";
 
 const UploadChannelFile = () => {
     const { visible, hide } = useRootStore().visibleStore;

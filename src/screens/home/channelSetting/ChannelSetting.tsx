@@ -1,35 +1,23 @@
-import { Slider } from "antd";
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { BiCheck, BiPlus } from "react-icons/bi";
-import { GrClose } from "react-icons/gr";
-import {
-    IoIosCheckmarkCircleOutline,
-    IoIosCloseCircleOutline,
-} from "react-icons/io";
+import { BiPlus } from "react-icons/bi";
 import Header from "../../../components/Header/Header";
 import MenuItem from "../../../components/MenuItem/MenuItem";
-import RowItemView from "../../../components/RowItem";
 import SearchInput from "../../../components/SearchInput/SearchInput";
 import SmallAvatar from "../../../components/SmallAvatar/smallAvatar";
 import Text from "../../../components/Text/Text";
 import { TMP_URL } from "../../../env";
 import useRootStore from "../../../hooks/useRootStore";
-import Colors from "../../../utils/colors";
 import styles from "./ChannelSetting.module.css";
 
 const ChannelSetting = () => {
     const { t } = useTranslation();
 
     const {
-        delateUserFromChannel,
-        channelData,
         adminId,
         getOneMember,
         channelUsers,
-        updateMemberRelevance,
         relevanceData,
         setSearchChannelUsers,
     } = useRootStore().channelStore;
@@ -103,7 +91,7 @@ const ChannelSetting = () => {
                                                 handleLink={() => getUser(e.id)}
                                             />
                                             {e.isFriend ||
-                                            user.id === e.id ? null : (
+                                                user.id === e.id ? null : (
                                                 <span
                                                     onClick={() =>
                                                         createFriend(e.id)

@@ -1,6 +1,5 @@
 import { message } from "antd";
 import { makeAutoObservable, runInAction, toJS } from "mobx";
-import { generatePath } from "react-router-dom";
 import APIs from "../../api/api";
 import {
     Channel,
@@ -74,8 +73,8 @@ export default class ChannelStore {
     adminId: number = 0;
 
     hashId: string = "";
-    navigateChannel: () => void = () => {};
-    generateNavigateChannel: () => void = () => {};
+    navigateChannel: () => void = () => { };
+    generateNavigateChannel: () => void = () => { };
 
     getBlockedUser: User = {
         id: 0,
@@ -91,6 +90,12 @@ export default class ChannelStore {
 
     chFormData = new FormData();
     createFormData = new FormData();
+
+    channelsSort = () => {
+        this.myChannels = this.myChannels.sort((a, b) => {
+            return Number(new Date(b.lastMessageTimestamp)) - Number(new Date(a.lastMessageTimestamp));
+        });
+    }
 
     setRelevanceChange = (value: number) => {
         this.relevanceData.relevance = value;
@@ -137,12 +142,12 @@ export default class ChannelStore {
         await this.getChannelOperation.run(() => APIs.channels.getMyChannels());
         if (this.getChannelOperation.isSuccess) {
             runInAction(() => {
-                this.myChannels = this.getChannelOperation.data;
+                this.myChannels = this.getChannelOperation.data
+                this.channelsSort();
                 this.channelsLoading = false;
             });
-            console.log("mychannels", toJS(this.getChannelOperation.data));
-
             this.getChannelDataCache();
+            this.rootStore.chatStore.unreadMessages();
         }
     };
 
@@ -214,38 +219,26 @@ export default class ChannelStore {
 
     getChannelDataCache = async () => {
         try {
-            const promises = this.myChannels.map(async (channel) => {
-                const channelUsersData =
-                    await this.getChannelUsersOperation.run(() =>
-                        APIs.channels.getChannelUsers(channel.hashId)
-                    );
-                const channelData = await this.getChannelByHashIdOperation.run(
-                    () => APIs.channels.getChannelByHashId(channel.hashId)
-                );
-                if (this.getChannelByHashIdOperation.isSuccess) {
-                    this.rootStore.messageStore.setChannelDataCache(
-                        channel.slug,
-                        channelData.data
-                    );
-                    this.rootStore.messageStore.getHistoryMessages(
-                        this.getChannelByHashIdOperation.data.slug
-                    );
-                }
-                if (this.getChannelUsersOperation.isSuccess) {
-                    this.rootStore.messageStore.setChannelUsersCache(
-                        channel.slug,
-                        channelUsersData.data
-                    );
-                }
-            });
+            await Promise.all(
+                this.myChannels.map(async (channel) => {
+                    const [channelUsersData, channelData] = await Promise.all([
+                        this.getChannelUsersOperation.run(() => APIs.channels.getChannelUsers(channel.hashId)),
+                        this.getChannelByHashIdOperation.run(() => APIs.channels.getChannelByHashId(channel.hashId)),
+                    ]);
 
-            await Promise.all(promises)
-                .then(() => {
-                    this.getHashId();
+                    if (this.getChannelByHashIdOperation.isSuccess) {
+                        const channelSlug = this.getChannelByHashIdOperation.data.slug;
+                        this.rootStore.messageStore.setChannelDataCache(channelSlug, channelData.data);
+                        this.rootStore.messageStore.getHistoryMessages(channelSlug);
+                    }
+
+                    if (this.getChannelUsersOperation.isSuccess) {
+                        this.rootStore.messageStore.setChannelUsersCache(channel.slug, channelUsersData.data);
+                    }
                 })
-                .catch((error) => {
-                    console.log("error getChannelDataCache", error);
-                });
+            );
+
+            this.getHashId();
         } catch (error) {
             console.log("Error:", error);
         }
@@ -294,15 +287,15 @@ export default class ChannelStore {
     };
 
     createChannelDataToSetData = () =>
-        (this.setCreateChannelData = {
-            name: "",
-            description: "",
-            avatar: "",
-            color: "",
-            isPrivate: false,
-            defaultRelevance: 0,
-            users: [],
-        });
+    (this.setCreateChannelData = {
+        name: "",
+        description: "",
+        avatar: "",
+        color: "",
+        isPrivate: false,
+        defaultRelevance: 0,
+        users: [],
+    });
 
     setCreateChannelState = (key: keyof CreateChannelType, value: any) => {
         this.setCreateChannelData[key] = value;
@@ -336,15 +329,14 @@ export default class ChannelStore {
         }
     };
 
-    channelDataToSetData = (channel: Channel) =>
-        (this.setUpdataChannel = {
-            name: channel.name as string,
-            isPrivate: channel.isPrivate as boolean,
-            color: channel.color as string,
-            avatar: channel.avatar as string,
-            defaultRelevance: channel.relevance as never,
-            description: channel.description as string,
-        });
+    channelDataToSetData = (channel: Channel) => (this.setUpdataChannel = {
+        name: channel.name as string,
+        isPrivate: channel.isPrivate as boolean,
+        color: channel.color as string,
+        avatar: channel.avatar as string,
+        defaultRelevance: channel.relevance as never,
+        description: channel.description as string,
+    });
 
     setUpdateChannelState = (key: keyof SetUpdataChanelType, value: any) => {
         runInAction(() => {
@@ -387,7 +379,7 @@ export default class ChannelStore {
         });
     };
 
-    noInvitationCode = async () => {};
+    noInvitationCode = async () => { };
 
     onSelectChannelImage = async (file: File) => {
         runInAction(() => {
@@ -585,4 +577,13 @@ export default class ChannelStore {
             }
         });
     };
+
+    updateUnreadMessages = (slug: string, count: number) => {
+        this.myChannels = this.myChannels.map((channel) => {
+            if (channel.slug === slug) {
+                channel.unreadMessage = count;
+            }
+            return channel;
+        })
+    }
 }

@@ -13,9 +13,9 @@ const ChatHashtag = () => {
 
     const navigate = useNavigate();
     const { allHashTagsMessages, exit } = useRootStore().hashtagStore
-    const { messageCache, slug, messagesFilterValue } =
+    const { messageCache, slug, messagesFilterValue, setIsMessagesLength } =
         useRootStore().messageStore;
-    
+
 
     useEffect(() => {
         const handleEsc = (event: any) => {
@@ -32,8 +32,19 @@ const ChatHashtag = () => {
         };
     }, []);
 
-    const messages = useMemo(() => messagesFilterValue !== 0 && allHashTagsMessages.messages.length >= 0 ? allHashTagsMessages.messages.filter((e) => e.relevance && e.relevance >= messagesFilterValue) : allHashTagsMessages.messages, [allHashTagsMessages.messages, slug, messagesFilterValue])
-    const users = useMemo(() => messageCache[slug]?.channelUsers, [messageCache[slug]?.channelUsers, slug])
+    const messages = useMemo(() => {
+        const messagesData = messageCache[slug]?.messages;
+        if (messagesData?.length === 0) {
+            setIsMessagesLength(true)
+            return []
+        }
+        if (messagesFilterValue !== 0) {
+            setIsMessagesLength(false)
+            return messagesData.filter((e) => e.relevance && e.relevance >= messagesFilterValue)
+        }
+        setIsMessagesLength(false)
+        return messagesData
+    }, [messageCache[slug]?.messages, slug, messagesFilterValue]);
 
     return (
         <ChatContainer id="chatView">
@@ -52,7 +63,7 @@ const ChatHashtag = () => {
                                 paddingTop: 0 === index ? "7vh" : "0",
                             }}
                         >
-                            <MessageComponent message={message} users={users} />
+                            <MessageComponent message={message} users={messageCache[slug]?.channelUsers} />
                         </div>
                     );
                 })}

@@ -1,15 +1,12 @@
 import { motion } from "framer-motion";
-import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 import { useTranslation } from "react-i18next";
 import Header from "../../../components/Header/Header";
 import MessageBox from "../../../components/MessageBox/MessageBox";
 import RowItemView from "../../../components/RowItem";
 import SearchInput from "../../../components/SearchInput/SearchInput";
-import Text from "../../../components/Text/Text";
 import { TMP_URL } from "../../../env";
 import useRootStore from "../../../hooks/useRootStore";
-import { InputComponent } from "../../../utils/inputComponent";
 import styles from "./FriendsScreen.module.css";
 
 const container = {

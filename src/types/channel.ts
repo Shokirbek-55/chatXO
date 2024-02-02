@@ -1,6 +1,6 @@
 // import { IMessage } from 'react-native-gifted-chat';
 import { MsgLocation } from "../types/auth";
-import { pollMessage, PollOptionsType } from "./messageType";
+import { PollOptionsType } from "./messageType";
 import { User } from "./user";
 
 export type Hashtag = {
@@ -125,15 +125,12 @@ export type Channel = {
     createdAt: string;
     pageState: string;
     description: string;
-    // messages: Message[];
     lastMessageTimestamp: string;
     canLoadMore: boolean;
     relevance: number;
     userRelevance: number;
     filtered: boolean;
     unreadMessage: number;
-    // hashtags: Hashtag[];
-    // activeHashtags: Hashtag[];
     isOpen: boolean;
     users: User[];
     inviteCode: string | null;

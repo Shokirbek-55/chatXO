@@ -1,14 +1,12 @@
+import { motion } from "framer-motion";
 import { observer } from "mobx-react-lite";
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import Header from "../../../components/Header/Header";
 import MessageBox from "../../../components/MessageBox/MessageBox";
 import RowItemView from "../../../components/RowItem";
+import { TMP_URL } from "../../../env";
 import useRootStore from "../../../hooks/useRootStore";
 import { InputComponent } from "../../../utils/inputComponent";
-import Loading from "../../../utils/loading";
-import { TMP_URL } from "../../../env";
-import { motion } from "framer-motion";
 import styles from "./AddFriend.module.css";
 
 const container = {
@@ -32,7 +30,8 @@ const item = {
 };
 
 const AddFriend = () => {
-    const { nonFriends, loading, getNonFriends, getUsersFilter } =
+    const { t } = useTranslation();
+    const { nonFriends, getUsersFilter } =
         useRootStore().usersStore;
 
     const { createFriend } = useRootStore().friendsStore;
@@ -42,7 +41,6 @@ const AddFriend = () => {
         getUsersFilter(text);
     };
 
-    const { t } = useTranslation();
 
     return (
         <div className={styles.container}>

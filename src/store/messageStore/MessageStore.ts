@@ -27,6 +27,30 @@ const initialMassegeText: SendMessage = {
     msgLocation: undefined,
 };
 
+type FileUploadOperationData = {
+    filePath: string;
+    fileTitle: string;
+    thumbnailPath: string;
+};
+
+type MessageCacheType = {
+    [key: string]: {
+        messages: RawMessage[];
+        pageState: string | null;
+        end?: boolean;
+        channelData: Channel;
+        channelUsers: {
+            [key: string]: ChannelsUsersType;
+        };
+    };
+}
+
+type MessagesInChannelType = {
+    messages: RawMessage[];
+    pageState: string | null;
+    end?: boolean;
+}
+
 export default class MessageStore {
     app: AppRootStore;
     constructor(app: AppRootStore) {
@@ -34,42 +58,26 @@ export default class MessageStore {
         this.app = app;
     }
 
-    FileUploadOperation = new Operation<{
-        filePath: string;
-        fileTitle: string;
-        thumbnailPath: string;
-    }>(
-        {} as {
-            filePath: string;
-            fileTitle: string;
-            thumbnailPath: string;
-        }
-    );
+    FileUploadOperation = new Operation<FileUploadOperationData>({
+        filePath: "",
+        fileTitle: "",
+        thumbnailPath: "",
+    });
 
     getPollOperation = new Operation({});
 
     slug: string = "";
-    messageCache: {
-        [key: string]: {
-            messages: RawMessage[];
-            pageState: string | null;
-            end?: boolean;
-            channelData: Channel;
-            channelUsers: {
-                [key: string]: ChannelsUsersType;
-            };
-        };
-    } = {};
+    messageCache: MessageCacheType = {};
 
     prevInnerDivHeight: {
         [key: string]: number;
     } = {};
 
-    messagesInChannel: {
-        messages: RawMessage[];
-        pageState: string | null;
-        end?: boolean;
-    };
+    messagesInChannel: MessagesInChannelType = {
+        messages: [],
+        pageState: null,
+        end: false,
+    }
     dataInChannel: Channel | null = null;
     usersInChannel: {
         [key: string]: ChannelsUsersType;
@@ -92,6 +100,7 @@ export default class MessageStore {
     setReplyMessage: RawMessage | null = null;
 
     progress: number = 0;
+    isMessagesLength: boolean = false;
 
     setSendReplyMessageState = {};
 
@@ -101,6 +110,12 @@ export default class MessageStore {
     pollMessageState: pollMessage = pollMessageInitial;
     pollMessageOptionState: string[] = ["", ""];
     pollMessageDetails: pollMessage = {} as never;
+
+    setIsMessagesLength = (is: boolean) => {
+        runInAction(() => {
+            this.isMessagesLength = is
+        })
+    }
 
     setPollMessageState = (key: keyof pollMessage, value: any) => {
         runInAction(() => {
@@ -545,7 +560,7 @@ export default class MessageStore {
         runInAction(() => {
             this.messageCache[this.slug].messages = this.messageCache[
                 this.slug
-            ].messages.filter((e) => e.id != id);
+            ].messages.filter((e) => e.id !== id);
         });
     };
 

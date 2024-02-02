@@ -1,30 +1,19 @@
-import { Button, message, Popconfirm, Slider, Switch } from "antd";
-import { toJS } from "mobx";
+import { message, Slider, Switch } from "antd";
 import { observer } from "mobx-react-lite";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { generatePath, useNavigate } from "react-router-dom";
-import APIs from "../../../api/api";
+import { IoMdFunnel } from "react-icons/io";
+import { MdGroup } from "react-icons/md";
+import { RiFileCopyFill } from "react-icons/ri";
+import { useNavigate } from "react-router-dom";
 import AvatarUpload from "../../../components/AvatarUpload/AvatarUpload";
 import Header from "../../../components/Header/Header";
-import Input from "../../../components/Input";
-import SimpleSwitch from "../../../components/SimpleSwitch/switch";
-import Text from "../../../components/Text/Text";
+import MenuItem from "../../../components/MenuItem/MenuItem";
+import NewInput from "../../../components/NewInput/NewInput";
 import { TMP_URL } from "../../../env";
 import useRootStore from "../../../hooks/useRootStore";
 import { ButtonComponent } from "../../../utils/button";
-import { CoppyIcon } from "../../../utils/icons";
-import { getRandomColor } from "../../../utils/randomColor";
 import styles from "./EditChannel.module.css";
-import { BiCopy } from "react-icons/bi";
-import { BiCheck } from "react-icons/bi";
-import NewInput from "../../../components/NewInput/NewInput";
-import MenuItem from "../../../components/MenuItem/MenuItem";
-import { MdGroup } from "react-icons/md";
-import { IoMdFunnel } from "react-icons/io";
-import { BsFillShareFill } from "react-icons/bs";
-import Colors from "../../../utils/colors";
-import { RiFileCopyFill } from "react-icons/ri";
 
 const EditChannel = () => {
     const { t } = useTranslation();
@@ -37,9 +26,7 @@ const EditChannel = () => {
         channelData,
         setUpdateChannelState,
         updateChannel,
-        generateNewInvitationCode,
         delateChannel,
-        createChannelAvatar,
         setUpdataChannel,
         channelAvatar,
         channelAvatarLoading,
@@ -124,8 +111,8 @@ const EditChannel = () => {
                             channelAvatar
                                 ? channelAvatar
                                 : setUpdataChannel.avatar
-                                ? `${TMP_URL}/${setUpdataChannel.avatar}`
-                                : ""
+                                    ? `${TMP_URL}/${setUpdataChannel.avatar}`
+                                    : ""
                         }
                         loading={channelAvatarLoading}
                         color={
@@ -157,9 +144,8 @@ const EditChannel = () => {
                 </div>
                 <MenuItem
                     icon={<MdGroup size={24} />}
-                    title={`Group type: ${
-                        setUpdataChannel.isPrivate ? "Private" : "Public"
-                    }`}
+                    title={`Group type: ${setUpdataChannel.isPrivate ? "Private" : "Public"
+                        }`}
                     right={
                         <Switch
                             onChange={isPrivateGruop}
@@ -202,6 +188,12 @@ const EditChannel = () => {
                     right="  "
                 />
                 <div className={styles.btnSave}>
+                    <ButtonComponent
+                        backColor="transparent"
+                        text={`${t("deleteGroup")}`}
+                        color="red"
+                        clickMe={() => delateChannelEvent(channelData.hashId)}
+                    />
                     <ButtonComponent
                         text="Save"
                         width="100%"

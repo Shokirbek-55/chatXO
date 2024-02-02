@@ -1,28 +1,25 @@
 import { observer } from "mobx-react-lite";
-import { generatePath, Navigate, Outlet, useNavigate } from "react-router-dom";
+import { generatePath, Outlet, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import useRootStore from "../hooks/useRootStore";
 import SidebarLayout from "./Sidebar";
 
+import { useEffect } from "react";
+import PollMessageCard from "../components/Chat/PollMessageCard";
+import PreviewImage from "../components/PreviewImage/PreviewImage";
+import Relevence from "../components/Relevence/relevence";
+import UploadChannelFile from "../components/UploadChannelFile/UploadChannelFile";
+import UploadFile from "../components/UploadFile/UploadFile";
+import { regex } from "../utils/regax";
 import EmptyScreen from "./home/emptyScreen/EmptyScreen";
 import ManageChannelLayout from "./ManageChannel";
-import Relevence from "../components/Relevence/relevence";
-import PreviewImage from "../components/PreviewImage/PreviewImage";
-import UploadFile from "../components/UploadFile/UploadFile";
-import UploadChannelFile from "../components/UploadChannelFile/UploadChannelFile";
-import { regex } from "../utils/regax";
-import { useEffect, useMemo } from "react";
-import PollMessageCard from "../components/Chat/PollMessageCard";
 
 function HomeLayout() {
     const { session } = useRootStore().localStore;
-    const { isOpenRigthSideBar } = useRootStore().routerStore;
     const { visible, hide } = useRootStore().visibleStore;
-    const { setChannelHashId, getChannelByHashId } =
+    const { setChannelHashId } =
         useRootStore().channelStore;
     const navigate = useNavigate();
-    const { messageCache, slug, messagesFilterValue } =
-        useRootStore().messageStore;
     const hashIdArr = window.location.pathname.match(regex);
     const hashId = hashIdArr?.[1].toString();
 
@@ -35,17 +32,7 @@ function HomeLayout() {
         } else if (!session.accessToken) {
             navigate("/auth/welcome");
         }
-    }, []);
-
-    const messages = useMemo(
-        () =>
-            messagesFilterValue != 0 && messageCache[slug]?.messages.length >= 0
-                ? messageCache[slug]?.messages.filter(
-                      (e) => e.relevance && e.relevance >= messagesFilterValue
-                  )
-                : messageCache[slug]?.messages,
-        [messageCache[slug]?.messages, slug, messagesFilterValue]
-    );
+    }, [hashId]);
 
     return (
         <Container>
@@ -55,11 +42,7 @@ function HomeLayout() {
             <ChatArea onClick={() => hide("menuChannel")}>
                 <Outlet />
                 <EmptyScreen
-                    text={
-                        messages?.length === 0
-                            ? "No messages here yet!"
-                            : "Select a chat to start messaging"
-                    }
+                    text="Select a chat to start messaging"
                 />
             </ChatArea>
             <RightArea

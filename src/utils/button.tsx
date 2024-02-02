@@ -1,4 +1,3 @@
-import React from "react";
 import Colors from "./colors";
 import {
     AdminAddIcon,
@@ -6,8 +5,7 @@ import {
     DeleteIcon,
     MdGroupAddIcon,
     PasswordIcon,
-    SettingIcon,
-    UpdateIcon,
+    UpdateIcon
 } from "./icons";
 import styles from "./index.module.css";
 

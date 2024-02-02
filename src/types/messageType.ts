@@ -1,4 +1,3 @@
-import { VoteOption } from "./channel";
 import { User } from "./user";
 
 export const RELEVANCE_TYPE = "RELEVANCE";

@@ -1,12 +1,11 @@
-import { makeAutoObservable, runInAction, toJS } from "mobx";
+import { message } from "antd";
+import { t } from "i18next";
+import { makeAutoObservable, runInAction } from "mobx";
 import APIs from "../../api/api";
+import { Channel } from "../../types/channel";
 import { User } from "../../types/user";
 import { Operation } from "../../utils/Operation";
 import { AppRootStore } from "../store";
-import { message } from "antd";
-import { t } from "i18next";
-import { Channel } from "../../types/channel";
-import { generatePath } from "react-router-dom";
 
 type UserStateType = {
     username: string;
@@ -153,17 +152,17 @@ export default class UsersStore {
     };
 
     myDataToSetData = (myData: User) =>
-        (this.setMyData = {
-            username: myData.username || "",
-            email: myData.email || "",
-            color: myData.color || "",
-            avatar: myData.avatar || "",
-            name: myData.name || "",
-            city: myData.city || "",
-            birth: myData.birth || "",
-            occupacy: myData.occupacy || "",
-            description: myData.description || "",
-        });
+    (this.setMyData = {
+        username: myData.username || "",
+        email: myData.email || "",
+        color: myData.color || "",
+        avatar: myData.avatar || "",
+        name: myData.name || "",
+        city: myData.city || "",
+        birth: myData.birth || "",
+        occupacy: myData.occupacy || "",
+        description: myData.description || "",
+    });
 
     setUserState = (key: keyof UserStateType, value: string) => {
         this.setMyData[key] = value;

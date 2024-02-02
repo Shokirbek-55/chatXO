@@ -1,15 +1,14 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
-import { AiFillCheckCircle } from "react-icons/ai";
+import { Skeleton, Tooltip } from "antd";
 import { observer } from "mobx-react-lite";
+import { FC, useEffect, useMemo, useState } from "react";
+import { AiFillCheckCircle } from "react-icons/ai";
+import { useAsyncFn } from "react-use";
+import APIs from "../../../api/api";
+import useRootStore from "../../../hooks/useRootStore";
 import { RawMessage } from "../../../types/channel";
+import { pollMessage } from "../../../types/messageType";
 import Text from "../../Text/Text";
 import styles from "./index.module.css";
-import { useAsyncFn } from "react-use";
-import useRootStore from "../../../hooks/useRootStore";
-import { pollMessage } from "../../../types/messageType";
-import APIs from "../../../api/api";
-import { Skeleton, Tooltip } from "antd";
-import { toJS } from "mobx";
 interface Props {
     message: RawMessage;
 }

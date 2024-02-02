@@ -1,13 +1,12 @@
+import { motion } from "framer-motion";
+import { observer } from "mobx-react-lite";
 import { useTranslation } from "react-i18next";
 import Header from "../../../components/Header/Header";
 import MessageBox from "../../../components/MessageBox/MessageBox";
 import RowItemView from "../../../components/RowItem";
-import useRootStore from "../../../hooks/useRootStore";
-import { data } from "../../../store/dataBase";
-import { motion } from "framer-motion";
-import { observer } from "mobx-react-lite";
-import styles from "./NewAdmin.module.css";
 import { TMP_URL } from "../../../env";
+import useRootStore from "../../../hooks/useRootStore";
+import styles from "./NewAdmin.module.css";
 
 const container = {
     hidden: { opacity: 1, scale: 0 },
@@ -88,11 +87,10 @@ const NewAdmin = () => {
                                                 ? styles.old
                                                 : styles.new
                                         }
-                                        title={`${
-                                            e.id === user.id
+                                        title={`${e.id === user.id
                                                 ? t("admin")
                                                 : t("newAdmin")
-                                        }`}
+                                            }`}
                                         onButtonPress={() => NewAdmin(e.id)}
                                     />
                                 </motion.div>

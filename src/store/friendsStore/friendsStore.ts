@@ -1,9 +1,9 @@
-import { makeAutoObservable, runInAction, toJS } from "mobx";
+import { message } from "antd";
+import { makeAutoObservable, runInAction } from "mobx";
 import APIs from "../../api/api";
 import { User } from "../../types/user";
 import { Operation } from "../../utils/Operation";
 import { AppRootStore } from "../store";
-import { message } from "antd";
 
 export default class FriendsStore {
     rootStore: AppRootStore;
@@ -53,9 +53,9 @@ export default class FriendsStore {
     };
 
     setCollectUser = (id: number) => {
-        if (!this.collectUserList.find((e) => e.id == id)) {
+        if (!this.collectUserList.find((e) => e.id === id)) {
             this.collectUserList.push(
-                this.friends.find((e) => e.id == id) as never
+                this.friends.find((e) => e.id === id) as User
             );
             this.usersListForAdd = this.friends.map((users) => ({
                 ...users,

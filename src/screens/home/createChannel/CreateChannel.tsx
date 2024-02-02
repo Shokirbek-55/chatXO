@@ -1,22 +1,16 @@
-import { toJS } from "mobx";
 import { message, Slider, Switch } from "antd";
 import { observer } from "mobx-react-lite";
-import React, { ChangeEvent, useState } from "react";
+import { ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { IoMdFunnel } from "react-icons/io";
 import { MdGroup } from "react-icons/md";
 import { generatePath, useNavigate } from "react-router-dom";
 import AvatarUpload from "../../../components/AvatarUpload/AvatarUpload";
-import ButtonView from "../../../components/Button";
 import Header from "../../../components/Header/Header";
-import Input from "../../../components/Input";
 import MenuItem from "../../../components/MenuItem/MenuItem";
 import NewInput from "../../../components/NewInput/NewInput";
-import Text from "../../../components/Text/Text";
-import { TMP_URL } from "../../../env";
 import useRootStore from "../../../hooks/useRootStore";
 import { ButtonComponent } from "../../../utils/button";
-import { getRandomColor } from "../../../utils/randomColor";
 import styles from "./CreateChannel.module.css";
 
 const CreateChannel = () => {
@@ -36,7 +30,6 @@ const CreateChannel = () => {
         onCreateChannelImage,
     } = useRootStore().channelStore;
     const { visible, toglevisible, show } = useRootStore().visibleStore;
-    const [createAvatar, setCreateAvatar] = useState("");
 
     const isPrivateGruop = (checked: boolean) => {
         setCreateChannelState("isPrivate", checked);
@@ -47,10 +40,6 @@ const CreateChannel = () => {
             onCreateChannelImage(e.target.files[0]);
         }
         show("chUploadFile");
-    };
-
-    const randomChannelColor = (Color: string) => {
-        setCreateChannelState("color", Color);
     };
 
     const callbackHandle = (e) => {
@@ -121,11 +110,10 @@ const CreateChannel = () => {
                     <div className={styles.settings}>
                         <MenuItem
                             icon={<MdGroup size={24} />}
-                            title={`Group type: ${
-                                setCreateChannelData.isPrivate
-                                    ? "Private"
-                                    : "Public"
-                            }`}
+                            title={`Group type: ${setCreateChannelData.isPrivate
+                                ? "Private"
+                                : "Public"
+                                }`}
                             right={<Switch onChange={isPrivateGruop} />}
                         />
                         <MenuItem
