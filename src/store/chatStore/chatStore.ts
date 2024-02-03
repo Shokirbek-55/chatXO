@@ -100,12 +100,9 @@ class ChatStore {
             }
         );
 
-        this.root.socketStore.socket?.on(
-            "timestampHistory",
-            (payload: TimestampHistoryResponse) => {
-                console.log("timestamp history", payload);
-            }
-        );
+        this.root.socketStore.socket?.on("timestampHistory", (payload: TimestampHistoryResponse) => {
+            console.log("timestamp history", payload);
+        });
 
         this.root.socketStore.socket?.on("poll", (payload: RawMessage) => {
             console.log("createPoll", payload);
@@ -145,15 +142,21 @@ class ChatStore {
         });
     };
 
-    openChannel = (slug) => {
+    unreadMessages = () => {
+        this.root.socketStore.socket?.emit("unreadMessages", (data) => {
+            console.log("unreadMessages", data);
+        });
+    }
+
+    openChannel = (slug: string) => {
         this.root.socketStore.socket?.emit("openChannel", slug, (data) => {
-            console.log("openChannel", data);
+            console.log("openChannel emit", data);
         });
     };
 
-    exitChannel = (slug) => {
+    exitChannel = (slug: string) => {
         this.root.socketStore.socket?.emit("exitChannel", slug, (data) => {
-            console.log("exitChannel", data);
+            console.log("exitChannel emit", data);
         });
     };
 
@@ -169,7 +172,6 @@ class ChatStore {
 
     remove = (payload: { slug: string; id: string; timestamp: Date }) => {
         console.log("emit delete event ", payload);
-
         this.root.socketStore.socket?.emit("deleteMessage", {
             messageId: payload.id,
             channelSlug: payload.slug,
@@ -178,7 +180,7 @@ class ChatStore {
     };
 
     sendPoll = (slug: string, message: SendMessage) => {
-        this.root.socketStore.socket?.emit("poll", <RawMessage>{
+        this.root.socketStore.socket?.emit("poll", {
             id: message._id,
             channelSlug: slug,
             type: message.type,
@@ -195,7 +197,7 @@ class ChatStore {
             topic: message?.topic,
             pollType: message?.pollType,
             options: message?.options,
-        });
+        } as RawMessage);
     };
 
     search = (
@@ -204,11 +206,11 @@ class ChatStore {
         pageState?: string
     ) => {
         if (searchMessage && channelSlug) {
-            this.root.socketStore.socket?.emit("search", <SearchRequest>{
+            this.root.socketStore.socket?.emit("search", {
                 searchMessage,
                 channelSlug,
                 pageState,
-            });
+            } as SearchRequest);
         }
     };
 
@@ -220,12 +222,12 @@ class ChatStore {
     ) => {
         this.root.socketStore.socket?.emit(
             "vote",
-            <VoteOption>{
+            {
                 pollOption,
                 channelSlug,
                 pollId,
                 messageId,
-            },
+            } as VoteOption,
             (data) => {
                 console.log("data", toJS(data));
             }
@@ -245,6 +247,7 @@ class ChatStore {
             timestamp,
         });
     };
+
     unPimpMessage = (
         userId: any,
         messageId: any,
@@ -264,13 +267,11 @@ class ChatStore {
         timestamp: any,
         findOlder?: boolean
     ) => {
-        this.root.socketStore.socket?.emit("timestampHistory", <
-            TimestampHistoryRequest
-            >{
-                channelSlug,
-                timestamp,
-                findOlder,
-            });
+        this.root.socketStore.socket?.emit("timestampHistory", {
+            channelSlug,
+            timestamp,
+            findOlder,
+        } as TimestampHistoryRequest);
     };
 }
 

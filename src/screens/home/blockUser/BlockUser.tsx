@@ -1,6 +1,4 @@
-import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
-import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import Header from "../../../components/Header/Header";
 import MessageBox from "../../../components/MessageBox/MessageBox";
@@ -16,11 +14,8 @@ const BlockUser = () => {
         unblockUser,
         getBlockedUser,
         channelData,
-        blockUser,
-        channelUsers,
         adminId,
     } = useRootStore().channelStore;
-    const { user } = useRootStore().authStore;
     const { closeModal } = useRootStore().routerStore;
 
     const UnBlockUser = (id) => {
@@ -36,7 +31,7 @@ const BlockUser = () => {
             />
             <div className={styles.searchBox}>
                 <SearchInput
-                    onChange={() => {}}
+                    onChange={() => { }}
                     placeholder={`${t("searchPlaceholder")}`}
                 />
             </div>

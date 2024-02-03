@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './Waveform.css';
 
 const defaultData = `GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQRChYECGFOAZwH/////////FUmpZpkq17GDD0JATYCGQ2hyb21lV0GGQ2hyb2`;
@@ -66,7 +66,7 @@ const Waveform = ({ data, dragging, value }: {
     //             console.error('Error fetching audio data:', error);
     //         });
     // }, [data]);
-    
+
     const waveform = getNormalizedWaveform(waveformData);
 
     const transition = 'width 0.5s'

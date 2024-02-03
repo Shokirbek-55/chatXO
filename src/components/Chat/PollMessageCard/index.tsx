@@ -1,16 +1,13 @@
 import { Switch } from "antd";
 import { observer } from "mobx-react-lite";
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useState } from "react";
 import useRootStore from "../../../hooks/useRootStore";
+import { NORMAL_TYPE, RELEVANCE_TYPE } from "../../../types/messageType";
 import { ButtonComponent } from "../../../utils/button";
 import { CloseIcon, CloserNoCirculIcon, MenuIcon } from "../../../utils/icons";
 import Input from "../../Input";
-import SimpleSwitch from "../../SimpleSwitch/switch";
 import Text from "../../Text/Text";
 import styles from "./index.module.css";
-import { toJS } from "mobx";
-import { NORMAL_TYPE, RELEVANCE_TYPE } from "../../../types/messageType";
 
 const PollMessageCard = () => {
     const { visible, hide } = useRootStore().visibleStore;
@@ -30,7 +27,6 @@ const PollMessageCard = () => {
         setIsCheck(checked);
         setPollMessageState("type", checked ? RELEVANCE_TYPE : NORMAL_TYPE);
     };
-    const { t } = useTranslation();
 
     const createPollMessage = () => {
         onSendPoll(pollMessageState.type as never);

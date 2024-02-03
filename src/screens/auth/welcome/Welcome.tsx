@@ -1,10 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ChatxoLogo } from "../../../assets/icons/icons";
 import Text from "../../../components/Text/Text";
 import { ButtonComponent } from "../../../utils/button";
 import Colors from "../../../utils/colors";
-import Assets from "../../../utils/requireAssets";
 import styles from "./Welcome.module.css";
 
 const WelcomeView = () => {

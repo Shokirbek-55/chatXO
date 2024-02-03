@@ -1,10 +1,10 @@
-import { makeAutoObservable, runInAction, toJS } from "mobx";
-import { AppRootStore } from "../store";
-import { RawMessage } from "../../types/channel";
-import { Operation } from "../../utils/Operation";
-import APIs from "../../api/api";
 import { message } from "antd";
 import _ from "lodash";
+import { makeAutoObservable, runInAction } from "mobx";
+import APIs from "../../api/api";
+import { RawMessage } from "../../types/channel";
+import { Operation } from "../../utils/Operation";
+import { AppRootStore } from "../store";
 
 
 export default class HashtagStore {
@@ -54,7 +54,7 @@ export default class HashtagStore {
         this.getHistoryHashTagsMessages()
     }
 
-    exit = () => {       
+    exit = () => {
         this.setIsOpenHashTagScreen(false)
         this.allHashTagsMessages = {
             messages: [],
@@ -86,7 +86,7 @@ export default class HashtagStore {
             runInAction(() => {
                 this.allHashTagsMessages = data
             })
-        }       
+        }
     }
 
     addMessageHashTags = (message: RawMessage) => {

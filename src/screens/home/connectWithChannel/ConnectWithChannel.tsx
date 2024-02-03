@@ -1,5 +1,4 @@
 import { observer } from "mobx-react-lite";
-import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { generatePath, useNavigate } from "react-router-dom";
 import ButtonView from "../../../components/Button";
@@ -12,12 +11,12 @@ import styles from "./ConnectWithChannel.module.css";
 const ConnectWithChannel = () => {
     const { t } = useTranslation();
     const { toRouter } = useRootStore().routerStore;
-    const { forJoinChannelId, setConnectChannelData, connectChannelData } =
+    const { setConnectChannelData, connectChannelData } =
         useRootStore().usersStore;
     const { visible } = useRootStore().visibleStore;
     const navigation = useNavigate();
 
-    const { returnGroupByNumber, joinUserToChannel } =
+    const { returnGroupByNumber } =
         useRootStore().usersStore;
 
     const JoinChannel = async () => {

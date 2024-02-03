@@ -1,7 +1,6 @@
 import { message } from "antd";
 import { observer } from "mobx-react-lite";
 import { BsFillShareFill } from "react-icons/bs";
-import { MdContentCopy } from "react-icons/md";
 import { IoIosSettings } from "react-icons/io";
 import { MdGroup } from "react-icons/md";
 import { RiFileCopyFill } from "react-icons/ri";

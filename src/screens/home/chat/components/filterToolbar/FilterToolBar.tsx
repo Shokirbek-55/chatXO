@@ -1,5 +1,4 @@
 import FilterSilderComponent from "../../../../../components/FilterSlider/FilterSlider";
-import styles from "./index.module.css";
 
 interface Props {
     isOpen: boolean;

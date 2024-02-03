@@ -1,11 +1,9 @@
 import { observer } from "mobx-react-lite";
-import { ChangeEvent, CSSProperties, FC, useState } from "react";
+import { CSSProperties, FC } from "react";
 import { MdOutlineCameraAlt } from "react-icons/md";
 import Colors from "../../utils/colors";
 import { AvatarLoading } from "../AvatarLoading/AvatarLoading";
 import styles from "./AvatarUpload.module.css";
-import useRootStore from "../../hooks/useRootStore";
-import Avatar from "react-avatar-edit";
 
 interface Props {
     style?: CSSProperties;

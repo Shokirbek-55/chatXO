@@ -1,12 +1,11 @@
 import axios from "axios";
 import { FC, useState } from "react";
 import { Env } from "../../../env";
-import { ChannelsUsersType, RawMessage } from "../../../types/channel";
+import { RawMessage } from "../../../types/channel";
 import { relevanceFuniction } from "../../../utils/boxShadov";
 import Colors from "../../../utils/colors";
 import { DocumentIcon, DownloadIcon } from "../../../utils/icons";
 import CircleProgress from "../CircleProgress";
-import MessageComponent from "../MessageComponent/MessageComponent";
 import styles from "./index.module.css";
 
 interface Props {

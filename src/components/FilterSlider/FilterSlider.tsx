@@ -1,6 +1,6 @@
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import useRootStore from "../../hooks/useRootStore";
 
@@ -21,10 +21,7 @@ const StyleRangeSilder = styled.div`
     align-items: center;
   }
 `;
-interface propsType {
-  friendId: number;
-  friendRelevance: number;
-}
+
 const FilterSilderComponent = () => {
 
   const { setMessageFilterValue, messagesFilterValue } = useRootStore().messageStore

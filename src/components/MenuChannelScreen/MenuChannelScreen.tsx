@@ -1,16 +1,11 @@
 import { observer } from "mobx-react-lite";
-import React from "react";
 import { BsFillShareFill } from "react-icons/bs";
-import { GrUserManager } from "react-icons/gr";
 import { IoIosSettings, IoMdPerson } from "react-icons/io";
 import { MdGroup } from "react-icons/md";
 import useRootStore from "../../hooks/useRootStore";
 import { ButtonComponent } from "../../utils/button";
-import { SearchIcon } from "../../utils/icons";
 import MenuItem from "../MenuItem/MenuItem";
 import styles from "./MenuChannelScreen.module.css";
-
-interface Props {}
 
 const MenuChannelScreen = () => {
     const { visible, hide } = useRootStore().visibleStore;

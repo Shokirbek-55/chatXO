@@ -16,6 +16,8 @@ import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import Text from "../../Text/Text";
+import { DataObject } from "../../../types";
+import { parseJsonData } from "../../../helper/helper";
 
 interface Props {
     message: RawMessage;
@@ -27,9 +29,9 @@ interface Props {
     setPimp?: Dispatch<
         SetStateAction<
             | {
-                  pimpType: "pimp" | "unPimp";
-                  value: number | undefined;
-              }
+                pimpType: "pimp" | "unPimp";
+                value: number | undefined;
+            }
             | undefined
         >
     >;
@@ -55,39 +57,20 @@ const MessageHeader = ({
     const { user } = useRootStore().authStore;
     const [activePimp, setActivePimp] = useState(false);
 
-    const myself = useMemo(
-        () => channelUsers.find((e) => e.id === user.id),
-        [channelUsers, user]
-    );
+    const myself = useMemo(() => channelUsers.find((e) => e.id === user.id), [channelUsers, user]);
 
-    const data: {
-        [key: string]: number;
-    } = useMemo(() => {
-        try {
-            return JSON.parse(message.pimps);
-        } catch (error) {
-            console.error("JSON parsing error:", error);
-            return {};
-        }
-    }, [message]);
+    const data: DataObject = useMemo(() => parseJsonData(message?.pimps), [message]);
 
-    const hasKey265 = useMemo(() => {
-        setActivePimp(data ? data.hasOwnProperty(user.id) : false);
-    }, [data, user]);
+    useEffect(() => {
+        setActivePimp(data ? data.hasOwnProperty(user.id) : false)
+    }, [data, user])
 
-    const onRelevance = (id: number) => {
-        if (id !== user.id) {
-            getOneMember(id);
-        }
+    const onRelevance = () => {
+        getOneMember(userId || 0);
     };
 
-    const PimpMesssage = (
-        userId: any,
-        messageId: any,
-        channelSlug: string,
-        timestamp: any
-    ) => {
-        pimpMessage(userId, messageId, channelSlug, timestamp);
+    const PimpMesssage = () => {
+        pimpMessage(userId, message.messageId, message.channelSlug, message.timestamp);
         console.log(toJS(myself));
         setPimp &&
             setPimp({
@@ -97,13 +80,8 @@ const MessageHeader = ({
         setActivePimp(true);
     };
 
-    const UnPimpMesssage = (
-        userId: any,
-        messageId: any,
-        channelSlug: string,
-        timestamp: any
-    ) => {
-        unPimpMessage(userId, messageId, channelSlug, timestamp);
+    const UnPimpMesssage = () => {
+        unPimpMessage(userId, message.messageId, message.channelSlug, message.timestamp);
         const keys = Object.keys(data);
         const il = keys[0] === `${user?.id}` ? 1 : 0;
         console.log(toJS(message));
@@ -123,27 +101,17 @@ const MessageHeader = ({
                         {name}
                     </Text>
                 </Button>
-                {!showReply && (
+                {!false && (
                     <div className="relevanceBox">
                         <div className="relevances">
-                            <Button onClick={() => onRelevance(userId || 0)}>
-                                <Text
-                                    fontSize={"14px"}
-                                    fontWeight={500}
-                                    color="#EE35AF"
-                                >
-                                    {message.minRelevance === -1
-                                        ? ""
-                                        : message.minRelevance}
+                            <Button onClick={() => onRelevance()}>
+                                <Text fontSize={'14px'} fontWeight={500} color='#EE35AF'>
+                                    {message?.minRelevance === -1 ? '' : message?.minRelevance}
                                 </Text>
                             </Button>
-                            <Button onClick={() => onRelevance(userId || 0)}>
-                                <Text
-                                    fontSize={"14px"}
-                                    fontWeight={500}
-                                    color="#999"
-                                >
-                                    {message.relevance || 0}
+                            <Button onClick={() => onRelevance()}>
+                                <Text fontSize={'14px'} fontWeight={500} color='#999'>
+                                    {message?.relevance || 0}
                                 </Text>
                             </Button>
                         </div>
@@ -151,27 +119,13 @@ const MessageHeader = ({
                             <AiFillStar
                                 color="#FFAA33"
                                 size={14}
-                                onClick={() =>
-                                    UnPimpMesssage(
-                                        user.id,
-                                        message?.id,
-                                        message?.channelSlug as never,
-                                        message?.timestamp
-                                    )
-                                }
+                                onClick={() => UnPimpMesssage()}
                             />
                         ) : (
                             <AiOutlineStar
                                 size={14}
                                 color="#999"
-                                onClick={() =>
-                                    PimpMesssage(
-                                        user.id,
-                                        message?.id,
-                                        message?.channelSlug as never,
-                                        message?.timestamp
-                                    )
-                                }
+                                onClick={() => PimpMesssage()}
                             />
                         )}
                     </div>

@@ -1,7 +1,6 @@
 import Lottie from "lottie-react";
-import avatarLoading from "../../assets/loading.json";
 import styled from "styled-components";
-import { TMP_URL } from "../../env";
+import avatarLoading from "../../assets/loading.json";
 
 export const AvatarLoading = () => {
     return (

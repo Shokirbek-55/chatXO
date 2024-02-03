@@ -24,9 +24,6 @@ const ChannelRowItem: FC<Props> = ({
   number,
   natification
 }) => {
-  const { t } = useTranslation();
-
-  const messageTimestamp = item.lastMessageTimestamp;
 
   return (
     <motion.div

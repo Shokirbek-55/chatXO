@@ -34,4 +34,9 @@
     position: absolute;
     bottom: 20px;
     width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
 }

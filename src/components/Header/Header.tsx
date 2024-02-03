@@ -1,6 +1,5 @@
 import { Popconfirm } from "antd";
-import React, { CSSProperties, FC } from "react";
-import Colors from "../../utils/colors";
+import { CSSProperties, FC } from "react";
 import {
     AccountIcon,
     ArrowLeftIcon,
@@ -8,8 +7,8 @@ import {
     CloseIcon,
     LogoutIcon,
     MdGroupAddIcon,
-    SettingIcon,
     MoreDotIcon,
+    SettingIcon,
 } from "../../utils/icons";
 import styles from "./index.module.css";
 

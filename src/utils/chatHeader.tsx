@@ -1,6 +1,11 @@
+import { Spin, Tag, Tooltip } from "antd";
 import { observer } from "mobx-react-lite";
+import React from "react";
+import { GrFormClose } from "react-icons/gr";
 import styled from "styled-components";
 import { InputComponent } from "../components/InputSearch/inputComponent";
+import SmallAvatar from "../components/SmallAvatar/smallAvatar";
+import Text from "../components/Text/Text";
 import { TMP_URL } from "../env";
 import useRootStore from "../hooks/useRootStore";
 import {
@@ -10,19 +15,12 @@ import {
     HashtagIcon,
     SearchIcon,
 } from "./icons";
-import SmallAvatar from "../components/SmallAvatar/smallAvatar";
-import { Tag, Tooltip } from "antd";
-import Text from "../components/Text/Text";
-import { Spin } from "antd";
-import React from "react";
-import { GrFormClose } from "react-icons/gr";
-import { toJS } from "mobx";
 
 const ChatHeader = () => {
     const [isOpenAllHashTags, setIsOpenAllHashTags] =
         React.useState<boolean>(false);
     const { visible, toglevisible } = useRootStore().visibleStore;
-    const { openRightSideBar, closeModal, manageRouters } =
+    const { openRightSideBar } =
         useRootStore().routerStore;
     const {
         setSearch,
