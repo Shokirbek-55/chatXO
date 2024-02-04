@@ -87,10 +87,11 @@ const NewAdmin = () => {
                                                 ? styles.old
                                                 : styles.new
                                         }
-                                        title={`${e.id === user.id
+                                        title={`${
+                                            e.id === user.id
                                                 ? t("admin")
                                                 : t("newAdmin")
-                                            }`}
+                                        }`}
                                         onButtonPress={() => NewAdmin(e.id)}
                                     />
                                 </motion.div>

@@ -31,8 +31,7 @@ const item = {
 
 const AddFriend = () => {
     const { t } = useTranslation();
-    const { nonFriends, getUsersFilter } =
-        useRootStore().usersStore;
+    const { nonFriends, getUsersFilter } = useRootStore().usersStore;
 
     const { createFriend } = useRootStore().friendsStore;
     const { closeModal } = useRootStore().routerStore;
@@ -41,14 +40,13 @@ const AddFriend = () => {
         getUsersFilter(text);
     };
 
-
     return (
         <div className={styles.container}>
             <Header
                 style={{ zIndex: 1000 }}
                 text={t("addFriend")}
                 leftIcon="arrowLeft"
-                onLeftIconPress={() => closeModal('left')}
+                onLeftIconPress={() => closeModal("left")}
             />
             <div style={{ width: "90%", margin: "3px auto" }}>
                 <InputComponent

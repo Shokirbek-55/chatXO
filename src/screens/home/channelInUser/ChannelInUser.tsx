@@ -56,8 +56,9 @@ const ChannelInUser = () => {
             myChannels.find((item) => item?.id === e?.id)?.hashId as never
         );
         const target = generatePath(`/:name`, {
-            name: `@${myChannels.find((item) => item?.id === e?.id)?.hashId as never
-                }`,
+            name: `@${
+                myChannels.find((item) => item?.id === e?.id)?.hashId as never
+            }`,
         });
         navigate(target);
     };
@@ -75,8 +76,8 @@ const ChannelInUser = () => {
 
     const cloesModal = () => {
         closeModal("right");
-        clearFriendDetails()
-    }
+        clearFriendDetails();
+    };
 
     return (
         <div className={styles.container}>
@@ -100,7 +101,7 @@ const ChannelInUser = () => {
                             ? `linear-gradient(25deg, ${friendDetails.color} 30%, #ddd 100%)`
                             : "linear-gradient(#ddd, #666)"
                     }
-                    onChange={() => { }}
+                    onChange={() => {}}
                 />
                 <Text
                     children={

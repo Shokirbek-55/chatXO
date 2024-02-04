@@ -89,8 +89,9 @@ const AddUserToChannel = () => {
                                                 e.id as any
                                             )
                                         }
-                                        title={`${e.isAdded ? t("added") : t("add")
-                                            }`}
+                                        title={`${
+                                            e.isAdded ? t("added") : t("add")
+                                        }`}
                                         className={
                                             e.isAdded
                                                 ? styles.added

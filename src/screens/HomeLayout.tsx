@@ -3,7 +3,6 @@ import { generatePath, Outlet, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import useRootStore from "../hooks/useRootStore";
 import SidebarLayout from "./Sidebar";
-
 import { useEffect } from "react";
 import PollMessageCard from "../components/Chat/PollMessageCard";
 import PreviewImage from "../components/PreviewImage/PreviewImage";
@@ -17,8 +16,7 @@ import ManageChannelLayout from "./ManageChannel";
 function HomeLayout() {
     const { session } = useRootStore().localStore;
     const { visible, hide } = useRootStore().visibleStore;
-    const { setChannelHashId } =
-        useRootStore().channelStore;
+    const { setChannelHashId } = useRootStore().channelStore;
     const navigate = useNavigate();
     const hashIdArr = window.location.pathname.match(regex);
     const hashId = hashIdArr?.[1].toString();
@@ -41,9 +39,7 @@ function HomeLayout() {
             </Sidebar>
             <ChatArea onClick={() => hide("menuChannel")}>
                 <Outlet />
-                <EmptyScreen
-                    text="Select a chat to start messaging"
-                />
+                <EmptyScreen text="Select a chat to start messaging" />
             </ChatArea>
             <RightArea
                 onClick={() => hide("menuChannel")}

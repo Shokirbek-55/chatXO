@@ -36,8 +36,7 @@ const item = {
 };
 
 function ChannelsScreen() {
-    const { closeChannelInUser } =
-        useRootStore().routerStore;
+    const { closeChannelInUser } = useRootStore().routerStore;
     const { myChannels, setSearchChannels, getChannelByHashId } =
         useRootStore().channelStore;
     const { setChannelSlug } = useRootStore().messageStore;
@@ -58,11 +57,6 @@ function ChannelsScreen() {
         closeChannelInUser();
         openChannel(e.slug);
     };
-
-    // const onAccount = () => {
-    //     closeChannelInUser();
-    //     toRouter("account");
-    // };
 
     const openMenu = () => {
         show("menuChannel");

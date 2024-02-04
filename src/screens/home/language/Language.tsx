@@ -34,7 +34,7 @@ const Language = () => {
                 <Header
                     text={t("change_language")}
                     leftIcon="arrowLeft"
-                    onLeftIconPress={() => closeModal('left')}
+                    onLeftIconPress={() => closeModal("left")}
                 />
                 <div>
                     {Object.keys(lngs).map((lng, index) => (

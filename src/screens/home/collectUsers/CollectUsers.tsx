@@ -48,7 +48,7 @@ const CollectUsers = () => {
             />
             <div className={styles.searchBox}>
                 <SearchInput
-                    onChange={() => { }}
+                    onChange={() => {}}
                     placeholder={`${t("searchPlaceholder")}`}
                 />
             </div>
@@ -85,8 +85,9 @@ const CollectUsers = () => {
                                         onButtonPress={() =>
                                             setCollectUser(e.id as never)
                                         }
-                                        title={`${e.isAdded ? t("added") : t("add")
-                                            }`}
+                                        title={`${
+                                            e.isAdded ? t("added") : t("add")
+                                        }`}
                                         className={
                                             e.isAdded
                                                 ? styles.added

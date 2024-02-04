@@ -63,35 +63,6 @@ const EditChannel = () => {
         getFriends();
     };
 
-    // const generateNew = async () => {
-    //     const target = (e) =>
-    //         generatePath(`/:name`, {
-    //             name: `@${e}`,
-    //         });
-    //     generateNewInvitationCode(channelData.groupNumber as string, (e) =>
-    //         navigation(target(e), { replace: true })
-    //     );
-    // };
-
-    // const [copyNumber, setCopyNumber] = useState(false);
-
-    // const handleCopyNumber = (e) => {
-    //     navigator.clipboard.writeText(e);
-    //     setCopyNumber(true);
-    //     setTimeout(() => {
-    //         setCopyNumber(false);
-    //     }, 3000);
-    // };
-    // const [copyPass, setCopyPass] = useState(false);
-
-    // const handleCopyPass = (e) => {
-    //     navigator.clipboard.writeText(e);
-    //     setCopyPass(true);
-    //     setTimeout(() => {
-    //         setCopyPass(false);
-    //     }, 3000);
-    // };
-
     const copyChatLink = () => {
         navigator.clipboard.writeText(window.location.href);
         message.success("Copy chat link");
@@ -111,8 +82,8 @@ const EditChannel = () => {
                             channelAvatar
                                 ? channelAvatar
                                 : setUpdataChannel.avatar
-                                    ? `${TMP_URL}/${setUpdataChannel.avatar}`
-                                    : ""
+                                ? `${TMP_URL}/${setUpdataChannel.avatar}`
+                                : ""
                         }
                         loading={channelAvatarLoading}
                         color={
@@ -144,8 +115,9 @@ const EditChannel = () => {
                 </div>
                 <MenuItem
                     icon={<MdGroup size={24} />}
-                    title={`Group type: ${setUpdataChannel.isPrivate ? "Private" : "Public"
-                        }`}
+                    title={`Group type: ${
+                        setUpdataChannel.isPrivate ? "Private" : "Public"
+                    }`}
                     right={
                         <Switch
                             onChange={isPrivateGruop}
