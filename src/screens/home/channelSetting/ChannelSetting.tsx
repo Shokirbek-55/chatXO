@@ -1,4 +1,3 @@
-import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 import { useTranslation } from "react-i18next";
 import { BiPlus } from "react-icons/bi";
@@ -14,18 +13,12 @@ import styles from "./ChannelSetting.module.css";
 const ChannelSetting = () => {
     const { t } = useTranslation();
 
-    const {
-        adminId,
-        getOneMember,
-        channelUsers,
-        relevanceData,
-        setSearchChannelUsers,
-    } = useRootStore().channelStore;
+    const { adminId, getOneMember, channelUsers, setSearchChannelUsers } =
+        useRootStore().channelStore;
     const { createFriend } = useRootStore().friendsStore;
     const { getFriendDetails } = useRootStore().usersStore;
     const { user } = useRootStore().authStore;
     const { closeModal, toRouterManageCh } = useRootStore().routerStore;
-    console.log("relevanceData", toJS(relevanceData));
 
     const getUser = (id: number) => {
         if (id !== user.id) {
@@ -61,57 +54,53 @@ const ChannelSetting = () => {
                 />
             </div>
             <div className={styles.membersBox}>
-                {channelUsers
-                    .filter((e) => e?.id !== adminId)
-                    .map((e, index) => {
-                        return (
-                            <div key={index}>
-                                <MenuItem
-                                    icon={
-                                        <SmallAvatar
-                                            imageUrl={
-                                                e.avatar
-                                                    ? `${TMP_URL}/${e.avatar}`
-                                                    : ""
-                                            }
-                                            color={
-                                                e.color
-                                                    ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)`
-                                                    : "linear-gradient(#ddd, #666)"
-                                            }
+                {channelUsers.map((e, index) => {
+                    return (
+                        <div key={index}>
+                            <MenuItem
+                                icon={
+                                    <SmallAvatar
+                                        imageUrl={
+                                            e.avatar
+                                                ? `${TMP_URL}/${e.avatar}`
+                                                : ""
+                                        }
+                                        color={
+                                            e.color
+                                                ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)`
+                                                : "linear-gradient(#ddd, #666)"
+                                        }
+                                    />
+                                }
+                                title={e.username}
+                                right={
+                                    <div className={styles.userRelevanceBox}>
+                                        <Text
+                                            children={e.relevance}
+                                            handleLink={() => getUser(e.id)}
                                         />
-                                    }
-                                    title={e.username}
-                                    right={
-                                        <div
-                                            className={styles.userRelevanceBox}
-                                        >
-                                            <Text
-                                                children={e.relevance}
-                                                handleLink={() => getUser(e.id)}
-                                            />
-                                            {e.isFriend ||
-                                                user.id === e.id ? null : (
-                                                <span
-                                                    onClick={() =>
-                                                        createFriend(e.id)
-                                                    }
-                                                >
-                                                    <BiPlus
-                                                        size={24}
-                                                        style={{
-                                                            padding: "2px",
-                                                        }}
-                                                    />
-                                                </span>
-                                            )}
-                                        </div>
-                                    }
-                                    onTitlePress={() => FriendDetails(e.id)}
-                                />
-                            </div>
-                        );
-                    })}
+                                        {e.isFriend ||
+                                        user.id === e.id ? null : (
+                                            <span
+                                                onClick={() =>
+                                                    createFriend(e.id)
+                                                }
+                                            >
+                                                <BiPlus
+                                                    size={24}
+                                                    style={{
+                                                        padding: "2px",
+                                                    }}
+                                                />
+                                            </span>
+                                        )}
+                                    </div>
+                                }
+                                onTitlePress={() => FriendDetails(e.id)}
+                            />
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );

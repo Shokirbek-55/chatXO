@@ -15,29 +15,14 @@ import { ButtonComponent } from "../../../utils/button";
 import styles from "./ManagaChannel.module.css";
 
 const ManagaChannel = () => {
-    // const { t } = useTranslation();
     const { channelData, getChannelBlockedUsers, getChannelUsers, adminId } =
         useRootStore().channelStore;
-    const {
-        toRouterManageCh,
-        closeModal,
-        closeRightSideBar,
-        // openRightSideBar,
-    } = useRootStore().routerStore;
-    const {
-        userChannelLeave,
-        getPreviewData,
-        // getFriendDetails
-    } = useRootStore().usersStore;
+    const { toRouterManageCh, closeModal, closeRightSideBar } =
+        useRootStore().routerStore;
+    const { userChannelLeave, getPreviewData } = useRootStore().usersStore;
     const { user } = useRootStore().authStore;
     const { show } = useRootStore().visibleStore;
     const navigation = useNavigate();
-
-    // const FriendDetails = (friendId: number) => {
-    //     getFriendDetails(friendId);
-    //     openRightSideBar();
-    //     toRouterManageCh("channelInUser");
-    // };
 
     const PreviewChannelAvatar = () => {
         getPreviewData(channelData as any);

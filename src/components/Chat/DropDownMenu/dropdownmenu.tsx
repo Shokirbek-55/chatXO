@@ -6,8 +6,7 @@ import { styled } from "styled-components";
 import useRootStore from "../../../hooks/useRootStore";
 import { ChannelsUsersType, RawMessage } from "../../../types/channel";
 
-
-// 
+//
 
 interface Props {
     massage: RawMessage;
@@ -18,12 +17,14 @@ interface Props {
 }
 
 const DropDownMenu = ({ massage, children }: Props) => {
-
     const { user } = useRootStore().authStore;
     const { slug, messageCache, deleteMessage, replyMessage } =
         useRootStore().messageStore;
 
-    const isAdmin = useMemo(() => messageCache[slug].channelData.adminId === user?.id, [user, slug, messageCache]);
+    const isAdmin = useMemo(
+        () => messageCache[slug].channelData?.adminId === user?.id,
+        [user, slug, messageCache]
+    );
 
     const items: MenuProps["items"] = [
         {
@@ -36,7 +37,7 @@ const DropDownMenu = ({ massage, children }: Props) => {
         {
             key: "2",
             label: t("report"),
-            onClick: () => { },
+            onClick: () => {},
         },
         {
             key: "3",
@@ -68,9 +69,9 @@ const DropDownMenu = ({ massage, children }: Props) => {
         {
             key: "5",
             label: t("cancel"),
-            onClick: () => { },
-        }
-    ]
+            onClick: () => {},
+        },
+    ];
 
     const itemsIsAdmin: MenuProps["items"] = [
         {
@@ -110,13 +111,13 @@ const DropDownMenu = ({ massage, children }: Props) => {
         {
             key: "4",
             label: t("cancel"),
-            onClick: () => { },
-        }
-    ]
+            onClick: () => {},
+        },
+    ];
 
     return (
         <DropdownRN
-            menu={{ items: isAdmin ? items : itemsIsAdmin, }}
+            menu={{ items: isAdmin ? items : itemsIsAdmin }}
             trigger={["contextMenu"]}
             overlayStyle={{
                 width: "130px",
@@ -135,4 +136,4 @@ export default observer(DropDownMenu);
 
 const DropdownRN = styled(Dropdown)`
     display: block;
-`
+`;

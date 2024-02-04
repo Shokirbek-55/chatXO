@@ -46,13 +46,21 @@ const AccountSetting = () => {
                     title="Notifications"
                     icon={<IoMdNotifications size={22} />}
                 />
-                <a href="https://chatxo.app/impressum" target={"_blank"} rel="noreferrer">
+                <a
+                    href="https://chatxo.app/impressum"
+                    target={"_blank"}
+                    rel="noreferrer"
+                >
                     <MenuItem
                         title="Terms and Conditions"
                         icon={<IoIosSettings size={22} />}
                     />
                 </a>
-                <a href="https://chatxo.app/privacy-policy" target={"_blank"} rel="noreferrer">
+                <a
+                    href="https://chatxo.app/privacy-policy"
+                    target={"_blank"}
+                    rel="noreferrer"
+                >
                     <MenuItem
                         title="Privacy Statement"
                         icon={<IoIosSettings size={22} />}

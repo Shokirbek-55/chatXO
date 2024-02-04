@@ -1,3 +1,4 @@
+import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 import { useRef, useState } from "react";
 import { Cropper, CropperRef } from "react-advanced-cropper";
@@ -13,11 +14,13 @@ const UploadChannelFile = () => {
         createChannelAvatar,
         closeSelectImage,
         createAvatar,
-        setCreateChannelState,
-        createFormData,
+        onConvertedFile,
+        onCreateConvertedFile,
+        onSetCreateChannelImage,
+        setCreateChannelData,
     } = useRootStore().channelStore;
     const cropperRef = useRef<CropperRef>(null);
-    const [file, setFile] = useState(null);
+    console.log("setCreateChannelData", toJS(setCreateChannelData));
 
     const onCrop = () => {
         const base64Data = cropperRef.current?.getCanvas()?.toDataURL() || "";
@@ -40,17 +43,18 @@ const UploadChannelFile = () => {
         const convertedFile = new File([blob], fileName, {
             type: "application/octet-stream",
         });
-        setFile(convertedFile as never);
+        onConvertedFile(convertedFile);
+        onCreateConvertedFile(convertedFile);
     };
 
     const SelectChannelAvatar = () => {
-        createChannelAvatar(file as never);
-        hide("chUploadFile");
+        createChannelAvatar();
+        closeSelectImage();
     };
 
     const CreateChannelAvatar = () => {
-        setCreateChannelState("avatar", createAvatar);
-        hide("chUploadFile");
+        onSetCreateChannelImage();
+        closeSelectImage();
     };
 
     const selectAvatar = () => {

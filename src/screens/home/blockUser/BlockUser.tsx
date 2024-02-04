@@ -10,12 +10,8 @@ import styles from "./BlockUser.module.css";
 
 const BlockUser = () => {
     const { t } = useTranslation();
-    const {
-        unblockUser,
-        getBlockedUser,
-        channelData,
-        adminId,
-    } = useRootStore().channelStore;
+    const { unblockUser, getBlockedUser, channelData, adminId } =
+        useRootStore().channelStore;
     const { closeModal } = useRootStore().routerStore;
 
     const UnBlockUser = (id) => {
@@ -31,7 +27,7 @@ const BlockUser = () => {
             />
             <div className={styles.searchBox}>
                 <SearchInput
-                    onChange={() => { }}
+                    onChange={() => {}}
                     placeholder={`${t("searchPlaceholder")}`}
                 />
             </div>

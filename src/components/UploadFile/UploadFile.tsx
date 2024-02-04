@@ -9,10 +9,10 @@ import styles from "./UploadFile.module.css";
 
 const UploadFile = () => {
     const { visible, hide } = useRootStore().visibleStore;
-    const [file, setFile] = useState(null);
+    // const [file, setFile] = useState(null);
     const cropperRef = useRef<CropperRef>(null);
 
-    const { userAvatar, createMeAvatar } =
+    const { userAvatar, createMeAvatar, onConvertedFile, onCloseSelectImage } =
         useRootStore().usersStore;
 
     const onCrop = () => {
@@ -36,12 +36,12 @@ const UploadFile = () => {
         const convertedFile = new File([blob], fileName, {
             type: "application/octet-stream",
         });
-        setFile(convertedFile as never);
+        onConvertedFile(convertedFile as never);
     };
 
     const onUploadAvatar = () => {
-        createMeAvatar(file as never);
-        hide("uploadFile");
+        createMeAvatar();
+        onCloseSelectImage();
     };
 
     return (

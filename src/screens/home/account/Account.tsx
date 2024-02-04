@@ -39,7 +39,6 @@ const Account = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const {
-        // getFriendDetails,
         getPreviewData,
         setUserState,
         setMyData,
@@ -49,16 +48,8 @@ const Account = () => {
     const { show } = useRootStore().visibleStore;
     const { user } = useRootStore().authStore;
     const { myChannels, getChannelByHashId } = useRootStore().channelStore;
-    const {
-        // toRouter,
-        closeModal,
-    } = useRootStore().routerStore;
+    const { closeModal } = useRootStore().routerStore;
     const { setChannelSlug } = useRootStore().messageStore;
-
-    // const randomUserColor = (Color: string) => {
-    //     setUserState("color", Color);
-    //     updateUserAccount({ color: Color });
-    // };
 
     const onImageSelect = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.length) {
@@ -66,11 +57,6 @@ const Account = () => {
             show("uploadFile");
         }
     };
-
-    // const FriendDetails = (friendId: number) => {
-    //     getFriendDetails(friendId);
-    //     toRouter("friendDetails");
-    // };
 
     const handleChanel = (e) => {
         setChannelSlug(e.slug);
@@ -83,8 +69,6 @@ const Account = () => {
         show("previewModal");
         getPreviewData(data);
     };
-
-    console.log("render");
 
     return (
         <div className={styles.container}>

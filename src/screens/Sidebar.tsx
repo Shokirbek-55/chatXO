@@ -41,7 +41,6 @@ function Sidebar() {
                 );
             })}
             <currentRoute.components />
-            {/* <Footer /> */}
             <MenuChannelScreen />
         </SidebarContainer>
     );

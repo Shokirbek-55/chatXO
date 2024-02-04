@@ -28,6 +28,7 @@ const CreateChannel = () => {
         setCreateChannelState,
         setCreateChannelData,
         onCreateChannelImage,
+        createAvatar,
     } = useRootStore().channelStore;
     const { visible, toglevisible, show } = useRootStore().visibleStore;
 
@@ -77,11 +78,7 @@ const CreateChannel = () => {
                                 : "linear-gradient(#ddd, #666)"
                         }
                         upload={true}
-                        imageUrl={
-                            setCreateChannelData.avatar
-                                ? setCreateChannelData.avatar
-                                : ""
-                        }
+                        imageUrl={createAvatar ? createAvatar : ""}
                         onChange={(e) => handleFileChange(e)}
                     />
                     <NewInput
@@ -110,10 +107,11 @@ const CreateChannel = () => {
                     <div className={styles.settings}>
                         <MenuItem
                             icon={<MdGroup size={24} />}
-                            title={`Group type: ${setCreateChannelData.isPrivate
-                                ? "Private"
-                                : "Public"
-                                }`}
+                            title={`Group type: ${
+                                setCreateChannelData.isPrivate
+                                    ? "Private"
+                                    : "Public"
+                            }`}
                             right={<Switch onChange={isPrivateGruop} />}
                         />
                         <MenuItem

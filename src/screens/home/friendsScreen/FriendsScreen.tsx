@@ -31,8 +31,7 @@ const item = {
 
 const FriendsScreen = () => {
     const { t } = useTranslation();
-    const { friends, getFriendsFilter } =
-        useRootStore().friendsStore;
+    const { friends, getFriendsFilter } = useRootStore().friendsStore;
     const { toRouter, closeModal } = useRootStore().routerStore;
     const { getFriendDetails } = useRootStore().usersStore;
     const handleChangeText = (key: string) => {
