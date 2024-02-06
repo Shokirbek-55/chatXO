@@ -8,7 +8,6 @@ import PollMessageCard from "../components/Chat/PollMessageCard";
 import PreviewImage from "../components/PreviewImage/PreviewImage";
 import Relevence from "../components/Relevence/relevence";
 import UploadChannelFile from "../components/UploadChannelFile/UploadChannelFile";
-import UploadFile from "../components/UploadFile/UploadFile";
 import { regex } from "../utils/regax";
 import EmptyScreen from "./home/emptyScreen/EmptyScreen";
 import ManageChannelLayout from "./ManageChannel";
@@ -49,7 +48,6 @@ function HomeLayout() {
             </RightArea>
             <Relevence />
             <PreviewImage />
-            <UploadFile />
             <UploadChannelFile />
             <PollMessageCard />
         </Container>

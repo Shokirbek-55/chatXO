@@ -20,17 +20,17 @@ import SocialBtn from "../../../utils/socialBtn";
 import styles from "./Login.module.css";
 
 const Login = () => {
+    const { t } = useTranslation();
+    const navigation = useNavigate();
     const { loginEmailWithPassword, loginOAuth2 } = useRootStore().authStore;
     const { toglevisible, visible } = useRootStore().visibleStore;
-    const navigation = useNavigate();
-    const { t } = useTranslation();
 
     const visibility = () => {
         toglevisible("showPass");
     };
 
-    const handleGoogleSignIn = () => {
-        signInWithPopup(auth, providerOAuth)
+    const handleGoogleSignIn = async () => {
+        await signInWithPopup(auth, providerOAuth)
             .then((result: any) => {
                 loginOAuth2({
                     authType: "googleToken",
@@ -101,7 +101,6 @@ const Login = () => {
                                         name="email"
                                         type="email"
                                         placeholder="Your email"
-                                        visibility={false}
                                         icon={<SearchIcon />}
                                     />
                                     <TextFieldd
@@ -112,7 +111,6 @@ const Login = () => {
                                                 : "password"
                                         }
                                         placeholder="Your password"
-                                        visibility={true}
                                         showClick={visibility}
                                     />
                                     <div className={styles.forgotBox}>

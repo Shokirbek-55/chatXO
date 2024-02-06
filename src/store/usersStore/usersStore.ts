@@ -76,9 +76,6 @@ export default class UsersStore {
 
     formData = new FormData();
 
-    file: File = {} as never;
-    convertedFile: File = {} as never;
-
     connectChannelData: ConnectChannelaDataType = {
         channelNumber: "",
         channelInviteCode: "",
@@ -153,17 +150,17 @@ export default class UsersStore {
     };
 
     myDataToSetData = (myData: User) =>
-        (this.setMyData = {
-            username: myData.username || "",
-            email: myData.email || "",
-            color: myData.color || "",
-            avatar: myData.avatar || "",
-            name: myData.name || "",
-            city: myData.city || "",
-            birth: myData.birth || "",
-            occupacy: myData.occupacy || "",
-            description: myData.description || "",
-        });
+    (this.setMyData = {
+        username: myData.username || "",
+        email: myData.email || "",
+        color: myData.color || "",
+        avatar: myData.avatar || "",
+        name: myData.name || "",
+        city: myData.city || "",
+        birth: myData.birth || "",
+        occupacy: myData.occupacy || "",
+        description: myData.description || "",
+    });
 
     setUserState = (key: keyof UserStateType, value: string) => {
         this.setMyData[key] = value;
@@ -180,34 +177,7 @@ export default class UsersStore {
         }
     };
 
-    onConvertedFile = (file: any) => {
-        runInAction(() => {
-            this.convertedFile = file;
-        });
-        console.log("convertedFile", file);
-    };
-
-    onSelectFile = async (file: any) => {
-        runInAction(() => {
-            this.file = file;
-        });
-        if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            this.userAvatar = imageUrl;
-        }
-        console.log("file", file);
-    };
-
-    onCloseSelectImage = () => {
-        runInAction(() => {
-            this.file = File as never;
-            this.formData = new FormData();
-            this.convertedFile = File as never;
-            this.rootStore.visibleStore.hide("uploadFile");
-        });
-    };
-
-    createMeAvatar = async () => {
+    createMeAvatar = async (file: File) => {
         const config = {
             headers: {
                 "Content-Type": "multipart/form-data",
@@ -216,15 +186,7 @@ export default class UsersStore {
         runInAction(() => {
             this.avatarLoading = true;
         });
-        if (this.convertedFile.size > 1) {
-            this.formData.append(
-                "avatar",
-                this.convertedFile,
-                this.convertedFile.name
-            );
-        } else {
-            this.formData.append("avatar", this.file, this.file.name);
-        }
+        this.formData.append("avatar", file);
         await this.userMeAvatarOperation.run(() =>
             APIs.Account.usersMeAvatar(this.formData, config)
         );
@@ -243,7 +205,9 @@ export default class UsersStore {
             });
         }
         if (this.userMeAvatarOperation.isError) {
-            this.avatarLoading = false;
+            runInAction(() => {
+                this.avatarLoading = false;
+            });
         }
     };
 

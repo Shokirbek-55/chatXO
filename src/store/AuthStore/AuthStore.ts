@@ -28,7 +28,7 @@ export default class AuthStore {
     refreshTokenOperation = new Operation<Session>({} as Session);
     logoutOperation = new Operation<any>({} as any);
     getMeOperation = new Operation<User>({} as User);
-    loginOAuthOperation = new Operation<Session>({} as Session);
+    loginOAuthOperation = new Operation<Session['data']>({} as Session['data']);
     deleteUserOperation = new Operation<{ userId: number }>(
         {} as { userId: number }
     );
@@ -62,7 +62,7 @@ export default class AuthStore {
     loginEmailWithPassword = async (data: LoginEmailWithPasswordReqData) => {
         await this.loginOperation.run(() => APIs.login(data));
         if (this.loginOperation.data && this.loginOperation.isSuccess) {
-            this.root.localStore.setToken(this.loginOperation.data);
+            this.root.localStore.setToken(this.loginOperation.data.data);
             await this.getMeOperation.run(() => APIs.Account.getMyAccount());
             if (this.getMeOperation.data && this.getMeOperation.isSuccess) {
                 runInAction(() => {
@@ -85,7 +85,6 @@ export default class AuthStore {
             this.loginOAuthOperation.data &&
             this.loginOAuthOperation.isSuccess
         ) {
-            console.log("loginOAuthOperation", this.loginOAuthOperation.data);
             this.root.localStore.setToken(this.loginOAuthOperation.data);
             runInAction(() => {
                 this.isLoginLoading = false;
@@ -106,7 +105,7 @@ export default class AuthStore {
         });
         await this.registerOperation.run(() => APIs.registerOAuth(data));
         if (this.registerOperation.data && this.registerOperation.isSuccess) {
-            this.root.localStore.setToken(this.registerOperation.data);
+            this.root.localStore.setToken(this.registerOperation.data.data);
             runInAction(() => {
                 this.isLoginLoading = false;
             });
@@ -133,7 +132,7 @@ export default class AuthStore {
     register = async (data: any) => {
         await this.registerOperation.run(() => APIs.register(data));
         if (this.registerOperation.data) {
-            this.root.localStore.setToken(this.registerOperation.data);
+            this.root.localStore.setToken(this.registerOperation.data.data);
         }
     };
 
@@ -143,7 +142,7 @@ export default class AuthStore {
         );
 
         if (this.refreshTokenOperation.data) {
-            this.root.localStore.setToken(this.refreshTokenOperation.data);
+            this.root.localStore.setToken(this.refreshTokenOperation.data.data);
         }
     };
 

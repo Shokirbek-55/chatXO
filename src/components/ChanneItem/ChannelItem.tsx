@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { CSSProperties, FC } from "react";
-import { useTranslation } from "react-i18next";
 import ChannelAvatar from "../ChannelAvatar/channelAvatar";
 
 interface Props {

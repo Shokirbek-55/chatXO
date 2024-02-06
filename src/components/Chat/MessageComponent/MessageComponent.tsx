@@ -12,9 +12,9 @@ import useRootStore from "../../../hooks/useRootStore";
 import { observer } from "mobx-react-lite";
 import { RenderMessage } from "../AllMessage/AllMessage";
 import MessageBox from "../MessageBox";
-import { extractHourMinute } from "../../../utils/helper";
 import SmallAvatar from "../../SmallAvatar/smallAvatar";
 import { Env } from "../../../env";
+import { extractHourMinute } from "../../../helper/helper";
 
 interface Props {
     message: RawMessage;

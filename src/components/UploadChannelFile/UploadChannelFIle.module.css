@@ -23,14 +23,13 @@
 }
 
 .fileBox .cropper {
+    position: relative;
     min-width: 80%;
     min-height: 75%;
     max-width: 80%;
     max-height: 75%;
-    cursor: pointer;
     transition: ease-in-out 0.15s;
     border-radius: 10px;
-    object-fit: cover;
 }
 
 .closeIcon {

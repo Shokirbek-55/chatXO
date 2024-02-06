@@ -29,7 +29,10 @@ export default class ApiService {
     this.axios.interceptors.request.use(
       (config: any) => {
         const token = window.localStorage.getItem(TOKENS);
-        const { accessToken } = JSON.parse(token || '{}');
+        if (!token) {
+          return config;
+        }
+        const { accessToken } = JSON.parse(token);
         if (accessToken) {
           config.headers = {
             ...config.headers,
@@ -53,7 +56,7 @@ export default class ApiService {
   };
 
   public hasAuthorizationHeader = () =>
-    !!this.axios.defaults.headers.common.Authorization; 
+    !!this.axios.defaults.headers.common.Authorization;
 
   methods = {
     get: <R>(url: string, config?: AxiosRequestConfig) =>

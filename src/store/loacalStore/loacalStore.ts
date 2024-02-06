@@ -11,7 +11,7 @@ export default class LocalStore {
         makeAutoObservable(this);
     }
 
-    session: Session = {
+    session: Session['data'] = {
         accessToken: '',
         refreshToken: '',
     };
@@ -35,7 +35,7 @@ export default class LocalStore {
         }
     }
 
-    setToken = async (data: Session) => {
+    setToken = async (data: Session['data']) => {
         runInAction(() => {
             this.session = data;
         })
@@ -97,7 +97,7 @@ export default class LocalStore {
     }
 
 
-    getLocalStore = async(key: string) => {
+    getLocalStore = async (key: string) => {
         this.value = null;
         try {
             const value = window.localStorage.getItem(key);
@@ -110,7 +110,7 @@ export default class LocalStore {
         }
     }
 
-    setLocalStore = async(key: string, value: any) => {
+    setLocalStore = async (key: string, value: any) => {
         try {
             window.localStorage.setItem(key, JSON.stringify(value));
             this.value = value
@@ -119,7 +119,7 @@ export default class LocalStore {
         }
     }
 
-    removeLocalStore = async(key: string) => {
+    removeLocalStore = async (key: string) => {
         try {
             window.localStorage.removeItem(key);
             this.value = null;
@@ -128,7 +128,7 @@ export default class LocalStore {
         }
     }
 
-    clearLocalStore = async() => {
+    clearLocalStore = async () => {
         try {
             window.localStorage.clear();
             this.value = null;

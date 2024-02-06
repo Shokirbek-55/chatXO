@@ -1,4 +1,4 @@
-// const url0 = "http://192.168.1.28:4000";
+// const url1 = "http://192.168.1.108:4001";
 const url1 = "https://e-camp.uz";
 
 export const TMP_URL = url1;
