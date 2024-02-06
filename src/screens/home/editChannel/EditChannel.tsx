@@ -30,7 +30,7 @@ const EditChannel = () => {
         setUpdataChannel,
         channelAvatar,
         channelAvatarLoading,
-        onSelectChannelImage,
+        setCropAvatarState
     } = useRootStore().channelStore;
 
     const updateChannelEvent = () => {
@@ -43,9 +43,9 @@ const EditChannel = () => {
 
     const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.length) {
-            onSelectChannelImage(e.target.files[0]);
+            setCropAvatarState(e.target.files[0], 'updataChannel');
+            show("chUploadFile");
         }
-        show("chUploadFile");
     };
 
     const deleteEvent = () => {

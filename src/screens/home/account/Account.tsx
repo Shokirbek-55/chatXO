@@ -43,18 +43,20 @@ const Account = () => {
         setUserState,
         setMyData,
         updateUserAccount,
-        onSelectFile,
+        avatarLoading
     } = useRootStore().usersStore;
     const { show } = useRootStore().visibleStore;
     const { user } = useRootStore().authStore;
-    const { myChannels, getChannelByHashId } = useRootStore().channelStore;
-    const { closeModal } = useRootStore().routerStore;
+    const { myChannels, getChannelByHashId, setCropAvatarState } = useRootStore().channelStore;
+    const {
+        closeModal,
+    } = useRootStore().routerStore;
     const { setChannelSlug } = useRootStore().messageStore;
 
     const onImageSelect = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.length) {
-            onSelectFile(e.target.files[0]);
-            show("uploadFile");
+            setCropAvatarState(e.target.files[0], 'profile');
+            show("chUploadFile");
         }
     };
 
@@ -91,6 +93,7 @@ const Account = () => {
                                 : "linear-gradient(#ddd, #666)"
                         }
                         onChange={(e) => onImageSelect(e)}
+                        loading={avatarLoading}
                     />
                 </div>
                 <div className={styles.groupsBox}>

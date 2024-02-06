@@ -25,8 +25,12 @@ export type CheckOAuthData = {
 };
 
 export type Session = {
-  accessToken: string;
-  refreshToken: string;
+  success: boolean;
+  message: string;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+  }
 };
 
 export type MsgLocation = {

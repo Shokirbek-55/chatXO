@@ -10,7 +10,6 @@ class VisibleStore {
         FilterToolbar: false,
         RelevenceModal: false,
         previewModal: false,
-        uploadFile: false,
         chUploadFile: false,
         showPass: false,
         passwordInput: false,

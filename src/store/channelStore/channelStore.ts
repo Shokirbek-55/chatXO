@@ -16,6 +16,26 @@ import { User } from "../../types/user";
 import { Operation } from "../../utils/Operation";
 import { AppRootStore } from "../store";
 
+export type CropAvatarStateType = {
+    img: string;
+    type: "crateChannel" | "updataChannel" | "profile"
+};
+
+const CropAvatarStateInitial: CropAvatarStateType = {
+    img: "",
+    type: "crateChannel",
+};
+
+const CreateChannelInitialState: CreateChannelType = {
+    name: "",
+    description: "",
+    color: "",
+    avatar: "",
+    isPrivate: false,
+    defaultRelevance: 0,
+    users: [],
+}
+
 export default class ChannelStore {
     rootStore: AppRootStore;
 
@@ -60,11 +80,12 @@ export default class ChannelStore {
 
     channelAvatar: string = "";
     createAvatar: string = "";
+    cropAvatarState: CropAvatarStateType = CropAvatarStateInitial
     channelAvatarLoading: boolean = false;
 
     setUpdataChannel: SetUpdataChanelType = {} as SetUpdataChanelType;
 
-    setCreateChannelData: CreateChannelType = {} as CreateChannelType;
+    setCreateChannelData: CreateChannelType = CreateChannelInitialState;
 
     getChannelUsersData: ChannelsUsersType[] = [];
 
@@ -73,8 +94,8 @@ export default class ChannelStore {
     adminId: number = 0;
 
     hashId: string = "";
-    navigateChannel: () => void = () => {};
-    generateNavigateChannel: () => void = () => {};
+    navigateChannel: () => void = () => { };
+    generateNavigateChannel: () => void = () => { };
 
     getBlockedUser: User = {
         id: 0,
@@ -89,12 +110,6 @@ export default class ChannelStore {
     relevanceData: relevanceDataType = relevanceDataInitial;
 
     chFormData = new FormData();
-    createFormData = new FormData();
-
-    file: File = {} as never;
-    convertedFile: File = {} as never;
-    createFile: File = {} as never;
-    createConvertedFile: File = {} as never;
 
     channelsSort = () => {
         this.myChannels = this.myChannels.sort((a, b) => {
@@ -307,34 +322,18 @@ export default class ChannelStore {
         });
     };
 
-    createChannelDataToSetData = () =>
-        (this.setCreateChannelData = {
-            name: "",
-            description: "",
-            avatar: "",
-            color: "",
-            isPrivate: false,
-            defaultRelevance: 0,
-            users: [],
-        });
-
     setCreateChannelState = (key: keyof CreateChannelType, value: any) => {
         this.setCreateChannelData[key] = value;
     };
 
     createChannel = async (
-        data: CreateChannelType,
         callback: (e: string) => void
     ) => {
         await this.createChannelOperation.run(() =>
-            APIs.channels.createChannel(data)
+            APIs.channels.createChannel(this.setCreateChannelData)
         );
         if (this.createChannelOperation.isSuccess) {
             runInAction(() => {
-                console.log(
-                    "this.createChannelOperation.data",
-                    toJS(this.createChannelOperation.data)
-                );
                 this.myChannels.push(this.createChannelOperation.data);
                 this.rootStore.messageStore.setChannelSlug(
                     this.createChannelOperation.data.slug
@@ -351,14 +350,14 @@ export default class ChannelStore {
     };
 
     channelDataToSetData = (channel: Channel) =>
-        (this.setUpdataChannel = {
-            name: channel.name as string,
-            isPrivate: channel.isPrivate as boolean,
-            color: channel.color as string,
-            avatar: channel.avatar as string,
-            defaultRelevance: channel.relevance as never,
-            description: channel.description as string,
-        });
+    (this.setUpdataChannel = {
+        name: channel.name as string,
+        isPrivate: channel.isPrivate as boolean,
+        color: channel.color as string,
+        avatar: channel.avatar as string,
+        defaultRelevance: channel.relevance as never,
+        description: channel.description as string,
+    });
 
     setUpdateChannelState = (key: keyof SetUpdataChanelType, value: any) => {
         runInAction(() => {
@@ -401,63 +400,29 @@ export default class ChannelStore {
         });
     };
 
-    noInvitationCode = async () => {};
-
-    onConvertedFile = (file: any) => {
+    setCropAvatarState = async (file: File, type: "crateChannel" | "updataChannel" | "profile") => {
+        const imageUrl = URL.createObjectURL(file);
         runInAction(() => {
-            this.convertedFile = file;
+            this.cropAvatarState = {
+                img: imageUrl,
+                type,
+            }
         });
-    };
+    }
 
     onSelectChannelImage = async (file: File) => {
-        runInAction(() => {
+        if (file) {
             runInAction(() => {
-                this.file = file;
-            });
-            if (file) {
                 const imageUrl = URL.createObjectURL(file);
                 this.channelAvatar = imageUrl;
-            }
-        });
+            });
+        }
     };
 
-    onCreateConvertedFile = (file: any) => {
+    onCreateChannelImage = async (cropBase: string) => {
+        this.setCreateChannelData['avatar'] = cropBase
         runInAction(() => {
-            this.createConvertedFile = file;
-        });
-    };
-
-    onCreateChannelImage = async (file: File) => {
-        runInAction(() => {
-            this.createFile = file;
-            if (file) {
-                const imageUrl = URL.createObjectURL(file);
-                this.createAvatar = imageUrl;
-            }
-        });
-    };
-
-    onSetCreateChannelImage = async () => {
-        runInAction(() => {
-            if (this.createConvertedFile.size > 1) {
-                this.createFormData.append(
-                    "avatar",
-                    this.createConvertedFile,
-                    this.createConvertedFile.name
-                );
-                this.setCreateChannelState("avatar", this.createFormData);
-            } else {
-                this.createFormData.append(
-                    "avatar",
-                    this.createFile,
-                    this.createFile.name
-                );
-                this.setCreateChannelState("avatar", this.createFormData);
-            }
-            if (this.createConvertedFile) {
-                const imageUrl = URL.createObjectURL(this.createConvertedFile);
-                this.createAvatar = imageUrl;
-            }
+            this.createAvatar = cropBase;
         });
     };
 
@@ -465,16 +430,12 @@ export default class ChannelStore {
         runInAction(() => {
             this.channelAvatar = "";
             this.createAvatar = "";
-            this.createConvertedFile = File as never;
-            this.createFile = File as never;
-            this.file = File as never;
-            this.convertedFile = File as never;
             this.chFormData = new FormData();
             this.rootStore.visibleStore.hide("chUploadFile");
         });
     };
 
-    createChannelAvatar = async () => {
+    createChannelAvatar = async (file: File) => {
         const config = {
             headers: {
                 "Content-Type": "image/png",
@@ -483,15 +444,7 @@ export default class ChannelStore {
         runInAction(() => {
             this.channelAvatarLoading = true;
         });
-        if (this.convertedFile.size > 1) {
-            this.chFormData.append(
-                "avatar",
-                this.convertedFile,
-                this.convertedFile.name
-            );
-        } else {
-            this.chFormData.append("avatar", this.file, this.file.name);
-        }
+        this.chFormData.append("avatar", file)
         await this.createChannelAvatarOperation.run(() =>
             APIs.channels.createChannelAvatar(
                 this.channelData.hashId,

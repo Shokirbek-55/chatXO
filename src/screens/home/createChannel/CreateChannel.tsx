@@ -1,6 +1,6 @@
 import { message, Slider, Switch } from "antd";
 import { observer } from "mobx-react-lite";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IoMdFunnel } from "react-icons/io";
 import { MdGroup } from "react-icons/md";
@@ -24,23 +24,22 @@ const CreateChannel = () => {
         toRouter,
     } = useRootStore().routerStore;
     const {
+        createAvatar,
         createChannel,
         setCreateChannelState,
         setCreateChannelData,
-        onCreateChannelImage,
-        createAvatar,
+        setCropAvatarState
     } = useRootStore().channelStore;
     const { visible, toglevisible, show } = useRootStore().visibleStore;
-
     const isPrivateGruop = (checked: boolean) => {
         setCreateChannelState("isPrivate", checked);
     };
 
     const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.length) {
-            onCreateChannelImage(e.target.files[0]);
+            setCropAvatarState(e.target.files[0], 'crateChannel');
+            show("chUploadFile");
         }
-        show("chUploadFile");
     };
 
     const callbackHandle = (e) => {
@@ -54,9 +53,10 @@ const CreateChannel = () => {
         openRightSideBar();
         toRouterManageCh("editChannel");
     };
+
     const CreateChannel = () => {
         if (setCreateChannelData.name?.length > 1) {
-            createChannel(setCreateChannelData, (e) => callbackHandle(e));
+            createChannel((e) => callbackHandle(e));
         } else {
             message.warning("Please enter group name");
         }
@@ -78,7 +78,9 @@ const CreateChannel = () => {
                                 : "linear-gradient(#ddd, #666)"
                         }
                         upload={true}
-                        imageUrl={createAvatar ? createAvatar : ""}
+                        imageUrl={
+                            createAvatar
+                        }
                         onChange={(e) => handleFileChange(e)}
                     />
                     <NewInput
@@ -107,11 +109,10 @@ const CreateChannel = () => {
                     <div className={styles.settings}>
                         <MenuItem
                             icon={<MdGroup size={24} />}
-                            title={`Group type: ${
-                                setCreateChannelData.isPrivate
-                                    ? "Private"
-                                    : "Public"
-                            }`}
+                            title={`Group type: ${setCreateChannelData.isPrivate
+                                ? "Private"
+                                : "Public"
+                                }`}
                             right={<Switch onChange={isPrivateGruop} />}
                         />
                         <MenuItem

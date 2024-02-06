@@ -59,7 +59,7 @@ const MessageHeader = ({
 
     const myself = useMemo(() => channelUsers.find((e) => e.id === user.id), [channelUsers, user]);
 
-    const data: DataObject = useMemo(() => parseJsonData(message?.pimps), [message]);
+    const data: DataObject = useMemo(() => message?.pimps ? parseJsonData(message.pimps) : {}, [message]);
 
     useEffect(() => {
         setActivePimp(data ? data.hasOwnProperty(user.id) : false)
@@ -93,6 +93,23 @@ const MessageHeader = ({
         setActivePimp(false);
     };
 
+    const star = useMemo(() => {
+        if (userId === user.id) return null
+        activePimp ? (
+            <AiFillStar
+                color="#FFAA33"
+                size={14}
+                onClick={() => UnPimpMesssage()}
+            />
+        ) : (
+            <AiOutlineStar
+                size={14}
+                color="#999"
+                onClick={() => PimpMesssage()}
+            />
+        )
+    }, [activePimp, userId, user])
+
     return (
         <Container $backColor={lightenColor(color)}>
             <HeaderContainer>
@@ -101,7 +118,7 @@ const MessageHeader = ({
                         {name}
                     </Text>
                 </Button>
-                {!false && (
+                {!showReply && (
                     <div className="relevanceBox">
                         <div className="relevances">
                             <Button onClick={() => onRelevance()}>
@@ -115,19 +132,7 @@ const MessageHeader = ({
                                 </Text>
                             </Button>
                         </div>
-                        {activePimp ? (
-                            <AiFillStar
-                                color="#FFAA33"
-                                size={14}
-                                onClick={() => UnPimpMesssage()}
-                            />
-                        ) : (
-                            <AiOutlineStar
-                                size={14}
-                                color="#999"
-                                onClick={() => PimpMesssage()}
-                            />
-                        )}
+                        {star}
                     </div>
                 )}
             </HeaderContainer>

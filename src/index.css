@@ -6,7 +6,6 @@
 
 a {
     text-decoration: none;
-    color: #404d66;
 }
 
 @font-face {
@@ -56,6 +55,7 @@ a {
     src: url("./assets/fonts/Montserrat-Black.ttf") format("truetype");
     font-weight: 900;
 }
+
 body {
     background-color: #fff;
     padding: 0;
