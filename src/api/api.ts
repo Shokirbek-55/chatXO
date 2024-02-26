@@ -124,8 +124,12 @@ const APIs = {
             apiService.methods.get<
                 (Omit<Channel, "users"> & { users?: User[] })[]
             >(`${channelUrl}/all`),
-        createChannel: (data: CreateChannelType) =>
-            apiService.methods.post<Channel>(`${channelUrl}`, data),
+        createChannel: (data: CreateChannelType | FormData) =>
+            apiService.methods.post<Channel>(`${channelUrl}`, data, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }),
         createChannelWithName: (name: string, isPrivate: boolean) =>
             apiService.methods.post<Channel>(`${channelUrl}`, {
                 name,

@@ -17,25 +17,19 @@ const UploadChannelFile = () => {
         onCreateChannelImage,
         createChannelAvatar
     } = useRootStore().channelStore;
-    const [cropBase, setCropBase] = useState("");
     const [file, setFile] = useState<File>();
     const [crop, onCropChange] = useState({ x: 0, y: 0 })
     const [zoom, onZoomChange] = useState(1.2)
 
-    const onCropComplete = async (_, croppedAreaPixels) => {
+    const onCropComplete = (_, croppedAreaPixels) => {
         try {
-            const croppedImage = await getCroppedImg(
+            const croppedImage = getCroppedImg(
                 cropAvatarState.img,
-                croppedAreaPixels,
-                0,
-            )
-            const reader = new FileReader();
-            reader.readAsDataURL(croppedImage as Blob);
-            reader.onloadend = () => {
-                const base64data = reader.result;
-                setCropBase(base64data as string);
-            };
-            setFile(croppedImage as File);
+                croppedAreaPixels
+            );
+            croppedImage.then((blob) => {
+                setFile(new File([blob], "avatar.jpg"));
+            });
         } catch (e) {
             console.error(e)
         }
@@ -44,7 +38,7 @@ const UploadChannelFile = () => {
     const onHandle: {
         [key in CropAvatarStateType["type"]]: () => void;
     } = {
-        crateChannel: () => onCreateChannelImage(cropBase),
+        crateChannel: () => onCreateChannelImage(file!),
         updataChannel: () => createChannelAvatar(file!),
         profile: () => createMeAvatar(file!)
     };

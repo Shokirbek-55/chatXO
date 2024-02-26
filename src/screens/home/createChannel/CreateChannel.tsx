@@ -31,6 +31,7 @@ const CreateChannel = () => {
         setCropAvatarState
     } = useRootStore().channelStore;
     const { visible, toglevisible, show } = useRootStore().visibleStore;
+
     const isPrivateGruop = (checked: boolean) => {
         setCreateChannelState("isPrivate", checked);
     };
@@ -73,14 +74,10 @@ const CreateChannel = () => {
                 <div className={styles.contentTop}>
                     <AvatarUpload
                         color={
-                            setCreateChannelData.color
-                                ? setCreateChannelData.color
-                                : "linear-gradient(#ddd, #666)"
+                            setCreateChannelData.color || "linear-gradient(#ddd, #666)"
                         }
                         upload={true}
-                        imageUrl={
-                            createAvatar
-                        }
+                        imageUrl={createAvatar}
                         onChange={(e) => handleFileChange(e)}
                     />
                     <NewInput
@@ -119,9 +116,7 @@ const CreateChannel = () => {
                             icon={<IoMdFunnel size={24} />}
                             title="Default relevance"
                             right={
-                                setCreateChannelData.defaultRelevance
-                                    ? setCreateChannelData.defaultRelevance
-                                    : "0"
+                                setCreateChannelData.defaultRelevance || "0"
                             }
                             onClick={() =>
                                 toglevisible("relevenceSliderCreate")

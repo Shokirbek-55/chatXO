@@ -292,6 +292,7 @@ export default class MessageStore {
         pageState: string | null,
         end: boolean
     ) => {
+        console.log(toJS(messages), slug);
         if (!!this.messageCache[slug]) {
             if (this.messageCache[slug]?.pageState === pageState) {
                 return;

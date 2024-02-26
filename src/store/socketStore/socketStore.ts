@@ -8,7 +8,7 @@ class SocketStore {
 
     root: AppRootStore;
 
-    constructor(root : AppRootStore) {
+    constructor(root: AppRootStore) {
         makeAutoObservable(this);
         this.root = root;
     }
@@ -45,6 +45,8 @@ class SocketStore {
             autoConnect: true,
             query: { userId: user?.id },
             transports: ["websocket"],
+            reconnection: true,
+            forceNew: true,
         });
 
         this._socket.on("connect", () => {

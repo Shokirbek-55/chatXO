@@ -53,18 +53,21 @@ export class AppRootStore {
         this.channelStore.getMyChannels();
     };
 
+    runHasToken = () => {
+        if (!this.localStore.session.accessToken) return;
+        this.authStore.getMe();
+        this.channelStore.getMyChannels();
+        this.friendsStore.getFriends();
+        this.usersStore.getNonFriends();
+        console.log("All requests are done!");
+    }
+
     private run = () => {
         runInAction(() => {
             const list = [this.localStore.getToken()];
 
             Promise.all(list)
-                .then(() => {
-                    this.authStore.getMe();
-                    this.channelStore.getMyChannels();
-                    this.friendsStore.getFriends();
-                    this.usersStore.getNonFriends();
-                    console.log("All requests are done!");
-                })
+                .then(() => this.runHasToken())
                 .catch(() => console.log("Requests failed!"));
         });
     };

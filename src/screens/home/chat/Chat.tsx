@@ -8,6 +8,7 @@ import ScrollContainer from "../../../components/ScrollContainer/ScrollContainer
 import useRootStore from "../../../hooks/useRootStore";
 import ChatHeader from "../../../utils/chatHeader";
 import MessageInput from "./components/messageInput/MessageInput";
+import { toJS } from "mobx";
 
 const Chat = () => {
     const navigate = useNavigate();
@@ -31,6 +32,7 @@ const Chat = () => {
 
     const messages = useMemo(() => {
         const messagesData = messageCache[slug]?.messages;
+        console.log('messagesData', toJS(messagesData));
         if (messagesData?.length === 0) {
             setIsMessagesLength(true)
             return []
@@ -41,7 +43,7 @@ const Chat = () => {
         }
         setIsMessagesLength(false)
         return messagesData
-    }, [messageCache[slug]?.messages, slug, messagesFilterValue]);
+    }, [messageCache[slug]?.messages.length, slug, messagesFilterValue]);
 
     return (
         <ChatContainer id="chatView">
@@ -50,7 +52,7 @@ const Chat = () => {
                 {_.map(messages, (message, index) => {
                     return (
                         <div
-                            key={index}
+                            key={message.id}
                             style={{
                                 paddingBottom:
                                     messageCache[slug].messages?.length - 1 ===
