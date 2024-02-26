@@ -14,6 +14,7 @@ import useRootStore from "../../../hooks/useRootStore";
 import { Channel } from "../../../types/channel";
 import Colors from "../../../utils/colors";
 import styles from "./index.module.css";
+import { toJS } from "mobx";
 
 const container = {
     hidden: { opacity: 1, scale: 0 },
@@ -36,13 +37,13 @@ const item = {
 };
 
 function ChannelsScreen() {
+    const { t } = useTranslation();
+    const navigate = useNavigate();
     const { closeChannelInUser } = useRootStore().routerStore;
     const { myChannels, setSearchChannels, getChannelByHashId } =
         useRootStore().channelStore;
-    const { setChannelSlug } = useRootStore().messageStore;
+    const { setChannelSlug, messageCache } = useRootStore().messageStore;
     const { openChannel } = useRootStore().chatStore;
-    const { t } = useTranslation();
-    const navigate = useNavigate();
     const { show } = useRootStore().visibleStore;
 
     const serachChannelHandler = (text: string) => {
@@ -50,6 +51,7 @@ function ChannelsScreen() {
     };
 
     const handleChanel = (e: Channel) => {
+        console.log(e.slug, toJS(messageCache));
         getChannelByHashId(e.hashId);
         setChannelSlug(e.slug);
         const target = generatePath(`/:name`, { name: `@${e.hashId}` });
@@ -86,18 +88,23 @@ function ChannelsScreen() {
                         <MessageBox title={t("No Internet Connection")} />
                     </div>
                 )}
+                {myChannels.length === 0 && (
+                    <div className={styles.loadingError}>
+                        <MessageBox title={t("No Channels")} />
+                    </div>
+                )}
                 <motion.div
                     variants={container}
                     initial="hidden"
                     animate="visible"
                     className={styles.contentBox}
                 >
-                    {myChannels.map((e, index) => {
+                    {myChannels.map((e) => {
                         return (
                             <motion.div
                                 variants={item}
                                 whileTap={{ scale: 0.8 }}
-                                key={index}
+                                key={e.id}
                                 id="map-dev"
                                 className={styles.channelRowBox}
                                 onClick={() => handleChanel(e)}

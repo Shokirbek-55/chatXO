@@ -17,13 +17,11 @@ const ScrollContainer = ({ children }: ScrollContainerProps) => {
 
     const outerDiv = useRef<HTMLDivElement | any>(null);
     const innerDiv = useRef<HTMLDivElement | any>(null);
+    const topDiv = useRef<HTMLDivElement | any>(null);
+    const [showScrollButton, setShowScrollButton] = useState(false);
 
     const { getHistoryMessagesPageState, messageCache, slug, prevInnerDivHeight, setPrevInnerDivHeight } = useRootStore().messageStore
     const { isOpenHashTagScreen, getHistoryHashTagsMessagesPageState, allHashTagsMessages } = useRootStore().hashtagStore
-
-    const topDiv = useRef<HTMLDivElement | any>(null);
-
-    const [showScrollButton, setShowScrollButton] = useState(false);
 
     useEffect(() => {
         stop.current = messageCache[slug]?.end || allHashTagsMessages?.end || false;
@@ -36,12 +34,15 @@ const ScrollContainer = ({ children }: ScrollContainerProps) => {
         } else {
             topDiv.current.style.height = `0px`;
             if (prevInnerDivHeight[slug]) {
+                console.log('prevInnerDivHeight[slug]', prevInnerDivHeight[slug]);
+                console.log('top1', innerDivHeight - prevInnerDivHeight[slug] + outerDivScrollTop)
                 outerDiv.current.scrollTo({
                     top: innerDivHeight - prevInnerDivHeight[slug] + outerDivScrollTop,
                     left: 0,
                     behavior: "auto"
                 });
             } else {
+                console.log('top2', innerDivHeight - outerDivHeight + 12)
                 outerDiv.current.scrollTo({
                     top: innerDivHeight - outerDivHeight + 12,
                     left: 0,

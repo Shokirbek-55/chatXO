@@ -1,6 +1,6 @@
 import { Spin, Tag, Tooltip } from "antd";
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { useMemo } from "react";
 import { GrFormClose } from "react-icons/gr";
 import styled from "styled-components";
 import { InputComponent } from "../components/InputSearch/inputComponent";
@@ -58,9 +58,11 @@ const ChatHeader = () => {
         removeHashTags(removedTag);
     };
 
-    const img_url = messageCache[slug]?.channelData?.avatar;
-    const color = messageCache[slug]?.channelData?.color;
-    const name = messageCache[slug]?.channelData?.name;
+    const channel = useMemo(() => ({
+        img_url: messageCache[slug]?.channelData?.avatar,
+        color: messageCache[slug]?.channelData?.color,
+        name: messageCache[slug]?.channelData?.name,
+    }), [messageCache[slug]?.channelData]);
 
     return (
         <BassComponent>
@@ -68,10 +70,10 @@ const ChatHeader = () => {
                 <header>
                     <div onClick={OpenManageChannel}>
                         <SmallAvatar
-                            imageUrl={img_url ? `${TMP_URL}/${img_url}` : ""}
-                            color={color ? color : ""}
+                            imageUrl={channel.img_url ? `${TMP_URL}/${channel.img_url}` : ""}
+                            color={channel.color || ""}
                         />
-                        <h3>{name}</h3>
+                        <h3>{channel.name}</h3>
                     </div>
                 </header>
                 <div>

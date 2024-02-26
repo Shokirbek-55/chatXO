@@ -287,8 +287,8 @@ export type CreateChannelType = {
     name: string;
     description: string;
     color: string;
-    avatar: any;
+    avatar: File | string;
     isPrivate: any;
-    defaultRelevance: any;
-    users: User[];
+    defaultRelevance?: any;
+    users?: User[];
 };

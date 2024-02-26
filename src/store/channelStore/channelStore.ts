@@ -32,8 +32,11 @@ const CreateChannelInitialState: CreateChannelType = {
     color: "",
     avatar: "",
     isPrivate: false,
-    defaultRelevance: 0,
-    users: [],
+}
+
+type createChannelResponseType = {
+    success: boolean;
+    data: Channel
 }
 
 export default class ChannelStore {
@@ -45,7 +48,7 @@ export default class ChannelStore {
     }
 
     getChannelOperation = new Operation<Channel[]>([] as Channel[]);
-    createChannelOperation = new Operation<Channel>({} as Channel);
+    createChannelOperation = new Operation<createChannelResponseType>({} as createChannelResponseType);
     updateChannelOperation = new Operation<Channel>({} as Channel);
     getChannelByHashIdOperation = new Operation<Channel>({} as Channel);
     generateNewInvitationCodeOperation = new Operation<generateInviteCodeType>(
@@ -329,20 +332,24 @@ export default class ChannelStore {
     createChannel = async (
         callback: (e: string) => void
     ) => {
+        let formData = new FormData();
+        Object.keys(this.setCreateChannelData).forEach((key) => {
+            formData.append(key, this.setCreateChannelData[key]);
+        });
         await this.createChannelOperation.run(() =>
-            APIs.channels.createChannel(this.setCreateChannelData)
+            APIs.channels.createChannel(formData)
         );
-        if (this.createChannelOperation.isSuccess) {
+        if (this.createChannelOperation.data.success) {
             runInAction(() => {
-                this.myChannels.push(this.createChannelOperation.data);
+                this.myChannels.push(this.createChannelOperation.data.data);
                 this.rootStore.messageStore.setChannelSlug(
-                    this.createChannelOperation.data.slug
+                    this.createChannelOperation.data.data.slug
                 );
                 this.getChannelByHashId(
-                    this.createChannelOperation.data.hashId
+                    this.createChannelOperation.data.data.hashId
                 );
                 this.rootStore.routerStore.setCurrentRoute("channels");
-                callback(this.createChannelOperation.data.slug);
+                callback(this.createChannelOperation.data.data.slug);
             });
         } else {
             message.error(this.createChannelOperation.error);
@@ -419,10 +426,11 @@ export default class ChannelStore {
         }
     };
 
-    onCreateChannelImage = async (cropBase: string) => {
-        this.setCreateChannelData['avatar'] = cropBase
+    onCreateChannelImage = (file: File) => {
+        this.setCreateChannelData['avatar'] = file;
+        const imageUrl = URL.createObjectURL(file);
         runInAction(() => {
-            this.createAvatar = cropBase;
+            this.createAvatar = imageUrl;
         });
     };
 

@@ -21,7 +21,6 @@ export default class LocalStore {
     value: any = null;
 
     getToken = async () => {
-        console.log(toJS(this.session));
         try {
             const value = window.localStorage.getItem(TOKENS);
             if (value) {
@@ -30,6 +29,7 @@ export default class LocalStore {
                 })
                 return value
             }
+            console.log(toJS(this.session));
         } catch (error) {
             console.log('Token not found localStore');
         }

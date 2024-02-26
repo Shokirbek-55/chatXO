@@ -12,7 +12,7 @@ export default class ApiService {
       baseURL: Env.ApiUrl,
       headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json',
+        'Accept': 'application/json',
       },
     });
 
@@ -20,7 +20,14 @@ export default class ApiService {
       (response: AxiosResponse) => response,
       (error) => {
         if (error) {
-          console.log('[Error]:', error?.response?.data);
+          switch (error?.response?.status) {
+            case 401:
+              window.localStorage.removeItem(TOKENS);
+              window.location.reload();
+              break;
+            default:
+              console.log('[Error]:', error?.response?.data);
+          }
         }
         return Promise.reject(error);
       }
