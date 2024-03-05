@@ -5,7 +5,6 @@ import MessageHeader from "../MessageHeader";
 import styles from "./index.module.css";
 import DropDownMenu from "../DropDownMenu/dropdownmenu";
 import { ChannelsUsersType, RawMessage } from "../../../types/channel";
-import { User } from "../../../types/user";
 import { relevanceFuniction } from "../../../utils/boxShadov";
 import SmallAvatar from "../../SmallAvatar/smallAvatar";
 import { TMP_URL } from "../../../env";
@@ -33,7 +32,7 @@ const MessageCard: FC<Props> = ({ message, position, users }) => {
     const textWeight = MESSAGE_STYLE?.fontWeight;
     const textLineHeight = MESSAGE_STYLE?.lineHeight;
 
-    const handleRelevenceModal = () => {};
+    const handleRelevenceModal = () => { };
 
     return (
         <>
@@ -49,19 +48,15 @@ const MessageCard: FC<Props> = ({ message, position, users }) => {
                         </span>
                     )}
                     <div className={styles.messageCard}>
-                        {position && (
-                            <div className={styles.avatarCard}>
-                                {currentUser && (
-                                    <SmallAvatar
-                                        color={currentUser?.color}
-                                        imageUrl={
-                                            currentUser?.avatar
-                                                ? `${TMP_URL}/${currentUser?.avatar}`
-                                                : ""
-                                        }
-                                    />
-                                )}
-                            </div>
+                        {position && currentUser && (
+                            <SmallAvatar
+                                color={currentUser?.color}
+                                imageUrl={
+                                    currentUser?.avatar
+                                        ? `${TMP_URL}/${currentUser?.avatar}`
+                                        : ""
+                                }
+                            />
                         )}
                         <DropDownMenu massage={message} users={users}>
                             <div

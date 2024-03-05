@@ -69,7 +69,7 @@ const Waveform = ({ data, dragging, value }: {
 
     const waveform = getNormalizedWaveform(waveformData);
 
-    const transition = 'width 0.5s'
+    const transition = dragging ? 'none' : 'width 0.5s';
     const waveformMaxHeight = 23;
     const rectWidth = 1;
 

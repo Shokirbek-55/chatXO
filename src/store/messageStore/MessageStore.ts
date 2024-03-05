@@ -292,7 +292,6 @@ export default class MessageStore {
         pageState: string | null,
         end: boolean
     ) => {
-        console.log(toJS(messages), slug);
         if (!!this.messageCache[slug]) {
             if (this.messageCache[slug]?.pageState === pageState) {
                 return;
@@ -542,7 +541,7 @@ export default class MessageStore {
         this.setSendMessage = {
             ...this.setSendMessage,
             hashtags: this.app.hashtagStore.hashTags,
-        };
+        };       
         this.app.socketStore.socket?.emit("message", this.setSendMessage);
         this.setSendMessage = initialMassegeText;
         this.clearReplyMessage();

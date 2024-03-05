@@ -286,7 +286,7 @@ export const SettingIcon = ({
 };
 
 export const FillterIcon = ({
-    size = 28,
+    size = 18,
     padding = 10,
     radius = 50,
     background = "transparent",
@@ -297,9 +297,6 @@ export const FillterIcon = ({
         <span
             className={hoverActive ? styles.iconsHoverAndActive : ""}
             style={{
-                width: "45px",
-                height: "45px",
-                fontSize: `${size}px`,
                 display: "flex",
                 padding: `${padding}px`,
                 cursor: "pointer",
@@ -310,13 +307,15 @@ export const FillterIcon = ({
                 alignItems: "center",
             }}
         >
-            <FaFilter />
+            <svg width={`${size}`} height={`${size}`} viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fillRule="evenodd" clipRule="evenodd" d="M0.899727 0.246979H0.900099V0.247573L0.899727 0.246979ZM3.0371 3.6597L1.54396 1.27562H17.3555L15.8623 3.6597H3.0371ZM3.68145 4.68852L5.08787 6.93413H13.8116L15.218 4.68852H3.68145ZM7.0456 10.06L5.73222 7.96295H13.1672L11.8538 10.06H7.0456ZM7.68995 11.0888L9.44973 13.8986L11.2095 11.0888H7.68995Z" fill="#7FA88B" />
+            </svg>
         </span>
     );
 };
 
 export const ArrowUpIcon = ({
-    size = 28,
+    size = 18,
     padding = 10,
     radius = 50,
     background = "transparent",
@@ -327,7 +326,6 @@ export const ArrowUpIcon = ({
         <span
             className={hoverActive ? styles.iconsHoverAndActive : ""}
             style={{
-                fontSize: `${size}px`,
                 display: "flex",
                 padding: `${padding}px`,
                 cursor: "pointer",
@@ -336,7 +334,9 @@ export const ArrowUpIcon = ({
                 color: `${color}`,
             }}
         >
-            <IoIosArrowUp />
+            <svg width={`${size}`} height={`${size}`} viewBox="0 0 13 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 6.5L6.5 1L1 6.5" stroke="#7FA88B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
         </span>
     );
 };
@@ -368,7 +368,7 @@ export const LogoutIcon = ({
 };
 
 export const MicrophoneIcon = ({
-    size = 28,
+    size = 22,
     padding = 10,
     radius = 50,
     background = "transparent",
@@ -379,7 +379,6 @@ export const MicrophoneIcon = ({
         <span
             className={hoverActive ? styles.iconsHoverAndActive : ""}
             style={{
-                fontSize: `${size}px`,
                 display: "flex",
                 padding: `${padding}px`,
                 cursor: "pointer",
@@ -388,7 +387,9 @@ export const MicrophoneIcon = ({
                 color: `${color}`,
             }}
         >
-            <FaMicrophone />
+            <svg width={`${size}`} height={`${size}`} viewBox="0 0 15 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.5 0C8.35248 0 9.17005 0.365976 9.77284 1.01742C10.3756 1.66886 10.7143 2.55241 10.7143 3.47368V10.4211C10.7143 11.3423 10.3756 12.2259 9.77284 12.8773C9.17005 13.5288 8.35248 13.8947 7.5 13.8947C6.64752 13.8947 5.82995 13.5288 5.22716 12.8773C4.62436 12.2259 4.28571 11.3423 4.28571 10.4211V3.47368C4.28571 2.55241 4.62436 1.66886 5.22716 1.01742C5.82995 0.365976 6.64752 0 7.5 0ZM15 10.4211C15 14.5084 12.2036 17.8779 8.57143 18.4453V22H6.42857V18.4453C2.79643 17.8779 0 14.5084 0 10.4211H2.14286C2.14286 11.9565 2.70727 13.4291 3.71193 14.5148C4.71659 15.6006 6.0792 16.2105 7.5 16.2105C8.9208 16.2105 10.2834 15.6006 11.2881 14.5148C12.2927 13.4291 12.8571 11.9565 12.8571 10.4211H15Z" fill="#7FA88B" />
+            </svg>
         </span>
     );
 };
@@ -860,7 +861,7 @@ export const SendIcon = ({
 };
 
 export const ArrowDowunIcon = ({
-    size = 28,
+    size = 18,
     padding = 10,
     radius = 50,
     background = "transparent",
@@ -871,16 +872,18 @@ export const ArrowDowunIcon = ({
         <span
             className={hoverActive ? styles.iconsHoverAndActive : ""}
             style={{
-                fontSize: `${size}px`,
                 display: "flex",
                 padding: `${padding}px`,
                 cursor: "pointer",
                 borderRadius: `${radius}%`,
                 backgroundColor: `${background}`,
                 color: `${color}`,
+                transform: "rotate(180deg)"
             }}
         >
-            <IoIosArrowDown />
+            <svg width={`${size}`} height={`${size}`} viewBox="0 0 13 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 6.5L6.5 1L1 6.5" stroke="#7FA88B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
         </span>
     );
 };
