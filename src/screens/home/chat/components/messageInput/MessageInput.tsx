@@ -24,7 +24,6 @@ import AddHashtags from "../../../../../components/AddHashtags/addhashtags";
 
 function MessageInput() {
     const { recorderState, ...handlers } = useRecorder();
-    // const [open, setOpen] = useState<boolean>(false);
     const { visible, toglevisible } = useRootStore().visibleStore;
     const [openFilter, setOpenFilter] = useState<boolean>(false);
     const [openhastag, setOpenhastag] = useState<boolean>(false);
@@ -69,37 +68,37 @@ function MessageInput() {
                     setOpenHashtags={setOpenhastag}
                 />
                 <div className={styles.inputmessage}>
-                    <div
-                        className="icon"
-                        onClick={() => setOpenFilter(!openFilter)}
-                    >
-                        <FillterIcon size={17} color="#303030" />
-                    </div>
                     {!visible.openFooterMediaBar ? (
-                        <div
+                        <button
                             className="icon"
                             onClick={() => toglevisible("openFooterMediaBar")}
                         >
                             <ArrowUpIcon color="#303030" />
-                        </div>
+                        </button>
                     ) : (
-                        <div
+                        <button
                             className="icon"
                             onClick={() => toglevisible("openFooterMediaBar")}
                         >
                             <ArrowDowunIcon color="#303030" />
-                        </div>
+                        </button>
                     )}
+                    <button
+                        className="icon"
+                        onClick={() => setOpenFilter(!openFilter)}
+                    >
+                        <FillterIcon size={17} color="#303030" />
+                    </button>
                     <div className="inputContainer">
                         <textarea
                             id="textarea"
                             placeholder={
                                 recorderState.initRecording
                                     ? `${formatMinutes(
-                                          recorderState.recordingMinutes
-                                      )} : ${formatSeconds(
-                                          recorderState.recordingSeconds
-                                      )}`
+                                        recorderState.recordingMinutes
+                                    )} : ${formatSeconds(
+                                        recorderState.recordingSeconds
+                                    )}`
                                     : "Write a message..."
                             }
                             value={messageTextState}
@@ -111,28 +110,28 @@ function MessageInput() {
                         />
                     </div>
                     {messageTextState ? (
-                        <div className="icon" onClick={handleonSendMessage}>
+                        <button className="icon" onClick={handleonSendMessage}>
                             <SendIcon color="#303030" />
-                        </div>
+                        </button>
                     ) : recorderState.initRecording ? (
                         <div className="iconBox">
-                            <div
+                            <button
                                 className={`icon`}
                                 onClick={handlers.cancelRecording}
                             >
                                 <DeleteIcon color="#e74c3c" />
-                            </div>
-                            <div
+                            </button>
+                            <button
                                 className="icon"
                                 onClick={handlers.saveRecording}
                             >
                                 <SendIcon color="#303030" />
-                            </div>
+                            </button>
                         </div>
                     ) : (
-                        <div className="icon" onClick={handlers.startRecording}>
+                        <button className="icon" onClick={handlers.startRecording}>
                             <MicrophoneIcon color="#303030" />
-                        </div>
+                        </button>
                     )}
                 </div>
             </div>
@@ -171,20 +170,21 @@ const MessageInputContainer = styled.div`
         align-items: center;
         justify-content: center;
         background-color: #fff;
-        border-radius: 25px;
         margin: 0 5px 0 5px;
+        border: 0.5px solid #a3aea6;
+        border-radius: 8px;
 
         .textAreaInput {
             font-family: Montserrat;
-            font-weight: 700;
-            width: 100%;
-            height: 45px;
-            padding: 12.5px 15px;
+            font-weight: 600;
             font-size: 15px;
+            width: 100%;
+            height: 35px;
+            padding: 7.5px 15px;
             line-height: 20px;
-            color: #333;
-            outline: none;
             border: none;
+            color: #a3aea6;
+            outline: none;
             resize: none;
             opacity: initial;
             overflow: hidden;
@@ -198,6 +198,9 @@ const MessageInputContainer = styled.div`
         justify-content: center;
         width: 45px;
         height: 45px;
+        outline: none;
+        border: none;
+        background-color: transparent;
     }
 
     .iconBox {

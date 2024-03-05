@@ -17,7 +17,7 @@ const SmallAvatar: React.FC<Props> = ({
 }) => {
     style = color ? { ...style, background: color } : { ...style, background: "linear-gradient(#ddd, #666)" };
     if (forMessage) {
-        style = { ...style, borderRadius: '50%', boxShadow: 'none', marginRight: '5px' }
+        style = { ...style, width: '30px', height: '30px', marginRight: '15px' }
     }
     return (
         <div onClick={onPress} className={styles.container} style={{ ...style }}>

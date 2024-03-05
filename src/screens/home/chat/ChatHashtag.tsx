@@ -33,7 +33,7 @@ const ChatHashtag = () => {
     }, []);
 
     const messages = useMemo(() => {
-        const messagesData = messageCache[slug]?.messages;
+        const messagesData = allHashTagsMessages.messages
         if (messagesData?.length === 0) {
             setIsMessagesLength(true)
             return []
@@ -44,7 +44,7 @@ const ChatHashtag = () => {
         }
         setIsMessagesLength(false)
         return messagesData
-    }, [messageCache[slug]?.messages, slug, messagesFilterValue]);
+    }, [allHashTagsMessages.messages, slug, messagesFilterValue]);
 
     return (
         <ChatContainer id="chatView">
