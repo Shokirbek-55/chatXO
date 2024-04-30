@@ -11,39 +11,44 @@ import SignUp from "../screens/auth/sign-up/SignUp";
 import WelcomeView from "../screens/auth/welcome/Welcome";
 import Chat from "../screens/home/chat/Chat";
 import ChatHashtag from "../screens/home/chat/ChatHashtag";
+import OtpVerify from "../screens/auth/otp-verify/OtpVerify";
 
 const HomeLayout = React.lazy(() => import("../screens/HomeLayout"));
 
 function RootRouter() {
-    const { session } = useRootStore().localStore;
-    const navigation = useNavigate();
+  const { session } = useRootStore().localStore;
+  const navigation = useNavigate();
 
-    useEffect(() => {
-        if (!session.accessToken) {
-            navigation("/auth/welcome");
+  useEffect(() => {
+    if (!session.accessToken) {
+      navigation("/auth/welcome");
+    }
+  }, [session.accessToken]);
+
+  return (
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <React.Suspense fallback={null}>
+            <HomeLayout />
+          </React.Suspense>
         }
-    }, [session.accessToken]);
-
-    return (
-        <Routes>
-            <Route path="/" element={
-                <React.Suspense fallback={null}>
-                    <HomeLayout />
-                </React.Suspense>
-            }>
-                <Route path=":name" element={<Chat />} />
-                <Route path=":name/:hashTag" element={<ChatHashtag />} />
-            </Route>
-            <Route path="/auth" element={<AuthLayout />}>
-                <Route index path="welcome" element={<WelcomeView />} />
-                <Route path="login" element={<Login />} />
-                <Route path="sign-up" element={<SignUp />} />
-                <Route path="sign-up-social" element={<SignUpSocial />} />
-                <Route path="changeLanguage" element={<ChangeLanguageView />} />
-                <Route path="forgot-pass" element={<ForgotPasswordView />} />
-            </Route>
-        </Routes>
-    );
+      >
+        <Route path=":name" element={<Chat />} />
+        <Route path=":name/:hashTag" element={<ChatHashtag />} />
+      </Route>
+      <Route path="/auth" element={<AuthLayout />}>
+        <Route index path="welcome" element={<WelcomeView />} />
+        <Route path="login" element={<Login />} />
+        <Route path="sign-up" element={<SignUp />} />
+        <Route path="otp-verify" element={<OtpVerify />} />
+        <Route path="sign-up-social" element={<SignUpSocial />} />
+        <Route path="changeLanguage" element={<ChangeLanguageView />} />
+        <Route path="forgot-pass" element={<ForgotPasswordView />} />
+      </Route>
+    </Routes>
+  );
 }
 
 export default observer(RootRouter);

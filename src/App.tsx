@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import RootRouter from "./router/RootRouter";
+import "react-activity/dist/library.css";
 
 function App() {
   useEffect(() => {
