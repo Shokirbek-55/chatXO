@@ -51,12 +51,21 @@ type MessagesInChannelType = {
     end?: boolean;
 }
 
+type CacheMessagesType = {
+    messages: Map<string, RawMessage>;
+    pageState: string | null;
+    end?: boolean;
+}
+
 export default class MessageStore {
     app: AppRootStore;
     constructor(app: AppRootStore) {
         makeAutoObservable(this);
         this.app = app;
     }
+
+    channelsMsgDataBySlug = new Map<string, CacheMessagesType>();
+    slugQueue = new Set<string>();
 
     FileUploadOperation = new Operation<FileUploadOperationData>({
         filePath: "",
@@ -110,6 +119,59 @@ export default class MessageStore {
     pollMessageState: pollMessage = pollMessageInitial;
     pollMessageOptionState: string[] = ["", ""];
     pollMessageDetails: pollMessage = {} as never;
+
+    upsertChannelsMsgs = (slug: string, data: MessagesInChannelType) => {
+        const msgs = this.channelsMsgDataBySlug.get(slug);
+        if (msgs) {
+            data.messages.forEach(msg => {
+                msgs.messages.set(msg.id, msg)
+            })
+            msgs.pageState = data.pageState;
+            msgs.end = data.end;
+        } else {
+            const messageById = new Map<string, RawMessage>();
+            data.messages.forEach(msg => {
+                messageById.set(msg.id, msg)
+            })
+            this.channelsMsgDataBySlug.set(slug, {
+                messages: messageById,
+                pageState: data.pageState,
+                end: data.end
+            });
+        }
+    }
+
+    get getSelectedChannelMsgData() {
+        return this.channelsMsgDataBySlug.get(this.app.channelStore.selectedChannelData.slug)
+    }
+
+    get getSelectedChannelMsgsMap() {
+        return this.getSelectedChannelMsgData?.messages || new Map<string, RawMessage>()
+    }
+
+    get getSelectedChannelMsgsPageState() {
+        return this.getSelectedChannelMsgData?.pageState || ""
+    }
+
+    get getSelectedChannelMsgsEnd() {
+        return this.getSelectedChannelMsgData?.end || false
+    }
+
+    get getSelectedChannelMsgs() {
+        return Array.from(this.getSelectedChannelMsgsMap.values())
+    }
+
+    set setChannelMsgNewMessage(msg: RawMessage) {
+        this.getSelectedChannelMsgData?.messages.set(msg.id, msg)
+    }
+
+    getChannelMsgDataBySlug(slug: string) {
+        return this.channelsMsgDataBySlug.get(slug)
+    }
+
+    getSelectedChannelMsgById = (id: string) => {
+        return this.getSelectedChannelMsgsMap.get(id)
+    }
 
     setIsMessagesLength = (is: boolean) => {
         runInAction(() => {
@@ -292,6 +354,11 @@ export default class MessageStore {
         pageState: string | null,
         end: boolean
     ) => {
+        this.upsertChannelsMsgs(slug, {
+            messages,
+            pageState,
+            end,
+        });
         if (!!this.messageCache[slug]) {
             if (this.messageCache[slug]?.pageState === pageState) {
                 return;
@@ -319,6 +386,7 @@ export default class MessageStore {
     };
 
     addMessageToCache = (message: RawMessage) => {
+        this.setChannelMsgNewMessage = message;
         if (this.messageCache[message.channelSlug]) {
             if (
                 _.last(this.messageCache[message.channelSlug].messages)?.id ===
@@ -541,7 +609,7 @@ export default class MessageStore {
         this.setSendMessage = {
             ...this.setSendMessage,
             hashtags: this.app.hashtagStore.hashTags,
-        };       
+        };
         this.app.socketStore.socket?.emit("message", this.setSendMessage);
         this.setSendMessage = initialMassegeText;
         this.clearReplyMessage();

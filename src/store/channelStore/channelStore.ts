@@ -1,5 +1,5 @@
 import { message } from "antd";
-import { makeAutoObservable, runInAction, toJS } from "mobx";
+import { action, makeAutoObservable, runInAction, toJS } from "mobx";
 import APIs from "../../api/api";
 import {
     Channel,
@@ -7,6 +7,7 @@ import {
     ChannelsUsersInitial,
     ChannelsUsersType,
     CreateChannelType,
+    RawMessage,
     SetUpdataChanelType,
     generateInviteCodeType,
     relevanceDataInitial,
@@ -15,6 +16,7 @@ import {
 import { User } from "../../types/user";
 import { Operation } from "../../utils/Operation";
 import { AppRootStore } from "../store";
+import { throttle } from "lodash";
 
 export type CropAvatarStateType = {
     img: string;
@@ -39,15 +41,27 @@ type createChannelResponseType = {
     data: Channel
 }
 
+type selectedChannelType = {
+    id: number;
+    hashId: string;
+    slug: string;
+}
+
 export default class ChannelStore {
     rootStore: AppRootStore;
 
     constructor(rootStore: AppRootStore) {
-        makeAutoObservable(this);
+        makeAutoObservable(this, {
+            upsert: action
+        });
         this.rootStore = rootStore;
     }
 
-    getChannelOperation = new Operation<Channel[]>([] as Channel[]);
+    channelByHashId = new Map<string, Channel>();
+    channelUsersByHashId = new Map<string, User[]>();
+    hashIdQueue = new Set<string>();
+
+    getChannelOperation = new Operation<Channel[]>([]);
     createChannelOperation = new Operation<createChannelResponseType>({} as createChannelResponseType);
     updateChannelOperation = new Operation<Channel>({} as Channel);
     getChannelByHashIdOperation = new Operation<Channel>({} as Channel);
@@ -80,6 +94,11 @@ export default class ChannelStore {
     myChannels: Channel[] = [];
 
     channelData: Channel = ChannelInitialState;
+    selectedChannelData: selectedChannelType = {
+        id: 0,
+        hashId: "",
+        slug: "",
+    }
 
     channelAvatar: string = "";
     createAvatar: string = "";
@@ -113,6 +132,55 @@ export default class ChannelStore {
     relevanceData: relevanceDataType = relevanceDataInitial;
 
     chFormData = new FormData();
+
+    private processQueue = throttle(async () => {
+        if (!this.hashIdQueue.size) {
+            return;
+        }
+        const hashIds = Array.from(this.hashIdQueue)
+
+        for (const hashId of hashIds) {
+            const [channelInfo, channelUsers] = await Promise.all([
+                APIs.channels.getChannelByHashId(hashId),
+                APIs.channels.getChannelUsers(hashId)
+            ])
+            this.rootStore.messageStore.getHistoryMessages(
+                channelInfo.data.slug
+            );
+            this.upsert(hashId, channelInfo.data, channelUsers.data)
+            this.hashIdQueue.delete(hashId)
+        }
+
+        if (this.hashIdQueue.size) {
+            this.processQueue()
+        }
+    }, 500)
+
+    private get(channelHashId: string) {
+        this.hashIdQueue.add(channelHashId)
+        this.processQueue()
+    }
+
+    upsert(channelHashId: string, ChannelInfo: Channel, channelUsers: User[]) {
+        let channelBox = this.channelByHashId.get(channelHashId)
+
+        this.channelUsersByHashId.set(channelHashId, channelUsers)
+        if (channelBox) {
+            const channel = Object.assign(channelBox, ChannelInfo)
+            this.channelByHashId.set(channelHashId, channel)
+            return
+        }
+        this.channelByHashId.set(channelHashId, ChannelInitialState)
+    }
+
+    get getSelectedChannelData() {
+        return this.channelByHashId.get(this.selectedChannelData.hashId) || ChannelInitialState;
+    }
+
+    handelSelectedChannel = (data: selectedChannelType) => {
+        this.selectedChannelData = data;
+        this.get(data.hashId);
+    }
 
     channelsSort = () => {
         this.myChannels = this.myChannels.sort((a, b) => {
@@ -247,6 +315,7 @@ export default class ChannelStore {
         try {
             await Promise.all(
                 this.myChannels.map(async (channel) => {
+                    this.get(channel.hashId);
                     const [channelUsersData, channelData] = await Promise.all([
                         this.getChannelUsersOperation.run(() =>
                             APIs.channels.getChannelUsers(channel.hashId)

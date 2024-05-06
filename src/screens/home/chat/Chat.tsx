@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { observer } from "mobx-react-lite";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import MessageComponent from "../../../components/Chat/MessageComponent/MessageComponent";
@@ -8,12 +8,20 @@ import ScrollContainer from "../../../components/ScrollContainer/ScrollContainer
 import useRootStore from "../../../hooks/useRootStore";
 import ChatHeader from "../../../utils/chatHeader";
 import MessageInput from "./components/messageInput/MessageInput";
+import { toJS } from "mobx";
 
 const Chat = () => {
   const navigate = useNavigate();
-  const { messageCache, slug, messagesFilterValue, setIsMessagesLength } =
-    useRootStore().messageStore;
+  const {
+    messageCache,
+    messagesFilterValue,
+    setIsMessagesLength,
+    getSelectedChannelMsgs,
+  } = useRootStore().messageStore;
   const { closeRightSideBar } = useRootStore().routerStore;
+  const {
+    selectedChannelData: { slug },
+  } = useRootStore().channelStore;
 
   useEffect(() => {
     const handleEsc = (event: any) => {
@@ -27,8 +35,22 @@ const Chat = () => {
     return () => {
       window.removeEventListener("keydown", handleEsc);
     };
-  }, []);
+  }, [closeRightSideBar, navigate]);
 
+  const messagesV2: React.ReactNode[] = [];
+  for (let i = 0; i < getSelectedChannelMsgs.length; i++) {
+    const msg = getSelectedChannelMsgs[i];
+    messagesV2.unshift(
+      <MessageComponent
+        isFirst={0 === i}
+        isLast={messageCache[slug].messages?.length - 1 === i}
+        ref={(ref) => {}}
+        key={msg.id}
+        message={msg}
+        users={messageCache[slug]?.channelUsers}
+      />
+    );
+  }
   const messages = useMemo(() => {
     const messagesData = messageCache[slug]?.messages;
     if (messagesData?.length === 0) {
@@ -49,25 +71,19 @@ const Chat = () => {
     <ChatContainer id="chatView">
       <ChatHeader />
       <ScrollContainer>
-        {_.map(messages, (message, index) => {
+        {/* {_.map(messages, (message, index) => {
           return (
-            <div
+            <MessageComponent
+              isFirst={messageCache[slug].messages?.length - 1 === index}
+              isLast={0 === index}
+              ref={(ref) => {}}
               key={message.id}
-              style={{
-                paddingBottom:
-                  messageCache[slug].messages?.length - 1 === index
-                    ? "7.5vh"
-                    : "0",
-                paddingTop: 0 === index ? "7vh" : "0",
-              }}
-            >
-              <MessageComponent
-                message={message}
-                users={messageCache[slug]?.channelUsers}
-              />
-            </div>
+              message={message}
+              users={messageCache[slug]?.channelUsers}
+            />
           );
-        })}
+        })} */}
+        {messagesV2}
       </ScrollContainer>
       <MessageInput />
     </ChatContainer>
