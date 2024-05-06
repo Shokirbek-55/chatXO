@@ -12,15 +12,18 @@ type ScrollContainerProps = {
     children: React.ReactNode;
 };
 
+const SCROLL_PRECISION = 800;
 
 const ScrollContainer = ({ children }: ScrollContainerProps) => {
 
     const outerDiv = useRef<HTMLDivElement | any>(null);
     const innerDiv = useRef<HTMLDivElement | any>(null);
     const topDiv = useRef<HTMLDivElement | any>(null);
+    const prevInnerDiv = useRef<Number | any>(null);
+    const prevScrollTop = useRef<number | any>(null);
     const [showScrollButton, setShowScrollButton] = useState(false);
 
-    const { getHistoryMessagesPageState, messageCache, slug, prevInnerDivHeight, setPrevInnerDivHeight } = useRootStore().messageStore
+    const { getHistoryMessagesPageState, messageCache, slug } = useRootStore().messageStore
     const { isOpenHashTagScreen, getHistoryHashTagsMessagesPageState, allHashTagsMessages } = useRootStore().hashtagStore
 
     useEffect(() => {
@@ -33,11 +36,11 @@ const ScrollContainer = ({ children }: ScrollContainerProps) => {
             topDiv.current.style.height = `${outerDivHeight - innerDivHeight}px`;
         } else {
             topDiv.current.style.height = `0px`;
-            if (prevInnerDivHeight[slug]) {
-                console.log('prevInnerDivHeight[slug]', prevInnerDivHeight[slug]);
-                console.log('top1', innerDivHeight - prevInnerDivHeight[slug] + outerDivScrollTop)
+            if (prevInnerDiv.current) {
+                console.log('prevInnerDivHeight[slug]', prevInnerDiv.current)
+                console.log('top1', innerDivHeight - prevInnerDiv.current + outerDivScrollTop)
                 outerDiv.current.scrollTo({
-                    top: innerDivHeight - prevInnerDivHeight[slug] + outerDivScrollTop,
+                    top: innerDivHeight - prevInnerDiv.current + outerDivScrollTop,
                     left: 0,
                     behavior: "auto"
                 });
@@ -46,23 +49,40 @@ const ScrollContainer = ({ children }: ScrollContainerProps) => {
                 outerDiv.current.scrollTo({
                     top: innerDivHeight - outerDivHeight + 12,
                     left: 0,
-                    behavior: prevInnerDivHeight[slug] ? "smooth" : "auto",
+                    behavior: prevInnerDiv.current ? "smooth" : "auto",
                 });
             }
         }
-        setPrevInnerDivHeight(slug, innerDivHeight);
+        prevInnerDiv.current = innerDivHeight;
     }, [children]);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            if (innerDiv.current.clientHeight - outerDiv.current.clientHeight === outerDiv.current.scrollTop) {
-                setShowScrollButton(false);
+    const handleScroll = () => {
+        const list = outerDiv.current;
+        const innerDivHeight = innerDiv.current.clientHeight;
+
+        const scrollToNext = prevScrollTop.current > list.scrollTop;
+
+        if (prevScrollTop.current !== null) {
+            if (scrollToNext && list.scrollTop <= SCROLL_PRECISION) {
+                // onLoadNext();
+                console.log('onLoadNext');
             }
-            toBottomShowArrow();
-            toBottomNoShowArrow();
-        };
-        outerDiv.current.addEventListener('scroll', handleScroll);
-    }, []);
+
+            if (!scrollToNext && (list.scrollTop + list.offsetHeight >= list.scrollHeight - SCROLL_PRECISION)) {
+                // onLoadPrevious();
+                console.log('onLoadPrevious');
+
+            }
+        }
+
+        prevScrollTop.current = list.scrollTop;
+
+        if (innerDivHeight - list.clientHeight - list.scrollTop > 50) {
+            setShowScrollButton(true);
+        } else {
+            setShowScrollButton(false);
+        }
+    };
 
     const getMoreMessages = () => {
         if (isOpenHashTagScreen) {
@@ -87,84 +107,21 @@ const ScrollContainer = ({ children }: ScrollContainerProps) => {
         setShowScrollButton(false);
     }, []);
 
-    const toBottomShowArrow = useCallback(() => {
-        const outerDivHeight = outerDiv.current.clientHeight;
-        const innerDivHeight = innerDiv.current.clientHeight;
-        const outerDivScrollTop = outerDiv.current.scrollTop;
-
-        if (innerDivHeight - outerDivHeight - outerDivScrollTop > 50) {
-            setShowScrollButton(true);
-        }
-    }, []);
-
-    const toBottomNoShowArrow = useCallback(() => {
-        const outerDivHeight = outerDiv.current.clientHeight;
-        const innerDivHeight = innerDiv.current.clientHeight;
-        const outerDivScrollTop = outerDiv.current.scrollTop;
-
-        if (innerDivHeight - outerDivHeight - outerDivScrollTop < 50) {
-            setShowScrollButton(false);
-        }
-    }, []);
-
     return (
-        <div
-            style={{
-                position: "relative",
-                height: "100%",
-                width: "100%",
-                backgroundColor: '#fff',
-                overflow: "hidden",
-            }}
-        >
-            <div
-                ref={outerDiv}
-                style={{
-                    position: "relative",
-                    height: "100%",
-                    overflowY: "scroll",
-                    overflowX: "hidden",
-                    flex: '1 1 0',
-                    WebkitOverflowScrolling: 'touch',
-                }}
-            >
-                <div ref={topDiv} style={{
-                    flex: '1 1 auto',
-                    position: 'relative',
-                    minHeight: '12px',
-                }} />
-                <div
-                    ref={innerDiv}
-                    style={{
-                        position: "relative",
-                        flex: '0 0 auto',
-                    }}
-                >
-                    {
-                        isFetching ? (
-                            <ScrollTopLoading animationData={topLoaderJson} autoplay={!!isFetching} />
-                        ) : null
-                    }
+        <Container >
+            <div ref={outerDiv} className="outerDiv" onScroll={handleScroll}>
+                <div ref={topDiv} className="topDiv" />
+                <div ref={innerDiv} className="innerDiv">
+                    {isFetching ? (
+                        <ScrollTopLoading animationData={topLoaderJson} autoplay={!!isFetching} />
+                    ) : null}
                     {children}
                 </div>
             </div>
-            <button
-                style={{
-                    position: "absolute",
-                    bottom: "80px",
-                    right: "20px",
-                    zIndex: 10,
-                    borderRadius: "50%",
-                    outline: "none",
-                    border: "1px solid transparent",
-                    opacity: showScrollButton ? 1 : 0,
-                    pointerEvents: showScrollButton ? "auto" : "none",
-                }}
-                onClick={handleScrollButtonClick}
-            >
-                <ArrowDowunIcon padding={10} radius={50} />
-            </button>
-        </div>
+            {showScrollButton && <button className="bottomButton" onClick={handleScrollButtonClick}>
+                <ArrowDowunIcon />
+            </button>}
+        </Container>
     )
 };
 
@@ -177,4 +134,44 @@ const ScrollTopLoading = styled(Lottie)`
     top: 6vh;
     left: 0;
     width: 100%;
+`
+
+const Container = styled.div`
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-color: #fff;
+    overflow: hidden;
+
+   .outerDiv {
+        position: relative;
+        height: 100%;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        flex: 1 1 0;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .innerDiv {
+        position: relative;
+        flex: 0 0 auto;
+    }
+
+    .topDiv {
+        flex: 1 1 auto;
+        position: relative;
+        min-height: 12px;
+    }
+
+    .bottomButton {
+        position: absolute;
+        bottom: 80px;
+        right: 20px;
+        z-index: 10;
+        border-radius: 50%;
+        outline: none;
+        border: 1px solid transparent;
+        opacity: 1;
+        pointer-events: auto;
+    }
 `

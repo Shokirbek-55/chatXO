@@ -2,69 +2,70 @@
 import { RawMessage } from "../types/channel";
 
 export const relevanceFuniction = (message: RawMessage) => {
+  const color = message?.color?.startsWith("#") ? message?.color : '#' + message?.color;
   const relevenceStyle = {
     relevance0_9: {
-      boxShadow: `4px 4px 24px 0px ${message?.color}`,
+      boxShadow: `4px 4px 24px 0px ${color}`,
       fontSize: "10px",
       fontWeight: 400,
       lineHeight: '14px'
     },
     relevance10_19: {
-      boxShadow: `4px 4px 32px 0px ${message?.color}`,
+      boxShadow: `4px 4px 32px 0px ${color}`,
       fontSize: "10px",
       fontWeight: 500,
       lineHeight: '14px'
     },
     relevance20_29: {
-      boxShadow: `4px 8px 40px 0px ${message?.color}`,
+      boxShadow: `4px 8px 40px 0px ${color}`,
       fontSize: "10px",
       fontWeight: 500,
       lineHeight: '14px'
     },
     relevance30_39: {
-      boxShadow: `8px 12px 48px 0px ${message?.color}`,
+      boxShadow: `8px 12px 48px 0px ${color}`,
       fontSize: "12px",
       fontWeight: 500,
       lineHeight: '17px'
     },
     relevance40_49: {
-      boxShadow: `8px 12px 56px 0px ${message?.color}`,
+      boxShadow: `8px 12px 56px 0px ${color}`,
       fontSize: "14px",
       fontWeight: 500,
       lineHeight: '20px'
     },
     relevance50_59: {
-      boxShadow: `8px 16px 64px 0px ${message?.color}`,
+      boxShadow: `8px 16px 64px 0px ${color}`,
       fontSize: "14px",
       fontWeight: 500,
       lineHeight: '20px'
     },
     relevance60_69: {
-      boxShadow: `8px 16px 72px 2px ${message?.color}`,
+      boxShadow: `8px 16px 72px 2px ${color}`,
       fontSize: "16px",
       fontWeight: 600,
       lineHeight: '22px'
     },
     relevance70_79: {
-      boxShadow: `8px 16px 80px 8px ${message?.color}`,
+      boxShadow: `8px 16px 80px 8px ${color}`,
       fontSize: "16px",
       fontWeight: 700,
       lineHeight: '22px'
     },
     relevance80_89: {
-      boxShadow: `12px 20px 88px 16px ${message?.color}`,
+      boxShadow: `12px 20px 88px 16px ${color}`,
       fontSize: "18px",
       fontWeight: 700,
       lineHeight: '25px'
     },
     relevance90_99: {
-      boxShadow: `16px 24px 96px 24px ${message?.color}`,
+      boxShadow: `16px 24px 96px 24px ${color}`,
       fontSize: "18px",
       fontWeight: 800,
       lineHeight: '25px'
     },
     relevance100: {
-      boxShadow: `16px 24px 96px 32px ${message?.color}`,
+      boxShadow: `16px 24px 96px 32px ${color}`,
       fontSize: "18px",
       fontWeight: 900,
       lineHeight: '25px'
