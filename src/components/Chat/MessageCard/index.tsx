@@ -19,7 +19,7 @@ interface Props {
     position: boolean;
 }
 
-const MessageCard: FC<Props> = ({ message, position, users }) => {
+const MessageCard:FC<Props> = ({ message, position, users }) => {
     const POSITION_CONTENT = position
         ? { justifyContent: "flex-start" }
         : { justifyContent: "flex-end" };
