@@ -16,21 +16,25 @@ function HomeLayout() {
   const navigate = useNavigate();
   const { session } = useRootStore().localStore;
   const { visible, hide } = useRootStore().visibleStore;
-  const { setChannelHashId } = useRootStore().channelStore;
+  const { setChannelHashId  } = useRootStore().channelStore;
   const { closeRightSideBar } = useRootStore().routerStore;
   const hashIdArr = window.location.pathname.match(regex);
   const hashId = hashIdArr?.[1].toString();
 
+
   useEffect(() => {
     if (hashId && session.accessToken) {
-      const target = generatePath(`/:name`, {
+      const target = generatePath(`/:name` ,{
         name: `@${hashId}`,
       });
       setChannelHashId(hashId, () => navigate(target));
     } else if (!session.accessToken) {
       navigate("/auth/welcome");
     }
-  }, [hashId]);
+  },);
+
+
+
 
   return (
     <AppBody>

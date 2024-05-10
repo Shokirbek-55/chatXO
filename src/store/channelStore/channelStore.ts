@@ -41,7 +41,7 @@ type createChannelResponseType = {
     data: Channel
 }
 
-type selectedChannelType = {
+  type selectedChannelType = {
     id: number;
     hashId: string;
     slug: string;
@@ -293,6 +293,11 @@ export default class ChannelStore {
                         channel.slug
                     );
                     this.getChannelByHashId(this.hashId);
+                    this.selectedChannelData = {
+                        id: channel.id,
+                        hashId: channel.hashId,
+                        slug: channel.slug,
+                    }
                     this.rootStore.messageStore.setChannelSlug(channel.slug);
                     this.navigateChannel();
                     return true;

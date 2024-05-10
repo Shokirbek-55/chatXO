@@ -64,13 +64,19 @@ const DropDownMenu = ({ massage, children }: Props) => {
 			key: "5",
 			label: t("delete"),
 			onClick: () => {
-				if (isAdmin || massage.userId === user?.id) {
-					deleteMessage(massage.id, massage.channelSlug, new Date(massage.timestamp));
-				} else {
-					message.error("you are not admin");
-				}
+							if (isAdmin || massage.userId === user?.id) {
+											deleteMessage(
+															massage.id,
+															massage.channelSlug,
+															new Date(massage.timestamp)
+											);
+							} else {
+											message.error("you are not admin");
+							}
 			},
-		},
+},
+
+		
 		{
 			key: "6",
 			label: t("cancel"),
