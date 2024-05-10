@@ -34,9 +34,12 @@ function MessageInput() {
     const handleonSendMessage = () => {
         if (messageTextState) {
             onSendMessage("text");
-            setMessageText("");
-        }
+           setMessageText('');
+
+
+          }
     };
+
 
     useEffect(() => {
         var textarea: any = document.getElementById("textarea");
@@ -101,15 +104,16 @@ function MessageInput() {
                                     )}`
                                     : "Write a message..."
                             }
-                            value={messageTextState}
+                            value={ messageTextState }
                             onKeyDown={(e) => onSendEnter(e)}
                             autoFocus
                             disabled={recorderState.initRecording}
-                            onChange={(e) => setMessageText(e.target.value)}
+
+                            onChange={ (e) => setMessageText(e.target.value)}
                             className="textAreaInput"
                         />
                     </div>
-                    {messageTextState ? (
+                    {messageTextState ?  (
                         <button className="icon" onClick={handleonSendMessage}>
                             <SendIcon color="#303030" />
                         </button>
