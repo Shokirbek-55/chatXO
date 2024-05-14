@@ -4,7 +4,6 @@ import { useState } from "react";
 import styled from "styled-components";
 import useRootStore from "../../hooks/useRootStore";
 
-
 const StyleRangeSilder = styled.div`
   position: relative;
   overflow: hidden;
@@ -23,13 +22,13 @@ const StyleRangeSilder = styled.div`
 `;
 
 const FilterSilderComponent = () => {
-
-  const { setMessageFilterValue, messagesFilterValue } = useRootStore().messageStore
+  const { setMessageFilterValue, messagesFilterValue } =
+    useRootStore().messageStore;
   const [filter, setFilter] = useState(messagesFilterValue);
 
   const changeRelevance = (e: number) => {
-    setFilter(e)
-    setMessageFilterValue(e)
+    setFilter(e);
+    setMessageFilterValue(e);
   };
 
   return (

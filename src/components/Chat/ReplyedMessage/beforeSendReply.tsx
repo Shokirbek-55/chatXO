@@ -85,7 +85,10 @@ export const ReplyTypeRender = (ReplyMessage: RawMessage) => {
     );
   }
 
-  if (ReplyMessage.originMessage?.type === 'NORMAL' || ReplyMessage.originMessage?.type === 'RELEVANCE') {
+  if (
+    ReplyMessage.originMessage?.type === "NORMAL" ||
+    ReplyMessage.originMessage?.type === "RELEVANCE"
+  ) {
     return (
       <div className={styles.replyedMediaCard}>
         <ChartIcon
@@ -99,11 +102,11 @@ export const ReplyTypeRender = (ReplyMessage: RawMessage) => {
           style={{
             fontFamily: "sans-serif",
             color: Colors.ChatText,
-            fontSize: '12px',
+            fontSize: "12px",
             fontWeight: 700,
           }}
         />
       </div>
-    )
+    );
   }
 };

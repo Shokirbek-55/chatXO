@@ -12,93 +12,90 @@ import Text from "../../Text/Text";
 import Colors from "../../../utils/colors";
 
 interface Props {
-    message: RawMessage;
-    position?: boolean;
-    users?: {
-        [key: string]: ChannelsUsersType;
-    };
+  message: RawMessage;
+  position?: boolean;
+  users?: {
+    [key: string]: ChannelsUsersType;
+  };
 }
 
 const RepliedMessage: FC<Props> = ({ message, position, users }) => {
-    const currentUser: ChannelsUsersType | undefined = users?.[message.userId];
+  const currentUser: ChannelsUsersType | undefined = users?.[message.userId];
 
-    const positionMessage = position
-        ? { justifyContent: "flex-end" }
-        : { justifyContent: "flex-start" };
+  const positionMessage = position
+    ? { justifyContent: "flex-end" }
+    : { justifyContent: "flex-start" };
 
-    const messageHeaderIsPosition = position
-        ? { display: "none" }
-        : { display: "block", justifyContent: "flex-end" };
+  const messageHeaderIsPosition = position
+    ? { display: "none" }
+    : { display: "block", justifyContent: "flex-end" };
 
-    const MESSAGE_STYLE = relevanceFuniction(message);
-    const boxShadov = MESSAGE_STYLE?.boxShadow;
-    const textSize = MESSAGE_STYLE?.fontSize;
-    const textWeight = MESSAGE_STYLE?.fontWeight;
-    const textLineHeight = MESSAGE_STYLE?.lineHeight;
+  const MESSAGE_STYLE = relevanceFuniction(message);
+  const boxShadov = MESSAGE_STYLE?.boxShadow;
+  const textSize = MESSAGE_STYLE?.fontSize;
+  const textWeight = MESSAGE_STYLE?.fontWeight;
+  const textLineHeight = MESSAGE_STYLE?.lineHeight;
 
-    const handleRelevenceModal = () => {};
+  const handleRelevenceModal = () => {};
 
-    return (
-        <div className={styles.container} style={positionMessage}>
-            <div className={styles.originMessageCard} style={positionMessage}>
-                <div style={messageHeaderIsPosition}>
-                    <span onClick={() => handleRelevenceModal()}>
-                        <MessageHeader
-                            name={message.username}
-                            color={message.color}
-                            message={message}
-                        />
-                    </span>
-                </div>
-                <div className={styles.replyMessageBox}>
-                    <div
-                        className={styles.avatarCard}
-                        style={messageHeaderIsPosition}
-                    >
-                        <SmallAvatar
-                            style={{
-                                display: "flex",
-                                justifyContent: "flex-end",
-                            }}
-                            color={currentUser?.color}
-                            imageUrl={
-                                currentUser?.avatar
-                                    ? `${Env.AssetsUrl}/${currentUser?.avatar}`
-                                    : ""
-                            }
-                        />
-                    </div>
-                    <div
-                        className={styles.replyMessageCard}
-                        style={{ boxShadow: boxShadov }}
-                    >
-                        <MessageHeader
-                            name={message.originMessage?.username}
-                            showReply
-                            color={message?.color}
-                            style={{
-                                fontFamily: "sans-serif",
-                                fontSize: "20px",
-                            }}
-                            message={message}
-                        />
-                        {ReplyTypeRender(message)}
-                        <DropDownMenu massage={message}>
-                            <Text
-                                style={{
-                                    color: Colors.ChatText,
-                                    fontSize: textSize,
-                                    fontWeight: textWeight,
-                                    lineHeight: textLineHeight,
-                                }}
-                            >
-                                {message.message}
-                            </Text>
-                        </DropDownMenu>
-                    </div>
-                </div>
-            </div>
+  return (
+    <div className={styles.container} style={positionMessage}>
+      <div className={styles.originMessageCard} style={positionMessage}>
+        <div style={messageHeaderIsPosition}>
+          <span onClick={() => handleRelevenceModal()}>
+            <MessageHeader
+              name={message.username}
+              color={message.color}
+              message={message}
+            />
+          </span>
         </div>
-    );
+        <div className={styles.replyMessageBox}>
+          <div className={styles.avatarCard} style={messageHeaderIsPosition}>
+            <SmallAvatar
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+              color={currentUser?.color}
+              imageUrl={
+                currentUser?.avatar
+                  ? `${Env.AssetsUrl}/${currentUser?.avatar}`
+                  : ""
+              }
+            />
+          </div>
+          <div
+            className={styles.replyMessageCard}
+            style={{ boxShadow: boxShadov }}
+          >
+            <MessageHeader
+              name={message.originMessage?.username}
+              showReply
+              color={message?.color}
+              style={{
+                fontFamily: "sans-serif",
+                fontSize: "20px",
+              }}
+              message={message}
+            />
+            {ReplyTypeRender(message)}
+            <DropDownMenu massage={message}>
+              <Text
+                style={{
+                  color: Colors.ChatText,
+                  fontSize: textSize,
+                  fontWeight: textWeight,
+                  lineHeight: textLineHeight,
+                }}
+              >
+                {message.message}
+              </Text>
+            </DropDownMenu>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 export default RepliedMessage;

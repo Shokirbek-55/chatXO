@@ -119,7 +119,7 @@ const APIs = {
 
     getAllChannels: () =>
       apiService.methods.get<(Omit<Channel, "users"> & { users?: User[] })[]>(
-        `${channelUrl}/all`
+        `${channelUrl}/all`,
       ),
     createChannel: (data: CreateChannelType | FormData) =>
       apiService.methods.post<Channel>(`${channelUrl}`, data, {
@@ -136,12 +136,12 @@ const APIs = {
     createChannelAvatar: (
       hashId: string,
       data: any,
-      config: AxiosRequestConfig
+      config: AxiosRequestConfig,
     ) => {
       return apiService.methods.post(
         `${channelUrl}/${hashId}/avatar`,
         data,
-        config
+        config,
       );
     },
 
@@ -161,7 +161,7 @@ const APIs = {
         `${usersUrl}/${channelUrl}/join`,
         {
           channelId,
-        }
+        },
       ),
     leaveChannel: (channelId: number) =>
       apiService.methods.post(`${usersUrl}${channelUrl}/leave`, {
@@ -184,7 +184,7 @@ const APIs = {
 
     generateNewInviteCode: (channelNumber: string, onlyQr?: string) =>
       apiService.methods.get<{ inviteCode: string; qrCode: string }>(
-        `${channelUrl}/${channelNumber}/generate-invite-code${onlyQr || ""}`
+        `${channelUrl}/${channelNumber}/generate-invite-code${onlyQr || ""}`,
       ),
 
     addUsersToChannel: (channelHashId: string, users: number[]) =>
@@ -194,7 +194,7 @@ const APIs = {
 
     deleteUsersFromChannel: (channelHashId: string, userId: number) =>
       apiService.methods.delete(
-        `${channelUrl}/${channelHashId}/users/${userId}`
+        `${channelUrl}/${channelHashId}/users/${userId}`,
       ),
 
     delateChannelAvatar: (channelhashId: string) => {
@@ -225,7 +225,7 @@ const APIs = {
 
     getPollDetails: (pollId: number, includeVotedUsers?: boolean) =>
       apiService.methods.get(
-        `/poll/${pollId}?includeVotedUsers=${includeVotedUsers}`
+        `/poll/${pollId}?includeVotedUsers=${includeVotedUsers}`,
       ),
 
     getPollOptionInfo: (pollOptionId: number) =>

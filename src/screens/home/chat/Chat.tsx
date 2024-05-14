@@ -48,7 +48,7 @@ const Chat = () => {
         key={msg.id}
         message={msg}
         users={messageCache[slug]?.channelUsers}
-      />
+      />,
     );
   }
   const messages = useMemo(() => {
@@ -60,7 +60,7 @@ const Chat = () => {
     if (messagesFilterValue !== 0) {
       setIsMessagesLength(false);
       return messagesData.filter(
-        (e) => e.relevance && e.relevance >= messagesFilterValue
+        (e) => e.relevance && e.relevance >= messagesFilterValue,
       );
     }
     setIsMessagesLength(false);

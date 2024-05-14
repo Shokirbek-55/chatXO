@@ -1,78 +1,79 @@
-
 import { RawMessage } from "../types/channel";
 
 export const relevanceFuniction = (message: RawMessage) => {
-  const color = message?.color?.startsWith("#") ? message?.color : '#' + message?.color;
+  const color = message?.color?.startsWith("#")
+    ? message?.color
+    : "#" + message?.color;
   const relevenceStyle = {
     relevance0_9: {
       boxShadow: `4px 4px 24px 0px ${color}`,
       fontSize: "10px",
       fontWeight: 400,
-      lineHeight: '14px'
+      lineHeight: "14px",
     },
     relevance10_19: {
       boxShadow: `4px 4px 32px 0px ${color}`,
       fontSize: "10px",
       fontWeight: 500,
-      lineHeight: '14px'
+      lineHeight: "14px",
     },
     relevance20_29: {
       boxShadow: `4px 8px 40px 0px ${color}`,
       fontSize: "10px",
       fontWeight: 500,
-      lineHeight: '14px'
+      lineHeight: "14px",
     },
     relevance30_39: {
       boxShadow: `8px 12px 48px 0px ${color}`,
       fontSize: "12px",
       fontWeight: 500,
-      lineHeight: '17px'
+      lineHeight: "17px",
     },
     relevance40_49: {
       boxShadow: `8px 12px 56px 0px ${color}`,
       fontSize: "14px",
       fontWeight: 500,
-      lineHeight: '20px'
+      lineHeight: "20px",
     },
     relevance50_59: {
       boxShadow: `8px 16px 64px 0px ${color}`,
       fontSize: "14px",
       fontWeight: 500,
-      lineHeight: '20px'
+      lineHeight: "20px",
     },
     relevance60_69: {
       boxShadow: `8px 16px 72px 2px ${color}`,
       fontSize: "16px",
       fontWeight: 600,
-      lineHeight: '22px'
+      lineHeight: "22px",
     },
     relevance70_79: {
       boxShadow: `8px 16px 80px 8px ${color}`,
       fontSize: "16px",
       fontWeight: 700,
-      lineHeight: '22px'
+      lineHeight: "22px",
     },
     relevance80_89: {
       boxShadow: `12px 20px 88px 16px ${color}`,
       fontSize: "18px",
       fontWeight: 700,
-      lineHeight: '25px'
+      lineHeight: "25px",
     },
     relevance90_99: {
       boxShadow: `16px 24px 96px 24px ${color}`,
       fontSize: "18px",
       fontWeight: 800,
-      lineHeight: '25px'
+      lineHeight: "25px",
     },
     relevance100: {
       boxShadow: `16px 24px 96px 32px ${color}`,
       fontSize: "18px",
       fontWeight: 900,
-      lineHeight: '25px'
-    }
+      lineHeight: "25px",
+    },
   };
 
-  const messageRelevace = message?.relevance || 0
+  const messageRelevace = message?.relevance || 0;
 
   switch (true) {
     case messageRelevace === 100:
@@ -80,7 +81,7 @@ export const relevanceFuniction = (message: RawMessage) => {
     case messageRelevace <= 99 && messageRelevace >= 90:
       return relevenceStyle.relevance90_99;
     case messageRelevace <= 89 && messageRelevace >= 80:
-      return relevenceStyle.relevance80_89
+      return relevenceStyle.relevance80_89;
     case messageRelevace <= 79 && messageRelevace >= 70:
       return relevenceStyle.relevance70_79;
     case messageRelevace <= 69 && messageRelevace >= 60:
@@ -102,8 +103,8 @@ export const relevanceFuniction = (message: RawMessage) => {
 
 export const lightenColor = (color: string) => {
   // Ensure the input color starts with '#'
-  if (color === undefined || color === '') color = '#444555';
-  color = color.startsWith('#') ? color : '#' + color;
+  if (color === undefined || color === "") color = "#444555";
+  color = color.startsWith("#") ? color : "#" + color;
 
   // Parse the input color to get RGB values
   var r = parseInt(color.slice(1, 3), 16);
@@ -117,13 +118,13 @@ export const lightenColor = (color: string) => {
 
   // Format the new RGB values back to a hex color
   var newColor =
-    '#' +
-    (r < 16 ? '0' : '') +
+    "#" +
+    (r < 16 ? "0" : "") +
     r.toString(16) +
-    (g < 16 ? '0' : '') +
+    (g < 16 ? "0" : "") +
     g.toString(16) +
-    (b < 16 ? '0' : '') +
+    (b < 16 ? "0" : "") +
     b.toString(16);
 
   return newColor;
-}
+};

@@ -3,7 +3,7 @@ import styles from "./index.module.css";
 
 interface Props {
   onClickButton?: () => void;
-  accept?: 'image/*' | 'video/*' | 'audio/*' | 'application/*' | string;
+  accept?: "image/*" | "video/*" | "audio/*" | "application/*" | string;
   onChange?: (e: any) => void;
   children: any;
 }

@@ -12,7 +12,7 @@ interface Props {
   rounded?: boolean;
   uppercase?: boolean;
   textColor?: Color;
-  title?: string
+  title?: string;
   fontSize?: string;
   fromChatInfo?: boolean;
   style?: CSSProperties;
@@ -56,8 +56,9 @@ const ButtonView: FC<Props> = ({
             background: colors[color],
             ...style,
           }}
-          className={`${className} ${rounded ? styles.rounded : styles.notRounded
-            }`}
+          className={`${className} ${
+            rounded ? styles.rounded : styles.notRounded
+          }`}
         >
           <p className={uppercase ? styles.uppercase : styles.notuppercase}>
             {title}

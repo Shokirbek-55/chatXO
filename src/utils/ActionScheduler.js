@@ -6,93 +6,101 @@
  */
 
 class ActionScheduler {
-    constructor(actionCallback, cancelCallback) {
-        this.actions = new Map();
-        this.actionCallback = actionCallback;
-        this.cancelCallback = cancelCallback;
+  constructor(actionCallback, cancelCallback) {
+    this.actions = new Map();
+    this.actionCallback = actionCallback;
+    this.cancelCallback = cancelCallback;
+  }
+
+  add = (key, timeout, action, cancel) => {
+    if (this.actions.has(key)) {
+      return false;
     }
 
-    add = (key, timeout, action, cancel) => {
-        if (this.actions.has(key)) {
-            return false;
-        }
+    let expire = new Date();
+    expire.setMilliseconds(expire.getMilliseconds() + timeout);
 
-        let expire = new Date();
-        expire.setMilliseconds(expire.getMilliseconds() + timeout);
+    this.actions.set(key, { expire: expire, action: action, cancel: cancel });
 
-        this.actions.set(key, { expire: expire, action: action, cancel: cancel });
+    if (this.timerId) {
+      clearTimeout(this.timerId);
+    }
 
-        if (this.timerId) {
-            clearTimeout(this.timerId);
-        }
+    this.setTimeout();
 
-        this.setTimeout();
+    return true;
+  };
 
-        return true;
-    };
+  invoke = async (key) => {
+    const item = this.actions.get(key);
+    if (!item) return;
 
-    invoke = async key => {
-        const item = this.actions.get(key);
-        if (!item) return;
+    this.actions.delete(key);
 
-        this.actions.delete(key);
+    await this.actionCallback({
+      key: key,
+      action: item.action,
+      cancel: item.cancel,
+    });
+    if (item.action) await item.action();
 
-        await this.actionCallback({ key: key, action: item.action, cancel: item.cancel });
-        if (item.action) await item.action();
+    if (this.timerId) {
+      clearTimeout(this.timerId);
+    }
 
-        if (this.timerId) {
-            clearTimeout(this.timerId);
-        }
+    this.setTimeout();
+  };
 
-        this.setTimeout();
-    };
+  remove = (key) => {
+    const item = this.actions.get(key);
+    if (!item) return;
 
-    remove = key => {
-        const item = this.actions.get(key);
-        if (!item) return;
+    this.actions.delete(key);
 
-        this.actions.delete(key);
+    this.cancelCallback({ key: key, action: item.action, cancel: item.cancel });
+    if (item.cancel) item.cancel();
 
-        this.cancelCallback({ key: key, action: item.action, cancel: item.cancel });
-        if (item.cancel) item.cancel();
+    if (this.timerId) {
+      clearTimeout(this.timerId);
+    }
 
-        if (this.timerId) {
-            clearTimeout(this.timerId);
-        }
+    this.setTimeout();
+  };
 
-        this.setTimeout();
-    };
+  setTimeout = () => {
+    let now = new Date();
+    let timeout = 1000000;
+    for (let [key, value] of this.actions) {
+      let actionTimeout = value.expire - now;
+      if (actionTimeout < timeout) timeout = actionTimeout;
+      if (timeout < 0) timeout = 0;
+    }
 
-    setTimeout = () => {
-        let now = new Date();
-        let timeout = 1000000;
-        for (let [key, value] of this.actions) {
-            let actionTimeout = value.expire - now;
-            if (actionTimeout < timeout) timeout = actionTimeout;
-            if (timeout < 0) timeout = 0;
-        }
+    if (timeout < 1000000) {
+      this.timerId = setTimeout(this.handleTimer, timeout);
+    }
+  };
 
-        if (timeout < 1000000) {
-            this.timerId = setTimeout(this.handleTimer, timeout);
-        }
-    };
+  handleTimer = () => {
+    let now = new Date();
+    let expired = [];
+    for (let [key, value] of this.actions) {
+      let actionTimeout = value.expire - now;
+      if (actionTimeout <= 0) expired.push({ key: key, value: value });
+    }
 
-    handleTimer = () => {
-        let now = new Date();
-        let expired = [];
-        for (let [key, value] of this.actions) {
-            let actionTimeout = value.expire - now;
-            if (actionTimeout <= 0) expired.push({ key: key, value: value });
-        }
+    for (let item of expired) {
+      this.actions.delete(item.key);
+      this.actionCallback({
+        key: item.key,
+        action: item.value.action,
+        cancel: item.value.cancel,
+      });
+      if (item.value.action) item.value.action();
+    }
 
-        for (let item of expired) {
-            this.actions.delete(item.key);
-            this.actionCallback({ key: item.key, action: item.value.action, cancel: item.value.cancel });
-            if (item.value.action) item.value.action();
-        }
-
-        this.setTimeout();
-    };
+    this.setTimeout();
+  };
 }
 
 export default ActionScheduler;

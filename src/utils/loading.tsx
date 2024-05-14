@@ -16,13 +16,9 @@ const FullScreen = styled.div`
   align-items: center;
   justify-content: center;
 `;
-const Loading: React.FC<Props> = ({
-  isLoad,
-  style
-}) => {
-
+const Loading: React.FC<Props> = ({ isLoad, style }) => {
   return (
-    <FullScreen style={{ ...style, display: isLoad ? 'flex' : 'none' }}>
+    <FullScreen style={{ ...style, display: isLoad ? "flex" : "none" }}>
       <Lottie
         animationData={loadingChatxo}
         loop={isLoad}

@@ -20,7 +20,7 @@ export function extractHourMinute(dateTimeString: Date) {
   const hour = dateTime.getUTCHours();
   const minute = dateTime.getUTCMinutes();
 
-  return `${hour}:${minute}`
+  return `${hour}:${minute}`;
 }
 
 export const parseJsonData = (jsonData: string): DataObject => {
@@ -31,4 +31,3 @@ export const parseJsonData = (jsonData: string): DataObject => {
     return {};
   }
 };
-

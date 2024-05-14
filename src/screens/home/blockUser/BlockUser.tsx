@@ -9,59 +9,57 @@ import useRootStore from "../../../hooks/useRootStore";
 import styles from "./BlockUser.module.css";
 
 const BlockUser = () => {
-    const { t } = useTranslation();
-    const { unblockUser, getBlockedUser, channelData, adminId } =
-        useRootStore().channelStore;
-    const { closeModal } = useRootStore().routerStore;
+  const { t } = useTranslation();
+  const { unblockUser, getBlockedUser, channelData, adminId } =
+    useRootStore().channelStore;
+  const { closeModal } = useRootStore().routerStore;
 
-    const UnBlockUser = (id) => {
-        unblockUser(channelData.hashId, id);
-    };
+  const UnBlockUser = (id) => {
+    unblockUser(channelData.hashId, id);
+  };
 
-    return (
-        <div>
-            <Header
-                text={t("block_user_button")}
-                leftIcon="arrowLeft"
-                onLeftIconPress={() => closeModal("right")}
-            />
-            <div className={styles.searchBox}>
-                <SearchInput
-                    onChange={() => {}}
-                    placeholder={`${t("searchPlaceholder")}`}
+  return (
+    <div>
+      <Header
+        text={t("block_user_button")}
+        leftIcon="arrowLeft"
+        onLeftIconPress={() => closeModal("right")}
+      />
+      <div className={styles.searchBox}>
+        <SearchInput
+          onChange={() => {}}
+          placeholder={`${t("searchPlaceholder")}`}
+        />
+      </div>
+      <div>
+        {Object.values(getBlockedUser).length !== 0 ? (
+          Object.values(getBlockedUser)
+            .filter((e) => e.id !== adminId)
+            .map((e, index) => {
+              return (
+                <RowItemView
+                  key={index}
+                  loading={false}
+                  color={
+                    e.color
+                      ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)`
+                      : "linear-gradient(#ddd, #666)"
+                  }
+                  imageUrl={e.avatar ? `${TMP_URL}${e.avatar}` : ""}
+                  onButtonPress={() => UnBlockUser(e.id)}
+                  text={e.username}
+                  rightButton={true}
+                  title={`${t("unblock_user_button")}`}
+                  className="unblock_user_btn"
                 />
-            </div>
-            <div>
-                {Object.values(getBlockedUser).length !== 0 ? (
-                    Object.values(getBlockedUser)
-                        .filter((e) => e.id !== adminId)
-                        .map((e, index) => {
-                            return (
-                                <RowItemView
-                                    key={index}
-                                    loading={false}
-                                    color={
-                                        e.color
-                                            ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)`
-                                            : "linear-gradient(#ddd, #666)"
-                                    }
-                                    imageUrl={
-                                        e.avatar ? `${TMP_URL}${e.avatar}` : ""
-                                    }
-                                    onButtonPress={() => UnBlockUser(e.id)}
-                                    text={e.username}
-                                    rightButton={true}
-                                    title={`${t("unblock_user_button")}`}
-                                    className="unblock_user_btn"
-                                />
-                            );
-                        })
-                ) : (
-                    <MessageBox title={`${t("no_blocked_users")}`} />
-                )}
-            </div>
-        </div>
-    );
+              );
+            })
+        ) : (
+          <MessageBox title={`${t("no_blocked_users")}`} />
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default observer(BlockUser);

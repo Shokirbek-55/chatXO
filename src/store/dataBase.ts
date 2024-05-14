@@ -1,4 +1,4 @@
-import Assets from "../utils/requireAssets"
+import Assets from "../utils/requireAssets";
 
 export const friend = [
   {
@@ -8,7 +8,7 @@ export const friend = [
     email: "example3@gmail.com",
     avatar: null,
     color: null,
-    active: false
+    active: false,
   },
   {
     relevance: 0,
@@ -17,7 +17,7 @@ export const friend = [
     email: "shahzodtoyirov99@gmail.com",
     avatar: null,
     color: "#A18619",
-    active: true
+    active: true,
   },
   {
     relevance: 0,
@@ -26,38 +26,41 @@ export const friend = [
     email: "boxing04@gmail.com",
     avatar: null,
     color: null,
-    active: false
+    active: false,
   },
-]
+];
 
 export const myData = {
-  avatar: 'https://www.seiu1000.org/sites/main/files/main-images/camera_lense_0.jpeg',
+  avatar:
+    "https://www.seiu1000.org/sites/main/files/main-images/camera_lense_0.jpeg",
   color: null,
   username: "Nurulloh",
-  email: "nurulloh1809@gmail.com"
-}
+  email: "nurulloh1809@gmail.com",
+};
 export const channels = [
   {
-    avatar: 'https://www.seiu1000.org/sites/main/files/main-images/camera_lense_0.jpeg',
+    avatar:
+      "https://www.seiu1000.org/sites/main/files/main-images/camera_lense_0.jpeg",
     color: "#A18619",
-    name: "Empire"
+    name: "Empire",
   },
   {
     avatar: null,
     color: null,
-    name: "Empire"
+    name: "Empire",
   },
   {
     avatar: null,
     color: "#A18619",
-    name: "Empire"
+    name: "Empire",
   },
   {
-    avatar: 'https://www.seiu1000.org/sites/main/files/main-images/camera_lense_0.jpeg',
+    avatar:
+      "https://www.seiu1000.org/sites/main/files/main-images/camera_lense_0.jpeg",
     color: null,
-    name: "Empire"
-  }
-]
+    name: "Empire",
+  },
+];
 
 export const userList = [
   {
@@ -67,7 +70,7 @@ export const userList = [
     email: "example3@gmail.com",
     avatar: null,
     color: null,
-    active: false
+    active: false,
   },
   {
     relevance: 0,
@@ -76,7 +79,7 @@ export const userList = [
     email: "shahzodtoyirov99@gmail.com",
     avatar: null,
     color: "#A18619",
-    active: true
+    active: true,
   },
   {
     relevance: 0,
@@ -85,7 +88,7 @@ export const userList = [
     email: "boxing04@gmail.com",
     avatar: null,
     color: null,
-    active: false
+    active: false,
   },
   {
     relevance: 0,
@@ -94,7 +97,7 @@ export const userList = [
     email: "boxing04@gmail.com",
     avatar: null,
     color: null,
-    active: false
+    active: false,
   },
   {
     relevance: 0,
@@ -103,7 +106,7 @@ export const userList = [
     email: "boxing04@gmail.com",
     avatar: null,
     color: null,
-    active: false
+    active: false,
   },
   {
     relevance: 0,
@@ -112,7 +115,7 @@ export const userList = [
     email: "boxing04@gmail.com",
     avatar: null,
     color: null,
-    active: false
+    active: false,
   },
   {
     relevance: 0,
@@ -121,15 +124,7 @@ export const userList = [
     email: "boxing04@gmail.com",
     avatar: null,
     color: null,
-    active: false
-  },{
-    relevance: 0,
-    username: "Nurulloh01",
-    id: 22,
-    email: "boxing04@gmail.com",
-    avatar: null,
-    color: null,
-    active: false
+    active: false,
   },
   {
     relevance: 0,
@@ -138,31 +133,42 @@ export const userList = [
     email: "boxing04@gmail.com",
     avatar: null,
     color: null,
-    active: false
+    active: false,
   },
-]
+  {
+    relevance: 0,
+    username: "Nurulloh01",
+    id: 22,
+    email: "boxing04@gmail.com",
+    avatar: null,
+    color: null,
+    active: false,
+  },
+];
 export const weChanels = [
   {
-    avatar: 'https://www.seiu1000.org/sites/main/files/main-images/camera_lense_0.jpeg',
+    avatar:
+      "https://www.seiu1000.org/sites/main/files/main-images/camera_lense_0.jpeg",
     color: "#A18619",
-    name: "Empire"
+    name: "Empire",
   },
-   {
-    avatar: 'https://www.seiu1000.org/sites/main/files/main-images/camera_lense_0.jpeg',
+  {
+    avatar:
+      "https://www.seiu1000.org/sites/main/files/main-images/camera_lense_0.jpeg",
     color: "#A18619",
-    name: "Empire"
+    name: "Empire",
   },
-]
+];
 
 export const friendDetails = {
-    relevance: 0,
-    username: "Shahzod Toyirov",
-    id: 6,
-    email: "shahzodtoyirov99@gmail.com",
-    avatar: null,
-    color: "#A18619",
-    active: true
-}
+  relevance: 0,
+  username: "Shahzod Toyirov",
+  id: 6,
+  email: "shahzodtoyirov99@gmail.com",
+  avatar: null,
+  color: "#A18619",
+  active: true,
+};
 
 export const data = {
   id: 1,
@@ -191,23 +197,23 @@ export const data = {
   isOpen: false,
   users: [
     {
-    relevance: 0,
-    username: "Nurulloh01",
-    id: 22,
-    email: "boxing04@gmail.com",
-    avatar: null,
-    color: null,
-    active: false
-  },
-  {
-    relevance: 0,
-    username: "Nurulloh01",
-    id: 22,
-    email: "boxing04@gmail.com",
-    avatar: null,
-    color: null,
-    active: false
-  },
+      relevance: 0,
+      username: "Nurulloh01",
+      id: 22,
+      email: "boxing04@gmail.com",
+      avatar: null,
+      color: null,
+      active: false,
+    },
+    {
+      relevance: 0,
+      username: "Nurulloh01",
+      id: 22,
+      email: "boxing04@gmail.com",
+      avatar: null,
+      color: null,
+      active: false,
+    },
   ],
   inviteCode: "",
   groupNumber: "",
@@ -215,7 +221,7 @@ export const data = {
   invitationCodes: [],
   qrCode: "",
   isBlocked: false,
-}
+};
 
 export const blockedUser = [
   {
@@ -225,6 +231,6 @@ export const blockedUser = [
     email: "boxing04@gmail.com",
     avatar: null,
     color: null,
-    active: false
-  }
-]
+    active: false,
+  },
+];

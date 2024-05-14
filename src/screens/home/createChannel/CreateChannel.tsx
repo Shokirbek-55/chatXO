@@ -14,145 +14,131 @@ import { ButtonComponent } from "../../../utils/button";
 import styles from "./CreateChannel.module.css";
 
 const CreateChannel = () => {
-    const { t } = useTranslation();
-    const navigation = useNavigate();
-    const {
-        closeModal,
-        openRightSideBar,
-        toRouterManageCh,
-        setCurrentRoute,
-        toRouter,
-    } = useRootStore().routerStore;
-    const {
-        createAvatar,
-        createChannel,
-        setCreateChannelState,
-        setCreateChannelData,
-        setCropAvatarState
-    } = useRootStore().channelStore;
-    const { visible, toglevisible, show } = useRootStore().visibleStore;
+  const { t } = useTranslation();
+  const navigation = useNavigate();
+  const {
+    closeModal,
+    openRightSideBar,
+    toRouterManageCh,
+    setCurrentRoute,
+    toRouter,
+  } = useRootStore().routerStore;
+  const {
+    createAvatar,
+    createChannel,
+    setCreateChannelState,
+    setCreateChannelData,
+    setCropAvatarState,
+  } = useRootStore().channelStore;
+  const { visible, toglevisible, show } = useRootStore().visibleStore;
 
-    const isPrivateGruop = (checked: boolean) => {
-        setCreateChannelState("isPrivate", checked);
-    };
+  const isPrivateGruop = (checked: boolean) => {
+    setCreateChannelState("isPrivate", checked);
+  };
 
-    const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files?.length) {
-            setCropAvatarState(e.target.files[0], 'crateChannel');
-            show("chUploadFile");
-        }
-    };
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.length) {
+      setCropAvatarState(e.target.files[0], "crateChannel");
+      show("chUploadFile");
+    }
+  };
 
-    const callbackHandle = (e) => {
-        const target = (e) =>
-            generatePath(`/:name`, {
-                name: `@${e}`,
-            });
-        setCurrentRoute("channels");
-        closeModal("left");
-        navigation(target(e));
-        openRightSideBar();
-        toRouterManageCh("editChannel");
-    };
+  const callbackHandle = (e) => {
+    const target = (e) =>
+      generatePath(`/:name`, {
+        name: `@${e}`,
+      });
+    setCurrentRoute("channels");
+    closeModal("left");
+    navigation(target(e));
+    openRightSideBar();
+    toRouterManageCh("editChannel");
+  };
 
-    const CreateChannel = () => {
-        if (setCreateChannelData.name?.length > 1) {
-            createChannel((e) => callbackHandle(e));
-        } else {
-            message.warning("Please enter group name");
-        }
-    };
+  const CreateChannel = () => {
+    if (setCreateChannelData.name?.length > 1) {
+      createChannel((e) => callbackHandle(e));
+    } else {
+      message.warning("Please enter group name");
+    }
+  };
 
-    return (
-        <div className={styles.container}>
-            <Header
-                text={t("createGroup")}
-                leftIcon={"arrowLeft"}
-                onLeftIconPress={() => closeModal("left")}
-            />
-            <div className={styles.contentBox}>
-                <div className={styles.contentTop}>
-                    <AvatarUpload
-                        color={
-                            setCreateChannelData.color || "linear-gradient(#ddd, #666)"
-                        }
-                        upload={true}
-                        imageUrl={createAvatar}
-                        onChange={(e) => handleFileChange(e)}
-                    />
-                    <NewInput
-                        onChange={(e) => setCreateChannelState("name", e)}
-                        placeholder="Group Name"
-                        margin="15px 0 0 0"
-                        fontSize="15px"
-                        value={setCreateChannelData.name}
-                    />
-                </div>
-                <div className={styles.contentBottom}>
-                    <div className={styles.descriptionBox}>
-                        <textarea
-                            className={styles.description}
-                            rows={6}
-                            placeholder="Enter description"
-                            value={setCreateChannelData.description}
-                            onChange={(e) =>
-                                setCreateChannelState(
-                                    "description",
-                                    e.target.value
-                                )
-                            }
-                        />
-                    </div>
-                    <div className={styles.settings}>
-                        <MenuItem
-                            icon={<MdGroup size={24} />}
-                            title={`Group type: ${setCreateChannelData.isPrivate
-                                ? "Private"
-                                : "Public"
-                                }`}
-                            right={<Switch onChange={isPrivateGruop} />}
-                        />
-                        <MenuItem
-                            icon={<IoMdFunnel size={24} />}
-                            title="Default relevance"
-                            right={
-                                setCreateChannelData.defaultRelevance || "0"
-                            }
-                            onClick={() =>
-                                toglevisible("relevenceSliderCreate")
-                            }
-                        />
-                        <div
-                            className={styles.sliderBox}
-                            style={{
-                                display: visible.relevenceSliderCreate
-                                    ? "block"
-                                    : "none",
-                            }}
-                        >
-                            <Slider
-                                className={styles.slider}
-                                onChange={(e) =>
-                                    setCreateChannelState("defaultRelevance", e)
-                                }
-                            />
-                        </div>
-                        <MenuItem
-                            icon={<MdGroup size={24} />}
-                            title="Add participiants"
-                            onClick={() => toRouter("collectUsers")}
-                        />
-                    </div>
-                    <ButtonComponent
-                        width="100%"
-                        margin="10px 0 0 0"
-                        text="Create new group"
-                        clickMe={CreateChannel}
-                    />
-                </div>
-            </div>
+  return (
+    <div className={styles.container}>
+      <Header
+        text={t("createGroup")}
+        leftIcon={"arrowLeft"}
+        onLeftIconPress={() => closeModal("left")}
+      />
+      <div className={styles.contentBox}>
+        <div className={styles.contentTop}>
+          <AvatarUpload
+            color={setCreateChannelData.color || "linear-gradient(#ddd, #666)"}
+            upload={true}
+            imageUrl={createAvatar}
+            onChange={(e) => handleFileChange(e)}
+          />
+          <NewInput
+            onChange={(e) => setCreateChannelState("name", e)}
+            placeholder="Group Name"
+            margin="15px 0 0 0"
+            fontSize="15px"
+            value={setCreateChannelData.name}
+          />
         </div>
-    );
+        <div className={styles.contentBottom}>
+          <div className={styles.descriptionBox}>
+            <textarea
+              className={styles.description}
+              rows={6}
+              placeholder="Enter description"
+              value={setCreateChannelData.description}
+              onChange={(e) =>
+                setCreateChannelState("description", e.target.value)
+              }
+            />
+          </div>
+          <div className={styles.settings}>
+            <MenuItem
+              icon={<MdGroup size={24} />}
+              title={`Group type: ${
+                setCreateChannelData.isPrivate ? "Private" : "Public"
+              }`}
+              right={<Switch onChange={isPrivateGruop} />}
+            />
+            <MenuItem
+              icon={<IoMdFunnel size={24} />}
+              title="Default relevance"
+              right={setCreateChannelData.defaultRelevance || "0"}
+              onClick={() => toglevisible("relevenceSliderCreate")}
+            />
+            <div
+              className={styles.sliderBox}
+              style={{
+                display: visible.relevenceSliderCreate ? "block" : "none",
+              }}
+            >
+              <Slider
+                className={styles.slider}
+                onChange={(e) => setCreateChannelState("defaultRelevance", e)}
+              />
+            </div>
+            <MenuItem
+              icon={<MdGroup size={24} />}
+              title="Add participiants"
+              onClick={() => toRouter("collectUsers")}
+            />
+          </div>
+          <ButtonComponent
+            width="100%"
+            margin="10px 0 0 0"
+            text="Create new group"
+            clickMe={CreateChannel}
+          />
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default observer(CreateChannel);

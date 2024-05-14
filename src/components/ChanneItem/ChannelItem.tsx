@@ -21,14 +21,14 @@ const ChannelRowItem: FC<Props> = ({
   item,
   onPress,
   number,
-  natification
+  natification,
 }) => {
-
   return (
     <motion.div
       id="map-dev"
       initial={{ scale: 1 }}
-      onClick={() => onPress && onPress(item?.hashId || "")}>
+      onClick={() => onPress && onPress(item?.hashId || "")}
+    >
       <ChannelAvatar
         name={name}
         imageUrl={imageUrl}

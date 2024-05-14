@@ -15,14 +15,15 @@ type RecoderStateType = {
   recordingMinutes: number;
   recordingSeconds: number;
   initRecording: boolean;
-  mediaStream: null | any
-  mediaRecorder: null | any
-  audio: null | any
-}
+  mediaStream: null | any;
+  mediaRecorder: null | any;
+  audio: null | any;
+};
 
 const useRecorder = () => {
-  const [recorderState, setRecorderState] = useState<RecoderStateType>(initialState);
-  const { readFile } = useRootStore().messageStore
+  const [recorderState, setRecorderState] =
+    useState<RecoderStateType>(initialState);
+  const { readFile } = useRootStore().messageStore;
 
   useEffect(() => {
     const MAX_RECORDER_TIME = 5;
@@ -112,6 +113,6 @@ const useRecorder = () => {
     cancelRecording: () => setRecorderState(initialState),
     saveRecording: () => saveRecording(recorderState.mediaRecorder),
   };
-}
+};
 
-export default useRecorder
+export default useRecorder;

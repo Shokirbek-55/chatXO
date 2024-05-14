@@ -64,7 +64,7 @@ const ChatHeader = () => {
       color: getSelectedChannelData.color,
       name: getSelectedChannelData.name,
     }),
-    [...Object.values(getSelectedChannelData)]
+    [...Object.values(getSelectedChannelData)],
   );
 
   return (
@@ -227,7 +227,8 @@ const BassComponent = styled.div`
   background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(25px);
   z-index: 15;
-  box-shadow: 0px 8px 48px 0px rgba(32, 35, 39, 0.02),
+  box-shadow:
+    0px 8px 48px 0px rgba(32, 35, 39, 0.02),
     0px 4px 8px 0px rgba(32, 35, 39, 0.04),
     0px 0px 1px 0px rgba(32, 35, 39, 0.16);
 

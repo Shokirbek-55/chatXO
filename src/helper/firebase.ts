@@ -1,5 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
+import {
+  getAuth,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAdMuI1wT1mK1Y5drZ8O6GaFxH3f_zmJUY",
@@ -19,13 +23,13 @@ const auth = getAuth(app);
 const providerOAuth = new GoogleAuthProvider();
 
 providerOAuth.setCustomParameters({
-  prompt: 'select_account'
+  prompt: "select_account",
 });
 
 const providerFC = new FacebookAuthProvider();
 
 providerFC.setCustomParameters({
-  prompt: 'select_account'
+  prompt: "select_account",
 });
 
-export { auth, providerOAuth, providerFC }
+export { auth, providerOAuth, providerFC };

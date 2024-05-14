@@ -18,11 +18,7 @@ interface Props {
   mediaTitle?: string;
 }
 
-const MessageDoc: FC<Props> = ({
-  message,
-  mediaLocation,
-  mediaTitle,
-}) => {
+const MessageDoc: FC<Props> = ({ message, mediaLocation, mediaTitle }) => {
   const [percentCompleted, setPercentCompleted] = useState<any>(0);
 
   const filename = mediaTitle ?? "";
@@ -30,14 +26,14 @@ const MessageDoc: FC<Props> = ({
   const MESSAGE_STYLE = relevanceFuniction(message);
   const textSize = MESSAGE_STYLE?.fontSize;
 
-  const handleClickDownloader = async() => {
+  const handleClickDownloader = async () => {
     await axios({
       url: `${Env.AssetsUrl}/${mediaLocation}`,
       method: "GET",
       responseType: "blob", // important
       onDownloadProgress: (progressEvent) => {
         setPercentCompleted(
-          Math.round((progressEvent.loaded * 100) / progressEvent.total!)
+          Math.round((progressEvent.loaded * 100) / progressEvent.total!),
         ); // you can use this to show user percentage of file downloaded
       },
     })
@@ -47,7 +43,7 @@ const MessageDoc: FC<Props> = ({
         const url = window.URL.createObjectURL(
           new Blob([response.data], {
             type: response.headers["content-type"],
-          })
+          }),
         );
         const link = document.createElement("a");
         link.href = url;
@@ -72,27 +68,24 @@ const MessageDoc: FC<Props> = ({
   };
 
   return (
-          <div
-            className={styles.ownCard}
-            onClick={() => handleClickDownloader()}
-          >
-            <div
-              className={styles.ondownloadCard}
-              style={{ backgroundColor: Colors.YellowOrange }}
-            >
-              {changeIcons()}
-            </div>
-            <span
-              style={{
-                fontSize: textSize,
-                marginTop: "10px",
-          fontFamily: 'Montserrat',
-          fontWeight:500
-              }}
-            >
-              {mediaTitle}
-            </span>
-          </div>
+    <div className={styles.ownCard} onClick={() => handleClickDownloader()}>
+      <div
+        className={styles.ondownloadCard}
+        style={{ backgroundColor: Colors.YellowOrange }}
+      >
+        {changeIcons()}
+      </div>
+      <span
+        style={{
+          fontSize: textSize,
+          marginTop: "10px",
+          fontFamily: "Montserrat",
+          fontWeight: 500,
+        }}
+      >
+        {mediaTitle}
+      </span>
+    </div>
   );
 };
 

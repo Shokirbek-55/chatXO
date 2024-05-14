@@ -75,7 +75,7 @@ const MessageComponent: FC<Props> = ({
         }) +
           generatePath("/:hashtag", {
             hashtag: tag,
-          })
+          }),
       );
     }
   };
@@ -88,7 +88,7 @@ const MessageComponent: FC<Props> = ({
 
   const renderMessage = useMemo(
     () => <RenderMessage message={msg} />,
-    [msg, pimp]
+    [msg, pimp],
   );
 
   if (msg.userId === -1) {

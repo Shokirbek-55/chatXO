@@ -30,7 +30,7 @@ export type Session = {
   data: {
     accessToken: string;
     refreshToken: string;
-  }
+  };
 };
 
 export type MsgLocation = {

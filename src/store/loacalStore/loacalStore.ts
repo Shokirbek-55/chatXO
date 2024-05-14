@@ -2,138 +2,136 @@ import { makeAutoObservable, runInAction, toJS } from "mobx";
 import { Session } from "../../types/auth";
 import { User } from "../../types/user";
 
-
-export const TOKENS = 'tokens';
-const USER = 'user';
+export const TOKENS = "tokens";
+const USER = "user";
 
 export default class LocalStore {
-    constructor() {
-        makeAutoObservable(this);
-    }
+  constructor() {
+    makeAutoObservable(this);
+  }
 
-    session: Session['data'] = {
-        accessToken: '',
-        refreshToken: '',
-    };
+  session: Session["data"] = {
+    accessToken: "",
+    refreshToken: "",
+  };
 
-    user: User | null = null;
+  user: User | null = null;
 
-    value: any = null;
+  value: any = null;
 
-    getToken = async () => {
-        try {
-            const value = window.localStorage.getItem(TOKENS);
-            if (value) {
-                runInAction(() => {
-                    this.session = JSON.parse(value);
-                })
-                return value
-            }
-            console.log(toJS(this.session));
-        } catch (error) {
-            console.log('Token not found localStore');
-        }
-    }
-
-    setToken = async (data: Session['data']) => {
+  getToken = async () => {
+    try {
+      const value = window.localStorage.getItem(TOKENS);
+      if (value) {
         runInAction(() => {
-            this.session = data;
-        })
-        try {
-            window.localStorage.setItem(TOKENS, JSON.stringify(data));
-        } catch (error) {
-            console.log('Can not set token localStore');
-        }
+          this.session = JSON.parse(value);
+        });
+        return value;
+      }
+      console.log(toJS(this.session));
+    } catch (error) {
+      console.log("Token not found localStore");
     }
+  };
 
-    removeToken = async () => {
-        try {
-            window.localStorage.removeItem(TOKENS);
-            runInAction(() => {
-                this.session = {
-                    accessToken: '',
-                    refreshToken: '',
-                };
-            })
-        } catch (error) {
-            console.log('Can not remove token localStore');
-        }
+  setToken = async (data: Session["data"]) => {
+    runInAction(() => {
+      this.session = data;
+    });
+    try {
+      window.localStorage.setItem(TOKENS, JSON.stringify(data));
+    } catch (error) {
+      console.log("Can not set token localStore");
     }
+  };
 
-    getUser = async () => {
-        try {
-            const value = window.localStorage.getItem(USER);
-            if (value) {
-                runInAction(() => {
-                    this.user = JSON.parse(value);
-                })
-                return value
-            }
-        } catch (error) {
-            console.log('User not found localStore');
-        }
+  removeToken = async () => {
+    try {
+      window.localStorage.removeItem(TOKENS);
+      runInAction(() => {
+        this.session = {
+          accessToken: "",
+          refreshToken: "",
+        };
+      });
+    } catch (error) {
+      console.log("Can not remove token localStore");
     }
+  };
 
-    setUser = async (data: User) => {
+  getUser = async () => {
+    try {
+      const value = window.localStorage.getItem(USER);
+      if (value) {
         runInAction(() => {
-            this.user = data;
-        })
-        try {
-            window.localStorage.setItem(USER, JSON.stringify(data));
-        } catch (error) {
-            console.log('Can not set user localStore');
-        }
+          this.user = JSON.parse(value);
+        });
+        return value;
+      }
+    } catch (error) {
+      console.log("User not found localStore");
     }
+  };
 
-    removeUser = async () => {
-        try {
-            window.localStorage.removeItem(USER);
-            runInAction(() => {
-                this.user = null;
-            })
-        } catch (error) {
-            console.log('Can not remove user localStore');
-        }
+  setUser = async (data: User) => {
+    runInAction(() => {
+      this.user = data;
+    });
+    try {
+      window.localStorage.setItem(USER, JSON.stringify(data));
+    } catch (error) {
+      console.log("Can not set user localStore");
     }
+  };
 
-
-    getLocalStore = async (key: string) => {
-        this.value = null;
-        try {
-            const value = window.localStorage.getItem(key);
-            if (value) {
-                this.value = JSON.parse(value);
-                return value
-            }
-        } catch (error) {
-            console.log('Not found localStore');
-        }
+  removeUser = async () => {
+    try {
+      window.localStorage.removeItem(USER);
+      runInAction(() => {
+        this.user = null;
+      });
+    } catch (error) {
+      console.log("Can not remove user localStore");
     }
+  };
 
-    setLocalStore = async (key: string, value: any) => {
-        try {
-            window.localStorage.setItem(key, JSON.stringify(value));
-            this.value = value
-        } catch (error) {
-            console.log('Can not set localStore');
-        }
+  getLocalStore = async (key: string) => {
+    this.value = null;
+    try {
+      const value = window.localStorage.getItem(key);
+      if (value) {
+        this.value = JSON.parse(value);
+        return value;
+      }
+    } catch (error) {
+      console.log("Not found localStore");
     }
+  };
 
-    removeLocalStore = async (key: string) => {
-        try {
-            window.localStorage.removeItem(key);
-            this.value = null;
-        } catch (error) {
-            console.log('Can not remove localStore');
-        }
+  setLocalStore = async (key: string, value: any) => {
+    try {
+      window.localStorage.setItem(key, JSON.stringify(value));
+      this.value = value;
+    } catch (error) {
+      console.log("Can not set localStore");
     }
+  };
 
-    clearLocalStore = async () => {
-        try {
-            window.localStorage.clear();
-            this.value = null;
-        } catch (error) {
-            console.log('Can not clear localStore');
-        }
+  removeLocalStore = async (key: string) => {
+    try {
+      window.localStorage.removeItem(key);
+      this.value = null;
+    } catch (error) {
+      console.log("Can not remove localStore");
     }
+  };
+
+  clearLocalStore = async () => {
+    try {
+      window.localStorage.clear();
+      this.value = null;
+    } catch (error) {
+      console.log("Can not clear localStore");
+    }
+  };
 }

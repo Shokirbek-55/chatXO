@@ -86,12 +86,12 @@ export const ButtonComponent = ({
       loadingType && ButtonLoadingAnimations[loadingType],
       icon && ButtonIcons[icon],
     ],
-    [icon, loadingType]
+    [icon, loadingType],
   );
 
   const buttonDisabled = useMemo(
     () => disabled || isLoading,
-    [disabled, isLoading]
+    [disabled, isLoading],
   );
   return (
     <button

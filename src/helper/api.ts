@@ -13,7 +13,7 @@ export const combineUrls = (url: string): string => {
 };
 
 export const combineConfig = (
-  config: AxiosRequestConfig | undefined
+  config: AxiosRequestConfig | undefined,
 ): AxiosRequestConfig | undefined => {
   return { ...globalRequestConfig, ...config };
 };

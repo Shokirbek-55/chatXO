@@ -59,12 +59,12 @@ const MessageHeader = ({
 
   const myself = useMemo(
     () => channelUsers.find((e) => e.id === user.id),
-    [channelUsers, user]
+    [channelUsers, user],
   );
 
   const data: DataObject = useMemo(
     () => (message?.pimps ? parseJsonData(message.pimps) : {}),
-    [message]
+    [message],
   );
 
   useEffect(() => {
@@ -80,7 +80,7 @@ const MessageHeader = ({
       userId,
       message.messageId,
       message.channelSlug,
-      message.timestamp
+      message.timestamp,
     );
     console.log(toJS(myself));
     setPimp &&
@@ -96,7 +96,7 @@ const MessageHeader = ({
       userId,
       message.messageId,
       message.channelSlug,
-      message.timestamp
+      message.timestamp,
     );
     const keys = Object.keys(data);
     const il = keys[0] === `${user?.id}` ? 1 : 0;

@@ -31,10 +31,10 @@ export default class AuthStore {
   getMeOperation = new Operation<User>({} as User);
   loginOAuthOperation = new Operation<Session["data"]>({} as Session["data"]);
   deleteUserOperation = new Operation<{ userId: number }>(
-    {} as { userId: number }
+    {} as { userId: number },
   );
   resetPassOperation = new Operation<{ email: string }>(
-    {} as { email: string }
+    {} as { email: string },
   );
 
   navigateAuth: () => void = () => {};
@@ -130,7 +130,7 @@ export default class AuthStore {
   verify = async (
     data: RegisterData & {
       code: string;
-    }
+    },
   ) => {
     await this.verifyOperation.run(() => APIs.verify(data));
     if (this.verifyOperation.data && this.verifyOperation.isSuccess) {
@@ -156,7 +156,7 @@ export default class AuthStore {
       this.navigateAuth = callabck;
     });
     await this.logoutOperation.run(() =>
-      APIs.logout(this.root.localStore.session.refreshToken)
+      APIs.logout(this.root.localStore.session.refreshToken),
     );
     if (this.logoutOperation.data) {
       runInAction(() => {

@@ -68,7 +68,7 @@ const MessageAudio: FC<Props> = ({ message, users, position }) => {
       audioRef.current.addEventListener("timeupdate", () => {
         if (audioRef.current) {
           setTimeUpdate(
-            Math.floor((audioRef.current.currentTime / duration) * 100)
+            Math.floor((audioRef.current.currentTime / duration) * 100),
           );
           setValue(Math.floor((audioRef.current.currentTime / duration) * 100));
           if (audioRef.current.currentTime === duration) {

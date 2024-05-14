@@ -13,7 +13,7 @@ interface propType {
   backColor?: string;
   outline?: string;
   fontFamily?: string;
-  fontWeight?: number
+  fontWeight?: number;
   onChangeText: (e: any) => void;
 }
 

@@ -39,7 +39,7 @@ const ChatHashtag = () => {
     if (messagesFilterValue !== 0) {
       setIsMessagesLength(false);
       return messagesData.filter(
-        (e) => e.relevance && e.relevance >= messagesFilterValue
+        (e) => e.relevance && e.relevance >= messagesFilterValue,
       );
     }
     setIsMessagesLength(false);
