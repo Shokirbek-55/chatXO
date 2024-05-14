@@ -8,7 +8,7 @@ function App() {
       if (event.key === "Tab") {
         event.preventDefault(); // Default tab o'zgarishi to'xtatiladi
         const focusableElements = document.querySelectorAll(
-          "input, select, textarea, button",
+          "input, select, textarea, button"
         );
         const firstElement: any = focusableElements[0];
         const lastElement: any =
