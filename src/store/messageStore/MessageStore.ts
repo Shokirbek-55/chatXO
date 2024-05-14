@@ -304,7 +304,6 @@ export default class MessageStore {
         this.app.socketStore.socket?.on(
             'history',
             (data: { messages: RawMessage[]; pageState: string; end: boolean }) => {
-                data.messages = _.reverse(toJS(data.messages));
                 if (this.app.hashtagStore.isOpenHashTagScreen) {
                     this.app.hashtagStore.setAllHashTagsMessages(data);
                 } else {
