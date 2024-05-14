@@ -5,14 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-
 import { isWebpSupported } from '../utils/Common';
 import FileStore from './Filestore';
 
-let canvas: HTMLCanvasElement
+let canvas: HTMLCanvasElement;
 
 function createPng(width, height, result) {
-    canvas = canvas || document.createElement('canvas')
+    canvas = canvas || document.createElement('canvas');
 
     return new Promise(resolve => {
         const img = new ImageData(result, width, height);
@@ -22,7 +21,13 @@ function createPng(width, height, result) {
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
         ctx.putImageData(img, 0, 0);
 
-        canvas.toBlob(blob => { resolve(blob); }, 'image/png', 1);
+        canvas.toBlob(
+            blob => {
+                resolve(blob);
+            },
+            'image/png',
+            1,
+        );
     });
 }
 
@@ -39,7 +44,7 @@ class WebpManager {
     }
 
     decode = async (fileId: any, thumbnail = false) => {
-        this.isSupported = await isWebpSupported()
+        this.isSupported = await isWebpSupported();
         if (this.isSupported) {
             return;
         }
@@ -49,10 +54,10 @@ class WebpManager {
         if (!blob) return;
 
         this.init();
-    }
+    };
 
     init = async () => {
-        this.isSupported = await isWebpSupported()
+        this.isSupported = await isWebpSupported();
         if (this.isSupported) {
             return;
         }
@@ -68,7 +73,7 @@ class WebpManager {
         }
     };
 
-    onLibWebpMessage = (event: { data: { [x: string]: any; id?: any; }; }) => {
+    onLibWebpMessage = (event: { data: { [x: string]: any; id?: any } }) => {
         const { worker } = this;
 
         const { id } = event.data;
@@ -76,7 +81,7 @@ class WebpManager {
             case 'ready': {
                 if (worker.wasmRequests) {
                     worker.wasmReady = true;
-                    worker.wasmRequests.forEach((request: { fileId: any; blob: any; thumbnail: any; }) => {
+                    worker.wasmRequests.forEach((request: { fileId: any; blob: any; thumbnail: any }) => {
                         this.decodeInternal(request.fileId, request.blob, request.thumbnail);
                     });
                     worker.wasmRequests = [];
@@ -115,7 +120,7 @@ class WebpManager {
         }
 
         // console.log('[sticker] decodeFile', fileId, thumbnail);
-        const { result, width, height } = await this.getDecodePromise(fileId, webp) as any;
+        const { result, width, height } = (await this.getDecodePromise(fileId, webp)) as any;
         if (!width || !height) {
             // console.log('[sticker] decodeFile png', fileId, [width, height, null]);
             return;

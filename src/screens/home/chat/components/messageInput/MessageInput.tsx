@@ -1,13 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { observer } from "mobx-react-lite";
-import { styled } from "styled-components";
-import {
-    formatMinutes,
-    formatSeconds,
-} from "../../../../../components/VoiceRecorder/format-time";
-import useRecorder from "../../../../../components/VoiceRecorder/useRecorder";
-import useRootStore from "../../../../../hooks/useRootStore";
+import { observer } from 'mobx-react-lite';
+import { styled } from 'styled-components';
+import { formatMinutes, formatSeconds } from '../../../../../components/VoiceRecorder/format-time';
+import useRecorder from '../../../../../components/VoiceRecorder/useRecorder';
+import useRootStore from '../../../../../hooks/useRootStore';
 import {
     ArrowDowunIcon,
     ArrowUpIcon,
@@ -15,12 +12,12 @@ import {
     FillterIcon,
     MicrophoneIcon,
     SendIcon,
-} from "../../../../../utils/icons";
-import FilterToolbar from "../filterToolbar/FilterToolBar";
-import FooterToolbarView from "../footerToolbar/FooterToolBar";
-import styles from "./index.module.css";
-import ReplyMessage from "../replyMessage/replyMessageComponent";
-import AddHashtags from "../../../../../components/AddHashtags/addhashtags";
+} from '../../../../../utils/icons';
+import FilterToolbar from '../filterToolbar/FilterToolBar';
+import FooterToolbarView from '../footerToolbar/FooterToolBar';
+import styles from './index.module.css';
+import ReplyMessage from '../replyMessage/replyMessageComponent';
+import AddHashtags from '../../../../../components/AddHashtags/addhashtags';
 
 function MessageInput() {
     const { recorderState, ...handlers } = useRecorder();
@@ -28,29 +25,25 @@ function MessageInput() {
     const [openFilter, setOpenFilter] = useState<boolean>(false);
     const [openhastag, setOpenhastag] = useState<boolean>(false);
 
-    const { setMessageText, messageTextState, onSendMessage } =
-        useRootStore().messageStore;
+    const { setMessageText, messageTextState, onSendMessage } = useRootStore().messageStore;
 
     const handleonSendMessage = () => {
         if (messageTextState) {
-            onSendMessage("text");
-           setMessageText('');
-
-
-          }
+            onSendMessage('text');
+            setMessageText('');
+        }
     };
 
-
     useEffect(() => {
-        var textarea: any = document.getElementById("textarea");
+        var textarea: any = document.getElementById('textarea');
         textarea.oninput = function () {
-            textarea.style.height = "";
-            textarea.style.height = textarea.scrollHeight + "px";
+            textarea.style.height = '';
+            textarea.style.height = textarea.scrollHeight + 'px';
         };
     }, []);
 
     const onSendEnter = (e: any) => {
-        if (e.key === "Enter" && !e.shiftKey) {
+        if (e.key === 'Enter' && !e.shiftKey) {
             handleonSendMessage();
             e.preventDefault();
         }
@@ -61,10 +54,7 @@ function MessageInput() {
             <div className="container">
                 <ReplyMessage />
                 <FilterToolbar isOpen={openFilter} />
-                <AddHashtags
-                    isOpen={openhastag}
-                    setopenhashtags={setOpenhastag}
-                />
+                <AddHashtags isOpen={openhastag} setopenhashtags={setOpenhastag} />
                 <FooterToolbarView
                     props={visible.openFooterMediaBar}
                     openHashTags={openhastag}
@@ -72,24 +62,15 @@ function MessageInput() {
                 />
                 <div className={styles.inputmessage}>
                     {!visible.openFooterMediaBar ? (
-                        <button
-                            className="icon"
-                            onClick={() => toglevisible("openFooterMediaBar")}
-                        >
+                        <button className="icon" onClick={() => toglevisible('openFooterMediaBar')}>
                             <ArrowUpIcon color="#303030" />
                         </button>
                     ) : (
-                        <button
-                            className="icon"
-                            onClick={() => toglevisible("openFooterMediaBar")}
-                        >
+                        <button className="icon" onClick={() => toglevisible('openFooterMediaBar')}>
                             <ArrowDowunIcon color="#303030" />
                         </button>
                     )}
-                    <button
-                        className="icon"
-                        onClick={() => setOpenFilter(!openFilter)}
-                    >
+                    <button className="icon" onClick={() => setOpenFilter(!openFilter)}>
                         <FillterIcon size={17} color="#303030" />
                     </button>
                     <div className="inputContainer">
@@ -98,37 +79,28 @@ function MessageInput() {
                             placeholder={
                                 recorderState.initRecording
                                     ? `${formatMinutes(
-                                        recorderState.recordingMinutes
-                                    )} : ${formatSeconds(
-                                        recorderState.recordingSeconds
-                                    )}`
-                                    : "Write a message..."
+                                          recorderState.recordingMinutes,
+                                      )} : ${formatSeconds(recorderState.recordingSeconds)}`
+                                    : 'Write a message...'
                             }
-                            value={ messageTextState }
-                            onKeyDown={(e) => onSendEnter(e)}
+                            value={messageTextState}
+                            onKeyDown={e => onSendEnter(e)}
                             autoFocus
                             disabled={recorderState.initRecording}
-
-                            onChange={ (e) => setMessageText(e.target.value)}
+                            onChange={e => setMessageText(e.target.value)}
                             className="textAreaInput"
                         />
                     </div>
-                    {messageTextState ?  (
+                    {messageTextState ? (
                         <button className="icon" onClick={handleonSendMessage}>
                             <SendIcon color="#303030" />
                         </button>
                     ) : recorderState.initRecording ? (
                         <div className="iconBox">
-                            <button
-                                className={`icon`}
-                                onClick={handlers.cancelRecording}
-                            >
+                            <button className={`icon`} onClick={handlers.cancelRecording}>
                                 <DeleteIcon color="#e74c3c" />
                             </button>
-                            <button
-                                className="icon"
-                                onClick={handlers.saveRecording}
-                            >
+                            <button className="icon" onClick={handlers.saveRecording}>
                                 <SendIcon color="#303030" />
                             </button>
                         </div>
@@ -152,7 +124,8 @@ const MessageInputContainer = styled.div`
     height: auto;
     background-color: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(25px);
-    box-shadow: 0px -8px 48px 0px rgba(32, 35, 39, 0.02),
+    box-shadow:
+        0px -8px 48px 0px rgba(32, 35, 39, 0.02),
         0px -4px 8px 0px rgba(32, 35, 39, 0.04),
         0px 0px 1px 0px rgba(32, 35, 39, 0.16);
     z-index: 15;
@@ -165,7 +138,9 @@ const MessageInputContainer = styled.div`
         display: flex;
         flex-direction: column;
         gap: 10px;
-        transition: height 0.15s ease-out, opacity 0.15s ease-out;
+        transition:
+            height 0.15s ease-out,
+            opacity 0.15s ease-out;
     }
 
     .inputContainer {

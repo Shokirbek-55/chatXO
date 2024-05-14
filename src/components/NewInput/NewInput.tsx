@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./NewInput.module.css";
+import React from 'react';
+import styles from './NewInput.module.css';
 
 interface Props {
     value?: any;
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const NewInput: React.FC<Props> = ({
-    value = "",
+    value = '',
     onChange,
     placeholder,
     margin,
@@ -25,7 +25,7 @@ const NewInput: React.FC<Props> = ({
     return (
         <input
             value={value}
-            onChange={(e) => onChange(e?.target.value)}
+            onChange={e => onChange(e?.target.value)}
             placeholder={placeholder}
             className={styles.input}
             style={{

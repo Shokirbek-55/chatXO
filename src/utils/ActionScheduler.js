@@ -37,7 +37,11 @@ class ActionScheduler {
 
         this.actions.delete(key);
 
-        await this.actionCallback({ key: key, action: item.action, cancel: item.cancel });
+        await this.actionCallback({
+            key: key,
+            action: item.action,
+            cancel: item.cancel,
+        });
         if (item.action) await item.action();
 
         if (this.timerId) {
@@ -87,7 +91,11 @@ class ActionScheduler {
 
         for (let item of expired) {
             this.actions.delete(item.key);
-            this.actionCallback({ key: item.key, action: item.value.action, cancel: item.value.cancel });
+            this.actionCallback({
+                key: item.key,
+                action: item.value.action,
+                cancel: item.value.cancel,
+            });
             if (item.value.action) item.value.action();
         }
 

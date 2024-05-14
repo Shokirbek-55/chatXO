@@ -1,9 +1,9 @@
-import { observer } from "mobx-react-lite";
-import { CSSProperties, FC } from "react";
-import { MdOutlineCameraAlt } from "react-icons/md";
-import Colors from "../../utils/colors";
-import { AvatarLoading } from "../AvatarLoading/AvatarLoading";
-import styles from "./AvatarUpload.module.css";
+import { observer } from 'mobx-react-lite';
+import { CSSProperties, FC } from 'react';
+import { MdOutlineCameraAlt } from 'react-icons/md';
+import Colors from '../../utils/colors';
+import { AvatarLoading } from '../AvatarLoading/AvatarLoading';
+import styles from './AvatarUpload.module.css';
 
 interface Props {
     style?: CSSProperties;
@@ -16,16 +16,7 @@ interface Props {
     loading?: boolean;
 }
 
-const AvatarUpload: FC<Props> = ({
-    style,
-    color,
-    imageUrl,
-    onChange,
-    upload,
-    value = "",
-    onPreview,
-    loading,
-}) => {
+const AvatarUpload: FC<Props> = ({ style, color, imageUrl, onChange, upload, value = '', onPreview, loading }) => {
     style = color ? { ...style, background: color } : { ...style };
 
     return (
@@ -39,25 +30,17 @@ const AvatarUpload: FC<Props> = ({
                 <div className={styles.avatarBox}>
                     {loading ? <AvatarLoading /> : null}
                     {imageUrl ? (
-                        <img
-                            onClick={onPreview}
-                            className={styles.avatar}
-                            src={imageUrl}
-                            alt="Avatar"
-                        />
+                        <img onClick={onPreview} className={styles.avatar} src={imageUrl} alt="Avatar" />
                     ) : null}
                     {upload ? (
                         <label className={styles.uploadIcon}>
-                            <MdOutlineCameraAlt
-                                size={36}
-                                color={Colors.Green}
-                            />
+                            <MdOutlineCameraAlt size={36} color={Colors.Green} />
                             <input
                                 type="file"
                                 multiple
                                 value={value}
                                 color={color}
-                                onChange={(e) => onChange && onChange(e)}
+                                onChange={e => onChange && onChange(e)}
                                 accept="image/png, image/gif, image/jpeg"
                                 className={styles.avatarInput}
                             />

@@ -1,13 +1,13 @@
-import { motion } from "framer-motion";
-import { observer } from "mobx-react-lite";
-import { useTranslation } from "react-i18next";
-import Header from "../../../components/Header/Header";
-import MessageBox from "../../../components/MessageBox/MessageBox";
-import RowItemView from "../../../components/RowItem";
-import { TMP_URL } from "../../../env";
-import useRootStore from "../../../hooks/useRootStore";
-import { InputComponent } from "../../../utils/inputComponent";
-import styles from "./AddFriend.module.css";
+import { motion } from 'framer-motion';
+import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
+import Header from '../../../components/Header/Header';
+import MessageBox from '../../../components/MessageBox/MessageBox';
+import RowItemView from '../../../components/RowItem';
+import { TMP_URL } from '../../../env';
+import useRootStore from '../../../hooks/useRootStore';
+import { InputComponent } from '../../../utils/inputComponent';
+import styles from './AddFriend.module.css';
 
 const container = {
     hidden: { opacity: 1, scale: 0 },
@@ -44,53 +44,34 @@ const AddFriend = () => {
         <div className={styles.container}>
             <Header
                 style={{ zIndex: 1000 }}
-                text={t("addFriend")}
+                text={t('addFriend')}
                 leftIcon="arrowLeft"
-                onLeftIconPress={() => closeModal("left")}
+                onLeftIconPress={() => closeModal('left')}
             />
-            <div style={{ width: "90%", margin: "3px auto" }}>
-                <InputComponent
-                    onChangeText={handleChangeText}
-                    placeholder="Search..."
-                />
+            <div style={{ width: '90%', margin: '3px auto' }}>
+                <InputComponent onChangeText={handleChangeText} placeholder="Search..." />
             </div>
             <div className={styles.main}>
                 {!nonFriends && (
                     <div className={styles.loadingError}>
-                        <MessageBox title={`${t("No Internet Connection")}`} />
+                        <MessageBox title={`${t('No Internet Connection')}`} />
                     </div>
                 )}
-                <motion.div
-                    variants={container}
-                    initial="hidden"
-                    animate="visible"
-                    className={styles.contentBox}
-                >
+                <motion.div variants={container} initial="hidden" animate="visible" className={styles.contentBox}>
                     {nonFriends?.length !== 0 ? (
                         nonFriends?.map((e, index) => {
                             return (
-                                <motion.div
-                                    variants={item}
-                                    key={index}
-                                    id="map-dev"
-                                    className={styles.channelRowBox}
-                                >
+                                <motion.div variants={item} key={index} id="map-dev" className={styles.channelRowBox}>
                                     <RowItemView
-                                        imageUrl={
-                                            e.avatar
-                                                ? `${TMP_URL}/${e.avatar}`
-                                                : ""
-                                        }
+                                        imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ''}
                                         color={
                                             e.color
                                                 ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)`
-                                                : "linear-gradient(#ddd, #666)"
+                                                : 'linear-gradient(#ddd, #666)'
                                         }
                                         text={e.username}
                                         loading={false}
-                                        onPressComponent={() =>
-                                            createFriend(e.id ? e.id : 0)
-                                        }
+                                        onPressComponent={() => createFriend(e.id ? e.id : 0)}
                                     />
                                 </motion.div>
                             );

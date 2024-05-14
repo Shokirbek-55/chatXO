@@ -1,25 +1,19 @@
-import { observer } from "mobx-react-lite";
-import React from "react";
-import { styled } from "styled-components";
-import useRootStore from "../hooks/useRootStore";
+import { observer } from 'mobx-react-lite';
+import React from 'react';
+import { styled } from 'styled-components';
+import useRootStore from '../hooks/useRootStore';
 
-const ModalComponent = ({
-    children,
-    isOpen,
-}: {
-    children: React.ReactNode;
-    isOpen: boolean;
-}) => {
+const ModalComponent = ({ children, isOpen }: { children: React.ReactNode; isOpen: boolean }) => {
     return (
         <div
             style={{
-                position: "absolute",
-                width: "100%",
-                height: "100vh",
+                position: 'absolute',
+                width: '100%',
+                height: '100vh',
                 zIndex: 10,
-                overflow: "hidden",
-                transform: isOpen ? "translateX(0)" : "translateX(100%)",
-                transition: "transform 0.3s ease-in-out",
+                overflow: 'hidden',
+                transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
+                transition: 'transform 0.3s ease-in-out',
             }}
         >
             <ModalContainer>{children}</ModalContainer>

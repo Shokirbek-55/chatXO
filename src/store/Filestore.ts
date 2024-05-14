@@ -8,8 +8,8 @@
 import EventEmitter from './EventEmitter';
 import WebpManager from './WebpManager';
 
-const FILE_PRIORITY = 1
-const THUMBNAIL_PRIORITY = 32
+const FILE_PRIORITY = 1;
+const THUMBNAIL_PRIORITY = 32;
 
 const useReadFile = true;
 const useDownloadFile = true;
@@ -300,8 +300,8 @@ class FileStore extends EventEmitter {
             store,
             file,
             arr,
-            () => { },
-            () => this.getRemoteFile(file.id, FILE_PRIORITY, chat)
+            () => {},
+            () => this.getRemoteFile(file.id, FILE_PRIORITY, chat),
         );
     };
 
@@ -313,7 +313,7 @@ class FileStore extends EventEmitter {
             file,
             arr,
             () => this.updateUserPhotoBlob(user.id, file.id),
-            () => this.getRemoteFile(file.id, FILE_PRIORITY, user)
+            () => this.getRemoteFile(file.id, FILE_PRIORITY, user),
         );
     };
 
@@ -448,8 +448,8 @@ class FileStore extends EventEmitter {
                     store,
                     source,
                     arr,
-                    () => { },
-                    () => this.getRemoteFile(file.id, THUMBNAIL_PRIORITY, obj || animation)
+                    () => {},
+                    () => this.getRemoteFile(file.id, THUMBNAIL_PRIORITY, obj || animation),
                 );
             }
         }
@@ -461,8 +461,8 @@ class FileStore extends EventEmitter {
                     store,
                     source,
                     arr,
-                    () => { },
-                    () => this.getRemoteFile(file.id, FILE_PRIORITY, obj || animation)
+                    () => {},
+                    () => this.getRemoteFile(file.id, FILE_PRIORITY, obj || animation),
                 );
             }
         }
@@ -479,8 +479,8 @@ class FileStore extends EventEmitter {
                     store,
                     source,
                     arr,
-                    () => { },
-                    () => this.getRemoteFile(file.id, THUMBNAIL_PRIORITY, obj || audio)
+                    () => {},
+                    () => this.getRemoteFile(file.id, THUMBNAIL_PRIORITY, obj || audio),
                 );
             }
         }
@@ -492,8 +492,8 @@ class FileStore extends EventEmitter {
                     store,
                     source,
                     arr,
-                    () => { },
-                    () => this.getRemoteFile(file.id, FILE_PRIORITY, obj || audio)
+                    () => {},
+                    () => this.getRemoteFile(file.id, FILE_PRIORITY, obj || audio),
                 );
             }
         }
@@ -523,8 +523,8 @@ class FileStore extends EventEmitter {
                     store,
                     source,
                     arr,
-                    () => { },
-                    () => this.getRemoteFile(file.id, THUMBNAIL_PRIORITY, obj || document)
+                    () => {},
+                    () => this.getRemoteFile(file.id, THUMBNAIL_PRIORITY, obj || document),
                 );
             }
         }
@@ -536,8 +536,8 @@ class FileStore extends EventEmitter {
                     store,
                     source,
                     arr,
-                    () => { },
-                    () => this.getRemoteFile(file.id, FILE_PRIORITY, obj || document)
+                    () => {},
+                    () => this.getRemoteFile(file.id, FILE_PRIORITY, obj || document),
                 );
             }
         }
@@ -557,8 +557,8 @@ class FileStore extends EventEmitter {
                             store,
                             source,
                             arr,
-                            () => { },
-                            () => this.getRemoteFile(file.id, FILE_PRIORITY, obj || photo)
+                            () => {},
+                            () => this.getRemoteFile(file.id, FILE_PRIORITY, obj || photo),
                         );
                         break;
                     }
@@ -578,8 +578,8 @@ class FileStore extends EventEmitter {
                     store,
                     source,
                     arr,
-                    () => { },
-                    () => this.getRemoteFile(file.id, THUMBNAIL_PRIORITY, obj || sticker)
+                    () => {},
+                    () => this.getRemoteFile(file.id, THUMBNAIL_PRIORITY, obj || sticker),
                 );
             }
         }
@@ -591,8 +591,8 @@ class FileStore extends EventEmitter {
                     store,
                     source,
                     arr,
-                    () => { },
-                    () => this.getRemoteFile(file.id, FILE_PRIORITY, obj || sticker)
+                    () => {},
+                    () => this.getRemoteFile(file.id, FILE_PRIORITY, obj || sticker),
                 );
             }
         }
@@ -609,8 +609,8 @@ class FileStore extends EventEmitter {
                     store,
                     source,
                     arr,
-                    () => { },
-                    () => this.getRemoteFile(file.id, FILE_PRIORITY, obj || voiceNote)
+                    () => {},
+                    () => this.getRemoteFile(file.id, FILE_PRIORITY, obj || voiceNote),
                 );
             }
         }
@@ -627,8 +627,8 @@ class FileStore extends EventEmitter {
                     store,
                     source,
                     arr,
-                    () => { },
-                    () => this.getRemoteFile(file.id, THUMBNAIL_PRIORITY, obj || videoNote)
+                    () => {},
+                    () => this.getRemoteFile(file.id, THUMBNAIL_PRIORITY, obj || videoNote),
                 );
             }
         }
@@ -640,8 +640,8 @@ class FileStore extends EventEmitter {
                     store,
                     source,
                     arr,
-                    () => { },
-                    () => this.getRemoteFile(file.id, FILE_PRIORITY, obj || videoNote)
+                    () => {},
+                    () => this.getRemoteFile(file.id, FILE_PRIORITY, obj || videoNote),
                 );
             }
         }
@@ -658,8 +658,8 @@ class FileStore extends EventEmitter {
                     store,
                     source,
                     arr,
-                    () => { },
-                    () => this.getRemoteFile(file.id, THUMBNAIL_PRIORITY, obj || video)
+                    () => {},
+                    () => this.getRemoteFile(file.id, THUMBNAIL_PRIORITY, obj || video),
                 );
             }
         }
@@ -671,8 +671,8 @@ class FileStore extends EventEmitter {
                     store,
                     source,
                     arr,
-                    () => { },
-                    () => this.getRemoteFile(file.id, FILE_PRIORITY, obj || video)
+                    () => {},
+                    () => this.getRemoteFile(file.id, FILE_PRIORITY, obj || video),
                 );
             }
         }
@@ -893,7 +893,7 @@ class FileStore extends EventEmitter {
         this.items.set(file.id, file);
     };
 
-    getBlob = (fileId) => {
+    getBlob = fileId => {
         return this.blobItems.get(fileId);
     };
 
@@ -907,7 +907,7 @@ class FileStore extends EventEmitter {
 
     setPngBlob = (fileId, blob) => {
         this.pngBlobItems.set(fileId, blob);
-    }
+    };
 
     deleteBlob = fileId => {
         this.blobItems.delete(fileId);

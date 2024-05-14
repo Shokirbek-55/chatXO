@@ -21,12 +21,12 @@ Module.onRuntimeInitialized = async () => {
 };
 
 self.onmessage = event => {
-    const { id, blob} = event.data;
+    const { id, blob } = event.data;
     LOG('[webp] decode', id);
 
     const reader = new FileReader();
 
-    reader.addEventListener('loadend', function() {
+    reader.addEventListener('loadend', function () {
         const buffer = reader.result;
 
         const size = buffer.byteLength;
@@ -41,7 +41,13 @@ self.onmessage = event => {
             Module._free(ptr);
             Module._free(thisPtr);
             LOG('[webp] decode', id, [0, 0]);
-            self.postMessage({ '@type': 'result', id, width: 0, height: 0, result: null });
+            self.postMessage({
+                '@type': 'result',
+                id,
+                width: 0,
+                height: 0,
+                result: null,
+            });
             return;
         }
         const width = Module.getValue(ptr + 4, 'i32');

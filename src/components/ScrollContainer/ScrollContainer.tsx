@@ -1,12 +1,11 @@
-
-import Lottie from "lottie-react";
-import { observer } from "mobx-react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { styled } from "styled-components";
-import topLoaderJson from "../../assets/topLoader.json";
-import useRootStore from "../../hooks/useRootStore";
-import { useInfiniteScroll } from "../../hooks/useThrottledEffect";
-import { ArrowDowunIcon } from "../../utils/icons";
+import Lottie from 'lottie-react';
+import { observer } from 'mobx-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { styled } from 'styled-components';
+import topLoaderJson from '../../assets/topLoader.json';
+import useRootStore from '../../hooks/useRootStore';
+import { useInfiniteScroll } from '../../hooks/useThrottledEffect';
+import { ArrowDowunIcon } from '../../utils/icons';
 
 type ScrollContainerProps = {
     children: React.ReactNode;
@@ -15,7 +14,6 @@ type ScrollContainerProps = {
 const SCROLL_PRECISION = 800;
 
 const ScrollContainer = ({ children }: ScrollContainerProps) => {
-
     const outerDiv = useRef<HTMLDivElement | any>(null);
     const innerDiv = useRef<HTMLDivElement | any>(null);
     const topDiv = useRef<HTMLDivElement | any>(null);
@@ -23,8 +21,9 @@ const ScrollContainer = ({ children }: ScrollContainerProps) => {
     const prevScrollTop = useRef<number | any>(null);
     const [showScrollButton, setShowScrollButton] = useState(false);
 
-    const { getHistoryMessagesPageState, messageCache, slug } = useRootStore().messageStore
-    const { isOpenHashTagScreen, getHistoryHashTagsMessagesPageState, allHashTagsMessages } = useRootStore().hashtagStore
+    const { getHistoryMessagesPageState, messageCache, slug } = useRootStore().messageStore;
+    const { isOpenHashTagScreen, getHistoryHashTagsMessagesPageState, allHashTagsMessages } =
+        useRootStore().hashtagStore;
 
     useEffect(() => {
         stop.current = messageCache[slug]?.end || allHashTagsMessages?.end || false;
@@ -37,19 +36,19 @@ const ScrollContainer = ({ children }: ScrollContainerProps) => {
         } else {
             topDiv.current.style.height = `0px`;
             if (prevInnerDiv.current) {
-                console.log('prevInnerDivHeight[slug]', prevInnerDiv.current)
-                console.log('top1', innerDivHeight - prevInnerDiv.current + outerDivScrollTop)
+                console.log('prevInnerDivHeight[slug]', prevInnerDiv.current);
+                console.log('top1', innerDivHeight - prevInnerDiv.current + outerDivScrollTop);
                 outerDiv.current.scrollTo({
                     top: innerDivHeight - prevInnerDiv.current + outerDivScrollTop,
                     left: 0,
-                    behavior: "auto"
+                    behavior: 'auto',
                 });
             } else {
-                console.log('top2', innerDivHeight - outerDivHeight + 12)
+                console.log('top2', innerDivHeight - outerDivHeight + 12);
                 outerDiv.current.scrollTo({
                     top: innerDivHeight - outerDivHeight + 12,
                     left: 0,
-                    behavior: prevInnerDiv.current ? "smooth" : "auto",
+                    behavior: prevInnerDiv.current ? 'smooth' : 'auto',
                 });
             }
         }
@@ -68,10 +67,9 @@ const ScrollContainer = ({ children }: ScrollContainerProps) => {
                 console.log('onLoadNext');
             }
 
-            if (!scrollToNext && (list.scrollTop + list.offsetHeight >= list.scrollHeight - SCROLL_PRECISION)) {
+            if (!scrollToNext && list.scrollTop + list.offsetHeight >= list.scrollHeight - SCROLL_PRECISION) {
                 // onLoadPrevious();
                 console.log('onLoadPrevious');
-
             }
         }
 
@@ -90,7 +88,7 @@ const ScrollContainer = ({ children }: ScrollContainerProps) => {
         } else {
             getHistoryMessagesPageState(setIsFetching, stop);
         }
-    }
+    };
 
     const [isFetching, setIsFetching, stop] = useInfiniteScroll(getMoreMessages, outerDiv);
 
@@ -101,40 +99,38 @@ const ScrollContainer = ({ children }: ScrollContainerProps) => {
         outerDiv.current.scrollTo({
             top: innerDivHeight! - outerDivHeight! + 12,
             left: 0,
-            behavior: "smooth",
+            behavior: 'smooth',
         });
 
         setShowScrollButton(false);
     }, []);
 
     return (
-        <Container >
+        <Container>
             <div ref={outerDiv} className="outerDiv" onScroll={handleScroll}>
                 <div ref={topDiv} className="topDiv" />
                 <div ref={innerDiv} className="innerDiv">
-                    {isFetching ? (
-                        <ScrollTopLoading animationData={topLoaderJson} autoplay={!!isFetching} />
-                    ) : null}
+                    {isFetching ? <ScrollTopLoading animationData={topLoaderJson} autoplay={!!isFetching} /> : null}
                     {children}
                 </div>
             </div>
-            {showScrollButton && <button className="bottomButton" onClick={handleScrollButtonClick}>
-                <ArrowDowunIcon />
-            </button>}
+            {showScrollButton && (
+                <button className="bottomButton" onClick={handleScrollButtonClick}>
+                    <ArrowDowunIcon />
+                </button>
+            )}
         </Container>
-    )
+    );
 };
 
-
 export default observer(ScrollContainer);
-
 
 const ScrollTopLoading = styled(Lottie)`
     position: absolute;
     top: 6vh;
     left: 0;
     width: 100%;
-`
+`;
 
 const Container = styled.div`
     position: relative;
@@ -143,7 +139,7 @@ const Container = styled.div`
     background-color: #fff;
     overflow: hidden;
 
-   .outerDiv {
+    .outerDiv {
         position: relative;
         height: 100%;
         overflow-y: scroll;
@@ -174,4 +170,4 @@ const Container = styled.div`
         opacity: 1;
         pointer-events: auto;
     }
-`
+`;

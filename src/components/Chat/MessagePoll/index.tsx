@@ -1,14 +1,14 @@
-import { Skeleton, Tooltip } from "antd";
-import { observer } from "mobx-react-lite";
-import { FC, useEffect, useMemo, useState } from "react";
-import { AiFillCheckCircle } from "react-icons/ai";
-import { useAsyncFn } from "react-use";
-import APIs from "../../../api/api";
-import useRootStore from "../../../hooks/useRootStore";
-import { RawMessage } from "../../../types/channel";
-import { pollMessage } from "../../../types/messageType";
-import Text from "../../Text/Text";
-import styles from "./index.module.css";
+import { Skeleton, Tooltip } from 'antd';
+import { observer } from 'mobx-react-lite';
+import { FC, useEffect, useMemo, useState } from 'react';
+import { AiFillCheckCircle } from 'react-icons/ai';
+import { useAsyncFn } from 'react-use';
+import APIs from '../../../api/api';
+import useRootStore from '../../../hooks/useRootStore';
+import { RawMessage } from '../../../types/channel';
+import { pollMessage } from '../../../types/messageType';
+import Text from '../../Text/Text';
+import styles from './index.module.css';
 interface Props {
     message: RawMessage;
 }
@@ -20,40 +20,29 @@ const MessagePoll: FC<Props> = ({ message }) => {
     const [messsageDetails, setMessageDetails] = useState<pollMessage>();
 
     const canVote = useMemo(() => {
-        return !messsageDetails?.options?.find((option) => option.voted);
+        return !messsageDetails?.options?.find(option => option.voted);
     }, [messsageDetails]);
 
-    const voteHandle = (
-        pollOption: number,
-        channelSlug: string,
-        pollId: number,
-        messageId: string
-    ) => {
+    const voteHandle = (pollOption: number, channelSlug: string, pollId: number, messageId: string) => {
         if (canVote) vote(pollOption, channelSlug, pollId, messageId);
         getPollId(pollId, true);
     };
 
-    socket?.on("vote", async (payload: pollMessage) => {
+    socket?.on('vote', async (payload: pollMessage) => {
         if (message?.id === payload.messageId) {
-            const { data }: any = await APIs.channels.getPollDetails(
-                message.pollId as never,
-                true
-            );
+            const { data }: any = await APIs.channels.getPollDetails(message.pollId as never, true);
             setMessageDetails({ ...data });
         }
     });
 
     const [{}, getPollInfo] = useAsyncFn(async () => {
-        const { data }: any = await APIs.channels.getPollDetails(
-            message.pollId || 0,
-            true
-        );
+        const { data }: any = await APIs.channels.getPollDetails(message.pollId || 0, true);
         delete data.createdAt; //BE returns wrong timestamp
         setMessageDetails({ ...data });
     }, [message, message.pollId, message.isReply]);
 
     const votedInPoll = useMemo(() => {
-        return !!messsageDetails?.options?.find((option) => option?.voted);
+        return !!messsageDetails?.options?.find(option => option?.voted);
     }, [messsageDetails]);
 
     useEffect(() => {
@@ -63,21 +52,14 @@ const MessagePoll: FC<Props> = ({ message }) => {
     const renderAnswer = (option: any) => {
         const percentages = Math.round(
             //@ts-ignore
-            (option?.votes / messsageDetails?.votesCount) * 100 || 0
+            (option?.votes / messsageDetails?.votesCount) * 100 || 0,
         );
 
         return (
             <div
                 key={option.id}
                 className={styles.voteBox}
-                onClick={() =>
-                    voteHandle(
-                        option.id,
-                        message.channelSlug,
-                        messsageDetails?.id as never,
-                        message.id
-                    )
-                }
+                onClick={() => voteHandle(option.id, message.channelSlug, messsageDetails?.id as never, message.id)}
             >
                 {canVote && (
                     <div className={styles.radioBox}>
@@ -87,26 +69,16 @@ const MessagePoll: FC<Props> = ({ message }) => {
                 {!canVote && (
                     <div className={styles.votedBox}>
                         <Text fontSize="13px" children={`${percentages}%`} />
-                        <div className={styles.checkedIcon}>
-                            {option.voted ? <AiFillCheckCircle /> : null}
-                        </div>
+                        <div className={styles.checkedIcon}>{option.voted ? <AiFillCheckCircle /> : null}</div>
                     </div>
                 )}
                 {!canVote ? (
                     <Tooltip
-                        trigger={"click"}
-                        title={`${
-                            option.votes > 1
-                                ? option.votes + " votes"
-                                : option.votes + " vote"
-                        }`}
+                        trigger={'click'}
+                        title={`${option.votes > 1 ? option.votes + ' votes' : option.votes + ' vote'}`}
                     >
                         <div className={styles.option}>
-                            <Text
-                                margin="0 0 10px 0"
-                                fontSize="14px"
-                                children={option.name}
-                            />
+                            <Text margin="0 0 10px 0" fontSize="14px" children={option.name} />
                             {canVote ? (
                                 <div className={styles.line}></div>
                             ) : !option.votes ? (
@@ -118,11 +90,7 @@ const MessagePoll: FC<Props> = ({ message }) => {
                     </Tooltip>
                 ) : (
                     <div className={styles.option}>
-                        <Text
-                            margin="0 0 10px 0"
-                            fontSize="14px"
-                            children={option.name}
-                        />
+                        <Text margin="0 0 10px 0" fontSize="14px" children={option.name} />
                         {canVote ? (
                             <div className={styles.line}></div>
                         ) : !option.votes ? (
@@ -143,18 +111,12 @@ const MessagePoll: FC<Props> = ({ message }) => {
                     <Text fontSize="15px" children={messsageDetails?.topic} />
                     <Text
                         fontSize="12px"
-                        children={`${
-                            message.pollType === "NORMAL"
-                                ? "Normal Poll"
-                                : "Relevance Poll"
-                        }`}
+                        children={`${message.pollType === 'NORMAL' ? 'Normal Poll' : 'Relevance Poll'}`}
                     />
                     <div>
                         {(messsageDetails?.options || [])
                             ?.slice()
-                            ?.sort(
-                                (option1, option2) => option1?.id - option2?.id
-                            )
+                            ?.sort((option1, option2) => option1?.id - option2?.id)
                             ?.map(renderAnswer)}
                     </div>
                     <Text
@@ -165,21 +127,15 @@ const MessagePoll: FC<Props> = ({ message }) => {
                             messsageDetails?.votesCount
                                 ? `${
                                       messsageDetails?.votesCount > 1
-                                          ? messsageDetails?.votesCount +
-                                            " votes"
-                                          : messsageDetails?.votesCount +
-                                            " vote"
+                                          ? messsageDetails?.votesCount + ' votes'
+                                          : messsageDetails?.votesCount + ' vote'
                                   }`
-                                : "no voted yet"
+                                : 'no voted yet'
                         }
                     />
                 </div>
             ) : (
-                <Skeleton
-                    active
-                    paragraph={{ rows: 5 }}
-                    className={styles.skeleton}
-                />
+                <Skeleton active paragraph={{ rows: 5 }} className={styles.skeleton} />
             )}
         </>
     );

@@ -1,7 +1,7 @@
-import { User } from "./user";
+import { User } from './user';
 
-export const RELEVANCE_TYPE = "RELEVANCE";
-export const NORMAL_TYPE = "NORMAL";
+export const RELEVANCE_TYPE = 'RELEVANCE';
+export const NORMAL_TYPE = 'NORMAL';
 
 export interface MessageType {
     _id: number;
@@ -45,7 +45,7 @@ export type PollOptionsType = {
 
 export const PollOptionsInitial = {
     id: 1,
-    name: "",
+    name: '',
     voted: false,
 };
 
@@ -64,15 +64,15 @@ export type pollMessage = {
 };
 
 export const pollMessageInitial: pollMessage = {
-    channelSlug: "",
+    channelSlug: '',
     id: 0,
     options: [PollOptionsInitial],
-    topic: "",
-    messageId: "",
+    topic: '',
+    messageId: '',
     type: NORMAL_TYPE,
     pollType: NORMAL_TYPE,
-    updateAt: "",
+    updateAt: '',
     votersCount: 0,
     votesCount: 0,
-    voted: "",
+    voted: '',
 };

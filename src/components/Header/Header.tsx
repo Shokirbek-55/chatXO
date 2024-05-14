@@ -1,5 +1,5 @@
-import { Popconfirm } from "antd";
-import { CSSProperties, FC } from "react";
+import { Popconfirm } from 'antd';
+import { CSSProperties, FC } from 'react';
 import {
     AccountIcon,
     ArrowLeftIcon,
@@ -9,8 +9,8 @@ import {
     MdGroupAddIcon,
     MoreDotIcon,
     SettingIcon,
-} from "../../utils/icons";
-import styles from "./index.module.css";
+} from '../../utils/icons';
+import styles from './index.module.css';
 
 interface Props {
     header?: string;
@@ -34,10 +34,10 @@ const Header: FC<Props> = ({
     text,
     rightIcon,
     leftIcon,
-    rightIconColor = "#444",
-    leftIconColor = "#444",
-    colorText = " #404d66",
-    textSize = "18",
+    rightIconColor = '#444',
+    leftIconColor = '#444',
+    colorText = ' #404d66',
+    textSize = '18',
     onRightIconPress = () => {},
     onLeftIconPress = () => {},
     style,
@@ -49,31 +49,31 @@ const Header: FC<Props> = ({
     return (
         <div className={styles.container} style={{ ...style }}>
             <div>
-                {leftIcon === "account" ? (
+                {leftIcon === 'account' ? (
                     <div onClick={onLeftIconPress}>
                         <AccountIcon color={leftIconColor} />
                     </div>
-                ) : leftIcon === "arrowLeft" ? (
+                ) : leftIcon === 'arrowLeft' ? (
                     <div onClick={onLeftIconPress}>
                         <ArrowLeftIcon color={leftIconColor} />
                     </div>
-                ) : leftIcon === "arrowRight" ? (
+                ) : leftIcon === 'arrowRight' ? (
                     <div onClick={onLeftIconPress}>
                         <ArrowRightIcon color={leftIconColor} />
                     </div>
-                ) : leftIcon === "setting" ? (
+                ) : leftIcon === 'setting' ? (
                     <div onClick={onLeftIconPress}>
                         <SettingIcon color={leftIconColor} />
                     </div>
-                ) : leftIcon === "logout" ? (
+                ) : leftIcon === 'logout' ? (
                     <div onClick={onLeftIconPress}>
                         <LogoutIcon color={leftIconColor} />
                     </div>
-                ) : leftIcon === "addUser" ? (
+                ) : leftIcon === 'addUser' ? (
                     <div onClick={onLeftIconPress}>
                         <MdGroupAddIcon color={leftIconColor} />
                     </div>
-                ) : leftIcon === "close" ? (
+                ) : leftIcon === 'close' ? (
                     <div onClick={onLeftIconPress}>
                         <CloseIcon color={leftIconColor} />
                     </div>
@@ -81,31 +81,29 @@ const Header: FC<Props> = ({
                     <div className={styles.hidden}>left</div>
                 )}
             </div>
-            <div style={{ fontSize: `${textSize}px`, color: `${colorText}` }}>
-                {text}
-            </div>
+            <div style={{ fontSize: `${textSize}px`, color: `${colorText}` }}>{text}</div>
             <div>
-                {rightIcon === "more" ? (
+                {rightIcon === 'more' ? (
                     <div onClick={onRightIconPress}>
                         <MoreDotIcon color={rightIconColor} />
                     </div>
-                ) : rightIcon === "account" ? (
+                ) : rightIcon === 'account' ? (
                     <div onClick={onRightIconPress}>
                         <AccountIcon color={rightIconColor} />
                     </div>
-                ) : rightIcon === "arrowLeft" ? (
+                ) : rightIcon === 'arrowLeft' ? (
                     <div onClick={onRightIconPress}>
                         <ArrowLeftIcon color={rightIconColor} />
                     </div>
-                ) : rightIcon === "arrowRight" ? (
+                ) : rightIcon === 'arrowRight' ? (
                     <div onClick={onRightIconPress}>
                         <ArrowRightIcon color={rightIconColor} />
                     </div>
-                ) : rightIcon === "setting" ? (
+                ) : rightIcon === 'setting' ? (
                     <div onClick={onRightIconPress}>
                         <SettingIcon color={rightIconColor} />
                     </div>
-                ) : rightIcon === "logout" ? (
+                ) : rightIcon === 'logout' ? (
                     <Popconfirm
                         title={popTitle}
                         description={popQuest}
@@ -118,11 +116,11 @@ const Header: FC<Props> = ({
                             <LogoutIcon color={rightIconColor} />
                         </div>
                     </Popconfirm>
-                ) : rightIcon === "addUser" ? (
+                ) : rightIcon === 'addUser' ? (
                     <div onClick={onRightIconPress}>
                         <MdGroupAddIcon color={rightIconColor} />
                     </div>
-                ) : rightIcon === "close" ? (
+                ) : rightIcon === 'close' ? (
                     <div onClick={onRightIconPress}>
                         <CloseIcon color={rightIconColor} />
                     </div>

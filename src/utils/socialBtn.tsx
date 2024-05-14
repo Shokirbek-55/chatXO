@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./index.module.css";
+import React from 'react';
+import styles from './index.module.css';
 interface Props {
     title?: string;
     icon?: any;
@@ -17,14 +17,14 @@ interface Props {
 const SocialBtn: React.FC<Props> = ({
     title,
     icon,
-    width = "100%",
-    height = "45px",
-    border = "1px solid #D1D1D1",
-    backgroundColor = "transparent",
-    borderRadius = "10px",
-    color = "#242424",
+    width = '100%',
+    height = '45px',
+    border = '1px solid #D1D1D1',
+    backgroundColor = 'transparent',
+    borderRadius = '10px',
+    color = '#242424',
     margin,
-    cursor = "pointer",
+    cursor = 'pointer',
     onClick,
 }) => {
     return (
@@ -32,10 +32,10 @@ const SocialBtn: React.FC<Props> = ({
             onClick={onClick}
             className={styles.socialBtnHover}
             style={{
-                display: "flex",
-                alignItems: "center",
-                padding: "5px 20px",
-                justifyContent: "space-between",
+                display: 'flex',
+                alignItems: 'center',
+                padding: '5px 20px',
+                justifyContent: 'space-between',
                 cursor: cursor,
                 backgroundColor: backgroundColor,
                 border: border,

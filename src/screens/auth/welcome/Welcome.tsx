@@ -1,10 +1,10 @@
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-import { ChatxoLogo } from "../../../assets/icons/icons";
-import Text from "../../../components/Text/Text";
-import { ButtonComponent } from "../../../utils/button";
-import Colors from "../../../utils/colors";
-import styles from "./Welcome.module.css";
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { ChatxoLogo } from '../../../assets/icons/icons';
+import Text from '../../../components/Text/Text';
+import { ButtonComponent } from '../../../utils/button';
+import Colors from '../../../utils/colors';
+import styles from './Welcome.module.css';
 
 const WelcomeView = () => {
     const navigation = useNavigate();
@@ -18,14 +18,12 @@ const WelcomeView = () => {
                         <ChatxoLogo />
                     </div>
                     <Text
-                        textAlign={"center"}
+                        textAlign={'center'}
                         fontWeight={400}
                         fontFamily="Montserrat"
                         color={Colors.DarkGray}
                         margin="20px 0 0 0"
-                        children={
-                            "Revolutionizing group chats on a secure and user-friendly platform."
-                        }
+                        children={'Revolutionizing group chats on a secure and user-friendly platform.'}
                     />
                 </div>
                 <div className={styles.registerBoxBottom}>
@@ -33,7 +31,7 @@ const WelcomeView = () => {
                         width="200px"
                         text="Sign In"
                         height="40px"
-                        clickMe={() => navigation("/auth/login")}
+                        clickMe={() => navigation('/auth/login')}
                     />
                     <ButtonComponent
                         width="200px"
@@ -43,7 +41,7 @@ const WelcomeView = () => {
                         color={Colors.Black}
                         border="1px solid #000"
                         margin="15px 0 0 0"
-                        clickMe={() => navigation("/auth/sign-up")}
+                        clickMe={() => navigation('/auth/sign-up')}
                     />
                     <div className={styles.languageBox}>
                         <Text
@@ -52,10 +50,8 @@ const WelcomeView = () => {
                             color={Colors.Black}
                             fontSize="14px"
                             margin="15px 0 0 0"
-                            handleLink={() =>
-                                navigation("/auth/changeLanguage")
-                            }
-                            children={t("change_language")}
+                            handleLink={() => navigation('/auth/changeLanguage')}
+                            children={t('change_language')}
                         />
                     </div>
                 </div>

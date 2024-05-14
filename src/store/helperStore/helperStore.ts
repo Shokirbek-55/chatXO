@@ -1,5 +1,5 @@
-import _ from "lodash";
-import { makeAutoObservable } from "mobx";
+import _ from 'lodash';
+import { makeAutoObservable } from 'mobx';
 
 class HelperStore {
     constructor() {
@@ -11,10 +11,9 @@ class HelperStore {
     setIsPlayAudio = (id: string, value: boolean) => {
         _.forIn(this.isPlayAudio, (value, key) => {
             this.isPlayAudio[key] = false;
-        })
+        });
         this.isPlayAudio[id] = value;
-    }
-
+    };
 }
 
 export default HelperStore;

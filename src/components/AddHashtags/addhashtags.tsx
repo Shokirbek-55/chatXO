@@ -1,9 +1,9 @@
-import React, { useCallback } from "react";
-import styles from "./addhashtags.module.css";
-import { CloseIcon, PlusIcon } from "../../utils/icons";
-import Colors from "../../utils/colors";
-import useRootStore from "../../hooks/useRootStore";
-import { observer } from "mobx-react-lite";
+import React, { useCallback } from 'react';
+import styles from './addhashtags.module.css';
+import { CloseIcon, PlusIcon } from '../../utils/icons';
+import Colors from '../../utils/colors';
+import useRootStore from '../../hooks/useRootStore';
+import { observer } from 'mobx-react-lite';
 
 interface Props {
     isOpen: boolean;
@@ -11,7 +11,7 @@ interface Props {
 }
 
 const AddHashtags = ({ isOpen, setopenhashtags }: Props) => {
-    const [hashtag, setHashtag] = React.useState<string>("");
+    const [hashtag, setHashtag] = React.useState<string>('');
     const { setHashTags } = useRootStore().hashtagStore;
 
     const handleOpenHashtags = useCallback(() => {
@@ -20,11 +20,11 @@ const AddHashtags = ({ isOpen, setopenhashtags }: Props) => {
 
     const addHashtag = () => {
         setHashTags(hashtag);
-        setHashtag("");
+        setHashtag('');
     };
 
     const onSendEnter = (e: any) => {
-        if (e.key === "Enter" && !e.shiftKey) {
+        if (e.key === 'Enter' && !e.shiftKey) {
             addHashtag();
             e.preventDefault();
         }
@@ -40,9 +40,9 @@ const AddHashtags = ({ isOpen, setopenhashtags }: Props) => {
                 <div className={styles.hashtag}>
                     <input
                         type="text"
-                        onKeyDown={(e) => onSendEnter(e)}
+                        onKeyDown={e => onSendEnter(e)}
                         className={styles.hashtaginput}
-                        onChange={(e) => handleHashtage(e.target.value)}
+                        onChange={e => handleHashtage(e.target.value)}
                         value={hashtag}
                         placeholder="Create hashtag"
                     />
