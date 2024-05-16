@@ -11,8 +11,24 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    padding-left: 15px;
 }
 
 .iconBox {
     min-width: 25px;
+}
+
+.rightIconSection {
+    position: relative;
+}
+
+.deleteIcon {
+    position: absolute;
+    left: 10px;
+    cursor: pointer;
+    color: red;
+}
+
+.cursor-not-allowed {
+    cursor: not-allowed;
 }

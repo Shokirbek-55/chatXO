@@ -56,6 +56,7 @@ export default class MessageStore {
 
     channelsMsgDataBySlug = new Map<string, CacheMessagesType>();
     slugQueue = new Set<string>();
+    newMsgChannelsSlug = new Set<string>();
 
     FileUploadOperation = new Operation<FileUploadOperationData>({
         filePath: '',
@@ -154,6 +155,14 @@ export default class MessageStore {
     }
 
     set setChannelMsgNewMessage(msg: RawMessage) {
+        if (this.getSelectedChannelMsgData?.messages) {
+            const messages = Array.from(this.getSelectedChannelMsgData?.messages);
+            messages.unshift([msg.id, msg]);
+            this.getSelectedChannelMsgData.messages = new Map(messages);
+        }
+    }
+
+    set setChannelMessageByMessageId(msg: RawMessage) {
         this.getSelectedChannelMsgData?.messages.set(msg.id, msg);
     }
 
@@ -366,6 +375,7 @@ export default class MessageStore {
     };
 
     addMessageToCache = (message: RawMessage) => {
+        this.newMsgChannelsSlug.add(message.channelSlug);
         this.setChannelMsgNewMessage = message;
         if (this.messageCache[message.channelSlug]) {
             if (_.last(this.messageCache[message.channelSlug].messages)?.id === message.id) {
@@ -390,6 +400,7 @@ export default class MessageStore {
     };
 
     addMergeMessageToCache = (message: RawMessage) => {
+        this.setChannelMessageByMessageId = message;
         runInAction(() => {
             this.messageCache[message.channelSlug].messages.pop();
             this.messageCache[message.channelSlug].messages = [
