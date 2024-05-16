@@ -55,7 +55,6 @@ const DropDownMenu = ({ massage, children }: Props) => {
                 setEditMessage(massage);
             },
         },
-
         {
             key: '5',
             label: t('delete'),
