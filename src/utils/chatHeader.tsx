@@ -226,7 +226,7 @@ const BassComponent = styled.div`
     }
 
     header {
-        position: relative;
+
         width: 70%;
         cursor: pointer;
         height: 100%;
@@ -241,6 +241,14 @@ const BassComponent = styled.div`
             justify-content: center;
             gap: 10px;
         }
+
+            h3 {
+              width:450px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
 
         nav {
             position: relative;
