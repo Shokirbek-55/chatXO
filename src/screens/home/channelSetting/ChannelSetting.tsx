@@ -13,7 +13,8 @@ import styles from './ChannelSetting.module.css';
 const ChannelSetting = () => {
     const { t } = useTranslation();
 
-    const { adminId, getOneMember, channelUsers, setSearchChannelUsers } = useRootStore().channelStore;
+    const { adminId, getOneMember, channelUsers, setSearchChannelUsers, delateUserFromChannel, selectedChannelData } =
+        useRootStore().channelStore;
     const { createFriend } = useRootStore().friendsStore;
     const { getFriendDetails } = useRootStore().usersStore;
     const { user } = useRootStore().authStore;
@@ -50,6 +51,10 @@ const ChannelSetting = () => {
                     return (
                         <div key={index}>
                             <MenuItem
+                                isAdmin={adminId === user.id && adminId !== e.id}
+                                onDelete={() => {
+                                    delateUserFromChannel(selectedChannelData.hashId, e.id);
+                                }}
                                 icon={
                                     <SmallAvatar
                                         imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ''}

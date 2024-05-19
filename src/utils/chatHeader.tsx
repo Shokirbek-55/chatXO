@@ -9,6 +9,7 @@ import Text from '../components/Text/Text';
 import { TMP_URL } from '../env';
 import useRootStore from '../hooks/useRootStore';
 import { ArrowDowunIcon, ArrowUpIcon, CloserNoCirculIcon, HashtagIcon, SearchIcon } from './icons';
+import { generatePath, useNavigate, useParams } from 'react-router-dom';
 
 const ChatHeader = () => {
     const [isOpenAllHashTags, setIsOpenAllHashTags] = React.useState<boolean>(false);
@@ -17,9 +18,38 @@ const ChatHeader = () => {
     const { setSearch, searchMessage, slug, clearSearch, searchMessageState, searchMessages } =
         useRootStore().messageStore;
 
-    const { hashTags, removeHashTags, getChannelAllHashTags, isLoading, allChatHashTags } = useRootStore().hashtagStore;
+    const {
+        hashTags,
+        removeHashTags,
+        getChannelAllHashTags,
+        isLoading,
+        allChatHashTags,
+        enter,
+        setHashTags,
+        isOpenHashTagScreen,
+    } = useRootStore().hashtagStore;
 
     const { getSelectedChannelData } = useRootStore().channelStore;
+    const navigate = useNavigate();
+    const { name } = useParams();
+
+    const handleHashTagClick = (tag: string) => {
+        if (isOpenHashTagScreen) {
+            setHashTags(tag);
+            enter();
+        } else {
+            setHashTags(tag);
+            enter();
+            navigate(
+                generatePath('/:name', {
+                    name: name || '',
+                }) +
+                    generatePath('/:hashtag', {
+                        hashtag: tag,
+                    }),
+            );
+        }
+    };
 
     const searchHandle = (e: string) => {
         setSearch(e);
@@ -37,6 +67,7 @@ const ChatHeader = () => {
 
     const handleClose = (removedTag: string) => {
         removeHashTags(removedTag);
+        handleHashTagClick(removedTag);
     };
 
     const channel = useMemo(
@@ -45,7 +76,7 @@ const ChatHeader = () => {
             color: getSelectedChannelData.color,
             name: getSelectedChannelData.name,
         }),
-        [...Object.values(getSelectedChannelData)],
+        [getSelectedChannelData],
     );
 
     return (
@@ -118,14 +149,15 @@ const ChatHeader = () => {
                 {allChatHashTags.map((tag, index) => {
                     const isLongTag = tag.length > 20;
                     const tagElem = (
-                        <Tag key={index} onClose={() => handleClose(tag)}>
+                        <Tag key={index} onClose={() => handleClose(tag)} style={{ cursor: 'pointer' }}>
                             <Text
+                                handleLink={() => handleClose(tag)}
                                 fontSize="12px"
                                 fontFamily="Montserrat"
                                 fontWeight={600}
                                 margin="0"
                                 style={{
-                                    cursor: 'auto',
+                                    cursor: 'pointer',
                                 }}
                             >
                                 #{isLongTag ? `${tag.slice(0, 20)}...` : tag}
