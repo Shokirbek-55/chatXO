@@ -51,6 +51,15 @@ const ManagaChannel = () => {
         message.success("Copy chat link");
     };
 
+    const truncatedText = text => {
+        const words = text.split(' ');
+        if (words.length > 35) {
+            return words.slice(0, 30).join(' ') + '...';
+        } else {
+            return text;
+        }
+    };
+
     return (
         <div className={styles.container}>
             <Header
@@ -78,7 +87,7 @@ const ManagaChannel = () => {
                     fontSize="12px"
                     children={
                         channelData.description
-                            ? channelData.description
+                            ? truncatedText(channelData.description)
                             : "no description"
                     }
                 />
