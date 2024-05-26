@@ -1,14 +1,14 @@
-import { CSSProperties, FC } from "react";
-import { Channel } from "../../types/channel";
-import { Friend } from "../../types/friend";
-import Colors from "../../utils/colors";
-import { SearchIcon } from "../../utils/icons";
-import Assets from "../../utils/requireAssets";
-import ButtonView from "../Button";
-import Icon from "../Icon";
-import SmallAvatar from "../SmallAvatar/smallAvatar";
-import Text from "../Text/Text";
-import styles from "./index.module.css";
+import { CSSProperties, FC } from 'react';
+import { Channel } from '../../types/channel';
+import { Friend } from '../../types/friend';
+import Colors from '../../utils/colors';
+import { SearchIcon } from '../../utils/icons';
+import Assets from '../../utils/requireAssets';
+import ButtonView from '../Button';
+import Icon from '../Icon';
+import SmallAvatar from '../SmallAvatar/smallAvatar';
+import Text from '../Text/Text';
+import styles from './index.module.css';
 
 interface Props {
     item?: Friend;
@@ -37,7 +37,7 @@ interface Props {
 function chsUser(username: string) {
     if (username.length <= 9) return username;
 
-    return username.slice(0, 10) + "...";
+    return username.slice(0, 10) + '...';
 }
 
 const RowItemView: FC<Props> = ({
@@ -66,22 +66,13 @@ const RowItemView: FC<Props> = ({
                 <div
                     className={styles.card}
                     onClick={() => {
-                        onGroupPress && onGroupPress(groupItem?.hashId || "");
+                        onGroupPress && onGroupPress(groupItem?.hashId || '');
                         onPressComponent && onPressComponent();
                     }}
                 >
                     <SmallAvatar color={color} imageUrl={imageUrl} />
-                    <div
-                        className={styles.headerTitle}
-                        onClick={() =>
-                            onNamePress && onNamePress(item?.id || "")
-                        }
-                    >
-                        <Text
-                            fontWeight={500}
-                            color={Colors.Black}
-                            children={chsUser(text)}
-                        />
+                    <div className={styles.headerTitle} onClick={() => onNamePress && onNamePress(item?.id || '')}>
+                        <Text fontWeight={500} color={Colors.Black} children={chsUser(text)} />
                     </div>
                 </div>
             ) : null}
@@ -96,21 +87,16 @@ const RowItemView: FC<Props> = ({
                         onRefreshbutton={onClick}
                     />
                 ) : null}
-                {icon === "search" ? <SearchIcon size={21} /> : null}
+                {icon === 'search' ? <SearchIcon size={21} /> : null}
                 {userType ? (
                     <div className={styles.relevanceBox}>
                         <Text
-                            style={{ fontSize: "12px", whiteSpace: "nowrap" }}
+                            style={{ fontSize: '12px', whiteSpace: 'nowrap' }}
                             color={Colors.Black}
                             children={userType}
                         />
                         {upDownIcon ? (
-                            <Icon
-                                src={Assets.up_downIcon}
-                                width="12px"
-                                height="12px"
-                                color={"yellowgreen"}
-                            />
+                            <Icon src={Assets.up_downIcon} width="12px" height="12px" color={'yellowgreen'} />
                         ) : null}
                     </div>
                 ) : null}

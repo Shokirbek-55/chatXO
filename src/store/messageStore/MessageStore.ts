@@ -1,23 +1,13 @@
-import { makeAutoObservable, runInAction, toJS } from "mobx";
-import {
-    Channel,
-    ChannelsUsersType,
-    MessageType,
-    RawMessage,
-    SearchResponse,
-    SendMessage,
-} from "../../types/channel";
-import { AppRootStore } from "../store";
-import _ from "lodash";
-import APIs from "../../api/api";
-import { Operation } from "../../utils/Operation";
-import {
-    pollMessage,
-    pollMessageInitial
-} from "../../types/messageType";
+import { makeAutoObservable, runInAction, toJS } from 'mobx';
+import { Channel, ChannelsUsersType, MessageType, RawMessage, SearchResponse, SendMessage } from '../../types/channel';
+import { AppRootStore } from '../store';
+import _ from 'lodash';
+import APIs from '../../api/api';
+import { Operation } from '../../utils/Operation';
+import { pollMessage, pollMessageInitial } from '../../types/messageType';
 
 const initialMassegeText: SendMessage = {
-    type: "text",
+    type: 'text',
     minRelevance: -1,
     isReply: false,
     hashtags: [],
@@ -43,19 +33,19 @@ type MessageCacheType = {
             [key: string]: ChannelsUsersType;
         };
     };
-}
+};
 
 type MessagesInChannelType = {
     messages: RawMessage[];
     pageState: string | null;
     end?: boolean;
-}
+};
 
 type CacheMessagesType = {
     messages: Map<string, RawMessage>;
     pageState: string | null;
     end?: boolean;
-}
+};
 
 export default class MessageStore {
     app: AppRootStore;
@@ -66,16 +56,17 @@ export default class MessageStore {
 
     channelsMsgDataBySlug = new Map<string, CacheMessagesType>();
     slugQueue = new Set<string>();
+    newMsgChannelsSlug = new Set<string>();
 
     FileUploadOperation = new Operation<FileUploadOperationData>({
-        filePath: "",
-        fileTitle: "",
-        thumbnailPath: "",
+        filePath: '',
+        fileTitle: '',
+        thumbnailPath: '',
     });
 
     getPollOperation = new Operation({});
 
-    slug: string = "";
+    slug: string = '';
     messageCache: MessageCacheType = {};
 
     prevInnerDivHeight: {
@@ -86,13 +77,13 @@ export default class MessageStore {
         messages: [],
         pageState: null,
         end: false,
-    }
+    };
     dataInChannel: Channel | null = null;
     usersInChannel: {
         [key: string]: ChannelsUsersType;
     } = {};
 
-    searchMessageState: string = "";
+    searchMessageState: string = '';
 
     searchMessages: SearchResponse = {
         messages: [],
@@ -100,13 +91,15 @@ export default class MessageStore {
         isEnd: false,
     };
 
-    messageTextState: string = "";
+    messageTextState: string = '';
 
     isLoadMessages: boolean = false;
 
     setSendMessage: SendMessage = initialMassegeText;
 
     setReplyMessage: RawMessage | null = null;
+
+    editMessage: RawMessage | null = null;
 
     progress: number = 0;
     isMessagesLength: boolean = false;
@@ -117,67 +110,79 @@ export default class MessageStore {
     goToBottom = false;
     messagesFilterValue: number = 0;
     pollMessageState: pollMessage = pollMessageInitial;
-    pollMessageOptionState: string[] = ["", ""];
+    pollMessageOptionState: string[] = ['', ''];
     pollMessageDetails: pollMessage = {} as never;
 
     upsertChannelsMsgs = (slug: string, data: MessagesInChannelType) => {
         const msgs = this.channelsMsgDataBySlug.get(slug);
         if (msgs) {
             data.messages.forEach(msg => {
-                msgs.messages.set(msg.id, msg)
-            })
+                msgs.messages.set(msg.id, msg);
+            });
             msgs.pageState = data.pageState;
             msgs.end = data.end;
         } else {
             const messageById = new Map<string, RawMessage>();
             data.messages.forEach(msg => {
-                messageById.set(msg.id, msg)
-            })
+                messageById.set(msg.id, msg);
+            });
             this.channelsMsgDataBySlug.set(slug, {
                 messages: messageById,
                 pageState: data.pageState,
-                end: data.end
+                end: data.end,
             });
         }
-    }
+    };
 
     get getSelectedChannelMsgData() {
-        return this.channelsMsgDataBySlug.get(this.app.channelStore.selectedChannelData.slug)
+        return this.channelsMsgDataBySlug.get(this.app.channelStore.selectedChannelData.slug);
     }
 
     get getSelectedChannelMsgsMap() {
-        return this.getSelectedChannelMsgData?.messages || new Map<string, RawMessage>()
+        return this.getSelectedChannelMsgData?.messages || new Map<string, RawMessage>();
     }
 
     get getSelectedChannelMsgsPageState() {
-        return this.getSelectedChannelMsgData?.pageState || ""
+        return this.getSelectedChannelMsgData?.pageState || '';
     }
 
     get getSelectedChannelMsgsEnd() {
-        return this.getSelectedChannelMsgData?.end || false
+        return this.getSelectedChannelMsgData?.end || false;
     }
 
     get getSelectedChannelMsgs() {
-        return Array.from(this.getSelectedChannelMsgsMap.values())
+        return Array.from(this.getSelectedChannelMsgsMap.values());
     }
 
     set setChannelMsgNewMessage(msg: RawMessage) {
-        this.getSelectedChannelMsgData?.messages.set(msg.id, msg)
+        if (this.getSelectedChannelMsgData?.messages) {
+            const messages = Array.from(this.getSelectedChannelMsgData?.messages);
+            messages.unshift([msg.id, msg]);
+            this.getSelectedChannelMsgData.messages = new Map(messages);
+        }
+    }
+
+    set setChannelMessageByMessageId(msg: RawMessage) {
+        this.getSelectedChannelMsgData?.messages.set(msg.id, msg);
     }
 
     getChannelMsgDataBySlug(slug: string) {
-        return this.channelsMsgDataBySlug.get(slug)
+        return this.channelsMsgDataBySlug.get(slug);
     }
 
     getSelectedChannelMsgById = (id: string) => {
-        return this.getSelectedChannelMsgsMap.get(id)
+        return this.getSelectedChannelMsgsMap.get(id);
+    };
+
+    set setSelectedChannelMsgById(msg: RawMessage) {
+        this.getSelectedChannelMsgsMap.set(msg.id, msg);
     }
 
     setIsMessagesLength = (is: boolean) => {
         runInAction(() => {
-            this.isMessagesLength = is
-        })
-    }
+            this.isMessagesLength = is;
+        });
+    };
 
     setPollMessageState = (key: keyof pollMessage, value: any) => {
         runInAction(() => {
@@ -195,12 +200,9 @@ export default class MessageStore {
     addPollOption = () => {
         runInAction(() => {
             if (this.pollMessageOptionState.length < 10) {
-                let item = "";
+                let item = '';
                 this.pollMessageOptionState.push(item);
-                this.setPollMessageState(
-                    "options",
-                    this.pollMessageOptionState
-                );
+                this.setPollMessageState('options', this.pollMessageOptionState);
             }
         });
     };
@@ -208,15 +210,14 @@ export default class MessageStore {
     removePollOption = (v: string, index: number) => {
         runInAction(() => {
             if (this.pollMessageOptionState.length > 2)
-                this.pollMessageOptionState =
-                    this.pollMessageOptionState.filter((e, i) => i !== index);
+                this.pollMessageOptionState = this.pollMessageOptionState.filter((e, i) => i !== index);
         });
     };
 
     clearPollMessageState = () => {
         runInAction(() => {
             this.pollMessageState = pollMessageInitial;
-            this.pollMessageOptionState = ["", ""];
+            this.pollMessageOptionState = ['', ''];
         });
     };
 
@@ -224,14 +225,14 @@ export default class MessageStore {
         pollOption: number,
         channelSlug: string,
         pollId: number,
-        messageId: string
+        messageId: string,
         // callback: () => void
     ) => {
         this.app.chatStore.vote(
             pollOption,
             channelSlug,
             pollId,
-            messageId
+            messageId,
             // callback
         );
     };
@@ -243,7 +244,7 @@ export default class MessageStore {
             });
         },
         400,
-        { leading: false, trailing: true }
+        { leading: false, trailing: true },
     );
 
     setPrevInnerDivHeight = (slug: string, height: number) => {
@@ -258,7 +259,7 @@ export default class MessageStore {
 
     clearSearch = () => {
         runInAction(() => {
-            this.searchMessageState = "";
+            this.searchMessageState = '';
         });
     };
 
@@ -310,13 +311,8 @@ export default class MessageStore {
         });
 
         this.app.socketStore.socket?.on(
-            "history",
-            (data: {
-                messages: RawMessage[];
-                pageState: string;
-                end: boolean;
-            }) => {
-                data.messages = _.reverse(toJS(data.messages));
+            'history',
+            (data: { messages: RawMessage[]; pageState: string; end: boolean }) => {
                 if (this.app.hashtagStore.isOpenHashTagScreen) {
                     this.app.hashtagStore.setAllHashTagsMessages(data);
                 } else {
@@ -324,10 +320,10 @@ export default class MessageStore {
                         data.messages[0]?.channelSlug || slug,
                         data.messages,
                         data.pageState,
-                        data.end
+                        data.end,
                     );
                 }
-            }
+            },
         );
         runInAction(() => {
             this.isLoadMessages = false;
@@ -335,7 +331,7 @@ export default class MessageStore {
     };
 
     getHistoryMessagesPageState = (setIsFetching, stop) => {
-        console.log("pagestate");
+        console.log('pagestate');
         if (this.messageCache[this.slug]?.end === false) {
             this.app.chatStore.history({
                 slug: this.slug,
@@ -348,12 +344,7 @@ export default class MessageStore {
         }
     };
 
-    setHistoryMessages = (
-        slug: string,
-        messages: RawMessage[],
-        pageState: string | null,
-        end: boolean
-    ) => {
+    setHistoryMessages = (slug: string, messages: RawMessage[], pageState: string | null, end: boolean) => {
         this.upsertChannelsMsgs(slug, {
             messages,
             pageState,
@@ -364,9 +355,7 @@ export default class MessageStore {
                 return;
             } else {
                 this.messageCache[slug].messages = [
-                    ...(this.messageCache[slug].messages.filter(
-                        (item) => item.id === messages[0]?.id
-                    ).length === 1
+                    ...(this.messageCache[slug].messages.filter(item => item.id === messages[0]?.id).length === 1
                         ? []
                         : [...messages]),
                     ...this.messageCache[slug].messages,
@@ -386,38 +375,32 @@ export default class MessageStore {
     };
 
     addMessageToCache = (message: RawMessage) => {
+        this.newMsgChannelsSlug.add(message.channelSlug);
         this.setChannelMsgNewMessage = message;
         if (this.messageCache[message.channelSlug]) {
-            if (
-                _.last(this.messageCache[message.channelSlug].messages)?.id ===
-                message.id
-            ) {
+            if (_.last(this.messageCache[message.channelSlug].messages)?.id === message.id) {
                 runInAction(() => {
-                    this.messageCache[message.channelSlug].messages[0] =
-                        message;
+                    this.messageCache[message.channelSlug].messages[0] = message;
                 });
             } else {
                 runInAction(() => {
-                    this.messageCache[message.channelSlug].messages.push(
-                        message
-                    );
+                    this.messageCache[message.channelSlug].messages.push(message);
                 });
             }
         } else {
             runInAction(() => {
                 this.messageCache[message.channelSlug] = {
                     messages: [message],
-                    pageState: "",
-                    channelData:
-                        this.messageCache[message.channelSlug]?.channelData,
-                    channelUsers:
-                        this.messageCache[message.channelSlug]?.channelUsers,
+                    pageState: '',
+                    channelData: this.messageCache[message.channelSlug]?.channelData,
+                    channelUsers: this.messageCache[message.channelSlug]?.channelUsers,
                 };
             });
         }
     };
 
     addMergeMessageToCache = (message: RawMessage) => {
+        this.setChannelMessageByMessageId = message;
         runInAction(() => {
             this.messageCache[message.channelSlug].messages.pop();
             this.messageCache[message.channelSlug].messages = [
@@ -431,7 +414,7 @@ export default class MessageStore {
         if (!this.messageCache[slug]) {
             this.messageCache[slug] = {
                 messages: [],
-                pageState: "",
+                pageState: '',
                 channelData: channelData,
                 channelUsers: this.messageCache[slug]?.channelUsers,
             };
@@ -447,12 +430,12 @@ export default class MessageStore {
         slug: string,
         channelUsers: {
             [key: string]: ChannelsUsersType;
-        }
+        },
     ) => {
         if (!this.messageCache[slug]) {
             this.messageCache[slug] = {
                 messages: [],
-                pageState: "",
+                pageState: '',
                 channelData: this.messageCache[slug]?.channelData,
                 channelUsers: channelUsers,
             };
@@ -476,7 +459,7 @@ export default class MessageStore {
         if (this.messageCache[slug]) {
             return this.messageCache[slug].pageState;
         } else {
-            return "";
+            return '';
         }
     };
 
@@ -497,7 +480,7 @@ export default class MessageStore {
             ...this.setSendMessage,
             userId: this.app.authStore.user.id,
             channelSlug: this.slug,
-            type: "text",
+            type: 'text',
             message: this.messageTextState,
         };
     };
@@ -518,7 +501,7 @@ export default class MessageStore {
     setSendPhotoMessage = () => {
         this.setSendMessage = {
             ...this.setSendMessage,
-            type: "image",
+            type: 'image',
             userId: this.app.authStore.user.id,
             channelSlug: this.slug,
             mediaTitle: this.FileUploadOperation.data.fileTitle,
@@ -530,7 +513,7 @@ export default class MessageStore {
     setSendVideoMessage = () => {
         this.setSendMessage = {
             ...this.setSendMessage,
-            type: "video",
+            type: 'video',
             userId: this.app.authStore.user.id,
             channelSlug: this.slug,
             mediaTitle: this.FileUploadOperation.data.fileTitle,
@@ -542,7 +525,7 @@ export default class MessageStore {
     setSendAudioMessage = () => {
         this.setSendMessage = {
             ...this.setSendMessage,
-            type: "audio",
+            type: 'audio',
             userId: this.app.authStore.user.id,
             channelSlug: this.slug,
             mediaTitle: this.FileUploadOperation.data.fileTitle,
@@ -554,7 +537,7 @@ export default class MessageStore {
     setSendDocumentMessage = () => {
         this.setSendMessage = {
             ...this.setSendMessage,
-            type: "document",
+            type: 'document',
             userId: this.app.authStore.user.id,
             channelSlug: this.slug,
             mediaTitle: this.FileUploadOperation.data.fileTitle,
@@ -579,38 +562,50 @@ export default class MessageStore {
         if (type) {
             this.setSendPollMessage();
         }
-        this.app.socketStore.socket?.emit("poll", this.setSendMessage);
+        this.app.socketStore.socket?.emit('poll', this.setSendMessage);
     };
 
     onSendMessage = (type?: MessageType) => {
         switch (type) {
-            case "text":
+            case 'text':
                 this.setSendTextMessage();
                 break;
-            case "image":
+            case 'image':
                 this.setSendPhotoMessage();
                 break;
-            case "audio":
+            case 'audio':
                 this.setSendAudioMessage();
                 break;
-            case "video":
+            case 'video':
                 this.setSendVideoMessage();
                 break;
-            case "NORMAL":
+            case 'NORMAL':
                 this.setSendPollMessage();
                 break;
-            case "RELEVANCE":
+            case 'RELEVANCE':
                 this.setSendPollMessage();
                 break;
             default:
                 break;
         }
 
+        if (this.editMessage) {
+            const editedMessage = {
+                ...this.editMessage,
+                message: this.messageTextState,
+            };
+            this.onEditMessage(editedMessage);
+            this.app.socketStore.socket?.emit('editMessage', editedMessage);
+            this.setSendMessage = initialMassegeText;
+            this.clearReplyMessage();
+            return;
+        }
+
         this.setSendMessage = {
             ...this.setSendMessage,
             hashtags: this.app.hashtagStore.hashTags,
         };
-        this.app.socketStore.socket?.emit("message", this.setSendMessage);
+        this.app.socketStore.socket?.emit('message', this.setSendMessage);
         this.setSendMessage = initialMassegeText;
         this.clearReplyMessage();
     };
@@ -625,20 +620,15 @@ export default class MessageStore {
     };
 
     onDeleteMessage = (id: string) => {
-        runInAction(() => {
-            this.messageCache[this.slug].messages = this.messageCache[
-                this.slug
-            ].messages.filter((e) => e.id !== id);
-        });
-    };
-
-    replyMessage = (message: RawMessage) => {
-        this.setReplyMessage = message;
-        this.setSendReplyMessage();
-    };
+		const selectedChannelData = this.getSelectedChannelMsgData;
+		if (selectedChannelData) {
+			selectedChannelData.messages.delete(id);
+		}
+	};
 
     clearReplyMessage = () => {
         this.setReplyMessage = null;
+        this.editMessage = null;
     };
 
     onProgress = (percent: number) => {
@@ -647,9 +637,9 @@ export default class MessageStore {
         });
     };
 
-    readFile = async (file: File, type: SendMessage["type"]) => {
+    readFile = async (file: File, type: SendMessage['type']) => {
         const form = new FormData();
-        form.append("file", file, file.name);
+        form.append('file', file, file.name);
 
         const config = {
             onUploadProgress: (progressEvent: any) => {
@@ -660,7 +650,7 @@ export default class MessageStore {
                 }
             },
             headers: {
-                "Content-Type": "multipart/form-data",
+                'Content-Type': 'multipart/form-data',
             },
         };
 
@@ -670,23 +660,23 @@ export default class MessageStore {
 
         if (this.FileUploadOperation.isSuccess) {
             switch (type) {
-                case "audio":
+                case 'audio':
                     this.setSendAudioMessage();
                     break;
-                case "image":
+                case 'image':
                     this.setSendPhotoMessage();
                     break;
-                case "video":
+                case 'video':
                     this.setSendVideoMessage();
                     break;
-                case "document":
+                case 'document':
                     this.setSendDocumentMessage();
                     break;
             }
 
             this.onSendMessage(type);
         } else {
-            console.log("Upload error");
+            console.log('Upload error');
         }
     };
 
@@ -695,9 +685,7 @@ export default class MessageStore {
     };
 
     getPollId = async (pollId: number, includeVotedUsers: boolean) => {
-        await this.getPollOperation.run(() =>
-            APIs.channels.getPollDetails(pollId, includeVotedUsers)
-        );
+        await this.getPollOperation.run(() => APIs.channels.getPollDetails(pollId, includeVotedUsers));
         runInAction(() => {
             if (this.getPollOperation.isSuccess) {
                 this.pollMessageDetails = {
@@ -705,5 +693,24 @@ export default class MessageStore {
                 } as never;
             }
         });
+    };
+
+    setEditMessage = (message: RawMessage) => {
+        this.showSetReplyMessage(message);
+        this.setMessageText(message.message);
+        this.editMessage = message;
+    };
+
+    onEditMessage = (editedMessage: RawMessage) => {
+        this.setSelectedChannelMsgById = editedMessage;
+    };
+
+    replyMessage = (message: RawMessage) => {
+        this.showSetReplyMessage(message);
+        this.setSendReplyMessage();
+    };
+
+    showSetReplyMessage = (message: RawMessage) => {
+        this.setReplyMessage = message;
     };
 }

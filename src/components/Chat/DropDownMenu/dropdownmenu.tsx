@@ -1,10 +1,10 @@
-import { Dropdown, MenuProps, Space, message } from "antd";
-import { t } from "i18next";
-import { observer } from "mobx-react-lite";
-import { useMemo } from "react";
-import { styled } from "styled-components";
-import useRootStore from "../../../hooks/useRootStore";
-import { ChannelsUsersType, RawMessage } from "../../../types/channel";
+import { Dropdown, MenuProps, Space, message } from 'antd';
+import { t } from 'i18next';
+import { observer } from 'mobx-react-lite';
+import { useMemo } from 'react';
+import { styled } from 'styled-components';
+import useRootStore from '../../../hooks/useRootStore';
+import { ChannelsUsersType, RawMessage } from '../../../types/channel';
 
 //
 
@@ -18,110 +18,109 @@ interface Props {
 
 const DropDownMenu = ({ massage, children }: Props) => {
     const { user } = useRootStore().authStore;
-    const { slug, messageCache, deleteMessage, replyMessage } =
-        useRootStore().messageStore;
+    const { slug, messageCache, deleteMessage, setEditMessage, replyMessage } = useRootStore().messageStore;
 
     const isAdmin = useMemo(() => messageCache[slug].channelData?.adminId === user?.id, [user, slug, messageCache]);
 
-    const items: MenuProps["items"] = [
+    const items: MenuProps['items'] = [
         {
-            key: "1",
-            label: t("reply"),
+            key: '1',
+            label: t('reply'),
             onClick: () => {
                 replyMessage(massage);
             },
         },
         {
-            key: "2",
-            label: t("report"),
-            onClick: () => { },
+            key: '2',
+            label: t('report'),
+            onClick: () => {},
         },
         {
-            key: "3",
-            label: t("copy"),
+            key: '3',
+            label: t('copy'),
             onClick: () => {
                 try {
                     navigator.clipboard.writeText(massage.message);
-                    console.log("Copied!");
+                    console.log('Copied!');
                 } catch (err) {
-                    console.log("Failed to copy!");
+                    console.log('Failed to copy!');
                 }
             },
         },
+
         {
-            key: "4",
-            label: t("delete"),
+            key: '4',
+            label: t('Edit'),
+            onClick: () => {
+                setEditMessage(massage);
+            },
+        },
+        {
+            key: '5',
+            label: t('delete'),
             onClick: () => {
                 if (isAdmin || massage.userId === user?.id) {
-                    deleteMessage(
-                        massage.id,
-                        massage.channelSlug,
-                        new Date(massage.timestamp)
-                    );
+                    deleteMessage(massage.id, massage.channelSlug, new Date(massage.timestamp));
                 } else {
-                    message.error("you are not admin");
+                    message.error('you are not admin');
                 }
             },
         },
         {
-            key: "5",
-            label: t("cancel"),
-            onClick: () => { },
+            key: '6',
+            label: t('cancel'),
+            onClick: () => {},
         },
     ];
 
-    const itemsIsAdmin: MenuProps["items"] = [
+    const itemsIsAdmin: MenuProps['items'] = [
         {
-            key: "1",
-            label: t("reply"),
+            key: '1',
+            label: t('reply'),
             onClick: () => {
                 replyMessage(massage);
             },
         },
         {
-            key: "2",
-            label: t("copy"),
+            key: '2',
+            label: t('copy'),
             onClick: () => {
                 try {
                     navigator.clipboard.writeText(massage.message);
-                    console.log("Copied!");
+                    console.log('Copied!');
                 } catch (err) {
-                    console.log("Failed to copy!");
+                    console.log('Failed to copy!');
                 }
             },
         },
         {
-            key: "3",
-            label: t("delete"),
+            key: '3',
+            label: t('delete'),
             onClick: () => {
                 if (isAdmin || massage.userId === user?.id) {
-                    deleteMessage(
-                        massage.id,
-                        massage.channelSlug,
-                        new Date(massage.timestamp)
-                    );
+                    deleteMessage(massage.id, massage.channelSlug, new Date(massage.timestamp));
                 } else {
-                    message.error("you are not admin");
+                    message.error('you are not admin');
                 }
             },
         },
         {
-            key: "4",
-            label: t("cancel"),
-            onClick: () => { },
+            key: '4',
+            label: t('cancel'),
+            onClick: () => {},
         },
     ];
 
     return (
         <DropdownRN
             menu={{ items: isAdmin ? items : itemsIsAdmin }}
-            trigger={["contextMenu"]}
+            trigger={['contextMenu']}
             overlayStyle={{
-                width: "130px",
-                height: "200px",
-                borderRadius: "10%",
-                alignItems: "center",
-                padding: "15px",
+                width: '130px',
+                height: '200px',
+                borderRadius: '10%',
+                alignItems: 'center',
+                padding: '15px',
             }}
         >
             <Space>{children}</Space>

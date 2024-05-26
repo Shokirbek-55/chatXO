@@ -1,22 +1,23 @@
-import { observer } from "mobx-react-lite";
-import { generatePath, Outlet, useNavigate } from "react-router-dom";
-import { styled } from "styled-components";
-import useRootStore from "../hooks/useRootStore";
-import SidebarLayout from "./Sidebar";
-import { useEffect } from "react";
-import PollMessageCard from "../components/Chat/PollMessageCard";
-import PreviewImage from "../components/PreviewImage/PreviewImage";
-import Relevence from "../components/Relevence/relevence";
-import UploadChannelFile from "../components/UploadChannelFile/UploadChannelFile";
-import { regex } from "../utils/regax";
-import EmptyScreen from "./home/emptyScreen/EmptyScreen";
-import ManageChannelLayout from "./ManageChannel";
+import { observer } from 'mobx-react-lite';
+import { generatePath, Outlet, useNavigate } from 'react-router-dom';
+import { styled } from 'styled-components';
+import useRootStore from '../hooks/useRootStore';
+import SidebarLayout from './Sidebar';
+import { useEffect } from 'react';
+import PollMessageCard from '../components/Chat/PollMessageCard';
+import PreviewImage from '../components/PreviewImage/PreviewImage';
+import Relevence from '../components/Relevence/relevence';
+import UploadChannelFile from '../components/UploadChannelFile/UploadChannelFile';
+import { regex } from '../utils/regax';
+import EmptyScreen from './home/emptyScreen/EmptyScreen';
+import ManageChannelLayout from './ManageChannel';
 
 function HomeLayout() {
     const navigate = useNavigate();
     const { session } = useRootStore().localStore;
     const { visible, hide } = useRootStore().visibleStore;
     const { setChannelHashId } = useRootStore().channelStore;
+    const { closeRightSideBar } = useRootStore().routerStore;
     const hashIdArr = window.location.pathname.match(regex);
     const hashId = hashIdArr?.[1].toString();
 
@@ -27,7 +28,7 @@ function HomeLayout() {
             });
             setChannelHashId(hashId, () => navigate(target));
         } else if (!session.accessToken) {
-            navigate("/auth/welcome");
+            navigate('/auth/welcome');
         }
     }, [hashId]);
 
@@ -37,17 +38,16 @@ function HomeLayout() {
                 <Sidebar>
                     <SidebarLayout />
                 </Sidebar>
-                <ChatArea onClick={() => hide("menuChannel")}>
+                <ChatArea onClick={() => hide('menuChannel')}>
                     <Outlet />
                     <EmptyScreen text="Select a chat to start messaging" />
                 </ChatArea>
-                <RightArea
-                    onClick={() => hide("menuChannel")}
-                    $isopen={visible.rightSidebar ? "0px" : "-340px"}
-                >
+                <RightArea onClick={() => hide('menuChannel')} $isopen={visible.rightSidebar ? '0px' : '-340px'}>
                     <ManageChannelLayout />
                 </RightArea>
                 <Relevence />
+                {visible.rightSidebar && <DissmissableSection onClick={closeRightSideBar} />}
+
                 <PreviewImage />
                 <UploadChannelFile />
                 <PollMessageCard />
@@ -64,7 +64,19 @@ const AppBody = styled.div`
     background-color: rgba(127, 168, 139, 0.15);
     display: flex;
     justify-content: center;
-`
+`;
+
+const DissmissableSection = styled.div`
+    height: 100vh;
+    height: 100vh;
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    background: transparent;
+    z-index: 1;
+`;
 
 const Container = styled.div`
     position: relative;
@@ -120,7 +132,7 @@ const RightArea = styled.div<{ $isopen?: string }>`
     height: 100%;
     transition: right 0.3s ease-in-out;
     z-index: 16;
-    right: ${(props) => props.$isopen};
+    right: ${props => props.$isopen};
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
     background: rgba(127, 168, 139, 0.6);
 `;

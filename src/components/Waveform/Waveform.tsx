@@ -18,18 +18,18 @@ function getNormalizedWaveform(data: string) {
         return waveformCache.get(data);
     }
 
-    const bytes = Array.from(atob(data)).map(x => x.charCodeAt(0) & 0xFF);
+    const bytes = Array.from(atob(data)).map(x => x.charCodeAt(0) & 0xff);
     const waveform: number[] = [];
-    const barsCount = Math.floor(bytes.length * 8 / 5);
+    const barsCount = Math.floor((bytes.length * 8) / 5);
     for (let i = 0; i < barsCount; i++) {
-        const byteIndex = Math.floor(i * 5 / 8);
-        const barPadding = i * 5 % 8;
+        const byteIndex = Math.floor((i * 5) / 8);
+        const barPadding = (i * 5) % 8;
 
-        const bits = bytes[byteIndex] | (((byteIndex + 1 < bytes.length) ? bytes[byteIndex + 1] : 0) << 8)
-        waveform.push(((bits >>> barPadding) & 0x1F) / 31.0);
+        const bits = bytes[byteIndex] | ((byteIndex + 1 < bytes.length ? bytes[byteIndex + 1] : 0) << 8);
+        waveform.push(((bits >>> barPadding) & 0x1f) / 31.0);
     }
 
-    for (let i = 0; i < (100 - barsCount); i++) {
+    for (let i = 0; i < 100 - barsCount; i++) {
         waveform.push(0);
     }
 
@@ -38,11 +38,7 @@ function getNormalizedWaveform(data: string) {
     return waveform;
 }
 
-const Waveform = ({ data, dragging, value }: {
-    data?: string,
-    dragging: boolean,
-    value: number,
-}) => {
+const Waveform = ({ data, dragging, value }: { data?: string; dragging: boolean; value: number }) => {
     const [waveformData, setWaveformData] = useState(defaultData);
 
     // useEffect(() => {
@@ -77,28 +73,27 @@ const Waveform = ({ data, dragging, value }: {
         .filter((x: any, index: number) => index % 2 === 1)
         .map((x: number, index: number) => {
             const height = Math.min(Math.max(2, x * waveformMaxHeight), waveformMaxHeight);
-            const y = 16 - (height / 2);
+            const y = 16 - height / 2;
             return `M${1 + 4 * index + 1},${y}v${height}h${rectWidth}v${-height}Z`;
         })
         .join('');
 
     const svg = (
-        <svg className='waveform-bars' viewBox='0 0 202 32'>
+        <svg className="waveform-bars" viewBox="0 0 202 32">
             <path d={d} />
         </svg>
     );
 
     return (
-        <div className='waveform'>
-            <div className='waveform-content'>
-                <div className='waveform-background'>{svg}</div>
-                <div className='waveform-progress' style={{ transition, width: value + '%' }}>
+        <div className="waveform">
+            <div className="waveform-content">
+                <div className="waveform-background">{svg}</div>
+                <div className="waveform-progress" style={{ transition, width: value + '%' }}>
                     {svg}
                 </div>
             </div>
         </div>
     );
 };
-
 
 export default Waveform;

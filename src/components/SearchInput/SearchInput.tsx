@@ -1,6 +1,6 @@
-import React from "react";
-import { SearchIcon } from "../../assets/icons/icons";
-import styles from "./SearchInput.module.css";
+import React from 'react';
+import { SearchIcon } from '../../assets/icons/icons';
+import styles from './SearchInput.module.css';
 interface Props {
     placeholder?: string;
     onChange: (e: any) => void;
@@ -17,7 +17,7 @@ const SearchInput: React.FC<Props> = ({ placeholder, value, onChange }) => {
                 className={styles.input}
                 placeholder={placeholder}
                 type="text"
-                onChange={(e) => onChange(e.target.value)}
+                onChange={e => onChange(e.target.value)}
             />
         </div>
     );

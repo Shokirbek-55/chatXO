@@ -1,4 +1,4 @@
-import FilterSilderComponent from "../../../../../components/FilterSlider/FilterSlider";
+import FilterSilderComponent from '../../../../../components/FilterSlider/FilterSlider';
 
 interface Props {
     isOpen: boolean;

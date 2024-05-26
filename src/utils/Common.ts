@@ -21,14 +21,15 @@ export async function isWebpSupported() {
         const image = new Image();
         image.onload = function () {
             resolve(image.width === 2 && image.height === 1);
-        }
+        };
         image.onerror = function () {
             resolve(false);
-        }
-        image.src = 'data:image/webp;base64,UklGRjIAAABXRUJQVlA4ICYAAACyAgCdASoCAAEALmk0mk0iIiIiIgBoSygABc6zbAAA/v56QAAAAA==';
+        };
+        image.src =
+            'data:image/webp;base64,UklGRjIAAABXRUJQVlA4ICYAAACyAgCdASoCAAEALmk0mk0iIiIiIgBoSygABc6zbAAA/v56QAAAAA==';
     });
 
-    return webpSupported = await promise;
+    return (webpSupported = await promise);
 }
 
 export function itemsInView(scrollContainerRef, itemsContainerRef) {
@@ -48,7 +49,6 @@ export function itemsInView(scrollContainerRef, itemsContainerRef) {
 
     return items;
 }
-
 
 export function mapEquals(map1, map2) {
     if (!map1 || !map2) return false;

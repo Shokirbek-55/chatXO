@@ -1,13 +1,13 @@
-import { motion } from "framer-motion";
-import { observer } from "mobx-react-lite";
-import { useTranslation } from "react-i18next";
-import Header from "../../../components/Header/Header";
-import MessageBox from "../../../components/MessageBox/MessageBox";
-import RowItemView from "../../../components/RowItem";
-import SearchInput from "../../../components/SearchInput/SearchInput";
-import { TMP_URL } from "../../../env";
-import useRootStore from "../../../hooks/useRootStore";
-import styles from "./AddUserToChannel.module.css";
+import { motion } from 'framer-motion';
+import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
+import Header from '../../../components/Header/Header';
+import MessageBox from '../../../components/MessageBox/MessageBox';
+import RowItemView from '../../../components/RowItem';
+import SearchInput from '../../../components/SearchInput/SearchInput';
+import { TMP_URL } from '../../../env';
+import useRootStore from '../../../hooks/useRootStore';
+import styles from './AddUserToChannel.module.css';
 const container = {
     hidden: { opacity: 1, scale: 0 },
     visible: {
@@ -31,8 +31,7 @@ const item = {
 const AddUserToChannel = () => {
     const { t } = useTranslation();
     const { addUserToChannel, channelData } = useRootStore().channelStore;
-    const { usersListForAdd, setSearchUsersForAdd } =
-        useRootStore().friendsStore;
+    const { usersListForAdd, setSearchUsersForAdd } = useRootStore().friendsStore;
 
     const { closeModal } = useRootStore().routerStore;
 
@@ -42,67 +41,36 @@ const AddUserToChannel = () => {
 
     return (
         <div className={styles.container}>
-            <Header
-                text={`${t("addParticipant")}`}
-                leftIcon="arrowLeft"
-                onLeftIconPress={() => closeModal("right")}
-            />
+            <Header text={`${t('addParticipant')}`} leftIcon="arrowLeft" onLeftIconPress={() => closeModal('right')} />
             <div className={styles.searchBox}>
-                <SearchInput
-                    onChange={(e) => handleChangeText(e)}
-                    placeholder={`${t("searchPlaceholder")}`}
-                />
+                <SearchInput onChange={e => handleChangeText(e)} placeholder={`${t('searchPlaceholder')}`} />
             </div>
-            <div style={{ marginTop: "5px" }}>
-                <motion.div
-                    variants={container}
-                    initial="hidden"
-                    animate="visible"
-                >
+            <div style={{ marginTop: '5px' }}>
+                <motion.div variants={container} initial="hidden" animate="visible">
                     {usersListForAdd?.length !== 0 ? (
                         usersListForAdd?.map((e, index) => {
                             return (
-                                <motion.div
-                                    variants={item}
-                                    key={index}
-                                    id="map-dev"
-                                    className={styles.channelRowBox}
-                                >
+                                <motion.div variants={item} key={index} id="map-dev" className={styles.channelRowBox}>
                                     <RowItemView
                                         key={index}
                                         text={e.username}
                                         loading={false}
-                                        imageUrl={
-                                            e.avatar
-                                                ? `${TMP_URL}/${e.avatar}`
-                                                : ""
-                                        }
+                                        imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ''}
                                         color={
                                             e.color
                                                 ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)`
-                                                : "linear-gradient(#ddd, #666)"
+                                                : 'linear-gradient(#ddd, #666)'
                                         }
                                         rightButton={true}
-                                        onButtonPress={() =>
-                                            addUserToChannel(
-                                                channelData.hashId,
-                                                e.id as any
-                                            )
-                                        }
-                                        title={`${
-                                            e.isAdded ? t("added") : t("add")
-                                        }`}
-                                        className={
-                                            e.isAdded
-                                                ? styles.added
-                                                : styles.add
-                                        }
+                                        onButtonPress={() => addUserToChannel(channelData.hashId, e.id as any)}
+                                        title={`${e.isAdded ? t('added') : t('add')}`}
+                                        className={e.isAdded ? styles.added : styles.add}
                                     />
                                 </motion.div>
                             );
                         })
                     ) : (
-                        <MessageBox title={`${t("no_avalible_friends")}`} />
+                        <MessageBox title={`${t('no_avalible_friends')}`} />
                     )}
                 </motion.div>
             </div>

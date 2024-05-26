@@ -1,19 +1,19 @@
-import { makeAutoObservable, runInAction } from "mobx";
-import { createContext } from "react";
+import { makeAutoObservable, runInAction } from 'mobx';
+import { createContext } from 'react';
 
-import MessageStore from "./messageStore/MessageStore";
-import ChannelStore from "./channelStore/channelStore";
-import AuthStore from "./AuthStore/AuthStore";
-import LocalStore from "./loacalStore/loacalStore";
-import SocketStore from "./socketStore/socketStore";
-import FriendsStore from "./friendsStore/friendsStore";
-import UsersStore from "./usersStore/usersStore";
-import RouterStore from "./RouterStore/routerStore";
-import ChatStore from "./chatStore/chatStore";
-import VisibleStore from "./visibleStore/visibleStore";
-import HelperStore from "./helperStore/helperStore";
-import AudioStore from "./AudioStore/AudioStore";
-import HashtagStore from "./hashtagStore/hashtagStore";
+import MessageStore from './messageStore/MessageStore';
+import ChannelStore from './channelStore/channelStore';
+import AuthStore from './AuthStore/AuthStore';
+import LocalStore from './loacalStore/loacalStore';
+import SocketStore from './socketStore/socketStore';
+import FriendsStore from './friendsStore/friendsStore';
+import UsersStore from './usersStore/usersStore';
+import RouterStore from './RouterStore/routerStore';
+import ChatStore from './chatStore/chatStore';
+import VisibleStore from './visibleStore/visibleStore';
+import HelperStore from './helperStore/helperStore';
+import AudioStore from './AudioStore/AudioStore';
+import HashtagStore from './hashtagStore/hashtagStore';
 
 export class AppRootStore {
     messageStore: MessageStore;
@@ -59,8 +59,8 @@ export class AppRootStore {
         this.channelStore.getMyChannels();
         this.friendsStore.getFriends();
         this.usersStore.getNonFriends();
-        console.log("All requests are done!");
-    }
+        console.log('All requests are done!');
+    };
 
     private run = () => {
         runInAction(() => {
@@ -68,7 +68,7 @@ export class AppRootStore {
 
             Promise.all(list)
                 .then(() => this.runHasToken())
-                .catch(() => console.log("Requests failed!"));
+                .catch(() => console.log('Requests failed!'));
         });
     };
 }

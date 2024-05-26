@@ -1,11 +1,10 @@
-import { makeAutoObservable, toJS } from "mobx";
-import io, { Socket } from "socket.io-client";
-import { Env } from "../../env";
-import { AppRootStore } from "../store";
-import { User } from "../../types/user";
+import { makeAutoObservable, toJS } from 'mobx';
+import io, { Socket } from 'socket.io-client';
+import { Env } from '../../env';
+import { AppRootStore } from '../store';
+import { User } from '../../types/user';
 
 class SocketStore {
-
     root: AppRootStore;
 
     constructor(root: AppRootStore) {
@@ -44,58 +43,57 @@ class SocketStore {
         this._socket = io(Env.SocketUrl, {
             autoConnect: true,
             query: { userId: user?.id },
-            transports: ["websocket"],
+            transports: ['websocket'],
             reconnection: true,
             forceNew: true,
         });
 
-        this._socket.on("connect", () => {
+        this._socket.on('connect', () => {
             this._connected = true;
-            console.log("connected", this._socket);
+            console.log('connected', this._socket);
 
             if (this._initialized) {
                 return;
             }
 
-            this._socket?.on("ping", () => {
-                console.log("ping");
+            this._socket?.on('ping', () => {
+                console.log('ping');
             });
 
-            this._socket?.on("disconnect", () => {
+            this._socket?.on('disconnect', () => {
                 this._connected = false;
-                console.log("disconnected", this._socket);
+                console.log('disconnected', this._socket);
             });
 
-            this._socket?.on("error", (error: any) => {
-                console.log("error", error);
-            })
+            this._socket?.on('error', (error: any) => {
+                console.log('error', error);
+            });
 
             this.root.chatStore.init();
         });
 
-        this._socket?.on("connect_error", (error: any) => {
-            console.log("connect_error", error);
+        this._socket?.on('connect_error', (error: any) => {
+            console.log('connect_error', error);
         });
-    }
+    };
 
     disconnect = () => {
         if (this._socket) {
             this._socket.disconnect();
         } else {
-            console.log("socket is null");
+            console.log('socket is null');
         }
-    }
+    };
 
     dispose = () => {
         this._connected = false;
         this._keepAlive = false;
         this._initialized = false;
 
-        this._socket?.removeAllListeners()
+        this._socket?.removeAllListeners();
 
         this._socket = io();
-    }
+    };
 }
-
 
 export default SocketStore;

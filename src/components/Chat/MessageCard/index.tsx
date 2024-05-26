@@ -1,15 +1,15 @@
-import { FC } from "react";
+import { FC } from 'react';
 
-import MessageHeader from "../MessageHeader";
+import MessageHeader from '../MessageHeader';
 
-import styles from "./index.module.css";
-import DropDownMenu from "../DropDownMenu/dropdownmenu";
-import { ChannelsUsersType, RawMessage } from "../../../types/channel";
-import { relevanceFuniction } from "../../../utils/boxShadov";
-import SmallAvatar from "../../SmallAvatar/smallAvatar";
-import { TMP_URL } from "../../../env";
-import Text from "../../Text/Text";
-import _ from "lodash";
+import styles from './index.module.css';
+import DropDownMenu from '../DropDownMenu/dropdownmenu';
+import { ChannelsUsersType, RawMessage } from '../../../types/channel';
+import { relevanceFuniction } from '../../../utils/boxShadov';
+import SmallAvatar from '../../SmallAvatar/smallAvatar';
+import { TMP_URL } from '../../../env';
+import Text from '../../Text/Text';
+import _ from 'lodash';
 
 interface Props {
     message: RawMessage;
@@ -20,9 +20,7 @@ interface Props {
 }
 
 const MessageCard: FC<Props> = ({ message, position, users }) => {
-    const POSITION_CONTENT = position
-        ? { justifyContent: "flex-start" }
-        : { justifyContent: "flex-end" };
+    const POSITION_CONTENT = position ? { justifyContent: 'flex-start' } : { justifyContent: 'flex-end' };
 
     const currentUser: ChannelsUsersType | undefined = users?.[message.userId];
 
@@ -32,7 +30,7 @@ const MessageCard: FC<Props> = ({ message, position, users }) => {
     const textWeight = MESSAGE_STYLE?.fontWeight;
     const textLineHeight = MESSAGE_STYLE?.lineHeight;
 
-    const handleRelevenceModal = () => { };
+    const handleRelevenceModal = () => {};
 
     return (
         <>
@@ -40,29 +38,18 @@ const MessageCard: FC<Props> = ({ message, position, users }) => {
                 <div className={styles.childContainer}>
                     {position && (
                         <span onClick={() => handleRelevenceModal()}>
-                            <MessageHeader
-                                name={message.username}
-                                color={currentUser?.color}
-                                message={message}
-                            />
+                            <MessageHeader name={message.username} color={currentUser?.color} message={message} />
                         </span>
                     )}
                     <div className={styles.messageCard}>
                         {position && currentUser && (
                             <SmallAvatar
                                 color={currentUser?.color}
-                                imageUrl={
-                                    currentUser?.avatar
-                                        ? `${TMP_URL}/${currentUser?.avatar}`
-                                        : ""
-                                }
+                                imageUrl={currentUser?.avatar ? `${TMP_URL}/${currentUser?.avatar}` : ''}
                             />
                         )}
                         <DropDownMenu massage={message} users={users}>
-                            <div
-                                className={styles.textCard}
-                                style={{ boxShadow: boxShadov }}
-                            >
+                            <div className={styles.textCard} style={{ boxShadow: boxShadov }}>
                                 <Text
                                     children={message.message}
                                     style={{
