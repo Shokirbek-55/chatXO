@@ -273,34 +273,6 @@ export default class MessageStore {
         }
     };
 
-    getMessagesInChannel = (slug: string) => {
-        if (this.messageCache[slug]) {
-            runInAction(() => {
-                this.messagesInChannel = {
-                    messages: this.messageCache[slug].messages,
-                    pageState: this.messageCache[slug].pageState,
-                    end: this.messageCache[slug].end,
-                };
-            });
-        }
-    };
-
-    getDataInChannel = (slug: string) => {
-        if (this.messageCache[slug]) {
-            runInAction(() => {
-                this.dataInChannel = this.messageCache[slug].channelData;
-            });
-        }
-    };
-
-    getUsersInChannel = (slug: string) => {
-        if (this.messageCache[slug]) {
-            runInAction(() => {
-                this.usersInChannel = this.messageCache[slug].channelUsers;
-            });
-        }
-    };
-
     getHistoryMessages = (slug: string) => {
         runInAction(() => {
             this.isLoadMessages = true;
@@ -331,7 +303,6 @@ export default class MessageStore {
     };
 
     getHistoryMessagesPageState = (setIsFetching, stop) => {
-        console.log('pagestate');
         if (this.messageCache[this.slug]?.end === false) {
             this.app.chatStore.history({
                 slug: this.slug,
@@ -444,14 +415,6 @@ export default class MessageStore {
                 ...this.messageCache[slug],
                 channelUsers: channelUsers,
             };
-        }
-    };
-
-    getMessages = (slug: string) => {
-        if (this.messageCache[slug]) {
-            return this.messageCache[slug].messages;
-        } else {
-            return [];
         }
     };
 
@@ -620,11 +583,11 @@ export default class MessageStore {
     };
 
     onDeleteMessage = (id: string) => {
-		const selectedChannelData = this.getSelectedChannelMsgData;
-		if (selectedChannelData) {
-			selectedChannelData.messages.delete(id);
-		}
-	};
+        const selectedChannelData = this.getSelectedChannelMsgData;
+        if (selectedChannelData) {
+            selectedChannelData.messages.delete(id);
+        }
+    };
 
     clearReplyMessage = () => {
         this.setReplyMessage = null;

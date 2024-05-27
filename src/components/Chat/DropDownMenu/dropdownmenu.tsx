@@ -18,9 +18,8 @@ interface Props {
 
 const DropDownMenu = ({ massage, children }: Props) => {
     const { user } = useRootStore().authStore;
-    const { slug, messageCache, deleteMessage, setEditMessage, replyMessage } = useRootStore().messageStore;
-
-    const isAdmin = useMemo(() => messageCache[slug].channelData?.adminId === user?.id, [user, slug, messageCache]);
+    const { isSelectChannelIsAdmin } = useRootStore().channelStore;
+    const { deleteMessage, setEditMessage, replyMessage } = useRootStore().messageStore;
 
     const items: MenuProps['items'] = [
         {
@@ -59,7 +58,7 @@ const DropDownMenu = ({ massage, children }: Props) => {
             key: '5',
             label: t('delete'),
             onClick: () => {
-                if (isAdmin || massage.userId === user?.id) {
+                if (isSelectChannelIsAdmin || massage.userId === user?.id) {
                     deleteMessage(massage.id, massage.channelSlug, new Date(massage.timestamp));
                 } else {
                     message.error('you are not admin');
@@ -97,7 +96,7 @@ const DropDownMenu = ({ massage, children }: Props) => {
             key: '3',
             label: t('delete'),
             onClick: () => {
-                if (isAdmin || massage.userId === user?.id) {
+                if (isSelectChannelIsAdmin || massage.userId === user?.id) {
                     deleteMessage(massage.id, massage.channelSlug, new Date(massage.timestamp));
                 } else {
                     message.error('you are not admin');
@@ -113,7 +112,7 @@ const DropDownMenu = ({ massage, children }: Props) => {
 
     return (
         <DropdownRN
-            menu={{ items: isAdmin ? items : itemsIsAdmin }}
+            menu={{ items: isSelectChannelIsAdmin ? items : itemsIsAdmin }}
             trigger={['contextMenu']}
             overlayStyle={{
                 width: '130px',

@@ -45,7 +45,7 @@ class Channels {
         this.channelByHashId.clear();
     }
 
-    upsert(channelHashId: string, ChannelInfo: Channel, channelUsers: User[]) {
+    upsert(channelHashId: string, ChannelInfo: Channel, channelUsers: any) {
         let channelBox = this.channelByHashId.get(channelHashId);
 
         this.channelUsersByHashId.set(channelHashId, channelUsers);

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { observer } from 'mobx-react-lite';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import MessageComponent from '../../../components/Chat/MessageComponent/MessageComponent';
@@ -8,16 +8,12 @@ import ScrollContainer from '../../../components/ScrollContainer/ScrollContainer
 import useRootStore from '../../../hooks/useRootStore';
 import ChatHeader from '../../../utils/chatHeader';
 import MessageInput from './components/messageInput/MessageInput';
-import { toJS } from 'mobx';
 
 const Chat = () => {
     const navigate = useNavigate();
-    const { messageCache, messagesFilterValue, setIsMessagesLength, getSelectedChannelMsgs } =
-        useRootStore().messageStore;
+    const { messagesFilterValue, getSelectedChannelMsgs } = useRootStore().messageStore;
     const { closeRightSideBar } = useRootStore().routerStore;
-    const {
-        selectedChannelData: { slug },
-    } = useRootStore().channelStore;
+    const { getSlectedChannelUsers } = useRootStore().channelStore;
 
     useEffect(() => {
         const handleEsc = (event: any) => {
@@ -39,46 +35,19 @@ const Chat = () => {
         messagesV2.unshift(
             <MessageComponent
                 isFirst={0 === i}
-                isLast={messageCache[slug].messages?.length - 1 === i}
-                ref={ref => {}}
+                isLast={getSelectedChannelMsgs.length - 1 === i}
+                _ref={ref => {}}
                 key={msg.id}
                 message={msg}
-                users={messageCache[slug]?.channelUsers}
+                users={getSlectedChannelUsers}
             />,
         );
     }
-    const messages = useMemo(() => {
-        const messagesData = messageCache[slug]?.messages;
-        if (messagesData?.length === 0) {
-            setIsMessagesLength(true);
-            return [];
-        }
-        if (messagesFilterValue !== 0) {
-            setIsMessagesLength(false);
-            return messagesData.filter(e => e.relevance && e.relevance >= messagesFilterValue);
-        }
-        setIsMessagesLength(false);
-        return messagesData;
-    }, [messageCache[slug]?.messages.length, slug, messagesFilterValue]);
 
     return (
         <ChatContainer id="chatView">
             <ChatHeader />
-            <ScrollContainer>
-                {/* {_.map(messages, (message, index) => {
-          return (
-            <MessageComponent
-              isFirst={messageCache[slug].messages?.length - 1 === index}
-              isLast={0 === index}
-              ref={(ref) => {}}
-              key={message.id}
-              message={message}
-              users={messageCache[slug]?.channelUsers}
-            />
-          );
-        })} */}
-                {messagesV2}
-            </ScrollContainer>
+            <ScrollContainer>{messagesV2}</ScrollContainer>
             <MessageInput />
         </ChatContainer>
     );

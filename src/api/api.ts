@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import { CheckOAuthData, RegisterData, Session } from '../types/auth';
-import { Channel, CreateChannelType, SetUpdataChanelType } from '../types/channel';
+import { Channel, ChannelsUsersType, CreateChannelType, SetUpdataChanelType } from '../types/channel';
 import { User } from '../types/user';
 import { LoginOAuth2Payload } from './../store/AuthStore/AuthStore';
 import ApiService from './services/ApiService';
@@ -117,7 +117,9 @@ const APIs = {
         },
 
         getChannelUsers: (channelHashId: string) =>
-            apiService.methods.get<User[]>(`${channelUrl}/${channelHashId}/users`),
+            apiService.methods.get<{
+                [key: string]: ChannelsUsersType;
+            }>(`${channelUrl}/${channelHashId}/users`),
 
         connectToChannel: (channelNumber: string) => apiService.methods.get<Channel>(`${channelUrl}/${channelNumber}`),
 

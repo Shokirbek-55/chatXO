@@ -41,7 +41,7 @@ type createChannelResponseType = {
     data: Channel;
 };
 
-  type selectedChannelType = {
+type selectedChannelType = {
     id: number;
     hashId: string;
     slug: string;
@@ -58,7 +58,12 @@ export default class ChannelStore {
     }
 
     channelByHashId = new Map<string, Channel>();
-    channelUsersByHashId = new Map<string, User[]>();
+    channelUsersByHashId = new Map<
+        string,
+        {
+            [key: string]: ChannelsUsersType;
+        }
+    >();
     hashIdQueue = new Set<string>();
 
     getChannelOperation = new Operation<Channel[]>([]);
@@ -151,7 +156,13 @@ export default class ChannelStore {
         this.processQueue();
     }
 
-    upsert(channelHashId: string, ChannelInfo: Channel, channelUsers: User[]) {
+    upsert(
+        channelHashId: string,
+        ChannelInfo: Channel,
+        channelUsers: {
+            [key: string]: ChannelsUsersType;
+        },
+    ) {
         let channelBox = this.channelByHashId.get(channelHashId);
 
         this.channelUsersByHashId.set(channelHashId, channelUsers);
@@ -160,11 +171,19 @@ export default class ChannelStore {
             this.channelByHashId.set(channelHashId, channel);
             return;
         }
-        this.channelByHashId.set(channelHashId, ChannelInitialState);
+        this.channelByHashId.set(channelHashId, ChannelInfo);
     }
 
     get getSelectedChannelData() {
         return this.channelByHashId.get(this.selectedChannelData.hashId) || ChannelInitialState;
+    }
+
+    get getSlectedChannelUsers() {
+        return this.channelUsersByHashId.get(this.selectedChannelData.hashId) || {};
+    }
+
+    get isSelectChannelIsAdmin() {
+        return this.getSelectedChannelData.adminId === this.rootStore.authStore.user.id;
     }
 
     handelSelectedChannel = (data: selectedChannelType) => {
@@ -251,6 +270,10 @@ export default class ChannelStore {
     };
 
     setChannelHashId = (hashId: string, callback: () => void) => {
+        this.selectedChannelData = {
+            ...this.selectedChannelData,
+            hashId,
+        };
         runInAction(() => {
             this.hashId = hashId;
             this.navigateChannel = callback;
@@ -267,7 +290,7 @@ export default class ChannelStore {
                         id: channel.id,
                         hashId: channel.hashId,
                         slug: channel.slug,
-                    }
+                    };
                     this.rootStore.messageStore.setChannelSlug(channel.slug);
                     this.navigateChannel();
                     return true;

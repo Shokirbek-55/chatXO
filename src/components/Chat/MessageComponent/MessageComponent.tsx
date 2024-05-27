@@ -23,10 +23,10 @@ interface Props {
     };
     isFirst: boolean;
     isLast: boolean;
-    ref: (node: HTMLDivElement | null) => void;
+    _ref: (node: HTMLDivElement | null) => void;
 }
 
-const MessageComponent: FC<Props> = ({ message, users, isFirst, isLast, ref }) => {
+const MessageComponent: FC<Props> = ({ message, users, isFirst, isLast, _ref }) => {
     const navigate = useNavigate();
     const { name } = useParams();
     const messageRef = useRef<HTMLDivElement>(null);
@@ -43,8 +43,8 @@ const MessageComponent: FC<Props> = ({ message, users, isFirst, isLast, ref }) =
     >(undefined);
 
     useEffect(() => {
-        if (ref) ref(messageRef.current);
-    }, [ref]);
+        if (_ref) _ref(messageRef.current);
+    }, [_ref]);
 
     const msg = useMemo(() => {
         return pimp !== undefined ? { ...message, relevance: pimp.value } : message;

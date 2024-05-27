@@ -1,6 +1,6 @@
+import React from 'react';
 import { Spin, Tag, Tooltip } from 'antd';
-import { observer } from 'mobx-react-lite';
-import React, { useMemo } from 'react';
+import { observer } from 'mobx-react';
 import { GrFormClose } from 'react-icons/gr';
 import styled from 'styled-components';
 import { InputComponent } from '../components/InputSearch/inputComponent';
@@ -70,25 +70,18 @@ const ChatHeader = () => {
         handleHashTagClick(removedTag);
     };
 
-    const channel = useMemo(
-        () => ({
-            img_url: getSelectedChannelData.avatar,
-            color: getSelectedChannelData.color,
-            name: getSelectedChannelData.name,
-        }),
-        [getSelectedChannelData],
-    );
-
     return (
         <BassComponent>
             <div className="container">
                 <header>
                     <div onClick={OpenManageChannel}>
                         <SmallAvatar
-                            imageUrl={channel.img_url ? `${TMP_URL}/${channel.img_url}` : ''}
-                            color={channel.color || ''}
+                            imageUrl={
+                                getSelectedChannelData.avatar ? `${TMP_URL}/${getSelectedChannelData.avatar}` : ''
+                            }
+                            color={getSelectedChannelData.color || ''}
                         />
-                        <h3>{channel.name}</h3>
+                        <h3>{getSelectedChannelData.name}</h3>
                     </div>
                 </header>
                 <div>
@@ -258,7 +251,6 @@ const BassComponent = styled.div`
     }
 
     header {
-
         width: 70%;
         cursor: pointer;
         height: 100%;
@@ -274,13 +266,12 @@ const BassComponent = styled.div`
             gap: 10px;
         }
 
-            h3 {
-              width:450px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
+        h3 {
+            width: 450px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
         nav {
             position: relative;

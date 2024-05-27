@@ -21,12 +21,12 @@ const ScrollContainer = ({ children }: ScrollContainerProps) => {
     const prevScrollTop = useRef<number | any>(null);
     const [showScrollButton, setShowScrollButton] = useState(false);
 
-    const { getHistoryMessagesPageState, messageCache, slug } = useRootStore().messageStore;
-    const { isOpenHashTagScreen, getHistoryHashTagsMessagesPageState, allHashTagsMessages } =
-        useRootStore().hashtagStore;
+    const { getHistoryMessagesPageState } = useRootStore().messageStore;
+    const { isOpenHashTagScreen, getHistoryHashTagsMessagesPageState } = useRootStore().hashtagStore;
 
     useEffect(() => {
-        stop.current = messageCache[slug]?.end || allHashTagsMessages?.end || false;
+        // TODO: yangi message cache bo'yicha quydagi qatorni yangilash kerak
+        // stop.current = messageCache[slug]?.end || allHashTagsMessages?.end || false;
         const outerDivHeight = outerDiv.current.clientHeight;
         const innerDivHeight = innerDiv.current.clientHeight;
         const outerDivScrollTop = outerDiv.current.scrollTop;
