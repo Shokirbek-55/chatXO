@@ -41,7 +41,7 @@ type createChannelResponseType = {
     data: Channel;
 };
 
-  type selectedChannelType = {
+type selectedChannelType = {
     id: number;
     hashId: string;
     slug: string;
@@ -58,7 +58,9 @@ export default class ChannelStore {
     }
 
     channelByHashId = new Map<string, Channel>();
-    channelUsersByHashId = new Map<string, User[]>();
+    channelUsersByHashId = new Map<string, {
+        [key: string]: ChannelsUsersType;
+    }>();
     hashIdQueue = new Set<string>();
 
     getChannelOperation = new Operation<Channel[]>([]);
@@ -108,8 +110,8 @@ export default class ChannelStore {
     adminId: number = 0;
 
     hashId: string = '';
-    navigateChannel: () => void = () => {};
-    generateNavigateChannel: () => void = () => {};
+    navigateChannel: () => void = () => { };
+    generateNavigateChannel: () => void = () => { };
 
     getBlockedUser: User = {
         id: 0,
@@ -151,7 +153,9 @@ export default class ChannelStore {
         this.processQueue();
     }
 
-    upsert(channelHashId: string, ChannelInfo: Channel, channelUsers: User[]) {
+    upsert(channelHashId: string, ChannelInfo: Channel, channelUsers: {
+        [key: string]: ChannelsUsersType;
+    }) {
         let channelBox = this.channelByHashId.get(channelHashId);
 
         this.channelUsersByHashId.set(channelHashId, channelUsers);
@@ -160,11 +164,19 @@ export default class ChannelStore {
             this.channelByHashId.set(channelHashId, channel);
             return;
         }
-        this.channelByHashId.set(channelHashId, ChannelInitialState);
+        this.channelByHashId.set(channelHashId, ChannelInfo);
     }
 
     get getSelectedChannelData() {
         return this.channelByHashId.get(this.selectedChannelData.hashId) || ChannelInitialState;
+    }
+
+    get getSlectedChannelUsers() {
+        return this.channelUsersByHashId.get(this.selectedChannelData.hashId) || {}
+    }
+
+    get isSelectChannelIsAdmin() {
+        return this.getSelectedChannelData.adminId === this.rootStore.authStore.user.id;
     }
 
     handelSelectedChannel = (data: selectedChannelType) => {
@@ -251,6 +263,10 @@ export default class ChannelStore {
     };
 
     setChannelHashId = (hashId: string, callback: () => void) => {
+        this.selectedChannelData = {
+            ...this.selectedChannelData,
+            hashId,
+        };
         runInAction(() => {
             this.hashId = hashId;
             this.navigateChannel = callback;
@@ -369,14 +385,14 @@ export default class ChannelStore {
     };
 
     channelDataToSetData = (channel: Channel) =>
-        (this.setUpdataChannel = {
-            name: channel.name as string,
-            isPrivate: channel.isPrivate as boolean,
-            color: channel.color as string,
-            avatar: channel.avatar as string,
-            defaultRelevance: channel.relevance as never,
-            description: channel.description as string,
-        });
+    (this.setUpdataChannel = {
+        name: channel.name as string,
+        isPrivate: channel.isPrivate as boolean,
+        color: channel.color as string,
+        avatar: channel.avatar as string,
+        defaultRelevance: channel.relevance as never,
+        description: channel.description as string,
+    });
 
     setUpdateChannelState = (key: keyof SetUpdataChanelType, value: any) => {
         runInAction(() => {

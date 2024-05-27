@@ -8,7 +8,7 @@ import SmallAvatar from '../components/SmallAvatar/smallAvatar';
 import { Tag, Tooltip } from 'antd';
 import Text from '../components/Text/Text';
 import { Spin } from 'antd';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { GrFormClose } from 'react-icons/gr';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,11 +17,12 @@ const ChatHeaderHashtag = () => {
     const [isOpenAllHashTags, setIsOpenAllHashTags] = React.useState<boolean>(false);
     const { visible, toglevisible } = useRootStore().visibleStore;
     const { openRightSideBar } = useRootStore().routerStore;
-    const { setSearch, searchMessage, slug, messageCache, clearSearch, searchMessageState, searchMessages } =
+    const { setSearch, searchMessage, slug, clearSearch, searchMessageState, searchMessages } =
         useRootStore().messageStore;
 
     const { hashTags, removeHashTags, getChannelAllHashTags, isLoading, allChatHashTags, exit } =
         useRootStore().hashtagStore;
+    const { getSelectedChannelData } = useRootStore().channelStore;
 
     const searchHandle = (e: string) => {
         setSearch(e);
@@ -46,9 +47,14 @@ const ChatHeaderHashtag = () => {
         exit();
     };
 
-    const img_url = messageCache[slug]?.channelData?.avatar;
-    const color = messageCache[slug]?.channelData?.color;
-    const name = messageCache[slug]?.channelData?.name;
+    const channel = useMemo(
+        () => ({
+            img_url: getSelectedChannelData.avatar,
+            color: getSelectedChannelData.color,
+            name: getSelectedChannelData.name,
+        }),
+        [getSelectedChannelData],
+    );
 
     return (
         <BassComponent>
@@ -65,8 +71,11 @@ const ChatHeaderHashtag = () => {
                         <ArrowLeftIcon color={'#444'} />
                     </button>
                     <div onClick={OpenManageChannel}>
-                        <SmallAvatar imageUrl={img_url ? `${TMP_URL}/${img_url}` : ''} color={color ? color : ''} />
-                        <h3>{name}</h3>
+                        <SmallAvatar
+                            imageUrl={channel.img_url ? `${TMP_URL}/${channel.img_url}` : ''}
+                            color={channel.color || ''}
+                        />
+                        <h3>{channel.name}</h3>
                     </div>
                 </header>
                 <div>

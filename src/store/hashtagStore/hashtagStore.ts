@@ -26,10 +26,10 @@ export default class HashtagStore {
         pageState: string | null;
         end?: boolean;
     } = {
-        messages: [],
-        pageState: null,
-        end: false,
-    };
+            messages: [],
+            pageState: null,
+            end: false,
+        };
 
     isOpenHashTagScreen: boolean = false;
 
