@@ -58,9 +58,12 @@ export default class ChannelStore {
     }
 
     channelByHashId = new Map<string, Channel>();
-    channelUsersByHashId = new Map<string, {
-        [key: string]: ChannelsUsersType;
-    }>();
+    channelUsersByHashId = new Map<
+        string,
+        {
+            [key: string]: ChannelsUsersType;
+        }
+    >();
     hashIdQueue = new Set<string>();
 
     getChannelOperation = new Operation<Channel[]>([]);
@@ -110,8 +113,8 @@ export default class ChannelStore {
     adminId: number = 0;
 
     hashId: string = '';
-    navigateChannel: () => void = () => { };
-    generateNavigateChannel: () => void = () => { };
+    navigateChannel: () => void = () => {};
+    generateNavigateChannel: () => void = () => {};
 
     getBlockedUser: User = {
         id: 0,
@@ -153,9 +156,13 @@ export default class ChannelStore {
         this.processQueue();
     }
 
-    upsert(channelHashId: string, ChannelInfo: Channel, channelUsers: {
-        [key: string]: ChannelsUsersType;
-    }) {
+    upsert(
+        channelHashId: string,
+        ChannelInfo: Channel,
+        channelUsers: {
+            [key: string]: ChannelsUsersType;
+        },
+    ) {
         let channelBox = this.channelByHashId.get(channelHashId);
 
         this.channelUsersByHashId.set(channelHashId, channelUsers);
@@ -172,7 +179,7 @@ export default class ChannelStore {
     }
 
     get getSlectedChannelUsers() {
-        return this.channelUsersByHashId.get(this.selectedChannelData.hashId) || {}
+        return this.channelUsersByHashId.get(this.selectedChannelData.hashId) || {};
     }
 
     get isSelectChannelIsAdmin() {
@@ -283,7 +290,7 @@ export default class ChannelStore {
                         id: channel.id,
                         hashId: channel.hashId,
                         slug: channel.slug,
-                    }
+                    };
                     this.rootStore.messageStore.setChannelSlug(channel.slug);
                     this.navigateChannel();
                     return true;
@@ -385,14 +392,14 @@ export default class ChannelStore {
     };
 
     channelDataToSetData = (channel: Channel) =>
-    (this.setUpdataChannel = {
-        name: channel.name as string,
-        isPrivate: channel.isPrivate as boolean,
-        color: channel.color as string,
-        avatar: channel.avatar as string,
-        defaultRelevance: channel.relevance as never,
-        description: channel.description as string,
-    });
+        (this.setUpdataChannel = {
+            name: channel.name as string,
+            isPrivate: channel.isPrivate as boolean,
+            color: channel.color as string,
+            avatar: channel.avatar as string,
+            defaultRelevance: channel.relevance as never,
+            description: channel.description as string,
+        });
 
     setUpdateChannelState = (key: keyof SetUpdataChanelType, value: any) => {
         runInAction(() => {
