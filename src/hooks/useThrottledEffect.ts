@@ -1,15 +1,18 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from 'react';
 
-const useThrottledEffect = (callback, delay, deps:any[] = []) => {
+const useThrottledEffect = (callback, delay, deps: any[] = []) => {
     const lastRan = useRef(Date.now());
 
     useEffect(() => {
-        const handler = setTimeout(function () {
-            if (Date.now() - lastRan.current >= delay) {
-                callback();
-                lastRan.current = Date.now();
-            }
-        }, delay - (Date.now() - lastRan.current));
+        const handler = setTimeout(
+            function () {
+                if (Date.now() - lastRan.current >= delay) {
+                    callback();
+                    lastRan.current = Date.now();
+                }
+            },
+            delay - (Date.now() - lastRan.current),
+        );
 
         return () => {
             clearTimeout(handler);
@@ -36,11 +39,11 @@ function debounce(func, wait, immediate) {
 const useInfiniteScroll = (callback: () => void, outerDiv) => {
     const [isFetching, setIsFetching] = useState(false);
     const stop = useRef<boolean>(false);
-    
+
     useThrottledEffect(() => {
         // mounts window listener and call debounceScroll, once in every 500ms
-        outerDiv.current.addEventListener("scroll", debounceScroll());
-        return () => outerDiv.current.removeEventListener("scroll", debounceScroll());
+        outerDiv.current.addEventListener('scroll', debounceScroll());
+        return () => outerDiv.current.removeEventListener('scroll', debounceScroll());
     }, 500);
 
     useThrottledEffect(
@@ -54,15 +57,11 @@ const useInfiniteScroll = (callback: () => void, outerDiv) => {
             }
         },
         500,
-        [isFetching]
+        [isFetching],
     );
 
     function handleScroll() {
-        if (
-            outerDiv.current.scrollTop >=
-            Math.floor(outerDiv.current.clientHeight * 0.75) ||
-            isFetching
-        )
+        if (outerDiv.current.scrollTop >= Math.floor(outerDiv.current.clientHeight * 0.75) || isFetching)
             // return if below 75% scroll or isFetching is false then don't do anything
             return;
         // if stop (meaning last page) then don't set isFetching true

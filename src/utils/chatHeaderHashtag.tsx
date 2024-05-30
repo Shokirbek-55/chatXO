@@ -1,48 +1,28 @@
-import { observer } from "mobx-react-lite";
-import styled from "styled-components";
-import { InputComponent } from "../components/InputSearch/inputComponent";
-import { TMP_URL } from "../env";
-import useRootStore from "../hooks/useRootStore";
-import {
-    ArrowDowunIcon,
-    ArrowLeftIcon,
-    ArrowUpIcon,
-    CloserNoCirculIcon,
-    HashtagIcon,
-    SearchIcon,
-} from "./icons";
-import SmallAvatar from "../components/SmallAvatar/smallAvatar";
-import { Tag, Tooltip } from "antd";
-import Text from "../components/Text/Text";
-import { Spin } from "antd";
-import React from "react";
-import { GrFormClose } from "react-icons/gr";
-import { useNavigate } from "react-router-dom";
+import { observer } from 'mobx-react-lite';
+import styled from 'styled-components';
+import { InputComponent } from '../components/InputSearch/inputComponent';
+import { TMP_URL } from '../env';
+import useRootStore from '../hooks/useRootStore';
+import { ArrowDowunIcon, ArrowLeftIcon, ArrowUpIcon, CloserNoCirculIcon, HashtagIcon, SearchIcon } from './icons';
+import SmallAvatar from '../components/SmallAvatar/smallAvatar';
+import { Tag, Tooltip } from 'antd';
+import Text from '../components/Text/Text';
+import { Spin } from 'antd';
+import React, { useMemo } from 'react';
+import { GrFormClose } from 'react-icons/gr';
+import { useNavigate } from 'react-router-dom';
 
 const ChatHeaderHashtag = () => {
     const navigate = useNavigate();
-    const [isOpenAllHashTags, setIsOpenAllHashTags] =
-        React.useState<boolean>(false);
+    const [isOpenAllHashTags, setIsOpenAllHashTags] = React.useState<boolean>(false);
     const { visible, toglevisible } = useRootStore().visibleStore;
     const { openRightSideBar } = useRootStore().routerStore;
-    const {
-        setSearch,
-        searchMessage,
-        slug,
-        messageCache,
-        clearSearch,
-        searchMessageState,
-        searchMessages,
-    } = useRootStore().messageStore;
+    const { setSearch, searchMessage, slug, clearSearch, searchMessageState, searchMessages } =
+        useRootStore().messageStore;
 
-    const {
-        hashTags,
-        removeHashTags,
-        getChannelAllHashTags,
-        isLoading,
-        allChatHashTags,
-        exit,
-    } = useRootStore().hashtagStore;
+    const { hashTags, removeHashTags, getChannelAllHashTags, isLoading, allChatHashTags, exit } =
+        useRootStore().hashtagStore;
+    const { getSelectedChannelData } = useRootStore().channelStore;
 
     const searchHandle = (e: string) => {
         setSearch(e);
@@ -51,7 +31,7 @@ const ChatHeaderHashtag = () => {
 
     const ToggleSearchInput = () => {
         clearSearch();
-        toglevisible("setSearch");
+        toglevisible('setSearch');
     };
 
     const OpenManageChannel = () => {
@@ -67,9 +47,14 @@ const ChatHeaderHashtag = () => {
         exit();
     };
 
-    const img_url = messageCache[slug]?.channelData?.avatar;
-    const color = messageCache[slug]?.channelData?.color;
-    const name = messageCache[slug]?.channelData?.name;
+    const channel = useMemo(
+        () => ({
+            img_url: getSelectedChannelData.avatar,
+            color: getSelectedChannelData.color,
+            name: getSelectedChannelData.name,
+        }),
+        [getSelectedChannelData],
+    );
 
     return (
         <BassComponent>
@@ -77,28 +62,28 @@ const ChatHeaderHashtag = () => {
                 <header>
                     <button
                         style={{
-                            outline: "none",
-                            border: "none",
-                            background: "transparent",
+                            outline: 'none',
+                            border: 'none',
+                            background: 'transparent',
                         }}
                         onClick={GoToBack}
                     >
-                        <ArrowLeftIcon color={"#444"} />
+                        <ArrowLeftIcon color={'#444'} />
                     </button>
                     <div onClick={OpenManageChannel}>
                         <SmallAvatar
-                            imageUrl={img_url ? `${TMP_URL}/${img_url}` : ""}
-                            color={color ? color : ""}
+                            imageUrl={channel.img_url ? `${TMP_URL}/${channel.img_url}` : ''}
+                            color={channel.color || ''}
                         />
-                        <h3>{name}</h3>
+                        <h3>{channel.name}</h3>
                     </div>
                 </header>
                 <div>
                     <button
                         style={{
-                            outline: "none",
-                            border: "none",
-                            background: "transparent",
+                            outline: 'none',
+                            border: 'none',
+                            background: 'transparent',
                         }}
                         onClick={() => {
                             getChannelAllHashTags();
@@ -114,7 +99,7 @@ const ChatHeaderHashtag = () => {
                     {visible.setSearch && (
                         <div>
                             <InputComponent
-                                onChangeText={(e) => searchHandle(e)}
+                                onChangeText={e => searchHandle(e)}
                                 backColor="transparent"
                                 width="200px"
                                 value={searchMessageState}
@@ -123,18 +108,16 @@ const ChatHeaderHashtag = () => {
                                 <ArrowDowunIcon size={24} padding={1} />
                             </span>
                             <span>
-                                {searchMessageState.length > 0
-                                    ? searchMessages.count
-                                    : null}
+                                {searchMessageState.length > 0 ? searchMessages.count : null}
                                 <ArrowUpIcon size={24} padding={1} />
                             </span>
                         </div>
                     )}
                     <button
                         style={{
-                            outline: "none",
-                            border: "none",
-                            background: "transparent",
+                            outline: 'none',
+                            border: 'none',
+                            background: 'transparent',
                         }}
                         onClick={ToggleSearchInput}
                     >
@@ -146,15 +129,8 @@ const ChatHeaderHashtag = () => {
                     </button>
                 </div>
             </div>
-            <HashTagContainer
-                $isHas={allChatHashTags.length > 0 && isOpenAllHashTags}
-            >
-                <Text
-                    fontSize="12px"
-                    fontFamily="Montserrat"
-                    fontWeight={600}
-                    margin="0 5px 0 0"
-                >
+            <HashTagContainer $isHas={allChatHashTags.length > 0 && isOpenAllHashTags}>
+                <Text fontSize="12px" fontFamily="Montserrat" fontWeight={600} margin="0 5px 0 0">
                     All hashtags:
                 </Text>
                 {allChatHashTags.map((tag, index) => {
@@ -167,7 +143,7 @@ const ChatHeaderHashtag = () => {
                                 fontWeight={600}
                                 margin="0"
                                 style={{
-                                    cursor: "auto",
+                                    cursor: 'auto',
                                 }}
                             >
                                 #{isLongTag ? `${tag.slice(0, 20)}...` : tag}
@@ -184,9 +160,9 @@ const ChatHeaderHashtag = () => {
                 })}
                 <GrFormClose
                     style={{
-                        cursor: "pointer",
-                        position: "absolute",
-                        right: "10px",
+                        cursor: 'pointer',
+                        position: 'absolute',
+                        right: '10px',
                     }}
                     size={24}
                     color="#303030"
@@ -194,29 +170,20 @@ const ChatHeaderHashtag = () => {
                 />
             </HashTagContainer>
             <HashTagContainer $isHas={hashTags.length > 0}>
-                <Text
-                    fontSize="12px"
-                    fontFamily="Montserrat"
-                    fontWeight={600}
-                    margin="0 5px 0 0"
-                >
+                <Text fontSize="12px" fontFamily="Montserrat" fontWeight={600} margin="0 5px 0 0">
                     Created hashtags:
                 </Text>
                 {hashTags.map((tag, index) => {
                     const isLongTag = tag.length > 20;
                     const tagElem = (
-                        <Tag
-                            key={index}
-                            closable
-                            onClose={() => handleClose(tag)}
-                        >
+                        <Tag key={index} closable onClose={() => handleClose(tag)}>
                             <Text
                                 fontSize="12px"
                                 fontFamily="Montserrat"
                                 fontWeight={600}
                                 margin="0"
                                 style={{
-                                    cursor: "auto",
+                                    cursor: 'auto',
                                 }}
                             >
                                 {isLongTag ? `${tag.slice(0, 20)}...` : tag}
@@ -247,7 +214,8 @@ const BassComponent = styled.div`
     background-color: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(25px);
     z-index: 15;
-    box-shadow: 0px 8px 48px 0px rgba(32, 35, 39, 0.02),
+    box-shadow:
+        0px 8px 48px 0px rgba(32, 35, 39, 0.02),
         0px 4px 8px 0px rgba(32, 35, 39, 0.04),
         0px 0px 1px 0px rgba(32, 35, 39, 0.16);
 
@@ -313,7 +281,7 @@ const HashTagContainer = styled.div<{ $isHas: boolean }>`
     width: 100%;
     height: auto;
     padding: 5px;
-    display: ${({ $isHas }) => ($isHas ? "flex" : "none")};
+    display: ${({ $isHas }) => ($isHas ? 'flex' : 'none')};
     align-items: center;
     justify-content: flex-start;
     overflow-x: scroll;

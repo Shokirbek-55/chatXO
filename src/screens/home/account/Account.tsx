@@ -1,19 +1,19 @@
-import { motion } from "framer-motion";
-import { observer } from "mobx-react-lite";
-import { ChangeEvent } from "react";
-import { useTranslation } from "react-i18next";
-import { generatePath, useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import AvatarUpload from "../../../components/AvatarUpload/AvatarUpload";
-import Header from "../../../components/Header/Header";
-import MessageBox from "../../../components/MessageBox/MessageBox";
-import RowItemView from "../../../components/RowItem";
-import Text from "../../../components/Text/Text";
-import { TMP_URL } from "../../../env";
-import useRootStore from "../../../hooks/useRootStore";
-import { ButtonComponent } from "../../../utils/button";
-import Colors from "../../../utils/colors";
-import styles from "./Account.module.css";
+import { motion } from 'framer-motion';
+import { observer } from 'mobx-react-lite';
+import { ChangeEvent } from 'react';
+import { useTranslation } from 'react-i18next';
+import { generatePath, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import AvatarUpload from '../../../components/AvatarUpload/AvatarUpload';
+import Header from '../../../components/Header/Header';
+import MessageBox from '../../../components/MessageBox/MessageBox';
+import RowItemView from '../../../components/RowItem';
+import Text from '../../../components/Text/Text';
+import { TMP_URL } from '../../../env';
+import useRootStore from '../../../hooks/useRootStore';
+import { ButtonComponent } from '../../../utils/button';
+import Colors from '../../../utils/colors';
+import styles from './Account.module.css';
 
 const container = {
     hidden: { opacity: 1, scale: 0 },
@@ -38,29 +38,21 @@ const item = {
 const Account = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const {
-        getPreviewData,
-        setUserState,
-        setMyData,
-        updateUserAccount,
-        avatarLoading
-    } = useRootStore().usersStore;
+    const { getPreviewData, setUserState, setMyData, updateUserAccount, avatarLoading } = useRootStore().usersStore;
     const { show } = useRootStore().visibleStore;
     const { user } = useRootStore().authStore;
     const { myChannels, getChannelByHashId, setCropAvatarState } = useRootStore().channelStore;
-    const {
-        closeModal,
-    } = useRootStore().routerStore;
+    const { closeModal } = useRootStore().routerStore;
     const { setChannelSlug } = useRootStore().messageStore;
 
     const onImageSelect = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.length) {
             setCropAvatarState(e.target.files[0], 'profile');
-            show("chUploadFile");
+            show('chUploadFile');
         }
     };
 
-    const handleChanel = (e) => {
+    const handleChanel = e => {
         setChannelSlug(e.slug);
         getChannelByHashId(e.hashId);
         const target = generatePath(`/:name`, { name: `@${e.hashId}` });
@@ -68,59 +60,42 @@ const Account = () => {
     };
 
     const PreviewAvatar = (data: any) => {
-        show("previewModal");
+        show('previewModal');
         getPreviewData(data);
     };
 
     return (
         <div className={styles.container}>
-            <Header
-                text={t("Profile")}
-                leftIcon="arrowLeft"
-                onLeftIconPress={() => closeModal("left")}
-            />
+            <Header text={t('Profile')} leftIcon="arrowLeft" onLeftIconPress={() => closeModal('left')} />
             <div className={styles.container}>
                 <div className={styles.avatarBox}>
                     <AvatarUpload
                         upload={true}
-                        imageUrl={
-                            user.avatar ? `${TMP_URL}/${user.avatar}` : ""
-                        }
+                        imageUrl={user.avatar ? `${TMP_URL}/${user.avatar}` : ''}
                         onPreview={() => PreviewAvatar(user)}
                         color={
                             user?.color
                                 ? `linear-gradient(25deg, ${user.color} 30%, #ddd 100%)`
-                                : "linear-gradient(#ddd, #666)"
+                                : 'linear-gradient(#ddd, #666)'
                         }
-                        onChange={(e) => onImageSelect(e)}
+                        onChange={e => onImageSelect(e)}
                         loading={avatarLoading}
                     />
                 </div>
                 <div className={styles.groupsBox}>
                     <div className={styles.loader}>
-                        <Text
-                            margin="0 0 10px 0"
-                            children={user.username}
-                            fontWeight={700}
-                            center
-                        />
+                        <Text margin="0 0 10px 0" children={user.username} fontWeight={700} center />
                         <div className={styles.judgementText}>
                             <TextArea
                                 style={{
-                                    fontFamily: "Montserrat",
+                                    fontFamily: 'Montserrat',
                                     fontWeight: 900,
                                 }}
                                 placeholder="Write a little about yourself here..."
                                 value={setMyData.description}
-                                onChange={(e) =>
-                                    setUserState("description", e.target.value)
-                                }
+                                onChange={e => setUserState('description', e.target.value)}
                             />
-                            <Text
-                                fontSize="12px"
-                                style={{ textAlign: "end" }}
-                                children="175 character"
-                            />
+                            <Text fontSize="12px" style={{ textAlign: 'end' }} children="175 character" />
                         </div>
                         <div className={styles.formBox}>
                             <div className={styles.formItem}>
@@ -129,13 +104,11 @@ const Account = () => {
                                     color={Colors.Black}
                                     fontWeight={600}
                                     fontSize="14px"
-                                    style={{ width: "50%" }}
+                                    style={{ width: '50%' }}
                                 />
                                 <input
                                     value={setMyData.username}
-                                    onChange={(e) =>
-                                        setUserState("username", e.target.value)
-                                    }
+                                    onChange={e => setUserState('username', e.target.value)}
                                 />
                             </div>
                             <div className={styles.formItem}>
@@ -144,14 +117,12 @@ const Account = () => {
                                     color={Colors.Black}
                                     fontWeight={600}
                                     fontSize="14px"
-                                    style={{ width: "50%" }}
+                                    style={{ width: '50%' }}
                                 />
                                 <input
                                     value={setMyData.name}
                                     placeholder="Name"
-                                    onChange={(e) =>
-                                        setUserState("name", e.target.value)
-                                    }
+                                    onChange={e => setUserState('name', e.target.value)}
                                 />
                             </div>
                             <div className={styles.formItem}>
@@ -160,14 +131,9 @@ const Account = () => {
                                     color={Colors.Black}
                                     fontWeight={600}
                                     fontSize="14px"
-                                    style={{ width: "50%" }}
+                                    style={{ width: '50%' }}
                                 />
-                                <input
-                                    value={setMyData.email}
-                                    onChange={(e) =>
-                                        setUserState("email", e.target.value)
-                                    }
-                                />
+                                <input value={setMyData.email} onChange={e => setUserState('email', e.target.value)} />
                             </div>
                             <div className={styles.formItem}>
                                 <Text
@@ -175,14 +141,12 @@ const Account = () => {
                                     color={Colors.Black}
                                     fontWeight={600}
                                     fontSize="14px"
-                                    style={{ width: "50%" }}
+                                    style={{ width: '50%' }}
                                 />
                                 <input
                                     value={setMyData.city}
                                     placeholder="City"
-                                    onChange={(e) =>
-                                        setUserState("city", e.target.value)
-                                    }
+                                    onChange={e => setUserState('city', e.target.value)}
                                 />
                             </div>
                             <div className={styles.formItem}>
@@ -191,14 +155,12 @@ const Account = () => {
                                     color={Colors.Black}
                                     fontWeight={600}
                                     fontSize="14px"
-                                    style={{ width: "50%" }}
+                                    style={{ width: '50%' }}
                                 />
                                 <input
                                     value={setMyData.birth}
                                     placeholder="Age"
-                                    onChange={(e) =>
-                                        setUserState("birth", e.target.value)
-                                    }
+                                    onChange={e => setUserState('birth', e.target.value)}
                                 />
                             </div>
                             <div className={styles.formItem}>
@@ -207,28 +169,24 @@ const Account = () => {
                                     color={Colors.Black}
                                     fontWeight={600}
                                     fontSize="14px"
-                                    style={{ width: "50%" }}
+                                    style={{ width: '50%' }}
                                 />
                                 <input
                                     value={setMyData.occupacy}
                                     placeholder="Interests"
-                                    onChange={(e) =>
-                                        setUserState("occupacy", e.target.value)
-                                    }
+                                    onChange={e => setUserState('occupacy', e.target.value)}
                                 />
                             </div>
                         </div>
                         <Text
                             margin="15px 0 10px 7%"
-                            children={"My rating in groups"}
+                            children={'My rating in groups'}
                             fontWeight={600}
                             color={Colors.Black}
                         />
                         {!myChannels && (
                             <div className={styles.loadingError}>
-                                <MessageBox
-                                    title={`${t("No Internet Connection")}`}
-                                />
+                                <MessageBox title={`${t('No Internet Connection')}`} />
                             </div>
                         )}
                         <motion.div
@@ -250,21 +208,15 @@ const Account = () => {
                                                 // onGroupPress={(hashId) =>
                                                 //     onGroupPress(e.hashId as string)
                                                 // }
-                                                imageUrl={
-                                                    e.avatar
-                                                        ? `${TMP_URL}/${e.avatar}`
-                                                        : ""
-                                                }
+                                                imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ''}
                                                 color={
                                                     e.color
                                                         ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)`
-                                                        : "linear-gradient(#ddd, #666)"
+                                                        : 'linear-gradient(#ddd, #666)'
                                                 }
                                                 text={e.name}
                                                 loading={false}
-                                                onPressComponent={() =>
-                                                    handleChanel(e)
-                                                }
+                                                onPressComponent={() => handleChanel(e)}
                                                 userType={`${e.userRelevance}`}
                                                 upDownIcon={false}
                                             />
@@ -272,23 +224,13 @@ const Account = () => {
                                     );
                                 })
                             ) : (
-                                <MessageBox
-                                    title={`${t("no_avalible_groups")}`}
-                                />
+                                <MessageBox title={`${t('no_avalible_groups')}`} />
                             )}
                         </motion.div>
                     </div>
                     <div className={styles.btnBox}>
-                        <ButtonComponent
-                            text="delete account"
-                            backColor="transparent"
-                            color="red"
-                        />
-                        <ButtonComponent
-                            text="Save"
-                            width="100%"
-                            clickMe={() => updateUserAccount(setMyData)}
-                        />
+                        <ButtonComponent text="delete account" backColor="transparent" color="red" />
+                        <ButtonComponent text="Save" width="100%" clickMe={() => updateUserAccount(setMyData)} />
                     </div>
                 </div>
             </div>
@@ -307,7 +249,7 @@ const TextArea = styled.textarea`
     margin: 10px 0;
     resize: none;
     font-size: 14px;
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     font-weight: 500 !important;
     color: #333;
     outline: none;

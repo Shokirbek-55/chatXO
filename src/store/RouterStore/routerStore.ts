@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable, runInAction } from 'mobx';
 import {
     MainRoutes,
     MainRoutesType,
@@ -6,9 +6,9 @@ import {
     SideBarHelperRoutesType,
     mainRoutes,
     ManageHelperRoutes,
-} from "./routers";
-import _ from "lodash";
-import { AppRootStore } from "../store";
+} from './routers';
+import _ from 'lodash';
+import { AppRootStore } from '../store';
 
 export default class RouterStore {
     rootStore: AppRootStore;
@@ -21,12 +21,10 @@ export default class RouterStore {
     routers: SideBarHelperRoutesType[] = [];
     manageRouters: SideBarHelperRoutesType[] = [];
 
-    isOpenRigthSideBar = "-340px";
+    isOpenRigthSideBar = '-340px';
 
     setCurrentRoute = (route: keyof typeof MainRoutes) => {
-        this.currentRoute = mainRoutes.find(
-            (item) => item.key === route
-        ) as MainRoutesType;
+        this.currentRoute = mainRoutes.find(item => item.key === route) as MainRoutesType;
         this.closeChannelInUser();
     };
 
@@ -52,9 +50,9 @@ export default class RouterStore {
         }, 100);
     };
 
-    closeModal = (key: "left" | "right") => {
+    closeModal = (key: 'left' | 'right') => {
         console.log(key);
-        if (key === "left") {
+        if (key === 'left') {
             runInAction(() => {
                 if (this.routers.length) _.last(this.routers)!.isOpen = false;
             });
@@ -65,10 +63,8 @@ export default class RouterStore {
             }, 300);
         } else {
             runInAction(() => {
-                if (this.manageRouters.length > 1)
-                    _.last(this.manageRouters)!.isOpen = false;
-                else if (this.manageRouters.length === 1)
-                    this.closeRightSideBar();
+                if (this.manageRouters.length > 1) _.last(this.manageRouters)!.isOpen = false;
+                else if (this.manageRouters.length === 1) this.closeRightSideBar();
             });
             setTimeout(() => {
                 runInAction(() => {
@@ -79,37 +75,37 @@ export default class RouterStore {
     };
 
     openRightSideBar = () => {
-        this.rootStore.visibleStore.show("rightSidebar");
-        this.manageRouters = [ManageHelperRoutes["manageChannel"]];
+        this.rootStore.visibleStore.show('rightSidebar');
+        this.manageRouters = [ManageHelperRoutes['manageChannel']];
     };
 
     openInUser = () => {
-        this.manageRouters = [ManageHelperRoutes["channelInUser"]];
+        this.manageRouters = [ManageHelperRoutes['channelInUser']];
         _.last(this.manageRouters)!.isOpen = true;
-        this.rootStore.visibleStore.show("rightSidebar");
+        this.rootStore.visibleStore.show('rightSidebar');
     };
 
     closeInUser = () => {
-        this.manageRouters = [ManageHelperRoutes["manageChannel"]];
+        this.manageRouters = [ManageHelperRoutes['manageChannel']];
     };
 
     toggleRightSidebar = () => {
-        this.rootStore.visibleStore.toglevisible("rightSidebar");
+        this.rootStore.visibleStore.toglevisible('rightSidebar');
     };
 
     openManagaChannel = () => {
         if (this.manageRouters.length) {
-            this.manageRouters = [ManageHelperRoutes["manageChannel"]];
+            this.manageRouters = [ManageHelperRoutes['manageChannel']];
         }
     };
 
     closeRightSideBar = () => {
-        this.rootStore.visibleStore.hide("rightSidebar");
+        this.rootStore.visibleStore.hide('rightSidebar');
     };
 
     closeChannelInUser = () => {
-        if (this.manageRouters.some((e) => e.key === "channelInUserM")) {
-            this.rootStore.visibleStore.hide("rightSidebar");
+        if (this.manageRouters.some(e => e.key === 'channelInUserM')) {
+            this.rootStore.visibleStore.hide('rightSidebar');
             this.manageRouters = [];
         }
     };

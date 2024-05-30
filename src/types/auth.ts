@@ -1,39 +1,39 @@
 export type RegisterData = {
-  email: string;
-  username: string;
-  password: string;
-  passwordConfirm: string;
+    email: string;
+    username: string;
+    password: string;
+    passwordConfirm: string;
 };
 
 export type SocialFacebook = {
-  userName: string;
-  oAuth2token?: string;
-  email: string;
-  isRegister?: boolean;
+    userName: string;
+    oAuth2token?: string;
+    email: string;
+    isRegister?: boolean;
 };
 
 export type SocialData = {
-  token: string;
-  appleId?: string;
-  nonce?: string;
-  type: string;
+    token: string;
+    appleId?: string;
+    nonce?: string;
+    type: string;
 };
 
 export type CheckOAuthData = {
-  userName: string;
-  email?: string;
+    userName: string;
+    email?: string;
 };
 
 export type Session = {
-  success: boolean;
-  message: string;
-  data: {
-    accessToken: string;
-    refreshToken: string;
-  }
+    success: boolean;
+    message: string;
+    data: {
+        accessToken: string;
+        refreshToken: string;
+    };
 };
 
 export type MsgLocation = {
-  latitude: string;
-  longitude: string;
+    latitude: string;
+    longitude: string;
 };

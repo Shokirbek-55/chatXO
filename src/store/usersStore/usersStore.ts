@@ -1,11 +1,11 @@
-import { message } from "antd";
-import { t } from "i18next";
-import { makeAutoObservable, runInAction } from "mobx";
-import APIs from "../../api/api";
-import { Channel } from "../../types/channel";
-import { User } from "../../types/user";
-import { Operation } from "../../utils/Operation";
-import { AppRootStore } from "../store";
+import { message } from 'antd';
+import { t } from 'i18next';
+import { makeAutoObservable, runInAction } from 'mobx';
+import APIs from '../../api/api';
+import { Channel } from '../../types/channel';
+import { User } from '../../types/user';
+import { Operation } from '../../utils/Operation';
+import { AppRootStore } from '../store';
 
 type UserStateType = {
     username: string;
@@ -57,12 +57,8 @@ export default class UsersStore {
     deleteUserMeAvatarOperation = new Operation<User>({} as User);
     getFriendDetailsOperation = new Operation<User>({} as User);
     returnGroupByNumberOperation = new Operation<Channel>({} as Channel);
-    userChannelLeaveOperation = new Operation<{ channelId: number }>(
-        {} as { channelId: number }
-    );
-    joinUserToChannelOperation = new Operation<{ channelId: number }>(
-        {} as { channelId: number }
-    );
+    userChannelLeaveOperation = new Operation<{ channelId: number }>({} as { channelId: number });
+    joinUserToChannelOperation = new Operation<{ channelId: number }>({} as { channelId: number });
 
     setMyData: UserStateType = {} as UserStateType;
 
@@ -77,24 +73,24 @@ export default class UsersStore {
     formData = new FormData();
 
     connectChannelData: ConnectChannelaDataType = {
-        channelNumber: "",
-        channelInviteCode: "",
+        channelNumber: '',
+        channelInviteCode: '',
     };
 
     forJoinChannelId: number = 0;
-    userAvatar: string = "";
+    userAvatar: string = '';
 
     previewData: PreviewDataType = {
-        dataTypes: "",
-        avatar: "",
+        dataTypes: '',
+        avatar: '',
         id: 0,
-        username: "",
-        color: "",
-        name: "",
-        hashId: "",
+        username: '',
+        color: '',
+        name: '',
+        hashId: '',
         adminId: 0,
-        mediaUrl: "",
-        timestamp: "",
+        mediaUrl: '',
+        timestamp: '',
     };
 
     getPreviewData = (data: PreviewDataType) => {
@@ -104,16 +100,16 @@ export default class UsersStore {
     clearPreviewData = () => {
         runInAction(() => {
             this.previewData = {
-                dataTypes: "",
-                avatar: "",
+                dataTypes: '',
+                avatar: '',
                 id: 0,
-                username: "",
-                color: "",
-                name: "",
-                hashId: "",
+                username: '',
+                color: '',
+                name: '',
+                hashId: '',
                 adminId: 0,
-                mediaUrl: "",
-                timestamp: "",
+                mediaUrl: '',
+                timestamp: '',
             };
         });
     };
@@ -124,55 +120,45 @@ export default class UsersStore {
                 APIs.Account.delateMyAvatar();
             });
             if (this.deleteUserMeAvatarOperation.isSuccess) {
-                this.updateUserAccount({ avatar: "" });
+                this.updateUserAccount({ avatar: '' });
                 this.clearPreviewData();
-                this.rootStore.visibleStore.hide("previewModal");
+                this.rootStore.visibleStore.hide('previewModal');
             }
             return;
         }
-        if (
-            this.previewData.hashId &&
-            this.previewData.adminId === this.rootStore.authStore.user.id
-        ) {
-            await this.rootStore.channelStore.deleteChannelAvatar(
-                this.previewData.hashId
-            );
-            if (
-                this.rootStore.channelStore.deleteChannelAvatarOperation
-                    .isSuccess
-            ) {
+        if (this.previewData.hashId && this.previewData.adminId === this.rootStore.authStore.user.id) {
+            await this.rootStore.channelStore.deleteChannelAvatar(this.previewData.hashId);
+            if (this.rootStore.channelStore.deleteChannelAvatarOperation.isSuccess) {
                 this.clearPreviewData();
-                this.rootStore.visibleStore.hide("previewModal");
-                this.rootStore.channelStore.channelAvatar = "";
+                this.rootStore.visibleStore.hide('previewModal');
+                this.rootStore.channelStore.channelAvatar = '';
             }
             return;
         }
     };
 
     myDataToSetData = (myData: User) =>
-    (this.setMyData = {
-        username: myData.username || "",
-        email: myData.email || "",
-        color: myData.color || "",
-        avatar: myData.avatar || "",
-        name: myData.name || "",
-        city: myData.city || "",
-        birth: myData.birth || "",
-        occupacy: myData.occupacy || "",
-        description: myData.description || "",
-    });
+        (this.setMyData = {
+            username: myData.username || '',
+            email: myData.email || '',
+            color: myData.color || '',
+            avatar: myData.avatar || '',
+            name: myData.name || '',
+            city: myData.city || '',
+            birth: myData.birth || '',
+            occupacy: myData.occupacy || '',
+            description: myData.description || '',
+        });
 
     setUserState = (key: keyof UserStateType, value: string) => {
         this.setMyData[key] = value;
     };
 
     updateUserAccount = async (user: Partial<User>) => {
-        await this.updateUserAccountOperation.run(() =>
-            APIs.Account.updateAccount(user)
-        );
+        await this.updateUserAccountOperation.run(() => APIs.Account.updateAccount(user));
 
         if (this.updateUserAccountOperation.isSuccess) {
-            message.success(`${t("update_profile")}`);
+            message.success(`${t('update_profile')}`);
             this.rootStore.authStore.getMe();
         }
     };
@@ -180,27 +166,22 @@ export default class UsersStore {
     createMeAvatar = async (file: File) => {
         const config = {
             headers: {
-                "Content-Type": "multipart/form-data",
+                'Content-Type': 'multipart/form-data',
             },
         };
         runInAction(() => {
             this.avatarLoading = true;
         });
-        this.formData.append("avatar", file);
-        await this.userMeAvatarOperation.run(() =>
-            APIs.Account.usersMeAvatar(this.formData, config)
-        );
+        this.formData.append('avatar', file);
+        await this.userMeAvatarOperation.run(() => APIs.Account.usersMeAvatar(this.formData, config));
         if (this.userMeAvatarOperation.isSuccess) {
             runInAction(() => {
                 this.updateUserAccount({
                     avatar: this.userMeAvatarOperation.data.avatar,
                 });
-                this.userAvatar = "";
+                this.userAvatar = '';
                 this.formData = new FormData();
-                this.setUserState(
-                    "avatar",
-                    this.userMeAvatarOperation.data.avatar as never
-                );
+                this.setUserState('avatar', this.userMeAvatarOperation.data.avatar as never);
                 this.avatarLoading = false;
             });
         }
@@ -226,22 +207,17 @@ export default class UsersStore {
 
     getUsersFilter = (key: string) => {
         runInAction(() => {
-            this.nonFriends = this.getNonFriendsOperation.data.filter((i) =>
-                i.username
-                    ?.trim()
-                    .toLowerCase()
-                    .includes(key.toLowerCase().trim())
+            this.nonFriends = this.getNonFriendsOperation.data.filter(i =>
+                i.username?.trim().toLowerCase().includes(key.toLowerCase().trim()),
             );
         });
         if (!this.nonFriends) {
-            message.warning("No such username exists");
+            message.warning('No such username exists');
         }
     };
 
     getFriendDetails = async (friendId: number) => {
-        await this.getFriendDetailsOperation.run(() =>
-            APIs.Users.getFriendDetails(friendId)
-        );
+        await this.getFriendDetailsOperation.run(() => APIs.Users.getFriendDetails(friendId));
         if (this.getFriendDetailsOperation.isSuccess) {
             runInAction(() => {
                 this.friendDetails = this.getFriendDetailsOperation.data;
@@ -257,86 +233,60 @@ export default class UsersStore {
         });
     };
 
-    setConnectChannelData = (
-        key: keyof ConnectChannelaDataType,
-        value: string
-    ) => {
+    setConnectChannelData = (key: keyof ConnectChannelaDataType, value: string) => {
         this.connectChannelData[key] = value;
     };
 
-    returnGroupByNumber = async (
-        channelNumber: string,
-        callback: (e) => void
-    ) => {
-        await this.returnGroupByNumberOperation.run(() =>
-            APIs.channels.connectToChannel(channelNumber)
-        );
+    returnGroupByNumber = async (channelNumber: string, callback: (e) => void) => {
+        await this.returnGroupByNumberOperation.run(() => APIs.channels.connectToChannel(channelNumber));
         runInAction(() => {
             if (this.returnGroupByNumberOperation.isSuccess) {
                 if (
                     !this.returnGroupByNumberOperation.data.isPrivate ||
-                    (this.connectChannelData.channelInviteCode
-                        ?.length as never) > 1
+                    (this.connectChannelData.channelInviteCode?.length as never) > 1
                 ) {
-                    this.forJoinChannelId =
-                        this.returnGroupByNumberOperation.data.id;
+                    this.forJoinChannelId = this.returnGroupByNumberOperation.data.id;
                     this.joinUserToChannel(
                         this.forJoinChannelId,
                         this.connectChannelData.channelInviteCode as never,
-                        () =>
-                            callback(
-                                this.returnGroupByNumberOperation.data.hashId
-                            )
+                        () => callback(this.returnGroupByNumberOperation.data.hashId),
                     );
-                    this.rootStore.channelStore.getChannelByHashId(
-                        this.returnGroupByNumberOperation.data.hashId
-                    );
+                    this.rootStore.channelStore.getChannelByHashId(this.returnGroupByNumberOperation.data.hashId);
                     this.connectChannelData = {
-                        channelNumber: "",
-                        channelInviteCode: "",
+                        channelNumber: '',
+                        channelInviteCode: '',
                     };
                 } else {
-                    this.rootStore.visibleStore.show("passwordInput");
-                    message.warning(
-                        "Channel is private please enter group's invitation code"
-                    );
+                    this.rootStore.visibleStore.show('passwordInput');
+                    message.warning("Channel is private please enter group's invitation code");
                 }
             }
         });
     };
 
-    joinUserToChannel = async (
-        channleId: number,
-        invitationCode: string,
-        callback: () => void
-    ) => {
-        await this.joinUserToChannelOperation.run(() =>
-            APIs.channels.joinChannel(channleId, invitationCode)
-        );
+    joinUserToChannel = async (channleId: number, invitationCode: string, callback: () => void) => {
+        await this.joinUserToChannelOperation.run(() => APIs.channels.joinChannel(channleId, invitationCode));
         if (this.joinUserToChannelOperation.isSuccess) {
             runInAction(() => {
                 this.rootStore.channelStore.getMyChannels();
-                this.rootStore.routerStore.setCurrentRoute("channels");
+                this.rootStore.routerStore.setCurrentRoute('channels');
                 callback();
-                message.success("You have joined the group");
-                localStorage.removeItem("hashId");
+                message.success('You have joined the group');
+                localStorage.removeItem('hashId');
             });
         }
     };
 
     userChannelLeave = async (channelId: number, callback: () => void) => {
-        await this.userChannelLeaveOperation.run(() =>
-            APIs.Users.leaveFromChannel(channelId)
-        );
+        await this.userChannelLeaveOperation.run(() => APIs.Users.leaveFromChannel(channelId));
         if (this.userChannelLeaveOperation.isSuccess) {
             runInAction(() => {
-                this.rootStore.channelStore.myChannels =
-                    this.rootStore.channelStore.myChannels.filter(
-                        (i) => i?.id !== channelId
-                    );
-                this.rootStore.channelStore.hashId = "";
+                this.rootStore.channelStore.myChannels = this.rootStore.channelStore.myChannels.filter(
+                    i => i?.id !== channelId,
+                );
+                this.rootStore.channelStore.hashId = '';
                 callback();
-                message.success("Exited the channel");
+                message.success('Exited the channel');
             });
         }
     };

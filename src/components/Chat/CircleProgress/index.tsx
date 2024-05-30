@@ -1,16 +1,14 @@
-import { FC } from "react";
+import { FC } from 'react';
 //@ts-ignore
-import { CircularProgressbar } from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 interface Props {
-  progress: number;
+    progress: number;
 }
 
 const CircleProgress: FC<Props> = ({ progress }) => {
-  return (
-    <div>{<CircularProgressbar value={progress} text={`${progress}%`} />}</div>
-  );
+    return <div>{<CircularProgressbar value={progress} text={`${progress}%`} />}</div>;
 };
 
 export default CircleProgress;

@@ -1,5 +1,5 @@
-import React, { CSSProperties, FC } from "react";
-import styles from "./index.module.css";
+import React, { CSSProperties, FC } from 'react';
+import styles from './index.module.css';
 
 interface Props {
     children?: any;
@@ -10,7 +10,7 @@ interface Props {
     margin?: string;
     backgroundColor?: string;
     fontWeight?: number;
-    fontFamily?: "Montserrat";
+    fontFamily?: 'Montserrat';
     fontSize?: string;
     textAlign?: string | any;
     moreDot?: boolean;
@@ -30,20 +30,19 @@ const Text: FC<Props> = ({
     textAlign,
     moreDot,
 }) => {
-
     const tetx = () => {
-        if (!moreDot) return children
+        if (!moreDot) return children;
         if (children?.length > 18) {
-            return children?.slice(0, 15) + `...`
+            return children?.slice(0, 15) + `...`;
         }
-    }
+    };
 
     return (
         <p
             className={center ? styles.centerText : styles.text}
             onClick={handleLink}
             style={{
-                margin: margin ? margin : "3px 0",
+                margin: margin ? margin : '3px 0',
                 color: color,
                 background: backgroundColor,
                 fontFamily: fontFamily,

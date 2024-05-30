@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-
 class EventEmitter {
     observers: any;
     constructor() {
@@ -33,14 +32,16 @@ class EventEmitter {
     emit(event: string | number, ...args: any[]) {
         if (this.observers[event]) {
             const cloned = [].concat(this.observers[event]);
-            cloned.forEach((observer: Function) => { // Add type annotation to observer parameter
+            cloned.forEach((observer: Function) => {
+                // Add type annotation to observer parameter
                 observer(...args);
             });
         }
 
         if (this.observers['*']) {
             const cloned = [].concat(this.observers['*']);
-            cloned.forEach((observer: Function) => { // Add type annotation to observer parameter
+            cloned.forEach((observer: Function) => {
+                // Add type annotation to observer parameter
                 observer.apply(observer, [event, ...args]);
             });
         }

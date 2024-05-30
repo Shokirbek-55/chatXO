@@ -7,14 +7,14 @@
 
 // type : 1 => image, type : 2 => video , type : 3 => audio
 export const getMediaName = (file?: {}, type?: number) => {
-  let name;
-  if (type === 1) {
-    name = "random_image.jpg";
-  } else if (type === 2) {
-    name = "random_video.mp4";
-  } else {
-    name = "random_audio.mp3";
-  }
+    let name;
+    if (type === 1) {
+        name = 'random_image.jpg';
+    } else if (type === 2) {
+        name = 'random_video.mp4';
+    } else {
+        name = 'random_audio.mp3';
+    }
 
-  return file || name;
+    return file || name;
 };

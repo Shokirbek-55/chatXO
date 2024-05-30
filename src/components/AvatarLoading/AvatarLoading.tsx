@@ -1,15 +1,11 @@
-import Lottie from "lottie-react";
-import styled from "styled-components";
-import avatarLoading from "../../assets/loading.json";
+import Lottie from 'lottie-react';
+import styled from 'styled-components';
+import avatarLoading from '../../assets/loading.json';
 
 export const AvatarLoading = () => {
     return (
         <Box>
-            <Lottie
-                animationData={avatarLoading}
-                loop={true}
-                style={{ width: "50px" }}
-            />
+            <Lottie animationData={avatarLoading} loop={true} style={{ width: '50px' }} />
         </Box>
     );
 };

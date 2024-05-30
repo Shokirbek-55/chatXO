@@ -1,18 +1,18 @@
-import { motion } from "framer-motion";
-import { observer } from "mobx-react-lite";
-import { useMemo } from "react";
-import { useTranslation } from "react-i18next";
-import { generatePath, useNavigate } from "react-router-dom";
-import AvatarUpload from "../../../components/AvatarUpload/AvatarUpload";
-import Header from "../../../components/Header/Header";
-import MessageBox from "../../../components/MessageBox/MessageBox";
-import RowItemView from "../../../components/RowItem";
-import Text from "../../../components/Text/Text";
-import { TMP_URL } from "../../../env";
-import useRootStore from "../../../hooks/useRootStore";
-import { ButtonComponent } from "../../../utils/button";
-import Colors from "../../../utils/colors";
-import styles from "./FriendDetail.module.css";
+import { motion } from 'framer-motion';
+import { observer } from 'mobx-react-lite';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { generatePath, useNavigate } from 'react-router-dom';
+import AvatarUpload from '../../../components/AvatarUpload/AvatarUpload';
+import Header from '../../../components/Header/Header';
+import MessageBox from '../../../components/MessageBox/MessageBox';
+import RowItemView from '../../../components/RowItem';
+import Text from '../../../components/Text/Text';
+import { TMP_URL } from '../../../env';
+import useRootStore from '../../../hooks/useRootStore';
+import { ButtonComponent } from '../../../utils/button';
+import Colors from '../../../utils/colors';
+import styles from './FriendDetail.module.css';
 
 const container = {
     hidden: { opacity: 1, scale: 0 },
@@ -45,69 +45,48 @@ const FriendDetail = () => {
     const { show } = useRootStore().visibleStore;
     const { getPreviewData } = useRootStore().usersStore;
 
-    const isFriend = useMemo(
-        () => friends.some((e) => e.id === friendDetails.id),
-        [friends, friendDetails]
-    );
+    const isFriend = useMemo(() => friends.some(e => e.id === friendDetails.id), [friends, friendDetails]);
 
-    const handleChanel = (e) => {
+    const handleChanel = e => {
         setChannelSlug(e.slug);
-        getChannelByHashId(
-            myChannels.find((item) => item?.id === e?.id)?.hashId as never
-        );
+        getChannelByHashId(myChannels.find(item => item?.id === e?.id)?.hashId as never);
         const target = generatePath(`/:name`, {
-            name: `@${myChannels.find((item) => item?.id === e?.id)?.hashId as never
-                }`,
+            name: `@${myChannels.find(item => item?.id === e?.id)?.hashId as never}`,
         });
         navigate(target);
     };
 
     const handeCreateOrDelete = () => {
-        isFriend
-            ? deleteFriend(friendDetails?.id as never)
-            : createFriend(friendDetails?.id as never);
+        isFriend ? deleteFriend(friendDetails?.id as never) : createFriend(friendDetails?.id as never);
     };
 
     const PreviewAvatar = (data: any) => {
-        show("previewModal");
+        show('previewModal');
         getPreviewData(data);
     };
 
     const cloesModal = () => {
-        closeModal("left");
-        clearFriendDetails()
-    }
+        closeModal('left');
+        clearFriendDetails();
+    };
 
     return (
         <div className={styles.container}>
-            <Header
-                text={`${t("Profile")}`}
-                leftIcon="arrowLeft"
-                colorText="black"
-                onLeftIconPress={cloesModal}
-            />
+            <Header text={`${t('Profile')}`} leftIcon="arrowLeft" colorText="black" onLeftIconPress={cloesModal} />
             <div className={styles.contentBox}>
                 <AvatarUpload
-                    imageUrl={
-                        friendDetails?.avatar
-                            ? `${TMP_URL}/${friendDetails.avatar}`
-                            : ""
-                    }
+                    imageUrl={friendDetails?.avatar ? `${TMP_URL}/${friendDetails.avatar}` : ''}
                     onPreview={() => PreviewAvatar(friendDetails)}
                     upload={false}
                     color={
                         friendDetails?.color
                             ? `linear-gradient(25deg, ${friendDetails.color} 30%, #ddd 100%)`
-                            : "linear-gradient(#ddd, #666)"
+                            : 'linear-gradient(#ddd, #666)'
                     }
-                    onChange={() => { }}
+                    onChange={() => {}}
                 />
                 <Text
-                    children={
-                        friendDetails?.username
-                            ? friendDetails.username
-                            : "User"
-                    }
+                    children={friendDetails?.username ? friendDetails.username : 'User'}
                     margin="10px 0 0 0"
                     fontWeight={700}
                     center
@@ -121,14 +100,14 @@ const FriendDetail = () => {
                         color={Colors.Black}
                         fontWeight={600}
                         fontSize="14px"
-                        style={{ width: "50%" }}
+                        style={{ width: '50%' }}
                     />
                     <Text
                         children={friendDetails?.username}
                         color={Colors.Gray}
                         fontWeight={500}
                         fontSize="13px"
-                        style={{ width: "50%" }}
+                        style={{ width: '50%' }}
                         moreDot
                     />
                 </div>
@@ -138,14 +117,14 @@ const FriendDetail = () => {
                         color={Colors.Black}
                         fontWeight={600}
                         fontSize="14px"
-                        style={{ width: "50%" }}
+                        style={{ width: '50%' }}
                     />
                     <Text
                         children={friendDetails?.name}
                         color={Colors.Gray}
                         fontWeight={600}
                         fontSize="13px"
-                        style={{ width: "50%" }}
+                        style={{ width: '50%' }}
                         moreDot
                     />
                 </div>
@@ -155,14 +134,14 @@ const FriendDetail = () => {
                         color={Colors.Black}
                         fontWeight={600}
                         fontSize="14px"
-                        style={{ width: "50%" }}
+                        style={{ width: '50%' }}
                     />
                     <Text
                         children={friendDetails?.email}
                         color={Colors.Gray}
                         fontWeight={500}
                         fontSize="13px"
-                        style={{ width: "50%" }}
+                        style={{ width: '50%' }}
                         moreDot
                     />
                 </div>
@@ -172,14 +151,14 @@ const FriendDetail = () => {
                         color={Colors.Black}
                         fontWeight={600}
                         fontSize="14px"
-                        style={{ width: "50%" }}
+                        style={{ width: '50%' }}
                     />
                     <Text
                         children={friendDetails?.city}
                         color={Colors.Gray}
                         fontWeight={500}
                         fontSize="13px"
-                        style={{ width: "50%" }}
+                        style={{ width: '50%' }}
                     />
                 </div>
                 <div className={styles.formItem}>
@@ -188,14 +167,14 @@ const FriendDetail = () => {
                         color={Colors.Black}
                         fontWeight={600}
                         fontSize="14px"
-                        style={{ width: "50%" }}
+                        style={{ width: '50%' }}
                     />
                     <Text
                         children={friendDetails?.birth}
                         color={Colors.Gray}
                         fontWeight={500}
                         fontSize="13px"
-                        style={{ width: "50%" }}
+                        style={{ width: '50%' }}
                     />
                 </div>
                 <div className={styles.formItem}>
@@ -204,42 +183,30 @@ const FriendDetail = () => {
                         color={Colors.Black}
                         fontWeight={600}
                         fontSize="14px"
-                        style={{ width: "50%" }}
+                        style={{ width: '50%' }}
                     />
                     <Text
                         children={friendDetails?.occupacy}
                         color={Colors.Gray}
                         fontWeight={500}
                         fontSize="13px"
-                        style={{ width: "50%" }}
+                        style={{ width: '50%' }}
                     />
                 </div>
             </div>
-            <Text
-                margin="15px 0 10px 7%"
-                children={"Joint groups"}
-                fontWeight={600}
-                color={Colors.Black}
-            />
+            <Text margin="15px 0 10px 7%" children={'Joint groups'} fontWeight={600} color={Colors.Black} />
             <motion.div variants={container} initial="hidden" animate="visible">
                 {friendDetails?.channels?.length !== 0 ? (
                     friendDetails?.channels?.map((e, index) => {
                         return (
-                            <motion.div
-                                variants={item}
-                                key={index}
-                                id="map-dev"
-                                className={styles.channelRowBox}
-                            >
+                            <motion.div variants={item} key={index} id="map-dev" className={styles.channelRowBox}>
                                 <RowItemView
                                     color={
                                         e.color
                                             ? `linear-gradient(25deg, ${e.color} 30%, #ddd 100%)`
-                                            : "linear-gradient(#ddd, #666)"
+                                            : 'linear-gradient(#ddd, #666)'
                                     }
-                                    imageUrl={
-                                        e.avatar ? `${TMP_URL}/${e.avatar}` : ""
-                                    }
+                                    imageUrl={e.avatar ? `${TMP_URL}/${e.avatar}` : ''}
                                     text={e.name}
                                     loading={false}
                                     onPressComponent={() => handleChanel(e)}
@@ -248,17 +215,14 @@ const FriendDetail = () => {
                         );
                     })
                 ) : (
-                    <MessageBox
-                        size="12px"
-                        title={`${t("no_avalible_groups")}`}
-                    />
+                    <MessageBox size="12px" title={`${t('no_avalible_groups')}`} />
                 )}
             </motion.div>
             <ButtonComponent
                 margin="20px 7% 15px 7%"
                 width="86%"
                 color={isFriend ? Colors.Red : Colors.White}
-                text={isFriend ? "unfriend" : "+ add as friend"}
+                text={isFriend ? 'unfriend' : '+ add as friend'}
                 clickMe={handeCreateOrDelete}
             />
         </div>

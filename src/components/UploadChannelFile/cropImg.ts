@@ -19,7 +19,7 @@ export default function getCroppedImg(imageSrc: string, croppedAreaPixels: any):
                     0,
                     0,
                     croppedAreaPixels.width,
-                    croppedAreaPixels.height
+                    croppedAreaPixels.height,
                 );
 
                 canvas.toBlob(blob => {

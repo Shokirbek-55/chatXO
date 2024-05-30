@@ -1,7 +1,7 @@
-import { styled } from "styled-components";
-import { RawMessage } from "../../../types/channel";
-import { relevanceFuniction } from "../../../utils/boxShadov";
-import styles from "./index.module.css";
+import { styled } from 'styled-components';
+import { RawMessage } from '../../../types/channel';
+import { relevanceFuniction } from '../../../utils/boxShadov';
+import styles from './index.module.css';
 
 interface Props {
     message: RawMessage;
@@ -23,23 +23,18 @@ const LinkPriviewComponent = ({ message, textBackColor }: Props) => {
         fontWeight: number;
         lineHeight: string;
     }) => {
-        const regex =
-            /(http:\/\/|https:\/\/)?(www\.)?([a-zA-Z0-9-]+\.)*([a-zA-Z0-9-]+)\.[a-zA-Z]{2,}(\S*)/g;
+        const regex = /(http:\/\/|https:\/\/)?(www\.)?([a-zA-Z0-9-]+\.)*([a-zA-Z0-9-]+)\.[a-zA-Z]{2,}(\S*)/g;
         const links = message.message.match(regex);
 
         if (!links || links.length === 0)
             return (
-                <Paragraph
-                    $fontSize={fontSize}
-                    $fontWeight={fontWeight}
-                    $lineHeight={lineHeight}
-                >
+                <Paragraph $fontSize={fontSize} $fontWeight={fontWeight} $lineHeight={lineHeight}>
                     {message.message}
                 </Paragraph>
             );
 
         function urlify(text: string) {
-            const replacedText = text.replace(regex, (match) => {
+            const replacedText = text.replace(regex, match => {
                 const isLink = /^(http:\/\/|https:\/\/)/i.test(match);
                 const href = isLink ? match : `http://${match}`;
                 return `<a href="${href}" target="_blank" rel="noopener noreferrer">${match}</a>`;

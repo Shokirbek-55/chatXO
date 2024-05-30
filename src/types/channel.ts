@@ -1,22 +1,14 @@
 // import { IMessage } from 'react-native-gifted-chat';
-import { MsgLocation } from "../types/auth";
-import { PollOptionsType } from "./messageType";
-import { User } from "./user";
+import { MsgLocation } from '../types/auth';
+import { PollOptionsType } from './messageType';
+import { User } from './user';
 
 export type Hashtag = {
     text: string;
     isActive: boolean;
 };
 
-export type MessageType =
-    | "text"
-    | "audio"
-    | "video"
-    | "image"
-    | "document"
-    | "poll"
-    | "RELEVANCE"
-    | "NORMAL";
+export type MessageType = 'text' | 'audio' | 'video' | 'image' | 'document' | 'poll' | 'RELEVANCE' | 'NORMAL';
 
 export type Message = IMessage & {
     hashtags?: string[];
@@ -37,7 +29,7 @@ export type Message = IMessage & {
     originMessageTimestamp?: Date | string;
     index?: number;
     topic?: string;
-    pollType?: "NORMAL" | "RELEVANCE";
+    pollType?: 'NORMAL' | 'RELEVANCE';
     options?: PollOptionsType[];
     pollId?: number;
     votes?: any[];
@@ -50,7 +42,7 @@ export type Message = IMessage & {
     displayedRelevance?: number;
 };
 
-export type SendMessage = Omit<Message, "index">;
+export type SendMessage = Omit<Message, 'index'>;
 
 export interface IMessage {
     _id?: string | number;
@@ -155,28 +147,28 @@ export type generateInviteCodeType = {
     hashId: string;
 };
 export const generateInviteCodeInitialState = {
-    inviteCode: "",
-    qrCode: "",
-    hashId: "",
+    inviteCode: '',
+    qrCode: '',
+    hashId: '',
 };
 
 export const ChannelInitialState = {
     id: 0,
-    hashId: "",
-    name: "",
-    slug: "",
-    color: "",
-    avatar: "",
+    hashId: '',
+    name: '',
+    slug: '',
+    color: '',
+    avatar: '',
     adminId: 0,
     active: false,
     isOwn: false,
     isPrivate: false,
     synced: false,
-    createdAt: "",
-    pageState: "",
-    description: "",
+    createdAt: '',
+    pageState: '',
+    description: '',
     messages: [],
-    lastMessageTimestamp: "",
+    lastMessageTimestamp: '',
     canLoadMore: false,
     relevance: 0,
     userRelevance: 0,
@@ -186,11 +178,11 @@ export const ChannelInitialState = {
     activeHashtags: [],
     isOpen: false,
     users: [],
-    inviteCode: "" || null,
-    groupNumber: "",
-    groupPassword: "",
+    inviteCode: '' || null,
+    groupNumber: '',
+    groupPassword: '',
     invitationCodes: [],
-    qrCode: "",
+    qrCode: '',
     isBlocked: false,
 };
 
@@ -211,15 +203,15 @@ export type ChannelsUsersType = {
 export const ChannelsUsersInitial = {
     active: false,
     avatar: null,
-    color: "#",
-    email: "",
+    color: '#',
+    email: '',
     id: 0,
     adminId: 0,
     latitude: null,
     longitude: null,
     relevance: 0,
-    status: "",
-    username: "",
+    status: '',
+    username: '',
     isFriend: false,
 };
 
@@ -230,7 +222,7 @@ export type relevanceDataType = {
     relevance: number;
 };
 export const relevanceDataInitial = {
-    channelSlug: "",
+    channelSlug: '',
     fromUserId: 0,
     toUserId: 0,
     relevance: 0,
