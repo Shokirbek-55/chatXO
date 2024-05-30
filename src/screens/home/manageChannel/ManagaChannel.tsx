@@ -69,11 +69,7 @@ const ManagaChannel = () => {
             <div className={styles.description}>
                 <Text
                     fontSize="12px"
-                    children={
-                        channelData.description
-                            ? truncatedText(channelData.description)
-                            : "no description"
-                    }
+                    children={channelData.description ? truncatedText(channelData.description) : 'no description'}
                 />
             </div>
             {adminId === user.id ? (
