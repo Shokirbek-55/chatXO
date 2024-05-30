@@ -31,36 +31,35 @@ const Chat = () => {
 
     const messagesV2: React.ReactNode[] = useMemo(() => {
         const messagesData = getSelectedChannelMsgs;
-        
+
         if (!messagesData || messagesData.length === 0) {
-          setIsMessagesLength(true)
-          return [];
+            setIsMessagesLength(true);
+            return [];
         }
-  
+
         setIsMessagesLength(false);
-  
+
         const filteredMessages = messagesData.filter(
-          (msg) => msg.relevance !== undefined && msg.relevance >= messagesFilterValue
+            msg => msg.relevance !== undefined && msg.relevance >= messagesFilterValue,
         );
-      
-  
+
         const messageComponents: React.ReactNode[] = [];
-      
+
         for (let i = 0; i < filteredMessages.length; i++) {
-          const msg = filteredMessages[i]
-          messageComponents.unshift(
-            <MessageComponent 
-              isFirst={msg === filteredMessages[0]}
-              isLast={filteredMessages.length - 1 === i}
-              _ref={ref => {}}
-              message={msg} 
-              users={getSlectedChannelUsers}
-            />
-          )
+            const msg = filteredMessages[i];
+            messageComponents.unshift(
+                <MessageComponent
+                    isFirst={msg === filteredMessages[0]}
+                    isLast={filteredMessages.length - 1 === i}
+                    _ref={ref => {}}
+                    message={msg}
+                    users={getSlectedChannelUsers}
+                />,
+            );
         }
-  
-        return messageComponents; 
-      }, [getSelectedChannelMsgs, messagesFilterValue, getSlectedChannelUsers])
+
+        return messageComponents;
+    }, [getSelectedChannelMsgs, messagesFilterValue, getSlectedChannelUsers]);
 
     return (
         <ChatContainer id="chatView">
