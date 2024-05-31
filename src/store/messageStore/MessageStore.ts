@@ -620,11 +620,11 @@ export default class MessageStore {
     };
 
     onDeleteMessage = (id: string) => {
-		const selectedChannelData = this.getSelectedChannelMsgData;
-		if (selectedChannelData) {
-			selectedChannelData.messages.delete(id);
-		}
-	};
+        const selectedChannelData = this.getSelectedChannelMsgData;
+        if (selectedChannelData) {
+            selectedChannelData.messages.delete(id);
+        }
+    };
 
     clearReplyMessage = () => {
         this.setReplyMessage = null;
