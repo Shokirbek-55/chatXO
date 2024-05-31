@@ -41,7 +41,7 @@ type createChannelResponseType = {
     data: Channel;
 };
 
-  type selectedChannelType = {
+type selectedChannelType = {
     id: number;
     hashId: string;
     slug: string;
@@ -62,6 +62,7 @@ export default class ChannelStore {
     hashIdQueue = new Set<string>();
 
     getChannelOperation = new Operation<Channel[]>([]);
+    getOneChannelOperation = new Operation<Channel>({} as Channel);
     createChannelOperation = new Operation<createChannelResponseType>({} as createChannelResponseType);
     updateChannelOperation = new Operation<Channel>({} as Channel);
     getChannelByHashIdOperation = new Operation<Channel>({} as Channel);
@@ -244,6 +245,7 @@ export default class ChannelStore {
                     isPrivate: this.channelData.isPrivate,
                     color: this.channelData.color || '',
                     avatar: this.channelData.avatar || '',
+                    password: this.channelData.password || '',
                 };
                 this.isLoad = false;
             });
@@ -267,7 +269,7 @@ export default class ChannelStore {
                         id: channel.id,
                         hashId: channel.hashId,
                         slug: channel.slug,
-                    }
+                    };
                     this.rootStore.messageStore.setChannelSlug(channel.slug);
                     this.navigateChannel();
                     return true;

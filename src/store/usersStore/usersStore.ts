@@ -265,7 +265,17 @@ export default class UsersStore {
     };
 
     joinUserToChannel = async (channleId: number, invitationCode: string, callback: () => void) => {
-        await this.joinUserToChannelOperation.run(() => APIs.channels.joinChannel(channleId, invitationCode));
+        const newChannelToJoin = this.rootStore.channelStore.getOneChannelOperation;
+        await newChannelToJoin.run(() => APIs.channels.getChannel(this.rootStore.channelStore.hashId));
+
+        if (newChannelToJoin.isSuccess) {
+            if (newChannelToJoin.data.isPrivate) {
+                this.rootStore.visibleStore.show('newChannelToJoinModal');
+            } else {
+                await this.joinUserToChannelOperation.run(() => APIs.channels.joinChannel(channleId, invitationCode));
+            }
+        }
+
         if (this.joinUserToChannelOperation.isSuccess) {
             runInAction(() => {
                 this.rootStore.channelStore.getMyChannels();
@@ -276,6 +286,9 @@ export default class UsersStore {
             });
         }
     };
+
+    tryToJoinThePrivateChannel = async (data: { channelId: number; password: string }) =>
+        APIs.Users.tryToJoinToPrivateChannel(data);
 
     userChannelLeave = async (channelId: number, callback: () => void) => {
         await this.userChannelLeaveOperation.run(() => APIs.Users.leaveFromChannel(channelId));
