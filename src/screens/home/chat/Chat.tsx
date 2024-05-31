@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { observer } from 'mobx-react-lite';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import MessageComponent from '../../../components/Chat/MessageComponent/MessageComponent';
@@ -12,11 +12,9 @@ import ModalToPrivateChannel from '../../../components/ModalToPrivateChannel';
 
 const Chat = () => {
     const navigate = useNavigate();
-    const { messageCache, getSelectedChannelMsgs } = useRootStore().messageStore;
+    const { messagesFilterValue, setIsMessagesLength, getSelectedChannelMsgs } = useRootStore().messageStore;
     const { closeRightSideBar } = useRootStore().routerStore;
-    const {
-        selectedChannelData: { slug },
-    } = useRootStore().channelStore;
+    const { getSlectedChannelUsers } = useRootStore().channelStore;
 
     useEffect(() => {
         const handleEsc = (event: any) => {
@@ -32,20 +30,37 @@ const Chat = () => {
         };
     }, [closeRightSideBar, navigate]);
 
-    const messagesV2: React.ReactNode[] = [];
-    for (let i = 0; i < getSelectedChannelMsgs.length; i++) {
-        const msg = getSelectedChannelMsgs[i];
-        messagesV2.unshift(
-            <MessageComponent
-                isFirst={0 === i}
-                isLast={messageCache[slug].messages?.length - 1 === i}
-                ref={ref => {}}
-                key={msg.id}
-                message={msg}
-                users={messageCache[slug]?.channelUsers}
-            />,
+    const messagesV2: React.ReactNode[] = useMemo(() => {
+        const messagesData = getSelectedChannelMsgs;
+
+        if (!messagesData || messagesData.length === 0) {
+            setIsMessagesLength(true);
+            return [];
+        }
+
+        setIsMessagesLength(false);
+
+        const filteredMessages = messagesData.filter(
+            msg => msg.relevance !== undefined && msg.relevance >= messagesFilterValue,
         );
-    }
+
+        const messageComponents: React.ReactNode[] = [];
+
+        for (let i = 0; i < filteredMessages.length; i++) {
+            const msg = filteredMessages[i];
+            messageComponents.unshift(
+                <MessageComponent
+                    isFirst={msg === filteredMessages[0]}
+                    isLast={filteredMessages.length - 1 === i}
+                    _ref={ref => {}}
+                    message={msg}
+                    users={getSlectedChannelUsers}
+                />,
+            );
+        }
+
+        return messageComponents;
+    }, [getSelectedChannelMsgs, messagesFilterValue, getSlectedChannelUsers]);
 
     return (
         <ChatContainer id="chatView">

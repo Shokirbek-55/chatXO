@@ -12,7 +12,8 @@ import MessageComponent from '../../../components/Chat/MessageComponent/MessageC
 const ChatHashtag = () => {
     const navigate = useNavigate();
     const { allHashTagsMessages, exit } = useRootStore().hashtagStore;
-    const { messageCache, slug, messagesFilterValue, setIsMessagesLength } = useRootStore().messageStore;
+    const { messagesFilterValue, setIsMessagesLength } = useRootStore().messageStore;
+    const { getSlectedChannelUsers } = useRootStore().channelStore;
 
     useEffect(() => {
         const handleEsc = (event: any) => {
@@ -41,7 +42,7 @@ const ChatHashtag = () => {
         }
         setIsMessagesLength(false);
         return messagesData;
-    }, [allHashTagsMessages.messages, slug, messagesFilterValue]);
+    }, [allHashTagsMessages.messages, messagesFilterValue]);
 
     return (
         <ChatContainer id="chatView">
@@ -52,10 +53,10 @@ const ChatHashtag = () => {
                         <MessageComponent
                             isLast={0 === index}
                             isFirst={allHashTagsMessages.messages?.length - 1 === index}
-                            ref={ref => {}}
+                            _ref={ref => {}}
                             key={message.id}
                             message={message}
-                            users={messageCache[slug]?.channelUsers}
+                            users={getSlectedChannelUsers}
                         />
                     );
                 })}

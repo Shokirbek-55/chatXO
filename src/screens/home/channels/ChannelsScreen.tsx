@@ -41,7 +41,7 @@ function ChannelsScreen() {
     const navigate = useNavigate();
     const { closeChannelInUser } = useRootStore().routerStore;
     const { myChannels, setSearchChannels, getChannelByHashId, handelSelectedChannel } = useRootStore().channelStore;
-    const { setChannelSlug, messageCache } = useRootStore().messageStore;
+    const { setChannelSlug } = useRootStore().messageStore;
     const { openChannel } = useRootStore().chatStore;
     const { show } = useRootStore().visibleStore;
 
