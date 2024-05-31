@@ -20,6 +20,7 @@ class VisibleStore {
         menuChannel: false,
         relevenceSliderCreate: false,
         relevenceSliderEdit: false,
+        newChannelToJoinModal: false,
     };
 
     toglevisible = (key: keyof typeof this.visible) => {

@@ -1,4 +1,4 @@
-import { message, Slider, Switch } from 'antd';
+import { Input, message, Slider, Switch } from 'antd';
 import { observer } from 'mobx-react-lite';
 import { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -36,7 +36,7 @@ const EditChannel = () => {
         updateChannel(setUpdataChannel);
     };
 
-    const isPrivateGruop = (checked: boolean) => {
+    const onChangeGroupType = (checked: boolean) => {
         setUpdateChannelState('isPrivate', checked);
     };
 
@@ -109,8 +109,16 @@ const EditChannel = () => {
                 <MenuItem
                     icon={<MdGroup size={24} />}
                     title={`Group type: ${setUpdataChannel.isPrivate ? 'Private' : 'Public'}`}
-                    right={<Switch onChange={isPrivateGruop} checked={setUpdataChannel.isPrivate} />}
+                    right={<Switch onChange={onChangeGroupType} checked={setUpdataChannel.isPrivate} />}
                 />
+                {setUpdataChannel.isPrivate && (
+                    <Input
+                        placeholder="Enter password"
+                        type="number"
+                        value={setUpdataChannel.password}
+                        onChange={e => setUpdateChannelState('password', e.target.value)}
+                    />
+                )}
                 <MenuItem
                     icon={<IoMdFunnel size={24} />}
                     title="Default relevance"

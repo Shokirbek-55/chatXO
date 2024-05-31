@@ -8,6 +8,7 @@ import ScrollContainer from '../../../components/ScrollContainer/ScrollContainer
 import useRootStore from '../../../hooks/useRootStore';
 import ChatHeader from '../../../utils/chatHeader';
 import MessageInput from './components/messageInput/MessageInput';
+import ModalToPrivateChannel from '../../../components/ModalToPrivateChannel';
 
 const Chat = () => {
     const navigate = useNavigate();
@@ -66,6 +67,8 @@ const Chat = () => {
             <ChatHeader />
             <ScrollContainer>{messagesV2}</ScrollContainer>
             <MessageInput />
+
+            <ModalToPrivateChannel />
         </ChatContainer>
     );
 };

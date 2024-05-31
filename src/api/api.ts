@@ -91,6 +91,8 @@ const APIs = {
             apiService.methods.post(`${users}/${channelUrl}/leave`, {
                 channelId,
             }),
+        tryToJoinToPrivateChannel: (data: { channelId: number; password: string }) =>
+            apiService.methods.post(`${users}/channel/join`, data),
     },
 
     channels: {

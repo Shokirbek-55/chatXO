@@ -23,7 +23,7 @@ function RootRouter() {
         if (!session.accessToken) {
             navigation('/auth/welcome');
         }
-    }, [session.accessToken]);
+    }, [navigation, session.accessToken]);
 
     return (
         <Routes>

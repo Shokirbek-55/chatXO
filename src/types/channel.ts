@@ -131,6 +131,7 @@ export type Channel = {
     invitationCodes: InvitationCodes[];
     qrCode: string;
     isBlocked: boolean;
+    password?: string;
 };
 
 export type SetUpdataChanelType = {
@@ -140,6 +141,7 @@ export type SetUpdataChanelType = {
     avatar?: string;
     description?: string;
     defaultRelevance?: any;
+    password?: string;
 };
 export type generateInviteCodeType = {
     inviteCode: string;
